@@ -1,11 +1,34 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { X, Fingerprint, Brain, Apple, Home, Droplets, Sprout, Sun, ScanLine, ArrowRight } from 'lucide-react';
+import { X, Fingerprint, Brain, Apple, Home, Droplets, Sprout, Sun, ScanLine, ArrowRight, Sparkles, ChevronRight, Users } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 export default function HomePage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const revealRefs = useRef([]);
+  
+  // Elements content variations
+  const [elementsApproach, setElementsApproach] = useState('clinical');
+  const [elementsContent, setElementsContent] = useState(null);
+  const [loadingElements, setLoadingElements] = useState(false);
+  
+  // Protocol/Terrain modal
+  const [selectedConcept, setSelectedConcept] = useState(null);
+  const [conceptDetails, setConceptDetails] = useState(null);
+  const [loadingConcept, setLoadingConcept] = useState(false);
+  
+  // Membership tiers
+  const [showMembershipTiers, setShowMembershipTiers] = useState(false);
+  const [selectedTier, setSelectedTier] = useState(null);
+  const [membershipTiers, setMembershipTiers] = useState(null);
+  const [loadingTiers, setLoadingTiers] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    interests: []
+  });
 
   useEffect(() => {
     // Load Google Fonts
@@ -49,6 +72,148 @@ export default function HomePage() {
       document.body.style.overflow = '';
     }
   }, [isLoginOpen]);
+
+  // Generate Elements content variations
+  const generateElementsContent = async (approach) => {
+    if (elementsContent && elementsContent[approach]) {
+      setElementsApproach(approach);
+      return;
+    }
+    
+    setLoadingElements(true);
+    try {
+      const approachDescriptions = {
+        clinical: 'clinical and scientific, using medical terminology and evidence-based language',
+        holistic: 'wellness-focused and holistic, emphasizing natural healing and mind-body connection',
+        futuristic: 'futuristic and innovative, highlighting cutting-edge technology and bio-advancement'
+      };
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate three descriptive texts for a high-end biological medicine spa's services. Use a ${approachDescriptions[approach]} tone. Each description should be 15-20 words and capture the essence of the treatment.
+
+Services:
+1. Fluid Dynamics (IV & Ozone Therapy) - intravenous treatments and oxygenation therapy
+2. Microbiome Architecture (Gut-Brain Axis) - microbiome restoration and gut health optimization
+3. Mitochondrial Light (Photobiomodulation) - light therapy for cellular energy optimization
+
+Return as JSON with keys: fluidDynamics, microbiomeArchitecture, mitochondrialLight`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            fluidDynamics: { type: "string" },
+            microbiomeArchitecture: { type: "string" },
+            mitochondrialLight: { type: "string" }
+          }
+        }
+      });
+
+      setElementsContent(prev => ({
+        ...prev,
+        [approach]: result
+      }));
+      setElementsApproach(approach);
+    } catch (error) {
+      console.error('Error generating elements content:', error);
+    } finally {
+      setLoadingElements(false);
+    }
+  };
+
+  // Generate concept details with case study
+  const generateConceptDetails = async (concept) => {
+    setSelectedConcept(concept);
+    setLoadingConcept(true);
+    
+    try {
+      const conceptPrompts = {
+        neural: 'Neural Mapping - cognitive function assessment and brain optimization through advanced neurological protocols',
+        nutrition: 'Bio-Nutrition - personalized nutritional therapy based on individual cellular and metabolic needs',
+        environmental: 'Environmental Base - toxic load assessment and environmental detoxification strategies',
+        bluezone: 'Blue Zone Engineering - replicating longevity patterns from Blue Zones in individual biological terrain'
+      };
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate detailed information for a biological medicine concept: ${conceptPrompts[concept]}
+
+Include:
+1. overview: 2-3 sentence overview of the protocol (60-80 words)
+2. methodology: 3-4 bullet points explaining the process
+3. caseStudy: A realistic case study with patient profile (anonymized), initial condition, protocol applied, and outcome (100-120 words)
+4. expectedOutcomes: 3-4 measurable outcomes
+
+Return as JSON.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            overview: { type: "string" },
+            methodology: { type: "array", items: { type: "string" } },
+            caseStudy: { type: "string" },
+            expectedOutcomes: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+
+      setConceptDetails(result);
+    } catch (error) {
+      console.error('Error generating concept details:', error);
+    } finally {
+      setLoadingConcept(false);
+    }
+  };
+
+  // Generate membership tiers based on user input
+  const generateMembershipTiers = async () => {
+    setLoadingTiers(true);
+    
+    try {
+      const interestsText = formData.interests.length > 0 
+        ? `User is interested in: ${formData.interests.join(', ')}`
+        : 'General wellness and longevity';
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate three membership tiers for a high-end biological medicine spa. ${interestsText}
+
+Create tiers: Explorer (entry-level), Sustainer (mid-level), Pioneer (premium).
+
+For each tier include:
+- name, tagline (5-7 words), monthlyPrice (number), annualPrice (number)
+- benefits: array of 4-5 specific benefits
+- idealFor: short description of who this tier suits (20-30 words)
+- accessLevel: brief description of access privileges (15-20 words)
+
+Ensure benefits are progressively more comprehensive. Price ranges: Explorer $300-500/mo, Sustainer $800-1200/mo, Pioneer $2000-3500/mo.
+
+Return as JSON with array called 'tiers'.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            tiers: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  tagline: { type: "string" },
+                  monthlyPrice: { type: "number" },
+                  annualPrice: { type: "number" },
+                  benefits: { type: "array", items: { type: "string" } },
+                  idealFor: { type: "string" },
+                  accessLevel: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      setMembershipTiers(result.tiers);
+      setShowMembershipTiers(true);
+    } catch (error) {
+      console.error('Error generating membership tiers:', error);
+    } finally {
+      setLoadingTiers(false);
+    }
+  };
 
   const addToRefs = (el) => {
     if (el && !revealRefs.current.includes(el)) {
@@ -247,13 +412,14 @@ export default function HomePage() {
 
                 <div className="grid gap-6">
                   {[
-                    { icon: Brain, title: 'Neural Mapping', subtitle: 'Cognitive Resonance', color: 'bronze' },
-                    { icon: Apple, title: 'Bio-Nutrition', subtitle: 'Cellular Fueling', color: 'copper', ml: 'md:ml-8' },
-                    { icon: Home, title: 'Environmental Base', subtitle: 'Toxic Load Elimination', color: 'stone', ml: 'md:ml-16' }
+                    { icon: Brain, title: 'Neural Mapping', subtitle: 'Cognitive Resonance', color: 'bronze', concept: 'neural' },
+                    { icon: Apple, title: 'Bio-Nutrition', subtitle: 'Cellular Fueling', color: 'copper', ml: 'md:ml-8', concept: 'nutrition' },
+                    { icon: Home, title: 'Environmental Base', subtitle: 'Toxic Load Elimination', color: 'stone', ml: 'md:ml-16', concept: 'environmental' }
                   ].map((item, i) => (
-                    <div
+                    <button
                       key={i}
-                      className={`glass-panel p-6 rounded-sm flex items-center gap-6 group hover:bg-white/5 transition-colors duration-500 ${item.ml || ''}`}
+                      onClick={() => generateConceptDetails(item.concept)}
+                      className={`glass-panel p-6 rounded-sm flex items-center gap-6 group hover:bg-white/5 transition-colors duration-500 ${item.ml || ''} cursor-none text-left w-full`}
                       onMouseEnter={() => setIsHovering(true)}
                       onMouseLeave={() => setIsHovering(false)}
                     >
@@ -264,11 +430,12 @@ export default function HomePage() {
                       }`}>
                         <item.icon className="w-6 h-6" />
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <h4 className="font-serif text-lg text-stone-200">{item.title}</h4>
                         <p className="font-mono text-[10px] text-stone-500 uppercase tracking-wide">{item.subtitle}</p>
                       </div>
-                    </div>
+                      <ChevronRight className="w-5 h-5 text-stone-600 group-hover:text-copper-400 transition-colors" />
+                    </button>
                   ))}
                 </div>
               </div>
@@ -294,17 +461,23 @@ export default function HomePage() {
         {/* Blue Zones Data Block */}
         <section ref={addToRefs} className="reveal max-w-7xl mx-auto px-6 mb-32 md:mb-48">
           <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-[600px] border border-stone-800">
-            <div className="relative h-[400px] md:h-full overflow-hidden group">
+            <button
+              onClick={() => generateConceptDetails('bluezone')}
+              className="relative h-[400px] md:h-full overflow-hidden group cursor-none w-full"
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            >
               <div className="absolute inset-0 bg-[#0a1410]/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
               <img
                 src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=2641&auto=format&fit=crop"
                 className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-105"
                 alt="Blue Zone Path"
               />
-              <div className="absolute bottom-8 left-8 z-20">
+              <div className="absolute bottom-8 left-8 z-20 flex items-center gap-3">
                 <span className="font-mono text-[10px] bg-white text-[#0a1410] px-2 py-1 uppercase tracking-widest">Zone 04: Sardinian Highlands</span>
+                <ChevronRight className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-            </div>
+            </button>
 
             <div className="relative bg-[#13241c]/50 backdrop-blur-xl border-l border-stone-800 p-12 flex flex-col justify-center">
               <div className="absolute top-0 right-0 p-4">
@@ -347,8 +520,33 @@ export default function HomePage() {
               <span className="font-mono text-[10px] text-copper-400 tracking-widest uppercase mb-2 block">Offerings</span>
               <h2 className="font-serif text-4xl text-stone-100">The Elements</h2>
             </div>
-            <div className="font-mono text-[10px] text-stone-500 uppercase tracking-widest mt-4 md:mt-0">
-              Restoring Fundamental Harmony
+            <div className="flex items-center gap-4 mt-4 md:mt-0">
+              <span className="font-mono text-[10px] text-stone-500 uppercase tracking-widest hidden lg:block">
+                Perspective:
+              </span>
+              <div className="flex gap-2">
+                {[
+                  { key: 'clinical', label: 'Clinical', icon: '⚕️' },
+                  { key: 'holistic', label: 'Holistic', icon: '🌿' },
+                  { key: 'futuristic', label: 'Futuristic', icon: '🔬' }
+                ].map(approach => (
+                  <button
+                    key={approach.key}
+                    onClick={() => generateElementsContent(approach.key)}
+                    disabled={loadingElements}
+                    className={`px-3 py-1.5 rounded-sm border transition-all duration-300 font-mono text-[9px] uppercase tracking-widest flex items-center gap-2 ${
+                      elementsApproach === approach.key
+                        ? 'border-copper-400 bg-[#5eead4]/10 text-copper-400'
+                        : 'border-white/10 bg-white/5 text-stone-400 hover:border-white/20'
+                    }`}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                  >
+                    <span>{approach.icon}</span>
+                    <span>{approach.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -360,7 +558,8 @@ export default function HomePage() {
                 title: 'Fluid Dynamics',
                 subtitle: 'IV & Ozone Therapy',
                 desc: 'Restoring the internal ocean. Cleansing cellular pathways through hyper-oxygenation.',
-                color: '#5eead4'
+                color: '#5eead4',
+                contentKey: 'fluidDynamics'
               },
               {
                 img: 'https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c543a9e1-f226-4ced-80b0-feb8445a75b9_1600w.jpg',
@@ -368,7 +567,8 @@ export default function HomePage() {
                 title: 'Microbiome Architecture',
                 subtitle: 'Gut-Brain Axis',
                 desc: 'Rebuilding the foundation. Introducing ancestral strains to modern biology.',
-                color: '#d4a373'
+                color: '#d4a373',
+                contentKey: 'microbiomeArchitecture'
               },
               {
                 img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1632&auto=format&fit=crop',
@@ -376,32 +576,36 @@ export default function HomePage() {
                 title: 'Mitochondrial Light',
                 subtitle: 'Photobiomodulation',
                 desc: 'Direct energy transfer. Optimizing ATP production via targeted spectrum exposure.',
-                color: 'rgba(234, 179, 8, 0.8)'
+                color: 'rgba(234, 179, 8, 0.8)',
+                contentKey: 'mitochondrialLight'
               }
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="group relative h-[400px] md:h-full w-full overflow-hidden rounded-sm border border-stone-800"
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-              >
-                <img
-                  src={item.img}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 saturate-50 group-hover:saturate-100"
-                  alt={item.title}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a1410] via-[#0a1410]/40 to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-500" />
-                
-                <div className="absolute bottom-0 left-0 p-8 w-full z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <item.icon className="w-6 h-6 mb-4" style={{ color: item.color }} />
-                  <h3 className="font-serif text-2xl text-stone-100 mb-2">{item.title}</h3>
-                  <p className="font-mono text-[10px] uppercase tracking-widest mb-4" style={{ color: item.color }}>{item.subtitle}</p>
-                  <p className="font-mono text-xs text-stone-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500 border-l border-white/30 pl-3">
-                    {item.desc}
-                  </p>
+            ].map((item, i) => {
+              const displayDesc = elementsContent?.[elementsApproach]?.[item.contentKey] || item.desc;
+              return (
+                <div
+                  key={i}
+                  className="group relative h-[400px] md:h-full w-full overflow-hidden rounded-sm border border-stone-800"
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
+                >
+                  <img
+                    src={item.img}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 saturate-50 group-hover:saturate-100"
+                    alt={item.title}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a1410] via-[#0a1410]/40 to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-500" />
+                  
+                  <div className="absolute bottom-0 left-0 p-8 w-full z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <item.icon className="w-6 h-6 mb-4" style={{ color: item.color }} />
+                    <h3 className="font-serif text-2xl text-stone-100 mb-2">{item.title}</h3>
+                    <p className="font-mono text-[10px] uppercase tracking-widest mb-4" style={{ color: item.color }}>{item.subtitle}</p>
+                    <p className="font-mono text-xs text-stone-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500 border-l border-white/30 pl-3">
+                      {loadingElements ? 'Generating perspective...' : displayDesc}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -524,46 +728,224 @@ export default function HomePage() {
                   Membership is limited by biological capacity. We accept new terrains on a rolling basis following a comprehensive terrain assessment.
                 </p>
 
-                <form className="space-y-6">
-                  <div className="grid grid-cols-2 gap-6">
+                {!showMembershipTiers ? (
+                  <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); generateMembershipTiers(); }}>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-1">
+                        <label className="font-mono text-[9px] text-stone-500 uppercase tracking-widest">First Name</label>
+                        <input
+                          type="text"
+                          value={formData.firstName}
+                          onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                          className="w-full bg-white/5 border border-white/10 rounded-sm px-3 py-2 text-stone-300 text-xs focus:border-[#d4a373] focus:outline-none transition-colors"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-mono text-[9px] text-stone-500 uppercase tracking-widest">Last Name</label>
+                        <input
+                          type="text"
+                          value={formData.lastName}
+                          onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                          className="w-full bg-white/5 border border-white/10 rounded-sm px-3 py-2 text-stone-300 text-xs focus:border-[#d4a373] focus:outline-none transition-colors"
+                          required
+                        />
+                      </div>
+                    </div>
+                    
                     <div className="space-y-1">
-                      <label className="font-mono text-[9px] text-stone-500 uppercase tracking-widest">First Name</label>
+                      <label className="font-mono text-[9px] text-stone-500 uppercase tracking-widest">Signal (Email)</label>
                       <input
-                        type="text"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
                         className="w-full bg-white/5 border border-white/10 rounded-sm px-3 py-2 text-stone-300 text-xs focus:border-[#d4a373] focus:outline-none transition-colors"
+                        required
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="font-mono text-[9px] text-stone-500 uppercase tracking-widest">Last Name</label>
-                      <input
-                        type="text"
-                        className="w-full bg-white/5 border border-white/10 rounded-sm px-3 py-2 text-stone-300 text-xs focus:border-[#d4a373] focus:outline-none transition-colors"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <label className="font-mono text-[9px] text-stone-500 uppercase tracking-widest">Signal (Email)</label>
-                    <input
-                      type="email"
-                      className="w-full bg-white/5 border border-white/10 rounded-sm px-3 py-2 text-stone-300 text-xs focus:border-[#d4a373] focus:outline-none transition-colors"
-                    />
-                  </div>
 
-                  <button
-                    type="button"
-                    className="w-full bg-stone-100 text-[#0a1410] font-mono text-xs uppercase tracking-widest py-3 hover:bg-white transition-colors mt-4"
-                    onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={() => setIsHovering(false)}
-                  >
-                    Request Assessment
-                  </button>
-                </form>
+                    <div className="space-y-2">
+                      <label className="font-mono text-[9px] text-stone-500 uppercase tracking-widest">Areas of Interest</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {['Longevity', 'Performance', 'Recovery', 'Prevention', 'Optimization', 'Detox'].map(interest => (
+                          <button
+                            key={interest}
+                            type="button"
+                            onClick={() => {
+                              setFormData(prev => ({
+                                ...prev,
+                                interests: prev.interests.includes(interest)
+                                  ? prev.interests.filter(i => i !== interest)
+                                  : [...prev.interests, interest]
+                              }));
+                            }}
+                            className={`px-3 py-2 rounded-sm border text-[10px] font-mono uppercase tracking-widest transition-all ${
+                              formData.interests.includes(interest)
+                                ? 'border-[#d4a373] bg-[#d4a373]/10 text-[#d4a373]'
+                                : 'border-white/10 bg-white/5 text-stone-500 hover:border-white/20'
+                            }`}
+                          >
+                            {interest}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loadingTiers}
+                      className="w-full bg-stone-100 text-[#0a1410] font-mono text-xs uppercase tracking-widest py-3 hover:bg-white transition-colors mt-4 flex items-center justify-center gap-2 disabled:opacity-50"
+                      onMouseEnter={() => setIsHovering(true)}
+                      onMouseLeave={() => setIsHovering(false)}
+                    >
+                      {loadingTiers ? (
+                        <>
+                          <Sparkles className="w-4 h-4 animate-pulse" />
+                          Analyzing Terrain...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4" />
+                          Generate Personalized Tiers
+                        </>
+                      )}
+                    </button>
+                  </form>
+                ) : (
+                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                    {membershipTiers?.map((tier, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedTier(tier.name)}
+                        className={`w-full text-left glass-panel p-4 rounded-sm border transition-all duration-300 ${
+                          selectedTier === tier.name
+                            ? 'border-[#d4a373] bg-[#d4a373]/5'
+                            : 'border-white/10 hover:border-white/20'
+                        }`}
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="font-serif text-lg text-stone-100">{tier.name}</h3>
+                            <p className="font-mono text-[9px] text-[#d4a373] uppercase tracking-widest">{tier.tagline}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-serif text-xl text-stone-200">${tier.monthlyPrice}</p>
+                            <p className="font-mono text-[8px] text-stone-500">per month</p>
+                          </div>
+                        </div>
+                        <p className="font-mono text-[10px] text-stone-400 mb-3 pb-3 border-b border-white/5">{tier.idealFor}</p>
+                        <div className="space-y-1.5">
+                          {tier.benefits.slice(0, 3).map((benefit, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <span className="text-[#5eead4] text-xs mt-0.5">→</span>
+                              <p className="font-mono text-[9px] text-stone-300 leading-relaxed">{benefit}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => {
+                        setShowMembershipTiers(false);
+                        setSelectedTier(null);
+                      }}
+                      className="w-full py-2 text-center font-mono text-[9px] text-stone-500 uppercase tracking-widest hover:text-stone-300 transition-colors"
+                    >
+                      ← Back to Form
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Concept Details Modal */}
+      {selectedConcept && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+          style={{ backgroundColor: 'rgba(10, 20, 16, 0.95)' }}
+        >
+          <div className="absolute inset-0 backdrop-blur-2xl" onClick={() => setSelectedConcept(null)} />
+          
+          <div className="relative z-[110] w-full max-w-4xl glass-panel rounded-lg overflow-hidden border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setSelectedConcept(null)}
+              className="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors z-50"
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="p-12">
+              {loadingConcept ? (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <Sparkles className="w-12 h-12 text-copper-400 animate-pulse mb-4" />
+                  <p className="font-mono text-sm text-stone-400 uppercase tracking-widest">Analyzing Protocol...</p>
+                </div>
+              ) : conceptDetails ? (
+                <div className="space-y-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-2 h-2 rounded-full bg-copper-400 animate-pulse" />
+                    <span className="font-mono text-[10px] text-copper-400 uppercase tracking-widest">Protocol Analysis</span>
+                  </div>
+
+                  <div>
+                    <h2 className="font-serif text-3xl text-stone-100 mb-4">Protocol Overview</h2>
+                    <p className="font-mono text-sm text-stone-300 leading-relaxed">{conceptDetails.overview}</p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-mono text-xs text-bronze-400 uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Methodology</h3>
+                    <div className="space-y-3">
+                      {conceptDetails.methodology.map((step, i) => (
+                        <div key={i} className="flex items-start gap-3 glass-panel p-4 rounded-sm">
+                          <span className="font-mono text-copper-400 text-sm">{String(i + 1).padStart(2, '0')}</span>
+                          <p className="font-mono text-xs text-stone-300 leading-relaxed">{step}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="glass-panel p-6 rounded-sm border-l-2 border-copper-400">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Users className="w-4 h-4 text-copper-400" />
+                      <h3 className="font-mono text-xs text-copper-400 uppercase tracking-widest">Case Study</h3>
+                    </div>
+                    <p className="font-mono text-xs text-stone-300 leading-relaxed whitespace-pre-line">{conceptDetails.caseStudy}</p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-mono text-xs text-bronze-400 uppercase tracking-widest mb-4">Expected Outcomes</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {conceptDetails.expectedOutcomes.map((outcome, i) => (
+                        <div key={i} className="flex items-start gap-2 border border-white/5 p-3 rounded-sm">
+                          <span className="text-copper-400 text-sm">✓</span>
+                          <p className="font-mono text-[10px] text-stone-300">{outcome}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setIsLoginOpen(true)}
+                    className="w-full bg-stone-100 text-[#0a1410] font-mono text-xs uppercase tracking-widest py-3 hover:bg-white transition-colors flex items-center justify-center gap-2"
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Begin This Protocol
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
