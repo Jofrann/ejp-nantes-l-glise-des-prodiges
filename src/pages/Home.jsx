@@ -1,6 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { X, Fingerprint, Brain, Apple, Home, Droplets, Sprout, Sun, ScanLine, ArrowRight, Sparkles, ChevronRight, Users } from 'lucide-react';
+import { X, Fingerprint, Brain, Apple, Home, Droplets, Sprout, Sun, ScanLine, ArrowRight, Sparkles, ChevronRight, Users, Map, Microscope, BarChart3, LogIn } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import BiometricDashboard from '../components/BiometricDashboard';
+import ThreeDHero from '../components/ThreeDHero';
+import ThemeSwitcher from '../components/ThemeSwitcher';
+import TerrainAssessment from '../components/TerrainAssessment';
+import MemberDashboard from '../components/MemberDashboard';
+import BlueZoneMap from '../components/BlueZoneMap';
+import LabAssistant from '../components/LabAssistant';
+import ScanEffect from '../components/ScanEffect';
 
 export default function HomePage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -29,6 +38,16 @@ export default function HomePage() {
     email: '',
     interests: []
   });
+
+  // New feature states
+  const [theme, setTheme] = useState('elemental');
+  const [showAssessment, setShowAssessment] = useState(false);
+  const [showBiometrics, setShowBiometrics] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [isMemberLoggedIn, setIsMemberLoggedIn] = useState(false);
+  const [currentSection, setCurrentSection] = useState('hero');
+
+  const { scrollY } = useScroll();
 
   useEffect(() => {
     // Load Google Fonts
@@ -77,6 +96,43 @@ export default function HomePage() {
   useEffect(() => {
     generateElementsContent('clinical');
   }, []);
+
+  // Track current section for Lab Assistant
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['hero', 'terrain', 'elements', 'bluezone'];
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setCurrentSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Apply theme
+  useEffect(() => {
+    const root = document.documentElement;
+    const themeColors = {
+      clinical: { bg: '#f8fafc', text: '#1e293b', primary: '#0ea5e9' },
+      elemental: { bg: '#0a1410', text: '#d6d3d1', primary: '#5eead4' },
+      futuristic: { bg: '#000000', text: '#ffffff', primary: '#00ffff' }
+    };
+
+    const colors = themeColors[theme];
+    root.style.setProperty('--theme-bg', colors.bg);
+    root.style.setProperty('--theme-text', colors.text);
+    root.style.setProperty('--theme-primary', colors.primary);
+  }, [theme]);
 
   // Generate Elements content variations
   const generateElementsContent = async (approach) => {
@@ -232,6 +288,17 @@ Return as JSON with array called 'tiers'.`,
     try {
       const tierData = membershipTiers.find(t => t.name === selectedTier);
       
+      // Save to database
+      await base44.entities.MembershipApplication.create({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        interests: formData.interests,
+        selectedTier: selectedTier,
+        tierDetails: tierData,
+        status: 'pending'
+      });
+
       // Send confirmation email
       await base44.integrations.Core.SendEmail({
         to: formData.email,
@@ -267,6 +334,12 @@ Centre for Biological Medicine Team`
     } finally {
       setLoadingTiers(false);
     }
+  };
+
+  // Mock member login
+  const handleMemberLogin = () => {
+    setIsMemberLoggedIn(true);
+    setIsLoginOpen(false);
   };
 
   const addToRefs = (el) => {
@@ -399,8 +472,59 @@ Centre for Biological Medicine Team`
         </div>
       </nav>
 
+      {/* Theme Switcher */}
+      <ThemeSwitcher currentTheme={theme} onThemeChange={setTheme} isHovering={isHovering} setIsHovering={setIsHovering} />
+
+      {/* Lab Assistant */}
+      <LabAssistant currentSection={currentSection} setIsHovering={setIsHovering} />
+
+      {/* Quick Access Menu */}
+      <div className="fixed top-1/2 left-8 -translate-y-1/2 z-40 flex flex-col gap-4">
+        <button
+          onClick={() => setShowBiometrics(!showBiometrics)}
+          className="glass-panel p-3 rounded-full hover:scale-110 transition-transform group"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          title="Biometric Dashboard"
+        >
+          <BarChart3 className="w-5 h-5 text-copper-400" />
+        </button>
+        
+        <button
+          onClick={() => setShowAssessment(true)}
+          className="glass-panel p-3 rounded-full hover:scale-110 transition-transform group"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          title="Terrain Assessment"
+        >
+          <Microscope className="w-5 h-5 text-copper-400" />
+        </button>
+
+        <button
+          onClick={() => setShowMap(!showMap)}
+          className="glass-panel p-3 rounded-full hover:scale-110 transition-transform group"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          title="Blue Zone Map"
+        >
+          <Map className="w-5 h-5 text-copper-400" />
+        </button>
+
+        {isMemberLoggedIn && (
+          <button
+            onClick={() => setIsLoginOpen(true)}
+            className="glass-panel p-3 rounded-full hover:scale-110 transition-transform group"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            title="Member Dashboard"
+          >
+            <LogIn className="w-5 h-5 text-green-400" />
+          </button>
+        )}
+      </div>
+
       {/* Hero Section */}
-      <header className="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center">
+      <header id="hero" className="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[#0a1410]/40 z-10" />
           <img
@@ -408,6 +532,7 @@ Centre for Biological Medicine Team`
             alt="Glass House in Forest"
             className="w-full h-full object-cover animate-pan opacity-80"
           />
+          <ThreeDHero />
         </div>
 
         <div ref={addToRefs} className="relative z-20 text-center px-6 reveal active">
@@ -434,8 +559,32 @@ Centre for Biological Medicine Team`
       </header>
 
       <main>
+        {/* Biometric Dashboard Overlay */}
+        {showBiometrics && (
+          <motion.div
+            initial={{ opacity: 0, x: -300 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -300 }}
+            className="fixed left-8 top-32 z-40 w-[450px]"
+          >
+            <BiometricDashboard approach={elementsApproach} />
+          </motion.div>
+        )}
+
+        {/* Blue Zone Map Overlay */}
+        {showMap && (
+          <motion.div
+            initial={{ opacity: 0, y: 300 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 300 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 w-[600px]"
+          >
+            <BlueZoneMap />
+          </motion.div>
+        )}
+
         {/* Digital Terrain Section */}
-        <section className="relative py-32 md:py-48 overflow-hidden">
+        <section id="terrain" className="relative py-32 md:py-48 overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
               src="https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=2664&auto=format&fit=crop"
@@ -470,26 +619,30 @@ Centre for Biological Medicine Team`
                     { icon: Apple, title: 'Bio-Nutrition', subtitle: 'Cellular Fueling', color: 'copper', ml: 'md:ml-8', concept: 'nutrition' },
                     { icon: Home, title: 'Environmental Base', subtitle: 'Toxic Load Elimination', color: 'stone', ml: 'md:ml-16', concept: 'environmental' }
                   ].map((item, i) => (
-                    <button
-                      key={i}
-                      onClick={() => generateConceptDetails(item.concept)}
-                      className={`glass-panel p-6 rounded-sm flex items-center gap-6 group hover:bg-white/5 transition-colors duration-500 ${item.ml || ''} cursor-none text-left w-full`}
-                      onMouseEnter={() => setIsHovering(true)}
-                      onMouseLeave={() => setIsHovering(false)}
-                    >
-                      <div className={`w-12 h-12 flex items-center justify-center border rounded-full ${
-                        item.color === 'bronze' ? 'border-[#d4a373]/30 text-[#d4a373] bg-[#b08968]/10' :
-                        item.color === 'copper' ? 'border-[#5eead4]/30 text-[#5eead4] bg-[#2dd4bf]/10' :
-                        'border-stone-400/30 text-stone-300 bg-stone-500/10'
-                      }`}>
-                        <item.icon className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-serif text-lg text-stone-200">{item.title}</h4>
-                        <p className="font-mono text-[10px] text-stone-500 uppercase tracking-wide">{item.subtitle}</p>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-stone-600 group-hover:text-copper-400 transition-colors" />
-                    </button>
+                    <ScanEffect key={i}>
+                      <motion.button
+                        initial={{ opacity: 0, x: -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.2 }}
+                        onClick={() => generateConceptDetails(item.concept)}
+                        className={`glass-panel p-6 rounded-sm flex items-center gap-6 group hover:bg-white/5 transition-colors duration-500 ${item.ml || ''} cursor-none text-left w-full`}
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                      >
+                        <div className={`w-12 h-12 flex items-center justify-center border rounded-full ${
+                          item.color === 'bronze' ? 'border-[#d4a373]/30 text-[#d4a373] bg-[#b08968]/10' :
+                          item.color === 'copper' ? 'border-[#5eead4]/30 text-[#5eead4] bg-[#2dd4bf]/10' :
+                          'border-stone-400/30 text-stone-300 bg-stone-500/10'
+                        }`}>
+                          <item.icon className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-serif text-lg text-stone-200">{item.title}</h4>
+                          <p className="font-mono text-[10px] text-stone-500 uppercase tracking-wide">{item.subtitle}</p>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-stone-600 group-hover:text-copper-400 transition-colors" />
+                      </motion.button>
+                    </ScanEffect>
                   ))}
                 </div>
               </div>
@@ -513,7 +666,7 @@ Centre for Biological Medicine Team`
         </section>
 
         {/* Blue Zones Data Block */}
-        <section ref={addToRefs} className="reveal max-w-7xl mx-auto px-6 mb-32 md:mb-48">
+        <section id="bluezone" ref={addToRefs} className="reveal max-w-7xl mx-auto px-6 mb-32 md:mb-48">
           <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-[600px] border border-stone-800">
             <button
               onClick={() => generateConceptDetails('bluezone')}
@@ -568,7 +721,7 @@ Centre for Biological Medicine Team`
         </section>
 
         {/* The Elements Section */}
-        <section ref={addToRefs} className="reveal max-w-7xl mx-auto px-6 mb-32 pb-24">
+        <section id="elements" ref={addToRefs} className="reveal max-w-7xl mx-auto px-6 mb-32 pb-24">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-6">
             <div>
               <span className="font-mono text-[10px] text-copper-400 tracking-widest uppercase mb-2 block">Offerings</span>
@@ -724,7 +877,7 @@ Centre for Biological Medicine Team`
                 <h2 className="font-serif text-3xl text-stone-100 mb-2">Member Terminal</h2>
                 <p className="font-mono text-xs text-stone-500 mb-12">Enter biometric credentials to access your protocol.</p>
                 
-                <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); alert('Member login feature coming soon. For now, use the membership application on the right.'); }}>
+                <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); handleMemberLogin(); }}>
                   <div className="group relative">
                     <label className="absolute -top-3 left-0 font-mono text-[9px] text-stone-500 uppercase tracking-widest">Identifier</label>
                     <input
@@ -763,7 +916,7 @@ Centre for Biological Medicine Team`
               </div>
             </div>
 
-            {/* Right: Request Membership */}
+            {/* Right: Request Membership or Member Dashboard */}
             <div className="p-12 lg:p-16 flex flex-col justify-center relative overflow-hidden">
               <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
                 <svg width="100%" height="100%">
@@ -775,11 +928,15 @@ Centre for Biological Medicine Team`
               </div>
 
               <div className="relative z-10">
-                <div className="mb-10 inline-block px-3 py-1 rounded-full border border-[#d4a373]/30 bg-[#b08968]/5">
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-bronze-400">Waitlist Open</span>
-                </div>
+                {isMemberLoggedIn ? (
+                  <MemberDashboard memberData={{ bioId: '994-AZ' }} />
+                ) : (
+                  <>
+                    <div className="mb-10 inline-block px-3 py-1 rounded-full border border-[#d4a373]/30 bg-[#b08968]/5">
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-bronze-400">Waitlist Open</span>
+                    </div>
 
-                <h2 className="font-serif text-3xl text-stone-100 mb-6">Initiate Protocol</h2>
+                    <h2 className="font-serif text-3xl text-stone-100 mb-6">Initiate Protocol</h2>
                 <p className="font-mono text-xs leading-relaxed text-stone-400 mb-10 border-l border-white/20 pl-4">
                   Membership is limited by biological capacity. We accept new terrains on a rolling basis following a comprehensive terrain assessment.
                 </p>
@@ -935,6 +1092,8 @@ Centre for Biological Medicine Team`
                     </div>
                   </div>
                 )}
+                </>
+                )}
               </div>
             </div>
           </div>
@@ -1023,6 +1182,41 @@ Centre for Biological Medicine Team`
                   </button>
                 </div>
               ) : null}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Terrain Assessment Modal */}
+      {showAssessment && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6" style={{ backgroundColor: 'rgba(10, 20, 16, 0.95)' }}>
+          <div className="absolute inset-0 backdrop-blur-2xl" onClick={() => setShowAssessment(false)} />
+          
+          <div className="relative z-[110] w-full max-w-3xl glass-panel rounded-lg overflow-hidden border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowAssessment(false)}
+              className="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors z-50"
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="p-12">
+              <div className="flex items-center gap-3 mb-8">
+                <Microscope className="w-8 h-8 text-copper-400" />
+                <div>
+                  <h2 className="font-serif text-3xl text-stone-100">Terrain Assessment</h2>
+                  <p className="font-mono text-xs text-stone-500 mt-1">AI-Powered Biological Analysis</p>
+                </div>
+              </div>
+              
+              <TerrainAssessment
+                onComplete={(results) => {
+                  console.log('Assessment complete:', results);
+                }}
+                setIsHovering={setIsHovering}
+              />
             </div>
           </div>
         </div>
