@@ -73,6 +73,11 @@ export default function HomePage() {
     }
   }, [isLoginOpen]);
 
+  // Load default elements content on mount
+  useEffect(() => {
+    generateElementsContent('clinical');
+  }, []);
+
   // Generate Elements content variations
   const generateElementsContent = async (approach) => {
     if (elementsContent && elementsContent[approach]) {
@@ -210,6 +215,55 @@ Return as JSON with array called 'tiers'.`,
       setShowMembershipTiers(true);
     } catch (error) {
       console.error('Error generating membership tiers:', error);
+      alert('Unable to generate tiers. Please try again.');
+    } finally {
+      setLoadingTiers(false);
+    }
+  };
+
+  // Handle membership application submission
+  const submitMembershipApplication = async () => {
+    if (!selectedTier) {
+      alert('Please select a membership tier');
+      return;
+    }
+
+    setLoadingTiers(true);
+    try {
+      const tierData = membershipTiers.find(t => t.name === selectedTier);
+      
+      // Send confirmation email
+      await base44.integrations.Core.SendEmail({
+        to: formData.email,
+        subject: 'Membership Application Received - Centre for Biological Medicine',
+        body: `Dear ${formData.firstName} ${formData.lastName},
+
+Thank you for your interest in our ${selectedTier} membership tier.
+
+Selected Tier: ${selectedTier}
+${tierData.tagline}
+Monthly Investment: $${tierData.monthlyPrice}
+
+Your interests: ${formData.interests.join(', ') || 'General wellness'}
+
+We will review your application and contact you within 48 hours to schedule your comprehensive terrain assessment.
+
+Best regards,
+Centre for Biological Medicine Team`
+      });
+
+      // Close modal and show success
+      setIsLoginOpen(false);
+      alert(`✓ Application Received!\n\nThank you for applying to the ${selectedTier} tier. Check your email (${formData.email}) for confirmation.`);
+      
+      // Reset form
+      setFormData({ firstName: '', lastName: '', email: '', interests: [] });
+      setShowMembershipTiers(false);
+      setSelectedTier(null);
+      setMembershipTiers(null);
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('Unable to submit application. Please try again.');
     } finally {
       setLoadingTiers(false);
     }
@@ -313,9 +367,9 @@ Return as JSON with array called 'tiers'.`,
         </div>
         
         <div className="hidden md:flex gap-8 font-mono text-xs tracking-widest uppercase absolute left-1/2 -translate-x-1/2 mix-blend-difference z-50">
-          <a href="#" className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>The Protocol</a>
-          <a href="#" className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>The Terrain</a>
-          <a href="#" className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>Locations</a>
+          <button onClick={() => window.scrollTo({ top: document.querySelector('main').offsetTop, behavior: 'smooth' })} className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>The Protocol</button>
+          <button onClick={() => window.scrollTo({ top: document.querySelector('main').offsetTop, behavior: 'smooth' })} className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>The Terrain</button>
+          <button onClick={() => setIsLoginOpen(true)} className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>Membership</button>
         </div>
 
         <div className="flex items-center gap-6 z-50">
@@ -619,9 +673,9 @@ Return as JSON with array called 'tiers'.`,
               </div>
               
               <div className="flex gap-8 font-mono text-[10px] uppercase tracking-widest text-stone-400">
-                <a href="#" className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>Manifesto</a>
-                <a href="#" className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>Apply for Membership</a>
-                <a href="#" className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>Contact</a>
+                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>Manifesto</button>
+                <button onClick={() => setIsLoginOpen(true)} className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>Apply for Membership</button>
+                <button onClick={() => alert('Contact us at: contact@biologicalmedicine.com')} className="hover:text-copper-400 transition-colors" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>Contact</button>
               </div>
             </div>
             <div className="mt-12 flex justify-between items-end border-t border-white/5 pt-8 font-mono text-[9px] text-stone-600 uppercase">
@@ -670,13 +724,14 @@ Return as JSON with array called 'tiers'.`,
                 <h2 className="font-serif text-3xl text-stone-100 mb-2">Member Terminal</h2>
                 <p className="font-mono text-xs text-stone-500 mb-12">Enter biometric credentials to access your protocol.</p>
                 
-                <form className="space-y-8">
+                <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); alert('Member login feature coming soon. For now, use the membership application on the right.'); }}>
                   <div className="group relative">
                     <label className="absolute -top-3 left-0 font-mono text-[9px] text-stone-500 uppercase tracking-widest">Identifier</label>
                     <input
                       type="text"
                       className="block w-full bg-transparent border-b border-white/20 py-3 text-stone-200 focus:outline-none focus:border-[#5eead4] transition-colors font-mono text-sm placeholder-stone-700"
                       placeholder="BIO-ID (e.g. 994-AZ)"
+                      required
                     />
                   </div>
                   
@@ -686,11 +741,12 @@ Return as JSON with array called 'tiers'.`,
                       type="password"
                       className="block w-full bg-transparent border-b border-white/20 py-3 text-stone-200 focus:outline-none focus:border-[#5eead4] transition-colors font-mono text-sm placeholder-stone-700"
                       placeholder="••••••••••"
+                      required
                     />
                   </div>
 
                   <button
-                    type="button"
+                    type="submit"
                     className="mt-8 w-full group flex items-center justify-between bg-stone-100/5 hover:bg-stone-100/10 border border-white/10 rounded-sm px-6 py-4 transition-all duration-300"
                     onMouseEnter={() => setIsHovering(true)}
                     onMouseLeave={() => setIsHovering(false)}
@@ -812,49 +868,71 @@ Return as JSON with array called 'tiers'.`,
                     </button>
                   </form>
                 ) : (
-                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-                    {membershipTiers?.map((tier, idx) => (
+                  <div className="space-y-4">
+                    <div className="max-h-[300px] overflow-y-auto pr-2 space-y-3">
+                      {membershipTiers?.map((tier, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setSelectedTier(selectedTier === tier.name ? null : tier.name)}
+                          className={`w-full text-left glass-panel p-4 rounded-sm border transition-all duration-300 ${
+                            selectedTier === tier.name
+                              ? 'border-[#d4a373] bg-[#d4a373]/5'
+                              : 'border-white/10 hover:border-white/20'
+                          }`}
+                          onMouseEnter={() => setIsHovering(true)}
+                          onMouseLeave={() => setIsHovering(false)}
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h3 className="font-serif text-lg text-stone-100">{tier.name}</h3>
+                              <p className="font-mono text-[9px] text-[#d4a373] uppercase tracking-widest">{tier.tagline}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-serif text-xl text-stone-200">${tier.monthlyPrice}</p>
+                              <p className="font-mono text-[8px] text-stone-500">per month</p>
+                            </div>
+                          </div>
+                          <p className="font-mono text-[10px] text-stone-400 mb-3 pb-3 border-b border-white/5">{tier.idealFor}</p>
+                          <div className="space-y-1.5">
+                            {tier.benefits.slice(0, selectedTier === tier.name ? tier.benefits.length : 3).map((benefit, i) => (
+                              <div key={i} className="flex items-start gap-2">
+                                <span className="text-[#5eead4] text-xs mt-0.5">→</span>
+                                <p className="font-mono text-[9px] text-stone-300 leading-relaxed">{benefit}</p>
+                              </div>
+                            ))}
+                          </div>
+                          {selectedTier === tier.name && (
+                            <div className="mt-3 pt-3 border-t border-white/10">
+                              <p className="font-mono text-[9px] text-stone-400 leading-relaxed">{tier.accessLevel}</p>
+                              <p className="font-mono text-[10px] text-stone-500 mt-2">Annual: ${tier.annualPrice} (save ${(tier.monthlyPrice * 12 - tier.annualPrice).toFixed(0)})</p>
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                    
+                    <div className="flex gap-3 pt-4 border-t border-white/10">
                       <button
-                        key={idx}
-                        onClick={() => setSelectedTier(tier.name)}
-                        className={`w-full text-left glass-panel p-4 rounded-sm border transition-all duration-300 ${
-                          selectedTier === tier.name
-                            ? 'border-[#d4a373] bg-[#d4a373]/5'
-                            : 'border-white/10 hover:border-white/20'
-                        }`}
+                        onClick={() => {
+                          setShowMembershipTiers(false);
+                          setSelectedTier(null);
+                        }}
+                        className="flex-1 py-2 text-center font-mono text-[9px] text-stone-500 uppercase tracking-widest hover:text-stone-300 transition-colors border border-white/10 rounded-sm"
                         onMouseEnter={() => setIsHovering(true)}
                         onMouseLeave={() => setIsHovering(false)}
                       >
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <h3 className="font-serif text-lg text-stone-100">{tier.name}</h3>
-                            <p className="font-mono text-[9px] text-[#d4a373] uppercase tracking-widest">{tier.tagline}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-serif text-xl text-stone-200">${tier.monthlyPrice}</p>
-                            <p className="font-mono text-[8px] text-stone-500">per month</p>
-                          </div>
-                        </div>
-                        <p className="font-mono text-[10px] text-stone-400 mb-3 pb-3 border-b border-white/5">{tier.idealFor}</p>
-                        <div className="space-y-1.5">
-                          {tier.benefits.slice(0, 3).map((benefit, i) => (
-                            <div key={i} className="flex items-start gap-2">
-                              <span className="text-[#5eead4] text-xs mt-0.5">→</span>
-                              <p className="font-mono text-[9px] text-stone-300 leading-relaxed">{benefit}</p>
-                            </div>
-                          ))}
-                        </div>
+                        ← Back
                       </button>
-                    ))}
-                    <button
-                      onClick={() => {
-                        setShowMembershipTiers(false);
-                        setSelectedTier(null);
-                      }}
-                      className="w-full py-2 text-center font-mono text-[9px] text-stone-500 uppercase tracking-widest hover:text-stone-300 transition-colors"
-                    >
-                      ← Back to Form
-                    </button>
+                      <button
+                        onClick={submitMembershipApplication}
+                        disabled={!selectedTier || loadingTiers}
+                        className="flex-1 bg-stone-100 text-[#0a1410] font-mono text-xs uppercase tracking-widest py-2 hover:bg-white transition-colors rounded-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                      >
+                        {loadingTiers ? 'Submitting...' : 'Submit Application'}
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -932,7 +1010,10 @@ Return as JSON with array called 'tiers'.`,
                   </div>
 
                   <button
-                    onClick={() => setIsLoginOpen(true)}
+                    onClick={() => {
+                      setSelectedConcept(null);
+                      setIsLoginOpen(true);
+                    }}
                     className="w-full bg-stone-100 text-[#0a1410] font-mono text-xs uppercase tracking-widest py-3 hover:bg-white transition-colors flex items-center justify-center gap-2"
                     onMouseEnter={() => setIsHovering(true)}
                     onMouseLeave={() => setIsHovering(false)}
