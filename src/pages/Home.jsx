@@ -10,6 +10,8 @@ import MemberDashboard from '../components/MemberDashboard';
 import BlueZoneMap from '../components/BlueZoneMap';
 import LabAssistant from '../components/LabAssistant';
 import ScanEffect from '../components/ScanEffect';
+import Testimonials from '../components/Testimonials';
+import ProtocolJourney from '../components/ProtocolJourney';
 
 export default function HomePage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -46,6 +48,8 @@ export default function HomePage() {
   const [showMap, setShowMap] = useState(false);
   const [isMemberLoggedIn, setIsMemberLoggedIn] = useState(false);
   const [currentSection, setCurrentSection] = useState('hero');
+  const [selectedProtocolJourney, setSelectedProtocolJourney] = useState(null);
+  const [assessmentResults, setAssessmentResults] = useState(null);
 
   const { scrollY } = useScroll();
 
@@ -624,7 +628,10 @@ Centre for Biological Medicine Team`
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.2 }}
-                        onClick={() => generateConceptDetails(item.concept)}
+                        onClick={() => {
+                          generateConceptDetails(item.concept);
+                          setSelectedProtocolJourney({ name: item.title, concept: item.concept });
+                        }}
                         className={`glass-panel p-6 rounded-sm flex items-center gap-6 group hover:bg-white/5 transition-colors duration-500 ${item.ml || ''} cursor-none text-left w-full`}
                         onMouseEnter={() => setIsHovering(true)}
                         onMouseLeave={() => setIsHovering(false)}
@@ -718,6 +725,15 @@ Centre for Biological Medicine Team`
               <div className="absolute inset-0 pointer-events-none opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '100% 40px' }} />
             </div>
           </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="max-w-7xl mx-auto px-6 mb-32">
+          <div className="mb-8">
+            <span className="font-mono text-[10px] text-copper-400 tracking-widest uppercase mb-2 block">Member Experiences</span>
+            <h2 className="font-serif text-4xl text-stone-100">Transformation Stories</h2>
+          </div>
+          <Testimonials approach={elementsApproach} />
         </section>
 
         {/* The Elements Section */}
@@ -929,7 +945,10 @@ Centre for Biological Medicine Team`
 
               <div className="relative z-10">
                 {isMemberLoggedIn ? (
-                  <MemberDashboard memberData={{ bioId: '994-AZ' }} />
+                  <MemberDashboard 
+                    memberData={{ bioId: '994-AZ' }} 
+                    recommendedProtocols={assessmentResults?.recommendedProtocols || []}
+                  />
                 ) : (
                   <>
                     <div className="mb-10 inline-block px-3 py-1 rounded-full border border-[#d4a373]/30 bg-[#b08968]/5">
@@ -1168,18 +1187,34 @@ Centre for Biological Medicine Team`
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => {
-                      setSelectedConcept(null);
-                      setIsLoginOpen(true);
-                    }}
-                    className="w-full bg-stone-100 text-[#0a1410] font-mono text-xs uppercase tracking-widest py-3 hover:bg-white transition-colors flex items-center justify-center gap-2"
-                    onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={() => setIsHovering(false)}
-                  >
-                    <Sparkles className="w-4 h-4" />
-                    Begin This Protocol
-                  </button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      onClick={() => {
+                        const protocolName = selectedConcept === 'neural' ? 'Neural Mapping' :
+                                            selectedConcept === 'nutrition' ? 'Bio-Nutrition' :
+                                            selectedConcept === 'environmental' ? 'Environmental Base' :
+                                            'Blue Zone Engineering';
+                        setSelectedProtocolJourney({ name: protocolName, concept: selectedConcept });
+                      }}
+                      className="bg-white/5 border border-white/10 text-stone-300 font-mono text-xs uppercase tracking-widest py-3 hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+                      onMouseEnter={() => setIsHovering(true)}
+                      onMouseLeave={() => setIsHovering(false)}
+                    >
+                      View Journey
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedConcept(null);
+                        setIsLoginOpen(true);
+                      }}
+                      className="bg-stone-100 text-[#0a1410] font-mono text-xs uppercase tracking-widest py-3 hover:bg-white transition-colors flex items-center justify-center gap-2"
+                      onMouseEnter={() => setIsHovering(true)}
+                      onMouseLeave={() => setIsHovering(false)}
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      Begin Protocol
+                    </button>
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -1213,9 +1248,38 @@ Centre for Biological Medicine Team`
               
               <TerrainAssessment
                 onComplete={(results) => {
-                  console.log('Assessment complete:', results);
+                  setAssessmentResults(results);
+                  setShowAssessment(false);
+                  setTimeout(() => {
+                    alert('✓ Assessment Complete! View your recommended protocols in the Member Dashboard.');
+                  }, 500);
                 }}
                 setIsHovering={setIsHovering}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Protocol Journey Modal */}
+      {selectedProtocolJourney && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6" style={{ backgroundColor: 'rgba(10, 20, 16, 0.95)' }}>
+          <div className="absolute inset-0 backdrop-blur-2xl" onClick={() => setSelectedProtocolJourney(null)} />
+          
+          <div className="relative z-[110] w-full max-w-4xl glass-panel rounded-lg overflow-hidden border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setSelectedProtocolJourney(null)}
+              className="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors z-50"
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="p-12">
+              <ProtocolJourney 
+                protocol={selectedProtocolJourney}
+                onClose={() => setSelectedProtocolJourney(null)}
               />
             </div>
           </div>

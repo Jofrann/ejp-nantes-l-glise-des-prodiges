@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Calendar as CalendarIcon, TrendingUp, Target, Activity } from 'lucide-react';
+import { Calendar as CalendarIcon, TrendingUp, Target, Activity, ChevronRight } from 'lucide-react';
+import ProtocolTracker from './ProtocolTracker';
 
-export default function MemberDashboard({ memberData }) {
+export default function MemberDashboard({ memberData, recommendedProtocols = [] }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [activeProtocol, setActiveProtocol] = useState(null);
 
   const protocols = [
     { name: 'IV Therapy', time: '09:00', status: 'completed', date: '2025-01-15' },
@@ -16,6 +18,27 @@ export default function MemberDashboard({ memberData }) {
     hydration: 92,
     overall: 89
   };
+
+  // Default protocols if none provided
+  const protocolsToTrack = recommendedProtocols.length > 0 ? recommendedProtocols : [
+    { name: 'Neural Mapping', status: 'active' },
+    { name: 'IV Therapy', status: 'scheduled' },
+    { name: 'Microbiome Optimization', status: 'recommended' }
+  ];
+
+  if (activeProtocol) {
+    return (
+      <div className="space-y-4">
+        <button
+          onClick={() => setActiveProtocol(null)}
+          className="font-mono text-xs text-stone-400 hover:text-copper-400 transition-colors flex items-center gap-2"
+        >
+          ← Back to Dashboard
+        </button>
+        <ProtocolTracker protocol={activeProtocol} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -127,6 +150,25 @@ export default function MemberDashboard({ memberData }) {
                 <div className="font-mono text-[10px] text-stone-500 mt-1">3 days ago</div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="glass-panel p-6 rounded-sm">
+          <h3 className="font-mono text-xs text-bronze-400 uppercase tracking-widest mb-4">Protocol Tracking</h3>
+          <div className="space-y-3">
+            {protocolsToTrack.map((protocol, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveProtocol(protocol)}
+                className="w-full flex items-center justify-between p-3 border border-white/10 rounded-sm hover:border-copper-400/30 hover:bg-white/5 transition-all text-left"
+              >
+                <div>
+                  <div className="font-mono text-sm text-stone-200">{protocol.name}</div>
+                  <div className="font-mono text-[10px] text-stone-500 mt-1 capitalize">{protocol.status}</div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-stone-600" />
+              </button>
+            ))}
           </div>
         </div>
       </div>
