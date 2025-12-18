@@ -12,6 +12,9 @@ import LabAssistant from '../components/LabAssistant';
 import ScanEffect from '../components/ScanEffect';
 import Testimonials from '../components/Testimonials';
 import ProtocolJourney from '../components/ProtocolJourney';
+import GlobalImpactCounter from '../components/GlobalImpactCounter';
+import ScrollProgress from '../components/ScrollProgress';
+import MicroInteraction from '../components/MicroInteraction';
 
 export default function HomePage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -437,6 +440,9 @@ Centre for Biological Medicine Team`
       {/* Noise Overlay */}
       <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.03] noise-overlay mix-blend-overlay" />
 
+      {/* Scroll Progress */}
+      <ScrollProgress />
+
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-40 px-8 py-6 flex justify-between items-center" style={{ color: '#e7e5e4' }}>
         <div className="font-mono text-xs tracking-widest uppercase mix-blend-difference z-50 relative">
@@ -484,46 +490,54 @@ Centre for Biological Medicine Team`
 
       {/* Quick Access Menu */}
       <div className="fixed top-1/2 left-8 -translate-y-1/2 z-40 flex flex-col gap-4">
-        <button
-          onClick={() => setShowBiometrics(!showBiometrics)}
-          className="glass-panel p-3 rounded-full hover:scale-110 transition-transform group"
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          title="Biometric Dashboard"
-        >
-          <BarChart3 className="w-5 h-5 text-copper-400" />
-        </button>
-        
-        <button
-          onClick={() => setShowAssessment(true)}
-          className="glass-panel p-3 rounded-full hover:scale-110 transition-transform group"
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          title="Terrain Assessment"
-        >
-          <Microscope className="w-5 h-5 text-copper-400" />
-        </button>
-
-        <button
-          onClick={() => setShowMap(!showMap)}
-          className="glass-panel p-3 rounded-full hover:scale-110 transition-transform group"
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          title="Blue Zone Map"
-        >
-          <Map className="w-5 h-5 text-copper-400" />
-        </button>
-
-        {isMemberLoggedIn && (
+        <MicroInteraction type="glow">
           <button
-            onClick={() => setIsLoginOpen(true)}
-            className="glass-panel p-3 rounded-full hover:scale-110 transition-transform group"
+            onClick={() => setShowBiometrics(!showBiometrics)}
+            className="glass-panel p-3 rounded-full transition-all group"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
-            title="Member Dashboard"
+            title="Biometric Dashboard"
           >
-            <LogIn className="w-5 h-5 text-green-400" />
+            <BarChart3 className="w-5 h-5 text-copper-400 group-hover:animate-pulse" />
           </button>
+        </MicroInteraction>
+        
+        <MicroInteraction type="glow">
+          <button
+            onClick={() => setShowAssessment(true)}
+            className="glass-panel p-3 rounded-full transition-all group"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            title="Terrain Assessment"
+          >
+            <Microscope className="w-5 h-5 text-copper-400 group-hover:animate-pulse" />
+          </button>
+        </MicroInteraction>
+
+        <MicroInteraction type="glow">
+          <button
+            onClick={() => setShowMap(!showMap)}
+            className="glass-panel p-3 rounded-full transition-all group"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            title="Blue Zone Map"
+          >
+            <Map className="w-5 h-5 text-copper-400 group-hover:animate-pulse" />
+          </button>
+        </MicroInteraction>
+
+        {isMemberLoggedIn && (
+          <MicroInteraction type="glow">
+            <button
+              onClick={() => setIsLoginOpen(true)}
+              className="glass-panel p-3 rounded-full transition-all group"
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+              title="Member Dashboard"
+            >
+              <LogIn className="w-5 h-5 text-green-400 group-hover:animate-pulse" />
+            </button>
+          </MicroInteraction>
         )}
       </div>
 
@@ -727,6 +741,9 @@ Centre for Biological Medicine Team`
           </div>
         </section>
 
+        {/* Global Impact Counter */}
+        <GlobalImpactCounter />
+
         {/* Testimonials Section */}
         <section className="max-w-7xl mx-auto px-6 mb-32">
           <div className="mb-8">
@@ -805,12 +822,12 @@ Centre for Biological Medicine Team`
             ].map((item, i) => {
               const displayDesc = elementsContent?.[elementsApproach]?.[item.contentKey] || item.desc;
               return (
-                <div
-                  key={i}
-                  className="group relative h-[400px] md:h-full w-full overflow-hidden rounded-sm border border-stone-800"
-                  onMouseEnter={() => setIsHovering(true)}
-                  onMouseLeave={() => setIsHovering(false)}
-                >
+                <MicroInteraction key={i} type="lift">
+                  <div
+                    className="group relative h-[400px] md:h-full w-full overflow-hidden rounded-sm border border-stone-800"
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                  >
                   <img
                     src={item.img}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 saturate-50 group-hover:saturate-100"
@@ -825,10 +842,11 @@ Centre for Biological Medicine Team`
                     <p className="font-mono text-xs text-stone-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500 border-l border-white/30 pl-3">
                       {loadingElements ? 'Generating perspective...' : displayDesc}
                     </p>
-                  </div>
-                </div>
-              );
-            })}
+                    </div>
+                    </div>
+                    </MicroInteraction>
+                    );
+                    })}
           </div>
         </section>
 

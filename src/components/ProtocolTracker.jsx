@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, TrendingUp, Calendar, MessageSquare, Sparkles, Check } from 'lucide-react';
+import { Plus, TrendingUp, Calendar, MessageSquare, Sparkles, Check, Flame, Award } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import confetti from 'canvas-confetti';
 
 export default function ProtocolTracker({ protocol }) {
   const [logs, setLogs] = useState([]);
@@ -10,6 +11,8 @@ export default function ProtocolTracker({ protocol }) {
   const [newLog, setNewLog] = useState({ date: '', feeling: 5, notes: '' });
   const [motivation, setMotivation] = useState(null);
   const [loadingMotivation, setLoadingMotivation] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [showStreakCelebration, setShowStreakCelebration] = useState(false);
 
   useEffect(() => {
     // Simulate existing logs
@@ -19,11 +22,55 @@ export default function ProtocolTracker({ protocol }) {
       { date: '2025-01-16', feeling: 8, notes: 'Significant improvement in focus' }
     ];
     setLogs(mockLogs);
+    calculateStreak(mockLogs);
   }, [protocol]);
+
+  const calculateStreak = (logsList) => {
+    if (logsList.length === 0) {
+      setStreak(0);
+      return;
+    }
+
+    const sortedLogs = [...logsList].sort((a, b) => new Date(b.date) - new Date(a.date));
+    let currentStreak = 1;
+    
+    for (let i = 0; i < sortedLogs.length - 1; i++) {
+      const current = new Date(sortedLogs[i].date);
+      const next = new Date(sortedLogs[i + 1].date);
+      const daysDiff = Math.floor((current - next) / (1000 * 60 * 60 * 24));
+      
+      if (daysDiff <= 3) {
+        currentStreak++;
+      } else {
+        break;
+      }
+    }
+    
+    setStreak(currentStreak);
+  };
+
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#5eead4', '#d4a373', '#fbbf24']
+    });
+  };
 
   const addLog = () => {
     if (!newLog.date) return;
-    setLogs([...logs, newLog].sort((a, b) => new Date(a.date) - new Date(b.date)));
+    const updatedLogs = [...logs, newLog].sort((a, b) => new Date(a.date) - new Date(b.date));
+    setLogs(updatedLogs);
+    calculateStreak(updatedLogs);
+    
+    // Check for milestones
+    if (updatedLogs.length === 7 || updatedLogs.length === 14 || updatedLogs.length === 30) {
+      triggerConfetti();
+      setShowStreakCelebration(true);
+      setTimeout(() => setShowStreakCelebration(false), 3000);
+    }
+    
     setNewLog({ date: '', feeling: 5, notes: '' });
     setShowLogForm(false);
   };
@@ -149,22 +196,59 @@ Return as JSON.`,
         </motion.div>
       )}
 
-      <div className="grid grid-cols-3 gap-4">
-        <div className="glass-panel p-4 rounded-sm">
+      {showStreakCelebration && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: -20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: -20 }}
+          className="glass-panel p-4 rounded-sm border-2 border-copper-400 bg-copper-400/10 text-center"
+        >
+          <Award className="w-12 h-12 text-copper-400 mx-auto mb-2 animate-pulse" />
+          <div className="font-serif text-2xl text-copper-400">Milestone Reached!</div>
+          <div className="font-mono text-xs text-stone-300 mt-1">
+            {logs.length} days logged • Keep going!
+          </div>
+        </motion.div>
+      )}
+
+      <div className="grid grid-cols-4 gap-4">
+        <motion.div 
+          className="glass-panel p-4 rounded-sm relative overflow-hidden group hover:scale-105 transition-transform"
+          whileHover={{ y: -5 }}
+        >
+          <div className="absolute top-2 right-2">
+            <Flame className={`w-5 h-5 ${streak > 3 ? 'text-orange-500 animate-pulse' : 'text-stone-600'}`} />
+          </div>
+          <div className="font-mono text-[9px] text-stone-500 uppercase tracking-widest mb-2">Streak</div>
+          <div className="font-serif text-3xl text-copper-400">{streak}</div>
+        </motion.div>
+        
+        <motion.div 
+          className="glass-panel p-4 rounded-sm hover:scale-105 transition-transform"
+          whileHover={{ y: -5 }}
+        >
           <div className="font-mono text-[9px] text-stone-500 uppercase tracking-widest mb-2">Avg Feeling</div>
           <div className="font-serif text-3xl text-stone-100">{avgFeeling}/10</div>
-        </div>
-        <div className="glass-panel p-4 rounded-sm">
+        </motion.div>
+        
+        <motion.div 
+          className="glass-panel p-4 rounded-sm hover:scale-105 transition-transform"
+          whileHover={{ y: -5 }}
+        >
           <div className="font-mono text-[9px] text-stone-500 uppercase tracking-widest mb-2">Trend</div>
           <div className="flex items-center gap-2">
             <TrendingUp className={`w-5 h-5 ${trend > 0 ? 'text-green-500' : trend < 0 ? 'text-red-500' : 'text-stone-500'}`} />
             <span className="font-serif text-3xl text-stone-100">{trend > 0 ? '+' : ''}{trend}</span>
           </div>
-        </div>
-        <div className="glass-panel p-4 rounded-sm">
+        </motion.div>
+        
+        <motion.div 
+          className="glass-panel p-4 rounded-sm hover:scale-105 transition-transform"
+          whileHover={{ y: -5 }}
+        >
           <div className="font-mono text-[9px] text-stone-500 uppercase tracking-widest mb-2">Duration</div>
           <div className="font-serif text-3xl text-stone-100">{logs.length} days</div>
-        </div>
+        </motion.div>
       </div>
 
       {logs.length > 0 && (
