@@ -488,59 +488,6 @@ Centre for Biological Medicine Team`
       {/* Lab Assistant */}
       <LabAssistant currentSection={currentSection} setIsHovering={setIsHovering} />
 
-      {/* Quick Access Menu */}
-      <div className="fixed top-1/2 left-8 -translate-y-1/2 z-40 flex flex-col gap-4">
-        <MicroInteraction type="glow">
-          <button
-            onClick={() => setShowBiometrics(!showBiometrics)}
-            className="glass-panel p-3 rounded-full transition-all group"
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            title="Biometric Dashboard"
-          >
-            <BarChart3 className="w-5 h-5 text-copper-400 group-hover:animate-pulse" />
-          </button>
-        </MicroInteraction>
-        
-        <MicroInteraction type="glow">
-          <button
-            onClick={() => setShowAssessment(true)}
-            className="glass-panel p-3 rounded-full transition-all group"
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            title="Terrain Assessment"
-          >
-            <Microscope className="w-5 h-5 text-copper-400 group-hover:animate-pulse" />
-          </button>
-        </MicroInteraction>
-
-        <MicroInteraction type="glow">
-          <button
-            onClick={() => setShowMap(!showMap)}
-            className="glass-panel p-3 rounded-full transition-all group"
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            title="Blue Zone Map"
-          >
-            <Map className="w-5 h-5 text-copper-400 group-hover:animate-pulse" />
-          </button>
-        </MicroInteraction>
-
-        {isMemberLoggedIn && (
-          <MicroInteraction type="glow">
-            <button
-              onClick={() => setIsLoginOpen(true)}
-              className="glass-panel p-3 rounded-full transition-all group"
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              title="Member Dashboard"
-            >
-              <LogIn className="w-5 h-5 text-green-400 group-hover:animate-pulse" />
-            </button>
-          </MicroInteraction>
-        )}
-      </div>
-
       {/* Hero Section */}
       <header id="hero" className="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center">
         <div className="absolute inset-0 z-0">
