@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Calendar as CalendarIcon, TrendingUp, Target, Activity, ChevronRight } from 'lucide-react';
+import { Calendar as CalendarIcon, TrendingUp, Target, Activity, ChevronRight, Trophy, Award } from 'lucide-react';
 import ProtocolTracker from './ProtocolTracker';
+import Challenges from './gamification/Challenges';
+import Badges from './gamification/Badges';
+import Leaderboard from './gamification/Leaderboard';
 
 export default function MemberDashboard({ memberData, recommendedProtocols = [] }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeProtocol, setActiveProtocol] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
 
   const protocols = [
     { name: 'IV Therapy', time: '09:00', status: 'completed', date: '2025-01-15' },
@@ -40,6 +44,12 @@ export default function MemberDashboard({ memberData, recommendedProtocols = [] 
     );
   }
 
+  const userProgress = {
+    avgTerrainScore: progress.overall,
+    streakDays: 14,
+    completedProtocols: 8
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -54,7 +64,32 @@ export default function MemberDashboard({ memberData, recommendedProtocols = [] 
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Navigation Tabs */}
+      <div className="flex gap-2 border-b border-white/10 pb-4">
+        {[
+          { id: 'overview', label: 'Overview', icon: Activity },
+          { id: 'challenges', label: 'Challenges', icon: Target },
+          { id: 'badges', label: 'Badges', icon: Award },
+          { id: 'leaderboard', label: 'Leaderboard', icon: Trophy }
+        ].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-sm font-mono text-xs transition-all ${
+              activeTab === tab.id
+                ? 'bg-copper-400/20 text-copper-400 border border-copper-400/30'
+                : 'text-stone-500 hover:text-stone-300 hover:bg-white/5'
+            }`}
+          >
+            <tab.icon className="w-4 h-4" />
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'overview' && (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="glass-panel p-4 rounded-sm">
           <div className="flex items-center gap-2 mb-2">
             <Target className="w-4 h-4 text-copper-400" />
