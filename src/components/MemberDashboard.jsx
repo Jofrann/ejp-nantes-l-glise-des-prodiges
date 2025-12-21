@@ -207,6 +207,12 @@ export default function MemberDashboard({ memberData, recommendedProtocols = [] 
           </div>
         </div>
       </div>
+        </>
+      )}
+
+      {activeTab === 'challenges' && <Challenges userProgress={userProgress} />}
+      {activeTab === 'badges' && <Badges />}
+      {activeTab === 'leaderboard' && <Leaderboard />}
     </div>
   );
 }
