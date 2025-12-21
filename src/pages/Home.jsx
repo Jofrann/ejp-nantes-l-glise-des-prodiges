@@ -52,7 +52,6 @@ export default function HomePage() {
   const [showMap, setShowMap] = useState(false);
   const [isMemberLoggedIn, setIsMemberLoggedIn] = useState(false);
   const [showTerrainSimulator, setShowTerrainSimulator] = useState(false);
-  const [simulatorBiometrics, setSimulatorBiometrics] = useState(null);
   const [currentSection, setCurrentSection] = useState('hero');
   const [selectedProtocolJourney, setSelectedProtocolJourney] = useState(null);
   const [assessmentResults, setAssessmentResults] = useState(null);
@@ -689,16 +688,6 @@ Centre for Biological Medicine Team`
               <div className="absolute inset-0 pointer-events-none opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '100% 40px' }} />
             </div>
           </div>
-        </section>
-
-        {/* Digital Terrain Simulator Section */}
-        <section id="terrain" className="max-w-7xl mx-auto px-6 mb-32">
-          <DigitalTerrainSimulator 
-            onBiometricsUpdate={(biometrics) => {
-              setSimulatorBiometrics(biometrics);
-              setShowBiometrics(true);
-            }}
-          />
         </section>
 
         {/* Global Impact Counter */}
