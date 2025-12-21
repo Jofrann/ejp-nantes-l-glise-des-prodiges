@@ -517,6 +517,24 @@ Centre for Biological Medicine Team`
             BIOLOGICAL MEDICINE REDEFINED. <br />
             CATALOGING THE SILENT RHYTHMS OF BIO-ADVANCEMENT.
           </p>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mt-12 flex gap-4 justify-center"
+          >
+            <motion.button
+              onClick={() => setShowTerrainSimulator(true)}
+              className="border border-white/20 text-stone-200 px-8 py-3 hover:bg-white/5 transition-all font-mono text-xs uppercase tracking-widest rounded-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            >
+              Digital Simulator
+            </motion.button>
+          </motion.div>
         </div>
 
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
