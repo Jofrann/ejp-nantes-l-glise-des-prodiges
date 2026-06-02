@@ -1,0 +1,31 @@
+{
+  "name": "DeptMessage",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement"
+    },
+    "author_id": {
+      "type": "string",
+      "description": "ID de l'utilisateur (User.id)"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nom complet de l'auteur (d\u00e9normalis\u00e9)"
+    },
+    "author_photo": {
+      "type": "string",
+      "description": "Photo de l'auteur (d\u00e9normalis\u00e9e)"
+    },
+    "content": {
+      "type": "string",
+      "description": "Contenu du message"
+    }
+  },
+  "required": [
+    "department_id",
+    "author_id",
+    "content"
+  ]
+}
