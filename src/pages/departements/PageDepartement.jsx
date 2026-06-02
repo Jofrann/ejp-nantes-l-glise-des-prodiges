@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, UserPlus, Users, Star, Crown, Pencil } from 'lucide-react';
-import DeptIcon from '@/components/departements/DeptIcon';
-import MembreCard from '@/components/departements/MembreCard';
+import { motion } from 'framer-motion';
+import { Settings } from 'lucide-react';
+import DeptHero from '@/components/departements/DeptHero';
+import ReferentGrid from '@/components/departements/ReferentGrid';
+import MembresGrid from '@/components/departements/MembresGrid';
 import AjouterMembreModal from '@/components/departements/AjouterMembreModal';
 
 const COLOR_MAP = {
@@ -23,9 +24,8 @@ export default function PageDepartement() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [activeTab, setActiveTab] = useState('membres');
 
-  useEffect(() => {
+  const load = () => {
     Promise.all([
       base44.auth.me(),
       base44.entities.Department.filter({ id }),
@@ -36,9 +36,11 @@ export default function PageDepartement() {
       setMembers(mems || []);
       setLoading(false);
     });
-  }, [id]);
+  };
 
-  const reload = () => {
+  useEffect(() => { load(); }, [id]);
+
+  const reloadMembers = () => {
     base44.entities.DepartmentMember.filter({ department_id: id, is_active: true }).then(setMembers);
   };
 
@@ -58,122 +60,79 @@ export default function PageDepartement() {
   const colors = COLOR_MAP[dept.color] || COLOR_MAP.amber;
   const referents = members.filter(m => m.role_in_dept === 'referent');
   const simpleMembers = members.filter(m => m.role_in_dept === 'membre');
-  const isAdmin = user?.role === 'admin' || user?.role === 'bureau' || user?.role === 'referent';
+  const isAdmin = user?.role === 'admin' || user?.role === 'bureau';
+  const canManage = isAdmin || user?.role === 'referent';
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      {/* Glow déco */}
+      {/* Glow ambiant */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute -top-20 left-1/2 -translate-x-1/2 w-[400px] h-[300px] rounded-full ${colors.glow} blur-[120px] opacity-60`} />
+        <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full ${colors.glow} blur-[140px] opacity-50`} />
       </div>
 
-      <div className="relative max-w-2xl mx-auto px-5 pt-8 pb-16">
+      <div className="relative max-w-2xl mx-auto pb-20">
 
-        {/* Back */}
-        <Link
-          to="/departements"
-          className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors mb-6"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" /> Tous les départements
-        </Link>
-
-        {/* Header du département */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <div className="flex items-start gap-4">
-            <div className={`w-14 h-14 rounded-2xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0`}>
-              <DeptIcon name={dept.icon} className={`w-6 h-6 ${colors.text}`} />
-            </div>
-            <div className="flex-1">
-              <h1 className="text-2xl font-semibold text-white">{dept.name}</h1>
-              {dept.description && <p className="text-sm text-gray-400 mt-1">{dept.description}</p>}
-              <p className={`text-xs mt-2 ${colors.text} opacity-70`}>
-                {members.length} membre{members.length > 1 ? 's' : ''} · {referents.length} référent{referents.length > 1 ? 's' : ''}
-              </p>
-            </div>
-            {isAdmin && (
-              <button
-                onClick={() => setShowAddModal(true)}
-                className={`flex items-center gap-1.5 text-xs ${colors.bg} border ${colors.border} ${colors.text} px-3 py-2 rounded-xl hover:brightness-125 transition-all`}
-              >
-                <UserPlus className="w-3.5 h-3.5" /> Ajouter
-              </button>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Tabs */}
-        <div className="flex gap-1 bg-white/5 rounded-xl p-1 mb-6">
-          {[
-            { id: 'membres', label: 'Membres', count: simpleMembers.length, icon: Users },
-            { id: 'referents', label: 'Référents', count: referents.length, icon: Crown },
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium transition-all ${
-                activeTab === tab.id
-                  ? `bg-white/10 text-white`
-                  : 'text-gray-500 hover:text-gray-300'
-              }`}
-            >
-              <tab.icon className="w-3.5 h-3.5" />
-              {tab.label}
-              <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${activeTab === tab.id ? colors.bg + ' ' + colors.text : 'bg-white/5 text-gray-600'}`}>
-                {tab.count}
-              </span>
-            </button>
-          ))}
+        {/* Hero bannière + identité */}
+        <div className="px-4 pt-4">
+          <DeptHero
+            dept={dept}
+            colors={colors}
+            memberCount={members.length}
+            referentCount={referents.length}
+            isAdmin={canManage}
+            onAddClick={() => setShowAddModal(true)}
+          />
         </div>
 
-        {/* Liste membres */}
-        <AnimatePresence mode="wait">
+        {/* Bouton édition (admin seulement) */}
+        {isAdmin && (
           <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="px-5 mb-6 flex justify-end"
           >
-            {activeTab === 'referents' && (
-              <div className="space-y-3">
-                {referents.length === 0 ? (
-                  <EmptyState label="Aucun référent pour ce département." />
-                ) : referents.map((m, i) => (
-                  <MembreCard key={m.id} member={m} index={i} colors={colors} isAdmin={isAdmin} onDelete={reload} badge="Référent" />
-                ))}
-              </div>
-            )}
-            {activeTab === 'membres' && (
-              <div className="space-y-3">
-                {simpleMembers.length === 0 ? (
-                  <EmptyState label="Aucun membre pour ce département." />
-                ) : simpleMembers.map((m, i) => (
-                  <MembreCard key={m.id} member={m} index={i} colors={colors} isAdmin={isAdmin} onDelete={reload} />
-                ))}
-              </div>
-            )}
+            <Link
+              to={`/departement/${id}/editer`}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white border border-white/10 hover:border-white/20 bg-white/3 hover:bg-white/8 px-3 py-1.5 rounded-xl transition-all"
+            >
+              <Settings className="w-3 h-3" /> Modifier le département
+            </Link>
           </motion.div>
-        </AnimatePresence>
+        )}
 
+        {/* Référents */}
+        <div className="px-5">
+          <ReferentGrid
+            referents={referents}
+            colors={colors}
+            isAdmin={canManage}
+            onDelete={reloadMembers}
+          />
+
+          {/* Séparateur si les deux sections sont présentes */}
+          {referents.length > 0 && (
+            <div className="border-t border-white/5 my-6" />
+          )}
+
+          {/* Membres */}
+          <MembresGrid
+            membres={simpleMembers}
+            colors={colors}
+            isAdmin={canManage}
+            onDelete={reloadMembers}
+          />
+        </div>
       </div>
 
-      {/* Modal ajout membre */}
+      {/* Modal ajout */}
       {showAddModal && (
         <AjouterMembreModal
           departmentId={id}
           onClose={() => setShowAddModal(false)}
-          onAdded={() => { setShowAddModal(false); reload(); }}
+          onAdded={() => { setShowAddModal(false); reloadMembers(); }}
         />
       )}
-    </div>
-  );
-}
-
-function EmptyState({ label }) {
-  return (
-    <div className="text-center py-12 text-gray-600">
-      <Users className="w-8 h-8 mx-auto mb-2 opacity-30" />
-      <p className="text-sm">{label}</p>
     </div>
   );
 }

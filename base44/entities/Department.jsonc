@@ -4,11 +4,15 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Nom du d\u00e9partement (ex: Louange, Accueil, Jeunesse)"
+      "description": "Nom du d\u00e9partement (ex: Louange, Accueil, FIJ)"
     },
     "description": {
       "type": "string",
-      "description": "Description courte du d\u00e9partement"
+      "description": "Description courte (sous-titre)"
+    },
+    "mission": {
+      "type": "string",
+      "description": "Texte de pr\u00e9sentation / vision du d\u00e9partement (1-3 phrases)"
     },
     "icon": {
       "type": "string",
@@ -16,12 +20,12 @@
     },
     "color": {
       "type": "string",
-      "description": "Couleur th\u00e8me (ex: amber, blue, purple, rose, green)",
+      "description": "Couleur th\u00e8me : amber | blue | purple | rose | green | indigo",
       "default": "amber"
     },
     "cover_url": {
       "type": "string",
-      "description": "Image de couverture"
+      "description": "Image de couverture (banni\u00e8re du d\u00e9partement)"
     },
     "is_active": {
       "type": "boolean",
