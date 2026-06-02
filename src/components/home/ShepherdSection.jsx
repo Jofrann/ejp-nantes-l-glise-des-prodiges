@@ -17,7 +17,9 @@ function ShepherdCard({ person, label, delay = 0 }) {
           <img
             src={person.photo_url}
             alt={name}
+            loading="lazy"
             className="w-56 h-64 md:w-64 md:h-80 object-cover"
+            onError={e => { e.target.style.display = 'none'; e.target.parentElement.querySelector('div') && (e.target.parentElement.querySelector('div').style.display = 'flex'); }}
           />
         ) : (
           <div className="w-56 h-64 md:w-64 md:h-80 bg-[#111318] border border-white/5 flex items-center justify-center">

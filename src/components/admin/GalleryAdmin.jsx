@@ -70,13 +70,25 @@ export default function GalleryAdmin({ gallery, setGallery }) {
           <div key={m.id} className="relative group rounded-xl overflow-hidden aspect-square bg-white/5">
             {m.type === 'video' ? (
               <>
-                <video src={m.file_url} className="w-full h-full object-cover" />
+                <video
+                  src={m.file_url}
+                  className="w-full h-full object-cover"
+                  muted
+                  preload="metadata"
+                  playsInline
+                />
                 <div className="absolute top-2 left-2">
                   <Film className="w-4 h-4 text-white/60" />
                 </div>
               </>
             ) : (
-              <img src={m.file_url} alt={m.title || ''} className="w-full h-full object-cover" />
+              <img
+                src={m.file_url}
+                alt={m.title || ''}
+                loading="lazy"
+                className="w-full h-full object-cover"
+                onError={e => { e.target.src = ''; e.target.parentElement.style.background = '#1a1a1a'; }}
+              />
             )}
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <button onClick={() => remove(m.id)} className="bg-red-500/80 text-white p-2 rounded-lg">

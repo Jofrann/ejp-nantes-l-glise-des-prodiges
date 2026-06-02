@@ -30,13 +30,25 @@ export default function GallerySection({ media = [] }) {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.05 }}
               onClick={() => setLightbox(item)}
-              className="break-inside-avoid cursor-pointer group relative overflow-hidden"
+              className="break-inside-avoid cursor-pointer group relative overflow-hidden bg-[#E5E0D8]"
             >
-              <img
-                src={item.thumbnail_url || item.file_url}
-                alt={item.alt_text || ''}
-                className="w-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
+              {item.type === 'video' ? (
+                <video
+                  src={item.file_url}
+                  className="w-full object-cover min-h-[120px] group-hover:scale-105 transition-transform duration-700"
+                  muted
+                  preload="metadata"
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={item.thumbnail_url || item.file_url}
+                  alt={item.alt_text || item.title || ''}
+                  loading="lazy"
+                  className="w-full object-cover min-h-[120px] group-hover:scale-105 transition-transform duration-700"
+                  onError={e => { e.target.style.minHeight = '160px'; e.target.style.background = '#E5E0D8'; }}
+                />
+              )}
               {item.type === 'video' && (
                 <div className="absolute inset-0 flex items-center justify-center bg-[#0B0B0C]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="w-10 h-10 border border-white/60 flex items-center justify-center">
