@@ -1,70 +1,58 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Music, Users, Mic2, Hand, BookOpen, Star } from 'lucide-react';
-
-const ICON_MAP = {
-  Music, Users, Mic2, Hand, BookOpen, Star
-};
 
 const DEFAULT_MINISTRIES = [
-  { name: 'Coordination', description: 'Organisation et pilotage de la vie de l\'EJP.', icon: 'Star' },
-  { name: 'Communication', description: 'Présence digitale, réseaux, médias et création.', icon: 'Mic2' },
-  { name: 'Prodiges Musique', description: 'Louange, adoration et production musicale.', icon: 'Music' },
-  { name: 'Accueil', description: 'Intégration et accompagnement des nouveaux.', icon: 'Hand' },
-  { name: 'Pôle Vie Académique', description: 'Soutien, orientation et excellence académique.', icon: 'BookOpen' },
+  { name: 'Coordination', description: 'Organisation et pilotage de la vie de l\'EJP Nantes.' },
+  { name: 'Communication', description: 'Présence digitale, réseaux sociaux, médias et création de contenu.' },
+  { name: 'Prodiges Musique', description: 'Louange, adoration et excellence musicale au service de Dieu.' },
+  { name: 'Accueil', description: 'Recevoir, orienter et honorer chaque personne qui entre dans la maison.' },
+  { name: 'Pôle Vie Académique', description: 'Soutien, orientation et excellence académique pour les jeunes.' },
 ];
 
 export default function MinistriesSection({ ministries = [] }) {
   const items = ministries.filter(m => m.is_active).length > 0
-    ? ministries.filter(m => m.is_active)
+    ? ministries.filter(m => m.is_active).sort((a, b) => a.display_order - b.display_order)
     : DEFAULT_MINISTRIES;
 
   return (
-    <section id="ministeres" className="py-28 px-6 bg-slate-950 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-5 pointer-events-none"
-        style={{ backgroundImage: 'radial-gradient(ellipse at 100% 50%, #f59e0b, transparent 60%)' }} />
-
+    <section id="ministeres" className="py-36 px-6 bg-[#0B0B0C]">
       <div className="max-w-screen-lg mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-6"
+          transition={{ duration: 0.8 }}
+          className="mb-16"
         >
-          <span className="text-xs uppercase tracking-[0.3em] text-amber-400/80 font-medium">Departments</span>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-4">Nos ministères</h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-sm">
-            Chaque jeune peut découvrir, développer et exercer ses dons dans un cadre structuré, fraternel et stimulant.
+          <span className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A]/70 font-light block mb-4">Servir</span>
+          <h2 className="font-display text-4xl md:text-6xl text-[#F7F4EF] font-light leading-tight mb-5">Nos ministères</h2>
+          <p className="text-[#B8B8B8]/60 text-sm font-light max-w-md leading-relaxed">
+            Chaque jeune peut découvrir, développer et exercer ses dons dans un cadre structuré et fraternel.
           </p>
         </motion.div>
 
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {items.map((ministry, i) => {
-            const IconComp = ICON_MAP[ministry.icon] || Star;
-            return (
-              <motion.div
-                key={ministry.id || ministry.name}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group bg-white/5 border border-white/10 rounded-2xl p-7 hover:bg-white/8 hover:border-amber-400/25 transition-all duration-300"
-              >
-                {ministry.image_url ? (
-                  <img src={ministry.image_url} alt={ministry.name} className="w-12 h-12 rounded-xl object-cover mb-5" />
-                ) : (
-                  <div className="w-12 h-12 rounded-xl bg-amber-400/10 flex items-center justify-center mb-5">
-                    <IconComp className="w-6 h-6 text-amber-400" />
-                  </div>
-                )}
-                <h3 className="font-bold text-white text-base mb-2">{ministry.name}</h3>
-                {ministry.description && (
-                  <p className="text-sm text-gray-500 leading-relaxed">{ministry.description}</p>
-                )}
-              </motion.div>
-            );
-          })}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5">
+          {items.map((ministry, i) => (
+            <motion.div
+              key={ministry.id || ministry.name}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.08 }}
+              className="bg-[#0B0B0C] p-8 group hover:bg-[#111318] transition-colors duration-300"
+            >
+              <span className="font-display text-4xl text-white/5 font-light block mb-5">0{i + 1}</span>
+              {ministry.image_url && (
+                <div className="w-10 h-10 mb-5 overflow-hidden">
+                  <img src={ministry.image_url} alt={ministry.name} className="w-full h-full object-cover" />
+                </div>
+              )}
+              <h3 className="text-[#F7F4EF] text-sm font-medium tracking-wide mb-3">{ministry.name}</h3>
+              {ministry.description && (
+                <p className="text-[#B8B8B8]/50 text-xs leading-relaxed font-light">{ministry.description}</p>
+              )}
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

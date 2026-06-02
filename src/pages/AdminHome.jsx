@@ -7,6 +7,7 @@ const TABS = [
   { id: 'hero', label: 'Hero & Général', icon: Church },
   { id: 'leaders', label: 'Leaders', icon: Users },
   { id: 'events', label: 'Événements', icon: Calendar },
+  { id: 'testimonials', label: 'Témoignages', icon: Settings },
   { id: 'ministries', label: 'Ministères', icon: Settings },
   { id: 'gallery', label: 'Galerie', icon: Image },
 ];
@@ -38,6 +39,7 @@ export default function AdminHome() {
   const [events, setEvents] = useState([]);
   const [ministries, setMinistries] = useState([]);
   const [gallery, setGallery] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -48,12 +50,14 @@ export default function AdminHome() {
       base44.entities.Event.list('-event_date', 50),
       base44.entities.Ministry.list('display_order', 50),
       base44.entities.GalleryMedia.list('-created_date', 50),
-    ]).then(([c, l, e, m, g]) => {
+      base44.entities.Testimonial.list('display_order', 50),
+    ]).then(([c, l, e, m, g, t]) => {
       setConfig(c?.[0] || {});
       setLeaders(l || []);
       setEvents(e || []);
       setMinistries(m || []);
       setGallery(g || []);
+      setTestimonials(t || []);
     });
   }, []);
 
@@ -191,6 +195,9 @@ export default function AdminHome() {
           {tab === 'events' && (
             <EventsAdmin events={events} setEvents={setEvents} />
           )}
+          {tab === 'testimonials' && (
+            <TestimonialsAdmin testimonials={testimonials} setTestimonials={setTestimonials} />
+          )}
           {tab === 'ministries' && (
             <MinistriesAdmin ministries={ministries} setMinistries={setMinistries} />
           )}
@@ -299,6 +306,56 @@ function EventsAdmin({ events, setEvents }) {
               </label>
             </div>
             <button onClick={() => remove(e.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TestimonialsAdmin({ testimonials, setTestimonials }) {
+  const add = async () => {
+    const t = await base44.entities.Testimonial.create({ content: 'Nouveau témoignage', author_name: 'Prénom', is_published: false, display_order: testimonials.length });
+    setTestimonials(prev => [...prev, t]);
+  };
+  const update = async (id, data) => {
+    await base44.entities.Testimonial.update(id, data);
+    setTestimonials(prev => prev.map(t => t.id === id ? { ...t, ...data } : t));
+  };
+  const remove = async (id) => {
+    await base44.entities.Testimonial.delete(id);
+    setTestimonials(prev => prev.filter(t => t.id !== id));
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-white font-semibold">Témoignages ({testimonials.length})</h2>
+        <button onClick={add} className="flex items-center gap-2 bg-amber-400 text-black text-xs font-semibold px-3 py-2 rounded-xl hover:bg-amber-300">
+          <Plus className="w-3.5 h-3.5" /> Ajouter
+        </button>
+      </div>
+      {testimonials.map(t => (
+        <div key={t.id} className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
+          <textarea className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3 resize-none" rows={3} placeholder="Témoignage" value={t.content || ''} onChange={e => update(t.id, { content: e.target.value })} />
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <input className="bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm" placeholder="Prénom" value={t.author_name || ''} onChange={e => update(t.id, { author_name: e.target.value })} />
+            <input className="bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm" placeholder="Rôle" value={t.author_role || ''} onChange={e => update(t.id, { author_role: e.target.value })} />
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4 text-xs text-gray-500">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={t.is_anonymous || false} onChange={e => update(t.id, { is_anonymous: e.target.checked })} className="accent-amber-400" />
+                Anonyme
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={t.is_published || false} onChange={e => update(t.id, { is_published: e.target.checked })} className="accent-amber-400" />
+                Publié
+              </label>
+            </div>
+            <button onClick={() => remove(t.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
               <Trash2 className="w-4 h-4" />
             </button>
           </div>

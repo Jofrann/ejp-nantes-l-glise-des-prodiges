@@ -1,76 +1,60 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, MapPin, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 export default function EventsSection({ events = [] }) {
-  const activeEvents = events.filter(e => e.is_active).slice(0, 6);
-  if (activeEvents.length === 0) return null;
+  const active = events.filter(e => e.is_active).slice(0, 6);
+  if (active.length === 0) return null;
 
   return (
-    <section id="evenements" className="py-28 px-6 bg-gray-950">
+    <section id="evenements" className="py-36 px-6 bg-[#F7F4EF]">
       <div className="max-w-screen-lg mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-14"
+          transition={{ duration: 0.8 }}
+          className="flex items-end justify-between mb-16 flex-wrap gap-4"
         >
-          <span className="text-xs uppercase tracking-[0.3em] text-amber-400/80 font-medium">Agenda</span>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3">Nos événements</h2>
+          <div>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A] font-medium block mb-4">Agenda</span>
+            <h2 className="font-display text-4xl md:text-6xl text-[#0B0B0C] font-light leading-tight">Nos événements</h2>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {activeEvents.map((event, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {active.map((event, i) => (
             <motion.div
               key={event.id}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`group relative bg-white/5 border rounded-2xl overflow-hidden hover:border-amber-400/30 transition-all duration-300 ${event.is_featured ? 'border-amber-400/40' : 'border-white/10'}`}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              className="group bg-white border border-[#E5E0D8] overflow-hidden"
             >
-              {event.image_url && (
-                <div className="h-44 overflow-hidden">
-                  <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              {event.image_url ? (
+                <div className="h-48 overflow-hidden">
+                  <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 </div>
-              )}
-              {!event.image_url && (
-                <div className="h-32 bg-gradient-to-br from-amber-500/10 to-purple-500/10 flex items-center justify-center">
-                  <Calendar className="w-8 h-8 text-amber-400/30" />
-                </div>
+              ) : (
+                <div className="h-32 bg-[#F0EDE8]" />
               )}
               {event.is_featured && (
-                <div className="absolute top-3 right-3 bg-amber-400 text-black text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  À la une
+                <div className="px-6 pt-4">
+                  <span className="text-[9px] uppercase tracking-[0.3em] text-[#C8A96A]">À la une</span>
                 </div>
               )}
-              <div className="p-5">
-                <h3 className="font-bold text-white text-base mb-2">{event.title}</h3>
+              <div className="p-6">
+                <h3 className="font-medium text-[#0B0B0C] text-base mb-2">{event.title}</h3>
                 {event.description && (
-                  <p className="text-sm text-gray-500 mb-3 line-clamp-2">{event.description}</p>
+                  <p className="text-[#6B6B6B] text-sm mb-4 line-clamp-2 font-light leading-relaxed">{event.description}</p>
                 )}
-                <div className="flex flex-col gap-1.5 text-xs text-gray-500">
+                <div className="text-xs text-[#6B6B6B]/70 font-light space-y-1">
                   {event.event_date && (
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-amber-400/60" />
-                      {format(new Date(event.event_date), 'EEEE d MMMM yyyy', { locale: fr })}
-                    </span>
+                    <p>{format(new Date(event.event_date), 'EEEE d MMMM yyyy', { locale: fr })}</p>
                   )}
-                  {event.event_time && (
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-amber-400/60" />
-                      {event.event_time}
-                    </span>
-                  )}
-                  {event.location && (
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-amber-400/60" />
-                      {event.location}
-                    </span>
-                  )}
+                  {event.event_time && <p>{event.event_time}{event.location ? ` · ${event.location}` : ''}</p>}
                 </div>
               </div>
             </motion.div>

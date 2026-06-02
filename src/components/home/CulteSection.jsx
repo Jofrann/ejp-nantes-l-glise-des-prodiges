@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, Clock } from 'lucide-react';
 import CountdownTimer from './CountdownTimer';
 
 export default function CulteSection({ config }) {
@@ -10,7 +9,6 @@ export default function CulteSection({ config }) {
   const mapsLink = config?.maps_link || 'https://maps.google.com/?q=Nantes,France';
 
   const calendarLink = (() => {
-    // Génère un lien Google Calendar pour le prochain dimanche
     const now = new Date();
     const day = now.getDay();
     const daysUntil = day === 0 ? 7 : 7 - day;
@@ -24,42 +22,39 @@ export default function CulteSection({ config }) {
   })();
 
   return (
-    <section id="culte" className="py-28 px-6 bg-gradient-to-b from-gray-950 to-slate-950 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10 pointer-events-none"
-        style={{ backgroundImage: 'radial-gradient(ellipse at 50% 100%, #7c3aed, transparent 60%)' }} />
-
+    <section id="culte" className="py-36 px-6 bg-[#0B0B0C]">
       <div className="max-w-screen-md mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.9 }}
         >
-          <span className="text-xs uppercase tracking-[0.3em] text-amber-400/80 font-medium">Chaque semaine</span>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-2">Prochain culte EJP</h2>
-          <p className="text-gray-500 mb-12 text-sm">{serviceDay} à {serviceTime} — {address}</p>
+          <span className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A]/70 font-light block mb-6">Chaque semaine</span>
+          <h2 className="font-display text-4xl md:text-6xl text-[#F7F4EF] font-light mb-4 leading-tight">
+            Prochain culte
+          </h2>
+          <p className="text-[#B8B8B8]/50 text-sm tracking-wide mb-16 font-light">
+            {serviceDay} à {serviceTime} — {address}
+          </p>
 
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-10 mb-8">
-            <CountdownTimer serviceTime={serviceTime} />
-          </div>
+          <CountdownTimer serviceTime={serviceTime} />
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-14">
             <a
               href={mapsLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 border border-white/20 text-white/80 hover:text-white hover:border-amber-400/50 px-6 py-3 rounded-full text-sm transition-all"
+              className="px-8 py-3.5 border border-[#F7F4EF]/15 text-[#F7F4EF]/70 text-xs tracking-[0.2em] uppercase font-light hover:bg-white/5 transition-colors duration-300"
             >
-              <MapPin className="w-4 h-4" />
               Voir l'adresse
             </a>
             <a
               href={calendarLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-amber-400 text-black font-semibold px-6 py-3 rounded-full text-sm hover:bg-amber-300 transition-all"
+              className="px-8 py-3.5 bg-[#C8A96A] text-[#0B0B0C] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#D4B87A] transition-colors duration-300"
             >
-              <Calendar className="w-4 h-4" />
               Ajouter à mon calendrier
             </a>
           </div>

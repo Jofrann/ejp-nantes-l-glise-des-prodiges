@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import IntroOverlay from '@/components/home/IntroOverlay';
 import HeroSection from '@/components/home/HeroSection';
 import ScrollVideoSection from '@/components/home/ScrollVideoSection';
 import VisionSection from '@/components/home/VisionSection';
 import CulteSection from '@/components/home/CulteSection';
 import EventsSection from '@/components/home/EventsSection';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
 import ShepherdSection from '@/components/home/ShepherdSection';
 import LeadersSection from '@/components/home/LeadersSection';
 import MinistriesSection from '@/components/home/MinistriesSection';
@@ -20,7 +22,9 @@ export default function Home() {
   const [events, setEvents] = useState([]);
   const [ministries, setMinistries] = useState([]);
   const [gallery, setGallery] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [introDone, setIntroD] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -29,19 +33,21 @@ export default function Home() {
       base44.entities.Event.filter({ is_active: true }, 'event_date', 10),
       base44.entities.Ministry.list('display_order', 20),
       base44.entities.GalleryMedia.filter({ is_active: true }, '-created_date', 12),
-    ]).then(([configs, ldr, evts, min, gal]) => {
-      setConfig(configs?.[0] || null);
-      setLeaders(ldr || []);
-      setEvents(evts || []);
-      setMinistries(min || []);
-      setGallery(gal || []);
+      base44.entities.Testimonial.filter({ is_published: true }, 'display_order', 20),
+    ]).then(([c, l, e, m, g, t]) => {
+      setConfig(c?.[0] || null);
+      setLeaders(l || []);
+      setEvents(e || []);
+      setMinistries(m || []);
+      setGallery(g || []);
+      setTestimonials(t || []);
     }).finally(() => setLoading(false));
   }, []);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-white/20 border-t-amber-400 rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#0B0B0C] flex items-center justify-center">
+        <div className="w-6 h-6 border border-[#C8A96A]/30 border-t-[#C8A96A] rounded-full animate-spin" />
       </div>
     );
   }
@@ -49,50 +55,54 @@ export default function Home() {
   const shepherd = leaders.find(l => l.is_main_shepherd);
 
   return (
-    <div className="bg-gray-950">
-      {/* Bannière d'annonce */}
+    <div className="bg-[#0B0B0C] overflow-x-hidden">
+      {/* Intro cinématique */}
+      {!introDone && <IntroOverlay onDone={() => setIntroD(true)} />}
+
+      {/* Bannière annonce */}
       {config?.announcement_active && config?.announcement_text && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-amber-500 text-black text-xs font-medium text-center py-2 px-4">
+        <div className="fixed top-0 left-0 right-0 z-[60] bg-[#C8A96A] text-[#0B0B0C] text-[10px] font-medium text-center py-2 px-4 tracking-[0.2em] uppercase">
           {config.announcement_text}
         </div>
       )}
 
-      {/* 1. Hero immersif */}
-      <div className={config?.announcement_active ? 'pt-8' : ''}>
-        <HeroSection config={config} />
-      </div>
+      {/* 1. Hero */}
+      <HeroSection config={config} visible={introDone} />
 
-      {/* 2. Vidéo scroll (si vidéo configurée) */}
+      {/* 2. Vidéo scroll */}
       {config?.hero_video_url && <ScrollVideoSection videoUrl={config.hero_video_url} />}
 
       {/* 3. Vision */}
       <VisionSection title={config?.vision_title} text={config?.vision_text} />
 
-      {/* 4. Compte à rebours culte */}
+      {/* 4. Prochain culte */}
       <CulteSection config={config} />
 
       {/* 5. Événements */}
       <EventsSection events={events} />
 
-      {/* 6. Bergère principale */}
+      {/* 6. Témoignages */}
+      <TestimonialsSection testimonials={testimonials} />
+
+      {/* 7. Bergère */}
       <ShepherdSection shepherd={shepherd} />
 
-      {/* 7. Leaders */}
+      {/* 8. Leaders */}
       <LeadersSection leaders={leaders} />
 
-      {/* 8. Ministères */}
+      {/* 9. Ministères */}
       <MinistriesSection ministries={ministries} />
 
-      {/* 9. Galerie */}
+      {/* 10. Galerie */}
       <GallerySection media={gallery} />
 
-      {/* 10. Nantes */}
+      {/* 11. Nantes */}
       <NantesSection />
 
-      {/* 11. Adresse */}
+      {/* 12. Adresse */}
       <AddressSection config={config} />
 
-      {/* 12. Contact */}
+      {/* 13. Contact */}
       <ContactSection config={config} />
 
       {/* Footer */}

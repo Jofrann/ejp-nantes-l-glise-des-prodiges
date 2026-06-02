@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Clock, Navigation } from 'lucide-react';
 
 export default function AddressSection({ config }) {
   const address = config?.address_label || 'Nantes, Loire-Atlantique, France';
@@ -9,69 +8,57 @@ export default function AddressSection({ config }) {
   const serviceTime = config?.service_time || '15:00';
 
   return (
-    <section id="adresse" className="py-28 px-6 bg-gray-950">
+    <section id="adresse" className="py-36 px-6 bg-[#F7F4EF]">
       <div className="max-w-screen-lg mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-14"
-        >
-          <span className="text-xs uppercase tracking-[0.3em] text-amber-400/80 font-medium">Viens nous voir</span>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3">Nous rejoindre</h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 space-y-5"
+            transition={{ duration: 0.9 }}
           >
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-400/10 flex items-center justify-center shrink-0">
-                <Clock className="w-5 h-5 text-amber-400" />
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A] font-medium block mb-6">Viens nous voir</span>
+            <h2 className="font-display text-4xl md:text-5xl text-[#0B0B0C] font-light mb-10 leading-tight">Nous rejoindre</h2>
+
+            <div className="space-y-6 mb-10">
+              <div className="border-b border-[#E5E0D8] pb-6">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B6B6B]/60 mb-2">Culte</p>
+                <p className="text-[#0B0B0C] font-medium">{serviceDay} à {serviceTime}</p>
               </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Horaire du culte</p>
-                <p className="text-white font-semibold">{serviceDay} à {serviceTime}</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-400/10 flex items-center justify-center shrink-0">
-                <MapPin className="w-5 h-5 text-amber-400" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Adresse</p>
-                <p className="text-white font-semibold">{address}</p>
+              <div className="border-b border-[#E5E0D8] pb-6">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B6B6B]/60 mb-2">Adresse</p>
+                <p className="text-[#0B0B0C] font-medium">{address}</p>
               </div>
             </div>
+
             <a
               href={mapsLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 mt-4 bg-amber-400 text-black font-semibold px-6 py-3 rounded-xl text-sm hover:bg-amber-300 transition-all w-full"
+              className="inline-flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-[#0B0B0C] border border-[#0B0B0C] px-8 py-3.5 hover:bg-[#0B0B0C] hover:text-[#F7F4EF] transition-colors duration-300"
             >
-              <Navigation className="w-4 h-4" />
               Ouvrir dans Google Maps
             </a>
           </motion.div>
 
-          {/* Carte statique Google Maps */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="rounded-2xl overflow-hidden border border-white/10 min-h-[240px] bg-white/5 flex items-center justify-center"
+            transition={{ duration: 0.9, delay: 0.15 }}
           >
-            <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center text-gray-600 hover:text-amber-400 transition-colors p-8 text-center">
-              <div>
-                <MapPin className="w-10 h-10 mx-auto mb-3" />
-                <p className="text-sm">Cliquer pour voir sur Google Maps</p>
-                <p className="text-xs mt-1 text-gray-700">{address}</p>
+            <a
+              href={mapsLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full h-72 bg-[#E5E0D8] overflow-hidden group"
+            >
+              <div className="w-full h-full flex flex-col items-center justify-center text-[#6B6B6B] group-hover:text-[#0B0B0C] transition-colors">
+                <svg className="w-8 h-8 mb-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <p className="text-xs tracking-[0.2em] uppercase opacity-50">{address}</p>
               </div>
             </a>
           </motion.div>

@@ -3,23 +3,18 @@ import React, { useState, useEffect } from 'react';
 function getNextServiceDate(serviceTime = '15:00') {
   const [hour, minute] = serviceTime.split(':').map(Number);
   const now = new Date();
-  const target = new Date();
-
-  // Trouver le prochain dimanche
   const dayOfWeek = now.getDay(); // 0 = dimanche
+
   let daysUntilSunday = (7 - dayOfWeek) % 7;
 
-  // Si on est dimanche, vérifier si le culte est déjà passé
+  // Si aujourd'hui est dimanche, vérifier si le culte est passé
   if (dayOfWeek === 0) {
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
     const targetMinutes = hour * 60 + minute;
-    if (nowMinutes >= targetMinutes) {
-      // Culte déjà passé aujourd'hui → prochain dimanche dans 7 jours
-      daysUntilSunday = 7;
-    }
-    // Sinon daysUntilSunday reste 0 (c'est aujourd'hui)
+    if (nowMinutes >= targetMinutes) daysUntilSunday = 7;
   }
 
+  const target = new Date(now);
   target.setDate(now.getDate() + daysUntilSunday);
   target.setHours(hour, minute, 0, 0);
   return target;
@@ -32,21 +27,17 @@ export default function CountdownTimer({ serviceTime = '15:00' }) {
     const compute = () => {
       const target = getNextServiceDate(serviceTime);
       const diff = target - new Date();
-      if (diff <= 0) {
-        // Recompute immédiatement si expiré
-        return;
-      }
+      if (diff <= 0) return;
       setTimeLeft({
-        jours: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        heures: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-        secondes: Math.floor((diff % (1000 * 60)) / 1000),
+        jours: Math.floor(diff / 86400000),
+        heures: Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        secondes: Math.floor((diff % 60000) / 1000),
       });
     };
-
     compute();
-    const interval = setInterval(compute, 1000);
-    return () => clearInterval(interval);
+    const id = setInterval(compute, 1000);
+    return () => clearInterval(id);
   }, [serviceTime]);
 
   const units = [
@@ -57,17 +48,17 @@ export default function CountdownTimer({ serviceTime = '15:00' }) {
   ];
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-end justify-center gap-6 md:gap-10">
       {units.map(({ label, value }, i) => (
         <React.Fragment key={label}>
-          <div className="flex flex-col items-center min-w-[2.5rem]">
-            <span className="font-bold text-2xl md:text-4xl text-white tabular-nums leading-none">
+          <div className="flex flex-col items-center">
+            <span className="font-display text-5xl md:text-7xl text-[#F7F4EF] tabular-nums leading-none font-light">
               {String(value).padStart(2, '0')}
             </span>
-            <span className="text-[9px] text-white/50 uppercase tracking-widest mt-1">{label}</span>
+            <span className="text-[9px] text-[#B8B8B8]/40 uppercase tracking-[0.3em] mt-3 font-light">{label}</span>
           </div>
           {i < units.length - 1 && (
-            <span className="text-white/30 text-2xl md:text-3xl mb-4 select-none">:</span>
+            <span className="text-[#C8A96A]/30 text-4xl md:text-5xl pb-8 font-light select-none">·</span>
           )}
         </React.Fragment>
       ))}

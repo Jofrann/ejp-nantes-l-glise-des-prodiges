@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Instagram, Mail, MessageCircle, Youtube } from 'lucide-react';
 
 export default function ContactSection({ config }) {
   const [form, setForm] = useState({ prenom: '', email: '', message: '' });
@@ -8,91 +7,85 @@ export default function ContactSection({ config }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Ouvre le client mail avec pré-remplissage
-    const subject = encodeURIComponent('Message depuis ejpnantes.fr');
-    const body = encodeURIComponent(`Prénom : ${form.prenom}\nEmail : ${form.email}\n\nMessage :\n${form.message}`);
+    const subject = encodeURIComponent('Message depuis le site EJP Nantes');
+    const body = encodeURIComponent(`Prénom : ${form.prenom}\nEmail : ${form.email}\n\n${form.message}`);
     const mail = config?.contact_email || 'contact@ejpnantes.fr';
     window.open(`mailto:${mail}?subject=${subject}&body=${body}`);
     setSent(true);
     setTimeout(() => setSent(false), 5000);
   };
 
+  const socials = [
+    { label: 'Instagram', href: config?.instagram_url },
+    { label: 'TikTok', href: config?.tiktok_url },
+    { label: 'YouTube', href: config?.youtube_url },
+    { label: 'WhatsApp', href: config?.whatsapp_url },
+  ].filter(s => s.href);
+
   return (
-    <section id="contact" className="py-28 px-6 bg-slate-950 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-8 pointer-events-none"
-        style={{ backgroundImage: 'radial-gradient(ellipse at 50% 100%, #7c3aed, transparent 60%)' }} />
-
+    <section id="contact" className="py-36 px-6 bg-[#0B0B0C]">
       <div className="max-w-screen-lg mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-14"
-        >
-          <span className="text-xs uppercase tracking-[0.3em] text-amber-400/80 font-medium">On vous attend</span>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-3">Une question ?<br />Viens nous parler.</h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Réseaux */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="space-y-4"
+            transition={{ duration: 0.9 }}
           >
-            <p className="text-gray-500 text-sm mb-6">Retrouvez-nous sur les réseaux ou écrivez-nous directement.</p>
-            {[
-              { icon: Instagram, label: 'Instagram', href: config?.instagram_url || '#', color: 'hover:border-pink-400/50 hover:text-pink-400' },
-              { icon: Youtube, label: 'YouTube', href: config?.youtube_url || '#', color: 'hover:border-red-400/50 hover:text-red-400' },
-              { icon: MessageCircle, label: 'WhatsApp', href: config?.whatsapp_url || '#', color: 'hover:border-green-400/50 hover:text-green-400' },
-              { icon: Mail, label: config?.contact_email || 'contact@ejpnantes.fr', href: `mailto:${config?.contact_email || 'contact@ejpnantes.fr'}`, color: 'hover:border-amber-400/50 hover:text-amber-400' },
-            ].map(({ icon: Icon, label, href, color }) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                className={`flex items-center gap-4 border border-white/10 text-white/70 px-5 py-3.5 rounded-xl text-sm transition-all duration-200 ${color}`}>
-                <Icon className="w-5 h-5" />
-                {label}
-              </a>
-            ))}
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A]/70 font-light block mb-6">On vous attend</span>
+            <h2 className="font-display text-4xl md:text-5xl text-[#F7F4EF] font-light mb-6 leading-tight">
+              Une question ?<br />Écrivez-nous.
+            </h2>
+            <p className="text-[#B8B8B8]/60 text-sm font-light leading-relaxed mb-10">
+              Nous sommes disponibles pour répondre à toutes vos questions. N'hésitez pas à nous écrire.
+            </p>
+
+            {socials.length > 0 && (
+              <div className="flex flex-wrap gap-4">
+                {socials.map(s => (
+                  <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+                    className="text-[10px] uppercase tracking-[0.3em] text-[#B8B8B8]/50 hover:text-[#C8A96A] transition-colors duration-200 border-b border-transparent hover:border-[#C8A96A]/50 pb-0.5">
+                    {s.label}
+                  </a>
+                ))}
+              </div>
+            )}
           </motion.div>
 
-          {/* Formulaire */}
           <motion.form
             onSubmit={handleSubmit}
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="space-y-4"
+            transition={{ duration: 0.9, delay: 0.15 }}
+            className="space-y-5"
           >
             <input
               type="text"
-              placeholder="Votre prénom"
+              placeholder="Prénom"
               value={form.prenom}
               onChange={e => setForm(f => ({ ...f, prenom: e.target.value }))}
-              className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400/50"
+              className="w-full bg-transparent border-b border-white/10 text-[#F7F4EF] placeholder-[#B8B8B8]/30 py-3 text-sm font-light focus:outline-none focus:border-[#C8A96A]/60 transition-colors duration-200"
             />
             <input
               type="email"
-              placeholder="Votre email"
+              placeholder="Email"
               value={form.email}
               onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-              className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400/50"
+              className="w-full bg-transparent border-b border-white/10 text-[#F7F4EF] placeholder-[#B8B8B8]/30 py-3 text-sm font-light focus:outline-none focus:border-[#C8A96A]/60 transition-colors duration-200"
             />
             <textarea
               placeholder="Votre message"
               rows={4}
               value={form.message}
               onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-              className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400/50 resize-none"
+              className="w-full bg-transparent border-b border-white/10 text-[#F7F4EF] placeholder-[#B8B8B8]/30 py-3 text-sm font-light focus:outline-none focus:border-[#C8A96A]/60 transition-colors duration-200 resize-none"
             />
             <button
               type="submit"
-              className="w-full bg-amber-400 text-black font-semibold py-3 rounded-xl text-sm hover:bg-amber-300 transition-all"
+              className="w-full py-4 bg-[#C8A96A] text-[#0B0B0C] text-xs tracking-[0.3em] uppercase font-medium hover:bg-[#D4B87A] transition-colors duration-300 mt-4"
             >
-              {sent ? 'Merci ! Nous vous répondrons bientôt.' : 'Envoyer le message'}
+              {sent ? 'Merci — Nous vous répondrons.' : 'Envoyer'}
             </button>
           </motion.form>
         </div>

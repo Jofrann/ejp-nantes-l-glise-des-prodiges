@@ -1,104 +1,152 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, LogIn } from 'lucide-react';
-import CountdownTimer from './CountdownTimer';
+import { ChevronDown } from 'lucide-react';
 
-export default function HeroSection({ config }) {
-  const title = config?.hero_title || 'Église des Jeunes Prodiges — Nantes';
-  const subtitle = config?.hero_subtitle || 'Une génération de jeunes appelés à connaître Dieu, grandir ensemble et servir avec puissance.';
+const NAV_LINKS = [
+  { label: 'Vision', href: '#vision' },
+  { label: 'Culte', href: '#culte' },
+  { label: 'Témoignages', href: '#temoignages' },
+  { label: 'Ministères', href: '#ministeres' },
+  { label: 'Contact', href: '#contact' },
+];
+
+export default function HeroSection({ config, visible }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const title = config?.hero_title || 'Église des Jeunes Prodiges';
+  const subtitle = config?.hero_subtitle || 'Une génération appelée à connaître Dieu, grandir ensemble et servir avec excellence.';
   const videoUrl = config?.hero_video_url;
-  const serviceTime = config?.service_time || '15:00';
 
   return (
-    <section className="relative h-screen flex flex-col overflow-hidden">
-      {/* Fond vidéo ou dégradé */}
+    <section className="relative h-screen flex flex-col overflow-hidden bg-[#0B0B0C]">
+      {/* Fond */}
       {videoUrl ? (
-        <video
-          src={videoUrl}
-          className="absolute inset-0 w-full h-full object-cover"
-          autoPlay muted loop playsInline
-        />
+        <video src={videoUrl} className="absolute inset-0 w-full h-full object-cover opacity-50" autoPlay muted loop playsInline />
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950">
-          <div className="absolute inset-0 opacity-20" style={{
-            backgroundImage: 'radial-gradient(ellipse at 30% 50%, #f59e0b 0%, transparent 60%), radial-gradient(ellipse at 70% 30%, #7c3aed 0%, transparent 60%)'
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0C] via-[#111318] to-[#0B0B0C]" />
+          <div className="absolute inset-0 opacity-30" style={{
+            backgroundImage: 'radial-gradient(ellipse 80% 60% at 50% 40%, #1B2A41 0%, transparent 70%)'
           }} />
         </div>
       )}
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0C]/80 via-transparent to-[#0B0B0C]" />
 
       {/* Navbar */}
-      <nav className="relative z-20 flex items-center justify-between px-6 md:px-12 py-5">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-amber-400/20 border border-amber-400/30 flex items-center justify-center">
-            <span className="text-amber-400 font-bold text-sm">EJP</span>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-[#0B0B0C]/80 backdrop-blur-md border-b border-white/5' : ''}`}>
+        <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 md:px-10 py-4">
+          <a href="#" className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full border border-[#C8A96A]/40 flex items-center justify-center">
+              <span className="font-display text-[#C8A96A] text-xs tracking-widest">EJP</span>
+            </div>
+            <span className="text-[#F7F4EF] text-sm font-light tracking-wide hidden md:block">Nantes</span>
+          </a>
+
+          <div className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map(l => (
+              <a key={l.href} href={l.href} className="text-[#B8B8B8] hover:text-[#F7F4EF] text-xs tracking-[0.15em] uppercase transition-colors duration-200">
+                {l.label}
+              </a>
+            ))}
           </div>
-          <span className="text-white font-semibold text-sm hidden md:block">EJP Nantes</span>
+
+          <div className="flex items-center gap-4">
+            <Link to="/dashboard" className="hidden md:flex text-[10px] text-[#B8B8B8]/60 hover:text-[#C8A96A] tracking-[0.2em] uppercase transition-colors duration-200">
+              Espace serviteur
+            </Link>
+            <button className="md:hidden text-[#B8B8B8]" onClick={() => setMenuOpen(!menuOpen)}>
+              <div className="w-5 flex flex-col gap-1">
+                <span className={`h-px bg-current transition-all ${menuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+                <span className={`h-px bg-current transition-all ${menuOpen ? 'opacity-0' : ''}`} />
+                <span className={`h-px bg-current transition-all ${menuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+              </div>
+            </button>
+          </div>
         </div>
-        <div className="hidden md:flex items-center gap-8 text-sm text-white/70">
-          <a href="#vision" className="hover:text-white transition-colors">Vision</a>
-          <a href="#culte" className="hover:text-white transition-colors">Culte</a>
-          <a href="#leaders" className="hover:text-white transition-colors">Leaders</a>
-          <a href="#ministeres" className="hover:text-white transition-colors">Ministères</a>
-          <a href="#contact" className="hover:text-white transition-colors">Contact</a>
-        </div>
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-2 text-xs text-white/60 hover:text-amber-400 border border-white/20 hover:border-amber-400/50 px-4 py-2 rounded-full transition-all duration-300"
-        >
-          <LogIn className="w-3.5 h-3.5" />
-          Espace serviteur
-        </Link>
+
+        {/* Menu mobile */}
+        {menuOpen && (
+          <div className="md:hidden bg-[#0B0B0C]/95 backdrop-blur-xl border-t border-white/5 px-6 py-6 flex flex-col gap-5">
+            {NAV_LINKS.map(l => (
+              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} className="text-[#B8B8B8] text-sm tracking-widest uppercase">
+                {l.label}
+              </a>
+            ))}
+            <Link to="/dashboard" className="text-[#C8A96A]/60 text-xs tracking-widest uppercase mt-2">
+              Espace serviteur
+            </Link>
+          </div>
+        )}
       </nav>
 
-      {/* Contenu hero */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-        >
-          <span className="text-xs uppercase tracking-[0.3em] text-amber-400/80 font-medium mb-6 block">
-            Nantes, France
-          </span>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight leading-none">
-            Église des<br />
-            <span className="text-amber-400">Jeunes Prodiges</span>
-          </h1>
-          <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-            {subtitle}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#culte" className="bg-amber-400 text-black font-semibold px-8 py-3.5 rounded-full hover:bg-amber-300 transition-all duration-300 text-sm">
-              Nous rejoindre dimanche
-            </a>
-            <a href="#vision" className="border border-white/30 text-white font-medium px-8 py-3.5 rounded-full hover:bg-white/10 transition-all duration-300 text-sm">
-              Découvrir l'EJP
-            </a>
-          </div>
-        </motion.div>
-
-        {/* Décompte */}
+      {/* Contenu centré */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 pt-20">
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1 }}
-          className="mt-14 flex flex-col items-center gap-2"
+          animate={{ opacity: visible ? 1 : 0 }}
+          transition={{ duration: 1.2, ease: 'easeOut', delay: 0.3 }}
         >
-          <p className="text-[10px] uppercase tracking-[0.25em] text-white/40">Prochain culte dimanche à {serviceTime}</p>
-          <CountdownTimer serviceTime={serviceTime} />
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 10 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A]/70 font-light block mb-6"
+          >
+            Nantes, France
+          </motion.span>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 24 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="font-display text-5xl md:text-7xl lg:text-8xl text-[#F7F4EF] mb-6 leading-[1.05] font-light"
+          >
+            {title}
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 16 }}
+            transition={{ duration: 0.9, delay: 0.9 }}
+            className="text-[#B8B8B8] text-sm md:text-base max-w-xl mx-auto mb-12 leading-relaxed font-light"
+          >
+            {subtitle}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 12 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <a href="#culte" className="px-8 py-3.5 bg-[#C8A96A] text-[#0B0B0C] text-xs tracking-[0.2em] uppercase font-medium rounded-none hover:bg-[#D4B87A] transition-colors duration-300">
+              Nous rejoindre dimanche
+            </a>
+            <a href="#vision" className="px-8 py-3.5 border border-[#F7F4EF]/20 text-[#F7F4EF]/80 text-xs tracking-[0.2em] uppercase font-light rounded-none hover:bg-white/5 transition-colors duration-300">
+              Découvrir l'EJP
+            </a>
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll hint */}
       <motion.div
-        className="relative z-10 pb-8 flex flex-col items-center gap-2 text-white/30"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: visible ? 1 : 0 }}
+        transition={{ delay: 1.8, duration: 1 }}
+        className="relative z-10 pb-10 flex flex-col items-center gap-3 text-[#B8B8B8]/40"
       >
-        <span className="text-[9px] uppercase tracking-widest">Scrollez pour explorer</span>
-        <ChevronDown className="w-4 h-4" />
+        <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
+          <ChevronDown className="w-4 h-4" />
+        </motion.div>
       </motion.div>
     </section>
   );

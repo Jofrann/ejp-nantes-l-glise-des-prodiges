@@ -1,0 +1,42 @@
+{
+  "name": "Testimonial",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string",
+      "description": "Texte du t\u00e9moignage"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Pr\u00e9nom ou 'Anonyme'"
+    },
+    "author_role": {
+      "type": "string",
+      "description": "R\u00f4le (ex: Membre, Serviteur)"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo optionnelle"
+    },
+    "is_anonymous": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": false,
+      "description": "Valid\u00e9 par l'admin ?"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "content"
+  ]
+}
