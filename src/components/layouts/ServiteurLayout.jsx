@@ -5,9 +5,9 @@ import { Home, User, BookOpen, Bell, LogOut, Menu, X, Heart } from 'lucide-react
 import { base44 } from '@/api/base44Client';
 
 const navItems = [
-  { path: '/', label: 'Accueil', icon: Home },
-  { path: '/mon-profil', label: 'Mon Profil', icon: User },
-  { path: '/culte', label: 'Culte & Vie', icon: BookOpen },
+  { path: '/espace-serviteur', label: 'Tableau de bord', icon: Home },
+  { path: '/profil', label: 'Mon Profil', icon: User },
+  { path: '/', label: 'Site public', icon: BookOpen },
 ];
 
 export default function ServiteurLayout({ children, user }) {

@@ -40,7 +40,7 @@ export default function HomeFooter({ config }) {
                 <span key={s} className="text-xs text-[#B8B8B8]/40 tracking-wide">{s}</span>
               ))}
             </div>
-            <Link to="/dashboard" className="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] text-[#B8B8B8]/25 hover:text-[#C8A96A]/60 transition-colors">
+            <Link to="/espace-serviteur" className="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] text-[#B8B8B8]/25 hover:text-[#C8A96A]/60 transition-colors">
               Espace serviteur
             </Link>
           </div>
