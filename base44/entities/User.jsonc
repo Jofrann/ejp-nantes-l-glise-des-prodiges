@@ -1,0 +1,32 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "bureau",
+        "referent",
+        "serviteur"
+      ],
+      "default": "serviteur",
+      "description": "R\u00f4le de l'utilisateur dans l'\u00e9glise"
+    },
+    "department": {
+      "type": "string",
+      "description": "D\u00e9partement ou minist\u00e8re de l'utilisateur"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Num\u00e9ro de t\u00e9l\u00e9phone"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo de profil"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Courte pr\u00e9sentation"
+    }
+  }
+}

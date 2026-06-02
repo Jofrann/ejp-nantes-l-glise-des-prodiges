@@ -1,0 +1,60 @@
+{
+  "name": "MembershipApplication",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "description": "Applicant's first name"
+    },
+    "lastName": {
+      "type": "string",
+      "description": "Applicant's last name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Applicant's email address"
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Areas of interest"
+    },
+    "selectedTier": {
+      "type": "string",
+      "enum": [
+        "Explorer",
+        "Sustainer",
+        "Pioneer"
+      ],
+      "description": "Selected membership tier"
+    },
+    "tierDetails": {
+      "type": "object",
+      "description": "Full tier details at time of application"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "contacted",
+        "scheduled",
+        "accepted",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Application status"
+    },
+    "assessmentResults": {
+      "type": "object",
+      "description": "AI-generated terrain assessment results"
+    }
+  },
+  "required": [
+    "firstName",
+    "lastName",
+    "email"
+  ]
+}
