@@ -11,6 +11,7 @@ import ShepherdSection from '@/components/home/ShepherdSection';
 import LeadersSection from '@/components/home/LeadersSection';
 import MinistriesSection from '@/components/home/MinistriesSection';
 import GallerySection from '@/components/home/GallerySection';
+import FIJSection from '@/components/home/FIJSection';
 import NantesSection from '@/components/home/NantesSection';
 import AddressSection from '@/components/home/AddressSection';
 import ContactSection from '@/components/home/ContactSection';
@@ -23,6 +24,7 @@ export default function Home() {
   const [ministries, setMinistries] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
+  const [fiJs, setFiJs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [introDone, setIntroD] = useState(false);
 
@@ -34,13 +36,15 @@ export default function Home() {
       base44.entities.Ministry.list('display_order', 20),
       base44.entities.GalleryMedia.filter({ is_active: true }, '-created_date', 12),
       base44.entities.Testimonial.filter({ is_published: true }, 'display_order', 20),
-    ]).then(([c, l, e, m, g, t]) => {
+      base44.entities.FIJ.filter({ is_active: true }, 'display_order', 50),
+    ]).then(([c, l, e, m, g, t, f]) => {
       setConfig(c?.[0] || null);
       setLeaders(l || []);
       setEvents(e || []);
       setMinistries(m || []);
       setGallery(g || []);
       setTestimonials(t || []);
+      setFiJs(f || []);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -93,7 +97,10 @@ export default function Home() {
       {/* 9. Ministères */}
       <MinistriesSection ministries={ministries} />
 
-      {/* 10. Galerie */}
+      {/* 10. FIJ */}
+      <FIJSection fijs={fiJs} />
+
+      {/* 11. Galerie */}
       <GallerySection media={gallery} />
 
       {/* 11. Nantes */}

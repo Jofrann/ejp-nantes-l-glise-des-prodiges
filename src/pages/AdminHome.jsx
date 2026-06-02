@@ -238,6 +238,14 @@ export default function AdminHome() {
 }
 
 function LeadersAdmin({ leaders, setLeaders }) {
+  const uploadLeaderPhoto = async (e, id) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    await base44.entities.Leader.update(id, { photo_url: file_url });
+    setLeaders(prev => prev.map(l => l.id === id ? { ...l, photo_url: file_url } : l));
+  };
+
   const add = async () => {
     const l = await base44.entities.Leader.create({ first_name: 'Nouveau', last_name: 'Leader', role: 'Rôle', is_active: true, display_order: leaders.length });
     setLeaders(prev => [...prev, l]);
@@ -266,7 +274,15 @@ function LeadersAdmin({ leaders, setLeaders }) {
             <input className="bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm" placeholder="Nom" value={l.last_name || ''} onChange={e => update(l.id, { last_name: e.target.value })} />
           </div>
           <input className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" placeholder="Rôle / Fonction" value={l.role || ''} onChange={e => update(l.id, { role: e.target.value })} />
-          <input className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" placeholder="URL photo" value={l.photo_url || ''} onChange={e => update(l.id, { photo_url: e.target.value })} />
+          <div className="flex items-center gap-3 mb-3">
+            {l.photo_url && <img src={l.photo_url} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />}
+            <input className="flex-1 bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm" placeholder="URL photo" value={l.photo_url || ''} onChange={e => update(l.id, { photo_url: e.target.value })} />
+            <label className="flex items-center gap-1.5 text-xs text-amber-400 cursor-pointer hover:text-amber-300 flex-shrink-0">
+              <Upload className="w-3.5 h-3.5" />
+              Upload
+              <input type="file" accept="image/*" className="hidden" onChange={e => uploadLeaderPhoto(e, l.id)} />
+            </label>
+          </div>
           <textarea className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" rows={2} placeholder="Biographie courte" value={l.bio || ''} onChange={e => update(l.id, { bio: e.target.value })} />
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4 text-xs text-gray-500">

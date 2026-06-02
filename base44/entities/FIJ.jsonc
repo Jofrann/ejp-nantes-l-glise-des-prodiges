@@ -1,0 +1,61 @@
+{
+  "name": "FIJ",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nom de la FIJ (ex: FIJ Nantes Centre)"
+    },
+    "city": {
+      "type": "string",
+      "description": "Ville"
+    },
+    "country": {
+      "type": "string",
+      "description": "Pays",
+      "default": "France"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude GPS"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude GPS"
+    },
+    "leader_name": {
+      "type": "string",
+      "description": "Nom du responsable"
+    },
+    "member_count": {
+      "type": "number",
+      "description": "Nombre de membres",
+      "default": 0
+    },
+    "description": {
+      "type": "string",
+      "description": "Description courte"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo de groupe"
+    },
+    "is_nantes": {
+      "type": "boolean",
+      "description": "FIJ bas\u00e9e \u00e0 Nantes ?",
+      "default": false
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "city"
+  ]
+}

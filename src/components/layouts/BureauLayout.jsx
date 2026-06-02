@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Home, Users, Settings, BookOpen, BarChart3, Shield, LogOut, Menu, X, Heart, Bell } from 'lucide-react';
+import { Home, Users, Settings, BarChart3, Shield, LogOut, Menu, X, Bell } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const navItems = [
   { path: '/', label: 'Accueil', icon: Home },
-  { path: '/bureau/annuaire', label: 'Annuaire', icon: Users },
-  { path: '/bureau/ministeres', label: 'Ministères', icon: BookOpen },
-  { path: '/bureau/stats', label: 'Statistiques', icon: BarChart3 },
-  { path: '/bureau/parametres', label: 'Paramètres', icon: Settings },
+  { path: '/bureau', label: 'Dashboard', icon: BarChart3 },
+  { path: '/profil', label: 'Mon profil', icon: Users },
+  { path: '/admin', label: 'Admin vitrine', icon: Settings },
 ];
 
 export default function BureauLayout({ children, user }) {

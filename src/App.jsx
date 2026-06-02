@@ -11,6 +11,8 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import RoleLayout from '@/components/layouts/RoleLayout';
 import Home from '@/pages/Home';
 import AdminHome from '@/pages/AdminHome';
+import BureauDashboard from '@/pages/BureauDashboard';
+import MonProfil from '@/pages/MonProfil';
 
 const { Pages, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -47,6 +49,8 @@ const AuthenticatedApp = () => {
         ))}
 
         <Route path="/admin" element={<AdminHome />} />
+        <Route path="/bureau" element={<BureauDashboard />} />
+        <Route path="/profil" element={<MonProfil />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </RoleLayout>
