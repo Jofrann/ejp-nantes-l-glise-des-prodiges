@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import IntroOverlay from '@/components/home/IntroOverlay';
 import HeroSection from '@/components/home/HeroSection';
-import ScrollVideoSection from '@/components/home/ScrollVideoSection';
+import ScrollControlledVideo from '@/components/home/ScrollControlledVideo';
 import VisionSection from '@/components/home/VisionSection';
 import CulteSection from '@/components/home/CulteSection';
 import EventsSection from '@/components/home/EventsSection';
+import CalendarSection from '@/components/home/CalendarSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import ShepherdSection from '@/components/home/ShepherdSection';
 import LeadersSection from '@/components/home/LeadersSection';
@@ -69,8 +70,8 @@ export default function Home() {
       {/* 1. Hero */}
       <HeroSection config={config} visible={introDone} />
 
-      {/* 2. Vidéo scroll */}
-      {config?.hero_video_url && <ScrollVideoSection videoUrl={config.hero_video_url} />}
+      {/* 2. Vidéo scroll-controlled */}
+      {config?.hero_video_url && <ScrollControlledVideo videoUrl={config.hero_video_url} />}
 
       {/* 3. Vision */}
       <VisionSection title={config?.vision_title} text={config?.vision_text} />
@@ -78,7 +79,10 @@ export default function Home() {
       {/* 4. Prochain culte */}
       <CulteSection config={config} />
 
-      {/* 5. Événements */}
+      {/* 5. Calendrier */}
+      <CalendarSection events={events} />
+
+      {/* 5b. Événements à la une (grid) */}
       <EventsSection events={events} />
 
       {/* 6. Témoignages */}
