@@ -79,7 +79,14 @@ export default function AdminHome() {
     const file = e.target.files?.[0];
     if (!file) return;
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setConfig(c => ({ ...c, [field]: file_url }));
+    // Met à jour le state ET sauvegarde immédiatement en BDD
+    setConfig(c => {
+      const updated = { ...c, [field]: file_url };
+      if (updated.id) {
+        base44.entities.ChurchConfig.update(updated.id, { [field]: file_url });
+      }
+      return updated;
+    });
   };
 
   return (
@@ -241,14 +248,10 @@ function LeaderCard({ leader, onUpdate, onRemove }) {
   const [form, setForm] = useState({ ...leader });
   const [uploading, setUploading] = useState(false);
 
-  // Sync si leader change depuis l'extérieur (ex: après reload)
-  useEffect(() => { setForm(f => ({ ...f, ...leader })); }, [leader.id]);
-
-  const save = (patch) => {
-    const updated = { ...form, ...patch };
-    setForm(updated);
+  const save = useCallback((patch) => {
+    setForm(f => ({ ...f, ...patch }));
     onUpdate(leader.id, patch);
-  };
+  }, [leader.id, onUpdate]);
 
   const uploadPhoto = async (e) => {
     const file = e.target.files?.[0];
@@ -256,7 +259,9 @@ function LeaderCard({ leader, onUpdate, onRemove }) {
     setUploading(true);
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     setUploading(false);
-    save({ photo_url: file_url });
+    // Mise à jour directe sans passer par form (évite désync)
+    setForm(f => ({ ...f, photo_url: file_url }));
+    onUpdate(leader.id, { photo_url: file_url });
   };
 
   const iCls = "bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm w-full";
@@ -337,6 +342,68 @@ function LeadersAdmin({ leaders, setLeaders }) {
   );
 }
 
+function EventCard({ event: ev, onUpdate, onRemove }) {
+  const [form, setForm] = useState({ ...ev });
+  const [uploading, setUploading] = useState(false);
+  const iCls = "w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm";
+
+  const save = useCallback((patch) => {
+    setForm(f => ({ ...f, ...patch }));
+    onUpdate(ev.id, patch);
+  }, [ev.id, onUpdate]);
+
+  const uploadImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setUploading(false);
+    setForm(f => ({ ...f, image_url: file_url }));
+    onUpdate(ev.id, { image_url: file_url });
+  };
+
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
+      <input className={iCls + ' mb-3'} placeholder="Titre" value={form.title || ''} onChange={e => setForm(f => ({...f, title: e.target.value}))} onBlur={e => save({ title: e.target.value })} />
+      <textarea className={iCls + ' mb-3'} rows={2} placeholder="Description" value={form.description || ''} onChange={e => setForm(f => ({...f, description: e.target.value}))} onBlur={e => save({ description: e.target.value })} />
+      <div className="grid grid-cols-2 gap-3 mb-3">
+        <input type="date" className={iCls} value={form.event_date || ''} onChange={e => save({ event_date: e.target.value })} />
+        <input className={iCls} placeholder="Heure (15:00)" value={form.event_time || ''} onChange={e => setForm(f => ({...f, event_time: e.target.value}))} onBlur={e => save({ event_time: e.target.value })} />
+      </div>
+      <input className={iCls + ' mb-3'} placeholder="Lieu" value={form.location || ''} onChange={e => setForm(f => ({...f, location: e.target.value}))} onBlur={e => save({ location: e.target.value })} />
+
+      {/* Image */}
+      <div className="flex items-center gap-3 mb-3">
+        {form.image_url && <img src={form.image_url} alt="" className="w-14 h-10 rounded-lg object-cover flex-shrink-0 border border-white/10" />}
+        <div className="flex-1">
+          <input className={iCls + ' mb-1.5'} placeholder="URL image" value={form.image_url || ''} onChange={e => setForm(f => ({...f, image_url: e.target.value}))} onBlur={e => save({ image_url: e.target.value })} />
+          <label className={`flex items-center gap-1.5 text-xs cursor-pointer ${uploading ? 'text-gray-500' : 'text-amber-400 hover:text-amber-300'}`}>
+            <Upload className="w-3 h-3" />
+            {uploading ? 'Upload en cours...' : 'Uploader une image'}
+            <input type="file" accept="image/*" className="hidden" onChange={uploadImage} disabled={uploading} />
+          </label>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4 text-xs text-gray-500">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={form.is_featured || false} onChange={e => save({ is_featured: e.target.checked })} className="accent-amber-400" />
+            À la une
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={form.is_active !== false} onChange={e => save({ is_active: e.target.checked })} className="accent-amber-400" />
+            Visible
+          </label>
+        </div>
+        <button onClick={() => onRemove(ev.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function EventsAdmin({ events, setEvents }) {
   const add = async () => {
     const e = await base44.entities.Event.create({ title: 'Nouvel événement', event_date: new Date().toISOString().split('T')[0], is_active: true });
@@ -360,32 +427,42 @@ function EventsAdmin({ events, setEvents }) {
         </button>
       </div>
       {events.map(e => (
-        <div key={e.id} className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
-          <input className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" placeholder="Titre" value={e.title || ''} onChange={ev => update(e.id, { title: ev.target.value })} />
-          <textarea className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" rows={2} placeholder="Description" value={e.description || ''} onChange={ev => update(e.id, { description: ev.target.value })} />
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <input type="date" className="bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm" value={e.event_date || ''} onChange={ev => update(e.id, { event_date: ev.target.value })} />
-            <input className="bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm" placeholder="Heure (15:00)" value={e.event_time || ''} onChange={ev => update(e.id, { event_time: ev.target.value })} />
-          </div>
-          <input className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" placeholder="Lieu" value={e.location || ''} onChange={ev => update(e.id, { location: ev.target.value })} />
-          <input className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" placeholder="URL image" value={e.image_url || ''} onChange={ev => update(e.id, { image_url: ev.target.value })} />
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 text-xs text-gray-500">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={e.is_featured || false} onChange={ev => update(e.id, { is_featured: ev.target.checked })} className="accent-amber-400" />
-                À la une
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={e.is_active !== false} onChange={ev => update(e.id, { is_active: ev.target.checked })} className="accent-amber-400" />
-                Visible
-              </label>
-            </div>
-            <button onClick={() => remove(e.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+        <EventCard key={e.id} event={e} onUpdate={update} onRemove={remove} />
       ))}
+    </div>
+  );
+}
+
+function TestimonialCard({ t, onUpdate, onRemove }) {
+  const [form, setForm] = useState({ ...t });
+  const iCls = "bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm";
+  const save = useCallback((patch) => {
+    setForm(f => ({ ...f, ...patch }));
+    onUpdate(t.id, patch);
+  }, [t.id, onUpdate]);
+
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
+      <textarea className={"w-full " + iCls + " mb-3 resize-none"} rows={3} placeholder="Témoignage" value={form.content || ''} onChange={e => setForm(f => ({...f, content: e.target.value}))} onBlur={e => save({ content: e.target.value })} />
+      <div className="grid grid-cols-2 gap-3 mb-3">
+        <input className={iCls} placeholder="Prénom" value={form.author_name || ''} onChange={e => setForm(f => ({...f, author_name: e.target.value}))} onBlur={e => save({ author_name: e.target.value })} />
+        <input className={iCls} placeholder="Rôle" value={form.author_role || ''} onChange={e => setForm(f => ({...f, author_role: e.target.value}))} onBlur={e => save({ author_role: e.target.value })} />
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4 text-xs text-gray-500">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={form.is_anonymous || false} onChange={e => save({ is_anonymous: e.target.checked })} className="accent-amber-400" />
+            Anonyme
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={form.is_published || false} onChange={e => save({ is_published: e.target.checked })} className="accent-amber-400" />
+            Publié
+          </label>
+        </div>
+        <button onClick={() => onRemove(t.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 }
@@ -413,29 +490,34 @@ function TestimonialsAdmin({ testimonials, setTestimonials }) {
         </button>
       </div>
       {testimonials.map(t => (
-        <div key={t.id} className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
-          <textarea className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3 resize-none" rows={3} placeholder="Témoignage" value={t.content || ''} onChange={e => update(t.id, { content: e.target.value })} />
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <input className="bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm" placeholder="Prénom" value={t.author_name || ''} onChange={e => update(t.id, { author_name: e.target.value })} />
-            <input className="bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm" placeholder="Rôle" value={t.author_role || ''} onChange={e => update(t.id, { author_role: e.target.value })} />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 text-xs text-gray-500">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={t.is_anonymous || false} onChange={e => update(t.id, { is_anonymous: e.target.checked })} className="accent-amber-400" />
-                Anonyme
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={t.is_published || false} onChange={e => update(t.id, { is_published: e.target.checked })} className="accent-amber-400" />
-                Publié
-              </label>
-            </div>
-            <button onClick={() => remove(t.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+        <TestimonialCard key={t.id} t={t} onUpdate={update} onRemove={remove} />
       ))}
+    </div>
+  );
+}
+
+function MinistryCard({ m, onUpdate, onRemove }) {
+  const [form, setForm] = useState({ ...m });
+  const iCls = "w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm";
+  const save = useCallback((patch) => {
+    setForm(f => ({ ...f, ...patch }));
+    onUpdate(m.id, patch);
+  }, [m.id, onUpdate]);
+
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
+      <input className={iCls + ' mb-3'} placeholder="Nom" value={form.name || ''} onChange={e => setForm(f => ({...f, name: e.target.value}))} onBlur={e => save({ name: e.target.value })} />
+      <textarea className={iCls + ' mb-3'} rows={2} placeholder="Description" value={form.description || ''} onChange={e => setForm(f => ({...f, description: e.target.value}))} onBlur={e => save({ description: e.target.value })} />
+      <input className={iCls + ' mb-3'} placeholder="Icône (ex: Music, Users, Star)" value={form.icon || ''} onChange={e => setForm(f => ({...f, icon: e.target.value}))} onBlur={e => save({ icon: e.target.value })} />
+      <div className="flex items-center justify-between">
+        <label className="flex items-center gap-2 cursor-pointer text-xs text-gray-500">
+          <input type="checkbox" checked={form.is_active !== false} onChange={e => save({ is_active: e.target.checked })} className="accent-amber-400" />
+          Visible
+        </label>
+        <button onClick={() => onRemove(m.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 }
@@ -463,20 +545,7 @@ function MinistriesAdmin({ ministries, setMinistries }) {
         </button>
       </div>
       {ministries.map(m => (
-        <div key={m.id} className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
-          <input className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" placeholder="Nom" value={m.name || ''} onChange={e => update(m.id, { name: e.target.value })} />
-          <textarea className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" rows={2} placeholder="Description" value={m.description || ''} onChange={e => update(m.id, { description: e.target.value })} />
-          <input className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm mb-3" placeholder="Icône (ex: Music, Users, Star)" value={m.icon || ''} onChange={e => update(m.id, { icon: e.target.value })} />
-          <div className="flex items-center justify-between">
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-gray-500">
-              <input type="checkbox" checked={m.is_active !== false} onChange={e => update(m.id, { is_active: e.target.checked })} className="accent-amber-400" />
-              Visible
-            </label>
-            <button onClick={() => remove(m.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+        <MinistryCard key={m.id} m={m} onUpdate={update} onRemove={remove} />
       ))}
     </div>
   );
