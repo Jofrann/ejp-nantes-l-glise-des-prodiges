@@ -9,6 +9,7 @@ import MembresGrid from '@/components/departements/MembresGrid';
 import AjouterMembreModal from '@/components/departements/AjouterMembreModal';
 import DeptChat from '@/components/departements/DeptChat';
 import DeptIcon from '@/components/departements/DeptIcon';
+import GestionMembres from '@/components/departements/GestionMembres';
 
 const COLOR_MAP = {
   amber:  { border: 'border-amber-400/20', text: 'text-amber-400', bg: 'bg-amber-400/10', glow: 'bg-amber-400/5' },
@@ -162,6 +163,22 @@ export default function PageDepartement() {
             isAdmin={canManage}
             onDelete={reloadMembers}
           />
+
+          {/* Section gestion admin */}
+          {isAdmin && (
+            <div className="mt-10">
+              <div className="border-t border-white/5 mb-6" />
+              <p className="text-xs text-gray-600 uppercase tracking-widest mb-3">Administration</p>
+              <GestionMembres
+                members={members}
+                colors={colors}
+                departmentId={id}
+                existingUserIds={existingUserIds}
+                onReload={reloadMembers}
+                onOpenAdd={() => setShowAddModal(true)}
+              />
+            </div>
+          )}
         </div>
       </div>
 
