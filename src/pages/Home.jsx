@@ -84,8 +84,8 @@ export default function Home() {
       {/* 6. Témoignages */}
       <TestimonialsSection testimonials={testimonials} />
 
-      {/* 7. Bergère */}
-      <ShepherdSection shepherd={shepherd} />
+      {/* 7. Bergers */}
+      <ShepherdSection shepherd={shepherd} config={config} />
 
       {/* 8. Leaders */}
       <LeadersSection leaders={leaders} />

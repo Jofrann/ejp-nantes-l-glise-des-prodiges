@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Settings, Users, Calendar, Image, Church, LogOut, Save, Plus, Trash2, Upload } from 'lucide-react';
+import { Settings, Users, Calendar, Image, Church, Save, Plus, Trash2, Upload } from 'lucide-react';
+import GalleryAdmin from '@/components/admin/GalleryAdmin';
 import { motion } from 'framer-motion';
 
 const TABS = [
@@ -177,6 +178,32 @@ export default function AdminHome() {
                   <input className={inputCls} value={config.whatsapp_url || ''} onChange={e => setConfig(c => ({ ...c, whatsapp_url: e.target.value }))} />
                 </Field>
               </Section>
+              <Section title="Berger EJP Monde">
+                <p className="text-xs text-gray-500 mb-4">Affiché côte à côte avec la bergère EJP Nantes.</p>
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <Field label="Prénom">
+                    <input className={inputCls} value={config.world_shepherd_first_name || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_first_name: e.target.value }))} />
+                  </Field>
+                  <Field label="Nom">
+                    <input className={inputCls} value={config.world_shepherd_last_name || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_last_name: e.target.value }))} />
+                  </Field>
+                </div>
+                <Field label="Rôle (ex: Berger EJP Monde)">
+                  <input className={inputCls} value={config.world_shepherd_role || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_role: e.target.value }))} />
+                </Field>
+                <Field label="Biographie">
+                  <textarea className={inputCls} rows={3} value={config.world_shepherd_bio || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_bio: e.target.value }))} />
+                </Field>
+                <Field label="Photo (URL ou upload)">
+                  <input className={inputCls + ' mb-2'} placeholder="https://..." value={config.world_shepherd_photo_url || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_photo_url: e.target.value }))} />
+                  <label className="flex items-center gap-2 text-xs text-amber-400 cursor-pointer hover:text-amber-300">
+                    <Upload className="w-3.5 h-3.5" />
+                    Uploader une photo
+                    <input type="file" accept="image/*" className="hidden" onChange={e => uploadFile(e, 'world_shepherd_photo_url')} />
+                  </label>
+                </Field>
+              </Section>
+
               <Section title="Annonce">
                 <div className="flex items-center gap-3 mb-4">
                   <input type="checkbox" id="ann_active" checked={config.announcement_active || false} onChange={e => setConfig(c => ({ ...c, announcement_active: e.target.checked }))} className="accent-amber-400" />
@@ -403,55 +430,6 @@ function MinistriesAdmin({ ministries, setMinistries }) {
           </div>
         </div>
       ))}
-    </div>
-  );
-}
-
-function GalleryAdmin({ gallery, setGallery }) {
-  const [uploading, setUploading] = useState(false);
-
-  const upload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    const type = file.type.startsWith('video') ? 'video' : 'image';
-    const m = await base44.entities.GalleryMedia.create({ file_url, type, is_active: true, display_order: gallery.length });
-    setGallery(prev => [m, ...prev]);
-    setUploading(false);
-  };
-
-  const remove = async (id) => {
-    await base44.entities.GalleryMedia.delete(id);
-    setGallery(prev => prev.filter(m => m.id !== id));
-  };
-
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-white font-semibold">Galerie ({gallery.length})</h2>
-        <label className={`flex items-center gap-2 bg-amber-400 text-black text-xs font-semibold px-3 py-2 rounded-xl hover:bg-amber-300 cursor-pointer ${uploading ? 'opacity-50' : ''}`}>
-          <Upload className="w-3.5 h-3.5" />
-          {uploading ? 'Upload...' : 'Uploader'}
-          <input type="file" accept="image/*,video/*" className="hidden" onChange={upload} disabled={uploading} />
-        </label>
-      </div>
-      <div className="grid grid-cols-3 gap-3">
-        {gallery.map(m => (
-          <div key={m.id} className="relative group rounded-xl overflow-hidden aspect-square bg-white/5">
-            {m.type === 'video' ? (
-              <video src={m.file_url} className="w-full h-full object-cover" />
-            ) : (
-              <img src={m.file_url} alt="" className="w-full h-full object-cover" />
-            )}
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <button onClick={() => remove(m.id)} className="bg-red-500/80 text-white p-2 rounded-lg">
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

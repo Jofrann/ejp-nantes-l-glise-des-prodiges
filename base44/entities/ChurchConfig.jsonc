@@ -68,6 +68,26 @@
       "type": "boolean",
       "description": "Afficher l'annonce ?",
       "default": false
+    },
+    "world_shepherd_first_name": {
+      "type": "string",
+      "description": "Pr\u00e9nom du berger EJP Monde"
+    },
+    "world_shepherd_last_name": {
+      "type": "string",
+      "description": "Nom du berger EJP Monde"
+    },
+    "world_shepherd_role": {
+      "type": "string",
+      "description": "R\u00f4le (ex: Berger EJP Monde)"
+    },
+    "world_shepherd_bio": {
+      "type": "string",
+      "description": "Biographie du berger EJP Monde"
+    },
+    "world_shepherd_photo_url": {
+      "type": "string",
+      "description": "Photo du berger EJP Monde"
     }
   },
   "required": [
