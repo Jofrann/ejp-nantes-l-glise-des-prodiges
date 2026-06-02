@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import IntroOverlay from '@/components/home/IntroOverlay';
 import HeroSection from '@/components/home/HeroSection';
-import ScrollControlledVideo from '@/components/home/ScrollControlledVideo';
 import VisionSection from '@/components/home/VisionSection';
 import CulteSection from '@/components/home/CulteSection';
 import EventsSection from '@/components/home/EventsSection';
@@ -69,9 +68,6 @@ export default function Home() {
 
       {/* 1. Hero */}
       <HeroSection config={config} visible={introDone} />
-
-      {/* 2. Vidéo scroll-controlled */}
-      {config?.hero_video_url && <ScrollControlledVideo videoUrl={config.hero_video_url} />}
 
       {/* 3. Vision */}
       <VisionSection title={config?.vision_title} text={config?.vision_text} />
