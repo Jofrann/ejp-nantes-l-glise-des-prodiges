@@ -1,0 +1,49 @@
+{
+  "name": "DepartmentMember",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID de l'utilisateur (User)"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nom complet (d\u00e9normalis\u00e9 pour affichage rapide)"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo de profil"
+    },
+    "role_in_dept": {
+      "type": "string",
+      "enum": [
+        "referent",
+        "membre"
+      ],
+      "default": "membre",
+      "description": "R\u00f4le dans le d\u00e9partement"
+    },
+    "joined_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date d'int\u00e9gration dans le d\u00e9partement"
+    },
+    "note": {
+      "type": "string",
+      "description": "Note ou r\u00f4le pr\u00e9cis (ex: Guitariste, Coordinateur...)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Membre actif dans ce d\u00e9partement ?"
+    }
+  },
+  "required": [
+    "department_id",
+    "full_name"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Department",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nom du d\u00e9partement (ex: Louange, Accueil, Jeunesse)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description courte du d\u00e9partement"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Nom d'ic\u00f4ne Lucide (ex: Music, Users, Heart)"
+    },
+    "color": {
+      "type": "string",
+      "description": "Couleur th\u00e8me (ex: amber, blue, purple, rose, green)",
+      "default": "amber"
+    },
+    "cover_url": {
+      "type": "string",
+      "description": "Image de couverture"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

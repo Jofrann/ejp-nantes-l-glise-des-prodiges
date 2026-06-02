@@ -17,8 +17,8 @@ const ROLE_LABELS = {
 
 const QUICK_LINKS = [
   { icon: User, label: 'Mon profil', sub: 'Éditer mes infos', to: '/profil', color: 'from-amber-400/15 to-amber-600/5 border-amber-400/20' },
+  { icon: Users, label: 'Départements', sub: 'Équipes & membres', to: '/departements', color: 'from-purple-400/15 to-purple-600/5 border-purple-400/20' },
   { icon: Calendar, label: 'Agenda', sub: 'Prochains cultes & events', to: '/#agenda', color: 'from-blue-400/15 to-blue-600/5 border-blue-400/20' },
-  { icon: Users, label: 'Équipes', sub: 'Voir les ministères', to: '/#ministeres', color: 'from-purple-400/15 to-purple-600/5 border-purple-400/20' },
   { icon: Heart, label: 'Témoignages', sub: 'Partager & découvrir', to: '/#temoignages', color: 'from-rose-400/15 to-rose-600/5 border-rose-400/20' },
 ];
 

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Home, User, BookOpen, Bell, LogOut, Menu, X, Heart } from 'lucide-react';
+import { Home, User, BookOpen, Users, LogOut, Menu, X, Heart } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const navItems = [
   { path: '/espace-serviteur', label: 'Tableau de bord', icon: Home },
+  { path: '/departements', label: 'Départements', icon: Users },
   { path: '/profil', label: 'Mon Profil', icon: User },
   { path: '/', label: 'Site public', icon: BookOpen },
 ];
