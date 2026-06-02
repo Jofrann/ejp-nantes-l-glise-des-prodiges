@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Upload, Save, Shield, Mail, User, Instagram, Phone, FileText } from 'lucide-react';
+import ProfilDepartements from '@/components/profil/ProfilDepartements';
 
 const ROLE_LABELS = {
   admin: { label: 'Admin', color: 'text-red-400 bg-red-400/10 border-red-400/20' },
@@ -196,6 +197,10 @@ export default function MonProfil() {
             </button>
           </div>
         </motion.div>
+
+        {/* Activités dans les départements */}
+        {user && <ProfilDepartements userId={user.id} />}
+
       </div>
     </div>
   );
