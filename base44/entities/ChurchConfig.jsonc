@@ -4,15 +4,15 @@
   "properties": {
     "hero_video_url": {
       "type": "string",
-      "description": "URL de la vid\u00e9o h\u00e9ro (upload direct)"
+      "description": "URL de la vid\u00e9o h\u00e9ro"
     },
     "hero_title": {
       "type": "string",
-      "description": "Titre principal de la page d'accueil"
+      "description": "Titre principal"
     },
     "hero_subtitle": {
       "type": "string",
-      "description": "Sous-titre ou verset de la page d'accueil"
+      "description": "Sous-titre"
     },
     "vision_title": {
       "type": "string",
@@ -20,66 +20,49 @@
     },
     "vision_text": {
       "type": "string",
-      "description": "Texte de la vision de l'\u00e9glise"
-    },
-    "pastor_name": {
-      "type": "string",
-      "description": "Nom du pasteur principal"
-    },
-    "pastor_title": {
-      "type": "string",
-      "description": "Titre du pasteur (ex: Pasteur Principal)"
-    },
-    "pastor_photo_url": {
-      "type": "string",
-      "description": "Photo du pasteur"
-    },
-    "pastor_bio": {
-      "type": "string",
-      "description": "Biographie courte du pasteur"
-    },
-    "leaders": {
-      "type": "array",
-      "description": "Liste des responsables",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "role": {
-            "type": "string"
-          },
-          "photo_url": {
-            "type": "string"
-          },
-          "bio": {
-            "type": "string"
-          }
-        }
-      }
+      "description": "Texte de la vision"
     },
     "service_day": {
       "type": "string",
-      "description": "Jour du culte (ex: Dimanche)",
+      "description": "Jour du culte",
       "default": "Dimanche"
     },
     "service_time": {
       "type": "string",
-      "description": "Heure du culte (ex: 15:00)",
+      "description": "Heure du culte (HH:MM)",
       "default": "15:00"
     },
     "address_label": {
       "type": "string",
-      "description": "Adresse lisible de l'\u00e9glise"
+      "description": "Adresse lisible"
     },
     "maps_link": {
       "type": "string",
       "description": "Lien Google Maps"
     },
+    "contact_email": {
+      "type": "string",
+      "description": "Email de contact"
+    },
+    "instagram_url": {
+      "type": "string",
+      "description": "Lien Instagram"
+    },
+    "youtube_url": {
+      "type": "string",
+      "description": "Lien YouTube"
+    },
+    "whatsapp_url": {
+      "type": "string",
+      "description": "Lien WhatsApp"
+    },
+    "tiktok_url": {
+      "type": "string",
+      "description": "Lien TikTok"
+    },
     "announcement_text": {
       "type": "string",
-      "description": "Annonce ou \u00e9v\u00e9nement en cours \u00e0 afficher"
+      "description": "Texte de l'annonce"
     },
     "announcement_active": {
       "type": "boolean",

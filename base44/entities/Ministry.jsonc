@@ -1,0 +1,35 @@
+{
+  "name": "Ministry",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nom du minist\u00e8re"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description courte"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Nom de l'ic\u00f4ne Lucide"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image ou illustration"
+    },
+    "display_order": {
+      "type": "number",
+      "description": "Ordre d'affichage",
+      "default": 0
+    },
+    "is_active": {
+      "type": "boolean",
+      "description": "Visible sur la page ?",
+      "default": true
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

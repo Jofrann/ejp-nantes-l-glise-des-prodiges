@@ -10,6 +10,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import RoleLayout from '@/components/layouts/RoleLayout';
 import Home from '@/pages/Home';
+import AdminHome from '@/pages/AdminHome';
 
 const { Pages, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -45,6 +46,7 @@ const AuthenticatedApp = () => {
           <Route key={path} path={`/${path}`} element={<Page />} />
         ))}
 
+        <Route path="/admin" element={<AdminHome />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </RoleLayout>

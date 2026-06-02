@@ -1,0 +1,45 @@
+{
+  "name": "Event",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre de l'\u00e9v\u00e9nement"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description courte"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date"
+    },
+    "event_time": {
+      "type": "string",
+      "description": "Heure (ex: 15:00)"
+    },
+    "location": {
+      "type": "string",
+      "description": "Lieu"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image de l'\u00e9v\u00e9nement"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "description": "Mettre en avant ?",
+      "default": false
+    },
+    "is_active": {
+      "type": "boolean",
+      "description": "Visible sur la page ?",
+      "default": true
+    }
+  },
+  "required": [
+    "title",
+    "event_date"
+  ]
+}

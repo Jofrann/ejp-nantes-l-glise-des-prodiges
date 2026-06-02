@@ -1,0 +1,50 @@
+{
+  "name": "Leader",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "Pr\u00e9nom"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Nom de famille"
+    },
+    "role": {
+      "type": "string",
+      "description": "Fonction / r\u00f4le"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Courte biographie"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "URL de la photo"
+    },
+    "display_order": {
+      "type": "number",
+      "description": "Ordre d'affichage",
+      "default": 0
+    },
+    "is_main_shepherd": {
+      "type": "boolean",
+      "description": "Est la berg\u00e8re principale ?",
+      "default": false
+    },
+    "is_active": {
+      "type": "boolean",
+      "description": "Afficher sur la page ?",
+      "default": true
+    },
+    "instagram_url": {
+      "type": "string",
+      "description": "Lien Instagram optionnel"
+    }
+  },
+  "required": [
+    "first_name",
+    "last_name",
+    "role"
+  ]
+}

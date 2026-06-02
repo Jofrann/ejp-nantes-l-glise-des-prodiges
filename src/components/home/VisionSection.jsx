@@ -1,37 +1,54 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Heart, Users, Sparkles } from 'lucide-react';
+
+const PILLARS = [
+  { icon: Heart, label: 'Foi', text: 'Grandir dans une relation vivante et profonde avec Dieu.' },
+  { icon: Users, label: 'Famille', text: 'Marcher ensemble dans l\'amour, l\'unité et la fraternité.' },
+  { icon: Sparkles, label: 'Service', text: 'Découvrir ses dons et les mettre au service de Dieu et des autres.' },
+];
 
 export default function VisionSection({ title, text }) {
-  if (!title && !text) return null;
-
   return (
-    <section className="py-28 px-6 relative overflow-hidden">
-      {/* Fond décoratif */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-slate-900/50 to-gray-950" />
-      <div className="absolute inset-0 opacity-5" style={{
-        backgroundImage: 'radial-gradient(circle at 30% 50%, #f59e0b 0%, transparent 60%), radial-gradient(circle at 70% 50%, #3b82f6 0%, transparent 60%)'
-      }} />
+    <section id="vision" className="py-28 px-6 bg-gray-950 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-5 pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(ellipse at 50% 0%, #f59e0b, transparent 70%)' }} />
 
-      <div className="relative max-w-3xl mx-auto text-center">
+      <div className="max-w-screen-lg mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
+          className="text-center mb-16"
         >
-          <span className="inline-block text-xs uppercase tracking-widest text-amber-400 font-medium mb-4 border border-amber-400/20 px-3 py-1 rounded-full">
-            Notre Vision
-          </span>
-          <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-8">
-            {title || 'La Vision de l\'Église'}
+          <span className="text-xs uppercase tracking-[0.3em] text-amber-400/80 font-medium">Qui nous sommes</span>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-6">
+            {title || 'Notre vision'}
           </h2>
-          <div className="relative">
-            <div className="absolute left-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-amber-400/50 to-transparent" />
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed pl-8 text-left italic">
-              "{text || 'Aller, faire de toutes les nations des disciples...'}"
-            </p>
-          </div>
+          <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed italic border-l-2 border-amber-400/40 pl-5 text-left">
+            {text || "L'Église des Jeunes Prodiges existe pour conduire une génération de jeunes à connaître Dieu, découvrir leur identité, développer leurs dons et prendre leur place dans le corps de Christ."}
+          </p>
         </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {PILLARS.map((pillar, i) => (
+            <motion.div
+              key={pillar.label}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.15 }}
+              className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/8 hover:border-amber-400/20 transition-all duration-300"
+            >
+              <div className="w-12 h-12 rounded-xl bg-amber-400/10 flex items-center justify-center mb-5">
+                <pillar.icon className="w-6 h-6 text-amber-400" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-3">{pillar.label}</h3>
+              <p className="text-sm text-gray-400 leading-relaxed">{pillar.text}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
