@@ -124,8 +124,11 @@ export default function HeroSection({ config, visible }) {
           </div>
 
           <div className="flex items-center gap-4">
-            <Link to="/admin" className="hidden md:flex text-[10px] text-[#B8B8B8]/60 hover:text-[#C8A96A] tracking-[0.2em] uppercase transition-colors duration-200">
-              Espace bureau
+            <Link
+              to="/login"
+              className="hidden md:flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase border border-[#C8A96A]/30 text-[#C8A96A]/70 px-4 py-2 hover:border-[#C8A96A] hover:text-[#C8A96A] hover:bg-[#C8A96A]/5 transition-all duration-300"
+            >
+              Member Access
             </Link>
             <button className="md:hidden text-[#B8B8B8]" onClick={() => setMenuOpen(!menuOpen)}>
               <div className="w-5 flex flex-col gap-1">
@@ -144,8 +147,8 @@ export default function HeroSection({ config, visible }) {
                 {l.label}
               </a>
             ))}
-            <Link to="/admin" className="text-[#C8A96A]/60 text-xs tracking-widest uppercase mt-2">
-              Espace bureau
+            <Link to="/login" className="text-[#C8A96A]/70 text-xs tracking-widest uppercase mt-2 border border-[#C8A96A]/30 px-4 py-2">
+              Member Access
             </Link>
           </div>
         )}
@@ -200,6 +203,26 @@ export default function HeroSection({ config, visible }) {
             <a href="#vision" className="px-8 py-3.5 border border-[#F7F4EF]/20 text-[#F7F4EF]/80 text-xs tracking-[0.2em] uppercase font-light hover:bg-white/5 transition-colors duration-300">
               Découvrir l'EJP
             </a>
+          </motion.div>
+
+          {/* CTA Serviteur */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 16 }}
+            transition={{ duration: 0.8, delay: 1.5 }}
+            className="mt-10 flex flex-col items-center gap-3"
+          >
+            <div className="w-px h-8 bg-[#C8A96A]/30" />
+            <p className="text-[#F7F4EF]/60 text-xs tracking-[0.25em] uppercase font-light">
+              Tu veux devenir serviteur ?
+            </p>
+            <Link
+              to="/register"
+              className="relative group px-10 py-3.5 border border-[#C8A96A]/50 text-[#C8A96A] text-xs tracking-[0.25em] uppercase font-medium overflow-hidden transition-all duration-300 hover:border-[#C8A96A] hover:text-[#0B0B0C]"
+            >
+              <span className="absolute inset-0 bg-[#C8A96A] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
+              <span className="relative">Inscris-toi</span>
+            </Link>
           </motion.div>
         </motion.div>
       </div>
