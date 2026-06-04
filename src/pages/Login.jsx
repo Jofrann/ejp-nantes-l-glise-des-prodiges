@@ -33,28 +33,28 @@ export default function Login() {
   return (
     <AuthLayout
       footer={
-        <>
+      <>
           Don't have an account?{" "}
           <Link to="/register" className="text-red-500 font-medium hover:underline">
             Sign up for free!
           </Link>
         </>
-      }
-    >
+      }>
+      
       {/* Titre */}
       <h1 className="text-4xl font-bold tracking-tight text-zinc-900 mb-1">
         WELCOME BACK
       </h1>
-      <p className="text-zinc-400 text-sm mb-8">
-        Welcome back! Please enter your details.
+      <p className="text-zinc-400 text-sm mb-8">young prodigy.
+
       </p>
 
       {/* Erreur */}
-      {error && (
-        <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-500 text-sm border border-red-100">
+      {error &&
+      <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-500 text-sm border border-red-100">
           {error}
         </div>
-      )}
+      }
 
       {/* Formulaire */}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -69,8 +69,8 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition"
-          />
+            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition" />
+          
         </div>
 
         <div className="space-y-1">
@@ -83,8 +83,8 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition"
-          />
+            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition" />
+          
         </div>
 
         {/* Remember me + Forgot */}
@@ -94,8 +94,8 @@ export default function Login() {
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="w-4 h-4 rounded border-zinc-300 accent-red-500"
-            />
+              className="w-4 h-4 rounded border-zinc-300 accent-red-500" />
+            
             <span className="text-sm text-zinc-600">Remember me</span>
           </label>
           <Link to="/forgot-password" className="text-sm text-zinc-600 hover:text-red-500 transition">
@@ -107,8 +107,8 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-12 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2"
-        >
+          className="w-full h-12 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
+          
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Connexion...</> : "Sign in"}
         </button>
       </form>
@@ -124,11 +124,11 @@ export default function Login() {
       <button
         type="button"
         onClick={handleGoogle}
-        className="w-full h-12 rounded-2xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 font-medium text-sm transition flex items-center justify-center gap-2"
-      >
+        className="w-full h-12 rounded-2xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 font-medium text-sm transition flex items-center justify-center gap-2">
+        
         <GoogleIcon className="w-5 h-5" />
         Sign in with Google
       </button>
-    </AuthLayout>
-  );
+    </AuthLayout>);
+
 }
