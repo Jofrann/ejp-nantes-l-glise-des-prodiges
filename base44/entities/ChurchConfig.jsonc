@@ -88,6 +88,10 @@
     "world_shepherd_photo_url": {
       "type": "string",
       "description": "Photo du berger EJP Monde"
+    },
+    "auth_page_image_url": {
+      "type": "string",
+      "description": "Image illustrative affich\u00e9e sur les pages de connexion/inscription (colonne droite)"
     }
   },
   "required": [
