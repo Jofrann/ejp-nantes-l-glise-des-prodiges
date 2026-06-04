@@ -24,7 +24,6 @@ const CHAPTERS = [
 ];
 
 export default function HeroSection({ config, visible }) {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [chapterIndex, setChapterIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -35,13 +34,6 @@ export default function HeroSection({ config, visible }) {
   const title = config?.hero_title || 'Église des Jeunes Prodiges';
   const subtitle = config?.hero_subtitle || 'Une génération appelée à connaître Dieu, grandir ensemble et servir avec excellence.';
   const videoUrl = config?.hero_video_url;
-
-  // Navbar scroll
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   // GSAP scroll-controlled video
   useEffect(() => {
@@ -114,7 +106,7 @@ export default function HeroSection({ config, visible }) {
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80 pointer-events-none" />
 
       {/* Navbar */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-[#0B0B0C]/80 backdrop-blur-md border-b border-white/5' : ''}`}>
+      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-[#0B0B0C]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 md:px-10 py-4">
           <a href="#" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full border border-[#C8A96A]/40 flex items-center justify-center">
