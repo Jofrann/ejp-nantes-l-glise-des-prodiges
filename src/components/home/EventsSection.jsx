@@ -8,7 +8,7 @@ export default function EventsSection({ events = [] }) {
   if (active.length === 0) return null;
 
   return (
-    <section id="evenements" className="py-36 px-6 bg-[#F7F4EF]/85 backdrop-blur-md">
+    <section id="evenements" className="py-36 px-6 bg-[#F7F4EF]/75 backdrop-blur-md">
       <div className="max-w-screen-lg mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

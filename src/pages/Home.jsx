@@ -62,18 +62,18 @@ export default function Home() {
 
   return (
     <div className="bg-[#0B0B0C] overflow-x-hidden">
-      {/* Vidéo fixe en fond — style cinématique */}
+      {/* Vidéo fixe en fond global — couvre toute la page, accélération GPU */}
       {videoUrl && (
-        <div className="fixed inset-0 w-full h-screen -z-20 pointer-events-none overflow-hidden">
+        <div className="fixed inset-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
           <video
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transform-gpu will-change-transform"
             src={videoUrl}
           />
-          <div className="absolute inset-0 bg-[#0B0B0C]/50" />
+          <div className="absolute inset-0 bg-[#0B0B0C]/55" />
         </div>
       )}
       {/* Intro cinématique */}
