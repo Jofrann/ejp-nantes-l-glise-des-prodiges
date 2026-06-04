@@ -107,7 +107,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-12 rounded-2xl hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2 bg-gray-300">
+          className="w-full h-12 rounded-2xl hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2 bg-orange-950">
           
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Connexion...</> : "Sign in"}
         </button>
