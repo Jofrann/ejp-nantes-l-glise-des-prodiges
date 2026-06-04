@@ -45,7 +45,7 @@ export default function Login() {
       <h1 className="text-4xl font-bold tracking-tight text-zinc-900 mb-1">
         WELCOME BACK
       </h1>
-      <p className="text-zinc-400 text-sm mb-8">Glad to see you again, young prodigy.
+      <p className="text-sm mb-8 text-yellow-900">Glad to see you again, young prodigy.
 
       </p>
 
