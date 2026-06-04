@@ -43,6 +43,7 @@ export default function AdminHome() {
   const [testimonials, setTestimonials] = useState([]);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+  const [uploadingVideo, setUploadingVideo] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -138,13 +139,28 @@ export default function AdminHome() {
                 <Field label="Sous-titre">
                   <textarea className={inputCls} rows={3} value={config.hero_subtitle || ''} onChange={e => setConfig(c => ({ ...c, hero_subtitle: e.target.value }))} />
                 </Field>
-                <Field label="Vidéo hero (URL ou upload)">
+                <Field label="Vidéo de fond (URL ou upload)">
                   <input className={inputCls + ' mb-2'} placeholder="https://..." value={config.hero_video_url || ''} onChange={e => setConfig(c => ({ ...c, hero_video_url: e.target.value }))} />
-                  <label className="flex items-center gap-2 text-xs text-amber-400 cursor-pointer hover:text-amber-300">
+                  {config.hero_video_url && (
+                    <video
+                      src={config.hero_video_url}
+                      className="w-full h-32 object-cover rounded-xl mb-2 border border-white/10"
+                      muted
+                      loop
+                      autoPlay
+                      playsInline
+                    />
+                  )}
+                  <label className={`flex items-center gap-2 text-xs cursor-pointer ${uploadingVideo ? 'text-gray-500 pointer-events-none' : 'text-amber-400 hover:text-amber-300'}`}>
                     <Upload className="w-3.5 h-3.5" />
-                    Uploader une vidéo
-                    <input type="file" accept="video/*" className="hidden" onChange={e => uploadFile(e, 'hero_video_url')} />
+                    {uploadingVideo ? 'Upload en cours… ⏳' : 'Uploader une vidéo (MP4 recommandé)'}
+                    <input type="file" accept="video/*" className="hidden" disabled={uploadingVideo} onChange={async (e) => {
+                      setUploadingVideo(true);
+                      await uploadFile(e, 'hero_video_url');
+                      setUploadingVideo(false);
+                    }} />
                   </label>
+                  <p className="text-[10px] text-gray-600 mt-1.5">Conseil : vidéo &lt; 10 Mo pour un chargement rapide.</p>
                 </Field>
               </Section>
               <Section title="Vision">
