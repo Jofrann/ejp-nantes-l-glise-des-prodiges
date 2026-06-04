@@ -23,6 +23,7 @@ import EspaceServiteur from '@/pages/EspaceServiteur';
 import ListeDepartements from '@/pages/departements/ListeDepartements';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
+import Hub from '@/pages/Hub';
 
 const { Pages, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -67,6 +68,7 @@ const AuthenticatedApp = () => {
           <Route path="/departements" element={<ListeDepartements />} />
           <Route path="/departement/:id" element={<PageDepartement />} />
           <Route path="/departement/:id/editer" element={<EditerDepartement />} />
+          <Route path="/hub" element={<Hub />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Route>

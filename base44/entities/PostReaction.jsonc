@@ -1,0 +1,23 @@
+{
+  "name": "PostReaction",
+  "type": "object",
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "description": "ID du post"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID de l'utilisateur"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Emoji de r\u00e9action (ex: \u2764\ufe0f, \ud83d\udd25, \ud83d\ude4f)"
+    }
+  },
+  "required": [
+    "post_id",
+    "user_id",
+    "emoji"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Post",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string",
+      "description": "Contenu du post"
+    },
+    "author_id": {
+      "type": "string",
+      "description": "ID de l'auteur"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nom de l'auteur (d\u00e9normalis\u00e9)"
+    },
+    "author_photo": {
+      "type": "string",
+      "description": "Photo de l'auteur"
+    },
+    "author_role": {
+      "type": "string",
+      "description": "R\u00f4le de l'auteur"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "announcement",
+        "parvis"
+      ],
+      "default": "parvis",
+      "description": "announcement = fil officiel, parvis = flux social"
+    },
+    "media_url": {
+      "type": "string",
+      "description": "Image ou vid\u00e9o attach\u00e9e"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video"
+      ],
+      "description": "Type de m\u00e9dia"
+    },
+    "reactions": {
+      "type": "object",
+      "description": "Compteurs de r\u00e9actions {emoji: count}"
+    },
+    "comment_count": {
+      "type": "number",
+      "default": 0
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "content",
+    "author_id",
+    "type"
+  ]
+}

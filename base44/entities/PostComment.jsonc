@@ -1,0 +1,31 @@
+{
+  "name": "PostComment",
+  "type": "object",
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "description": "ID du post parent"
+    },
+    "author_id": {
+      "type": "string",
+      "description": "ID de l'auteur"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nom de l'auteur"
+    },
+    "author_photo": {
+      "type": "string",
+      "description": "Photo de l'auteur"
+    },
+    "content": {
+      "type": "string",
+      "description": "Contenu du commentaire"
+    }
+  },
+  "required": [
+    "post_id",
+    "author_id",
+    "content"
+  ]
+}

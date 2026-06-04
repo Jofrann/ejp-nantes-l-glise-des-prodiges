@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  Calendar, Heart, Users, BookOpen, Bell, ChevronRight,
+  Calendar, Users, BookOpen, Bell, ChevronRight,
   MapPin, Clock, Star, User
 } from 'lucide-react';
 
@@ -16,10 +16,10 @@ const ROLE_LABELS = {
 };
 
 const QUICK_LINKS = [
-  { icon: User, label: 'Mon profil', sub: 'Éditer mes infos', to: '/profil', color: 'from-amber-400/15 to-amber-600/5 border-amber-400/20' },
+  { icon: Bell, label: 'EJP Hub', sub: 'Feed & communauté', to: '/hub', color: 'from-amber-400/20 to-amber-600/5 border-amber-400/30' },
   { icon: Users, label: 'Départements', sub: 'Équipes & membres', to: '/departements', color: 'from-purple-400/15 to-purple-600/5 border-purple-400/20' },
   { icon: Calendar, label: 'Agenda', sub: 'Prochains cultes & events', to: '/#agenda', color: 'from-blue-400/15 to-blue-600/5 border-blue-400/20' },
-  { icon: Heart, label: 'Témoignages', sub: 'Partager & découvrir', to: '/#temoignages', color: 'from-rose-400/15 to-rose-600/5 border-rose-400/20' },
+  { icon: User, label: 'Mon profil', sub: 'Éditer mes infos', to: '/profil', color: 'from-rose-400/15 to-rose-600/5 border-rose-400/20' },
 ];
 
 export default function EspaceServiteur() {
