@@ -66,17 +66,17 @@ export default function Register() {
     return (
       <AuthLayout
         footer={
-          <button onClick={() => setShowOtp(false)} className="text-zinc-500 hover:text-zinc-700 text-sm">
+        <button onClick={() => setShowOtp(false)} className="text-zinc-500 hover:text-zinc-700 text-sm">
             ← Retour
           </button>
-        }
-      >
+        }>
+        
         <h1 className="text-3xl font-bold tracking-tight text-zinc-900 mb-1">VÉRIFICATION</h1>
         <p className="text-zinc-400 text-sm mb-8">Un code a été envoyé à <span className="text-zinc-700 font-medium">{email}</span></p>
 
-        {error && (
-          <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-500 text-sm border border-red-100">{error}</div>
-        )}
+        {error &&
+        <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-500 text-sm border border-red-100">{error}</div>
+        }
 
         <div className="flex justify-center mb-6">
           <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode} autoFocus autoComplete="one-time-code">
@@ -94,8 +94,8 @@ export default function Register() {
         <button
           onClick={handleVerify}
           disabled={loading || otpCode.length < 6}
-          className="w-full h-12 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2"
-        >
+          className="w-full h-12 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
+          
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Vérification...</> : "Vérifier"}
         </button>
 
@@ -103,27 +103,27 @@ export default function Register() {
           Code non reçu ?{" "}
           <button onClick={handleResend} className="text-red-500 font-medium hover:underline">Renvoyer</button>
         </p>
-      </AuthLayout>
-    );
+      </AuthLayout>);
+
   }
 
   return (
     <AuthLayout
       footer={
-        <>
+      <>
           Already have an account?{" "}
           <Link to="/login" className="text-red-500 font-medium hover:underline">
             Log in
           </Link>
         </>
-      }
-    >
+      }>
+      
       <h1 className="text-4xl font-bold tracking-tight text-zinc-900 mb-1">CREATE AN ACCOUNT</h1>
       <p className="text-zinc-400 text-sm mb-8">Join us! Please fill in your details below.</p>
 
-      {error && (
-        <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-500 text-sm border border-red-100">{error}</div>
-      )}
+      {error &&
+      <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-500 text-sm border border-red-100">{error}</div>
+      }
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1">
@@ -137,8 +137,8 @@ export default function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition"
-          />
+            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition" />
+          
         </div>
 
         <div className="space-y-1">
@@ -151,8 +151,8 @@ export default function Register() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition"
-          />
+            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition" />
+          
         </div>
 
         <div className="space-y-1">
@@ -165,15 +165,15 @@ export default function Register() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition"
-          />
+            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition" />
+          
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-12 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2"
-        >
+          className="w-full h-12 rounded-2xl hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2 bg-orange-600">
+          
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Création...</> : "Create account"}
         </button>
       </form>
@@ -187,11 +187,11 @@ export default function Register() {
       <button
         type="button"
         onClick={handleGoogle}
-        className="w-full h-12 rounded-2xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 font-medium text-sm transition flex items-center justify-center gap-2"
-      >
+        className="w-full h-12 rounded-2xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 font-medium text-sm transition flex items-center justify-center gap-2">
+        
         <GoogleIcon className="w-5 h-5" />
         Continue with Google
       </button>
-    </AuthLayout>
-  );
+    </AuthLayout>);
+
 }
