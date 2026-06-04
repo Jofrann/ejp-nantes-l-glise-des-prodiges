@@ -32,7 +32,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
   };
 
   return (
-    <section id="temoignages" className="py-36 px-6 bg-[#111318] relative overflow-hidden">
+    <section id="temoignages" className="py-36 px-6 bg-zinc-950/70 backdrop-blur-md border-y border-white/5 relative overflow-hidden">
       {/* Décoration de fond */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#C8A96A]/3 blur-[120px]" />

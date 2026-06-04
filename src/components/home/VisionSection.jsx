@@ -9,7 +9,7 @@ const PILLARS = [
 
 export default function VisionSection({ title, text }) {
   return (
-    <section id="vision" className="py-36 px-6 bg-[#F7F4EF]">
+    <section id="vision" className="py-36 px-6 bg-[#F7F4EF]/85 backdrop-blur-md">
       <div className="max-w-screen-lg mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -35,7 +35,7 @@ export default function VisionSection({ title, text }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="bg-[#F7F4EF] p-10"
+              className="bg-[#F7F4EF]/90 p-10"
             >
               <span className="font-display text-5xl text-[#E5E0D8] font-light block mb-4">0{i + 1}</span>
               <h3 className="text-[#0B0B0C] font-medium text-base mb-3 tracking-wide">{pillar.label}</h3>

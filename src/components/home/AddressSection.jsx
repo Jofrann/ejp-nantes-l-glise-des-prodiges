@@ -8,7 +8,7 @@ export default function AddressSection({ config }) {
   const serviceTime = config?.service_time || '15:00';
 
   return (
-    <section id="adresse" className="py-36 px-6 bg-[#F7F4EF]">
+    <section id="adresse" className="py-36 px-6 bg-[#F7F4EF]/85 backdrop-blur-md">
       <div className="max-w-screen-lg mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
           <motion.div

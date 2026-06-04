@@ -9,7 +9,7 @@ const PHOTOS = [
 
 export default function NantesSection() {
   return (
-    <section className="py-36 px-6 bg-[#0B0B0C]">
+    <section className="py-36 px-6 bg-zinc-950/70 backdrop-blur-md border-y border-white/5">
       <div className="max-w-screen-lg mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
           <motion.div

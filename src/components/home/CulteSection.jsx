@@ -22,7 +22,7 @@ export default function CulteSection({ config }) {
   })();
 
   return (
-    <section id="culte" className="py-36 px-6 bg-[#0B0B0C]">
+    <section id="culte" className="py-36 px-6 bg-zinc-950/70 backdrop-blur-md border-y border-white/5">
       <div className="max-w-screen-md mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

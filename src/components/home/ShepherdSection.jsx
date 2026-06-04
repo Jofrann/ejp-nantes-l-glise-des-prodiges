@@ -51,7 +51,7 @@ export default function ShepherdSection({ shepherd, config }) {
   if (!shepherd && !worldShepherd) return null;
 
   return (
-    <section className="py-36 px-6 bg-[#0B0B0C]">
+    <section className="py-36 px-6 bg-zinc-950/70 backdrop-blur-md border-y border-white/5">
       <div className="max-w-screen-lg mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

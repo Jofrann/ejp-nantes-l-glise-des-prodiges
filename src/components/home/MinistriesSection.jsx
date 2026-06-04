@@ -15,7 +15,7 @@ export default function MinistriesSection({ ministries = [] }) {
     : DEFAULT_MINISTRIES;
 
   return (
-    <section id="ministeres" className="py-36 px-6 bg-[#0B0B0C]">
+    <section id="ministeres" className="py-36 px-6 bg-zinc-950/70 backdrop-blur-md border-y border-white/5">
       <div className="max-w-screen-lg mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -39,7 +39,7 @@ export default function MinistriesSection({ ministries = [] }) {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="bg-[#0B0B0C] p-8 group hover:bg-[#111318] transition-colors duration-300"
+              className="bg-zinc-950/60 p-8 group hover:bg-zinc-900/60 transition-colors duration-300"
             >
               <span className="font-display text-4xl text-white/5 font-light block mb-5">0{i + 1}</span>
               {ministry.image_url && (

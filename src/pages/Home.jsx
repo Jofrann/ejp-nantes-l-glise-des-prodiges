@@ -58,8 +58,24 @@ export default function Home() {
 
   const shepherd = leaders.find(l => l.is_main_shepherd);
 
+  const videoUrl = config?.hero_video_url;
+
   return (
     <div className="bg-[#0B0B0C] overflow-x-hidden">
+      {/* Vidéo fixe en fond — style cinématique */}
+      {videoUrl && (
+        <div className="fixed inset-0 w-full h-screen -z-20 pointer-events-none overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            src={videoUrl}
+          />
+          <div className="absolute inset-0 bg-[#0B0B0C]/50" />
+        </div>
+      )}
       {/* Intro cinématique */}
       {!introDone && <IntroOverlay onDone={() => setIntroD(true)} />}
 

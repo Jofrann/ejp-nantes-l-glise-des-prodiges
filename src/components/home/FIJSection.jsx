@@ -164,7 +164,7 @@ export default function FIJSection({ fijs = [] }) {
   ];
 
   return (
-    <section id="fij" className="py-36 px-6 bg-[#06060A]">
+    <section id="fij" className="py-36 px-6 bg-zinc-950/70 backdrop-blur-md border-y border-white/5">
       <div className="max-w-screen-xl mx-auto">
         {/* Header */}
         <motion.div

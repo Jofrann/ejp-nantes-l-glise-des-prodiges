@@ -8,7 +8,7 @@ export default function EventsSection({ events = [] }) {
   if (active.length === 0) return null;
 
   return (
-    <section id="evenements" className="py-36 px-6 bg-[#F7F4EF]">
+    <section id="evenements" className="py-36 px-6 bg-[#F7F4EF]/85 backdrop-blur-md">
       <div className="max-w-screen-lg mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -31,7 +31,7 @@ export default function EventsSection({ events = [] }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="group bg-white border border-[#E5E0D8] overflow-hidden"
+              className="group bg-white/90 border border-[#E5E0D8] overflow-hidden"
             >
               {event.image_url ? (
                 <div className="h-48 overflow-hidden">

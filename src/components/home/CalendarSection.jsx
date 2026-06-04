@@ -19,7 +19,7 @@ export default function CalendarSection({ events = [] }) {
   if (upcoming.length === 0) return null;
 
   return (
-    <section id="agenda" className="py-36 px-6 bg-[#0B0B0C]">
+    <section id="agenda" className="py-36 px-6 bg-zinc-950/70 backdrop-blur-md border-y border-white/5">
       <div className="max-w-screen-lg mx-auto">
         {/* Header */}
         <motion.div

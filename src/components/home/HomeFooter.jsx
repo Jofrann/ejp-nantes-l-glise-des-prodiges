@@ -5,7 +5,7 @@ export default function HomeFooter({ config }) {
   const links = ['#vision', '#culte', '#evenements', '#temoignages', '#ministeres', '#adresse', '#contact'];
 
   return (
-    <footer className="bg-[#0B0B0C] border-t border-white/5 py-16 px-6">
+    <footer className="bg-zinc-950/80 backdrop-blur-md border-t border-white/5 py-16 px-6">
       <div className="max-w-screen-lg mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
           <div>
