@@ -8,6 +8,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import { Navigate } from 'react-router-dom';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
 import RoleLayout from '@/components/layouts/RoleLayout';
 import Home from '@/pages/Home';
 import AdminHome from '@/pages/AdminHome';
@@ -22,7 +28,7 @@ const { Pages, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
@@ -32,36 +38,39 @@ const AuthenticatedApp = () => {
     );
   }
 
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
-    }
+  if (authError?.type === 'user_not_registered') {
+    return <UserNotRegisteredError />;
   }
 
   return (
-    <RoleLayout>
-      <Routes>
-        {/* Page principale EJP */}
-        <Route path="/" element={<Home />} />
+    <Routes>
+      {/* Routes publiques auth */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* Routes héritées (pages.config) */}
-        {Object.entries(Pages).filter(([p]) => p !== 'Home').map(([path, Page]) => (
-          <Route key={path} path={`/${path}`} element={<Page />} />
-        ))}
+      {/* Toutes les routes protégées */}
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route element={<RoleLayout />}>
+          <Route path="/" element={<Home />} />
 
-        <Route path="/admin" element={<AdminHome />} />
-        <Route path="/bureau" element={<BureauDashboard />} />
-        <Route path="/profil" element={<MonProfil />} />
-        <Route path="/espace-serviteur" element={<EspaceServiteur />} />
-        <Route path="/departements" element={<ListeDepartements />} />
-        <Route path="/departement/:id" element={<PageDepartement />} />
-        <Route path="/departement/:id/editer" element={<EditerDepartement />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </RoleLayout>
+          {/* Routes héritées (pages.config) */}
+          {Object.entries(Pages).filter(([p]) => p !== 'Home').map(([path, Page]) => (
+            <Route key={path} path={`/${path}`} element={<Page />} />
+          ))}
+
+          <Route path="/admin" element={<AdminHome />} />
+          <Route path="/bureau" element={<BureauDashboard />} />
+          <Route path="/profil" element={<MonProfil />} />
+          <Route path="/espace-serviteur" element={<EspaceServiteur />} />
+          <Route path="/departements" element={<ListeDepartements />} />
+          <Route path="/departement/:id" element={<PageDepartement />} />
+          <Route path="/departement/:id/editer" element={<EditerDepartement />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 };
 

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import ServiteurLayout from './ServiteurLayout';
 import ReferentLayout from './ReferentLayout';
 import BureauLayout from './BureauLayout';
 
-export default function RoleLayout({ children }) {
+export default function RoleLayout() {
+  const children = <Outlet />;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
