@@ -58,22 +58,20 @@ export default function Home() {
 
   const shepherd = leaders.find(l => l.is_main_shepherd);
 
-  const videoUrl = config?.hero_video_url;
+  const mediaUrl = config?.hero_video_url;
+  const isImage = mediaUrl && /\.(jpe?g|png|webp|gif|avif)(\?.*)?$/i.test(mediaUrl);
 
   return (
     <div className="bg-[#0B0B0C] overflow-x-hidden">
-      {/* Vidéo fixe en fond — style cinématique */}
-      {videoUrl && (
+      {/* Fond fixe cinématique — photo ou vidéo */}
+      {mediaUrl && (
         <div className="fixed inset-0 w-full h-screen -z-20 pointer-events-none overflow-hidden">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-            src={videoUrl}
-          />
-          <div className="absolute inset-0 bg-[#0B0B0C]/50" />
+          {isImage ? (
+            <img src={mediaUrl} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <video autoPlay loop muted playsInline className="w-full h-full object-cover" src={mediaUrl} />
+          )}
+          <div className="absolute inset-0 bg-[#0B0B0C]/55" />
         </div>
       )}
       {/* Intro cinématique */}
