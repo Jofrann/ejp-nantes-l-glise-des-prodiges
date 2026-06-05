@@ -15,15 +15,15 @@ const navItems = [
 const roleConfig = {
   label: 'Bureau',
   accentClass: 'text-purple-400',
-  avatarClass: 'bg-purple-400/20 border-purple-400/30 text-purple-400',
-  navActiveClass: 'bg-purple-500/15 text-purple-300 border border-purple-500/20',
+  avatarClass: 'bg-purple-400/15 border-purple-400/30 text-purple-400',
+  navActiveClass: 'bg-purple-500/10 text-white border border-purple-500/25 border-l-2 border-l-purple-400',
 };
 
 export default function BureauLayout({ children, user }) {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col">
+    <div className="min-h-screen bg-ejp-void text-ejp-textLight flex flex-col">
       <AppHeader user={user} navItems={navItems} roleConfig={roleConfig} />
       <motion.main
         key={location.pathname}
