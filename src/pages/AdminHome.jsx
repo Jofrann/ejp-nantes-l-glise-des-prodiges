@@ -227,6 +227,21 @@ export default function AdminHome() {
                 </Field>
               </Section>
 
+              <Section title="Image page Connexion / Inscription">
+                <p className="text-xs text-gray-500 mb-4">Affichée sur la colonne droite des pages Login et Register.</p>
+                <Field label="Image (URL ou upload)">
+                  <input className={inputCls + ' mb-2'} placeholder="https://..." value={config.auth_page_image_url || ''} onChange={e => setConfig(c => ({ ...c, auth_page_image_url: e.target.value }))} />
+                  {config.auth_page_image_url && (
+                    <img src={config.auth_page_image_url} alt="Aperçu" className="w-full h-40 object-cover rounded-xl mb-2 border border-white/10" />
+                  )}
+                  <label className="flex items-center gap-2 text-xs text-amber-400 cursor-pointer hover:text-amber-300">
+                    <Upload className="w-3.5 h-3.5" />
+                    Uploader une image
+                    <input type="file" accept="image/*" className="hidden" onChange={e => uploadFile(e, 'auth_page_image_url')} />
+                  </label>
+                </Field>
+              </Section>
+
               <Section title="Annonce">
                 <div className="flex items-center gap-3 mb-4">
                   <input type="checkbox" id="ann_active" checked={config.announcement_active || false} onChange={e => setConfig(c => ({ ...c, announcement_active: e.target.checked }))} className="accent-amber-400" />
