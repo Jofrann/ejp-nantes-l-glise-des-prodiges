@@ -1,39 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import ServiteurLayout from './ServiteurLayout';
-import ReferentLayout from './ReferentLayout';
-import BureauLayout from './BureauLayout';
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
 
 export default function RoleLayout() {
-  const children = <Outlet />;
   const [user, setUser] = useState(null);
+  const [departments, setDepartments] = useState([]);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.auth.me().then((u) => {
+    Promise.all([
+      base44.auth.me(),
+      base44.entities.Department.filter({ is_active: true }, 'display_order', 10),
+    ]).then(([u, d]) => {
       setUser(u);
+      setDepartments(d || []);
       setLoading(false);
-    }).catch(() => setLoading(false));
+    });
   }, []);
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-gray-950 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
+      <div className="fixed inset-0 flex items-center justify-center bg-ejp-void">
+        <div className="w-7 h-7 border-2 border-ejp-greyTech border-t-ejp-orangeRS rounded-full animate-spin" />
       </div>
     );
   }
 
-  const role = user?.role || 'serviteur';
+  return (
+    <div className="flex h-screen w-full overflow-hidden bg-ejp-void text-ejp-textLight">
 
-  if (role === 'bureau') {
-    return <BureauLayout user={user}>{children}</BureauLayout>;
-  }
+      {/* Sidebar desktop */}
+      <div className="hidden md:flex">
+        <DashboardSidebar user={user} departments={departments} />
+      </div>
 
-  if (role === 'referent') {
-    return <ReferentLayout user={user}>{children}</ReferentLayout>;
-  }
+      {/* Mobile sidebar overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div className="absolute left-0 top-0 bottom-0">
+            <DashboardSidebar user={user} departments={departments} />
+          </div>
+        </div>
+      )}
 
-  return <ServiteurLayout user={user}>{children}</ServiteurLayout>;
+      {/* Bloc droite */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <DashboardHeader user={user} onMobileMenuToggle={() => setMobileOpen(v => !v)} />
+        <main className="flex-1 overflow-y-auto overflow-x-hidden">
+          <Outlet />
+        </main>
+      </div>
+
+    </div>
+  );
 }
