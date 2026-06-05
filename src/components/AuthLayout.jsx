@@ -1,17 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { base44 } from "@/api/base44Client";
-
-const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=900&q=80";
+import React from "react";
+import { useAuthImage } from "@/lib/useAuthImage";
 
 export default function AuthLayout({ children, footer }) {
-  const [imageUrl, setImageUrl] = useState(DEFAULT_IMAGE);
-
-  useEffect(() => {
-    base44.entities.ChurchConfig.list().then((configs) => {
-      const cfg = configs?.[0];
-      if (cfg?.auth_page_image_url) setImageUrl(cfg.auth_page_image_url);
-    }).catch(() => {});
-  }, []);
+  const imageUrl = useAuthImage();
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-white">
@@ -31,8 +22,8 @@ export default function AuthLayout({ children, footer }) {
           src={imageUrl}
           alt="Illustration"
           className="absolute inset-0 w-full h-full object-cover object-center"
+          loading="eager"
         />
-        {/* Léger overlay pour lisibilité */}
         <div className="absolute inset-0 bg-zinc-900/10" />
       </div>
     </div>
