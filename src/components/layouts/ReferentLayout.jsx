@@ -13,16 +13,16 @@ const navItems = [
 
 const roleConfig = {
   label: 'Référent',
-  accentClass: 'text-ejp-blueTAF',
-  avatarClass: 'bg-ejp-blueTAF/15 border-ejp-blueTAF/30 text-ejp-blueTAF',
-  navActiveClass: 'bg-ejp-blueTAF/10 text-white border border-ejp-blueTAF/25 border-l-2 border-l-ejp-blueTAF',
+  accentClass: 'text-blue-400',
+  avatarClass: 'bg-blue-400/20 border-blue-400/30 text-blue-400',
+  navActiveClass: 'bg-blue-500/15 text-blue-300 border border-blue-500/20',
 };
 
 export default function ReferentLayout({ children, user }) {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-ejp-void text-ejp-textLight flex flex-col">
+    <div className="min-h-screen bg-zinc-950 text-white flex flex-col">
       <AppHeader user={user} navItems={navItems} roleConfig={roleConfig} />
       <motion.main
         key={location.pathname}
