@@ -57,19 +57,29 @@ export function EmptyState({ icon: Icon, title, sub }) {
 export function RoleShell({ role, title, subtitle, children, actions, requiredRoles, breadcrumbLabel }) {
   const location = useLocation();
 
-  const navItems = role === 'pilot' ? PILOTE_NAV
-    : role === 'coordination' ? COORDINATION_NAV
-    : role === 'direction' ? DIRECTION_NAV
+  // Dérive la navigation de la route, pas du rôle utilisateur.
+  // Permet à la direction d'utiliser l'espace coordination avec la bonne navigation.
+  const routeRole = location.pathname.includes('/pilote') ? 'pilot'
+    : location.pathname.includes('/coordination') ? 'coordination'
+    : location.pathname.includes('/direction') ? 'direction'
+    : role;
+
+  const navItems = routeRole === 'pilot' ? PILOTE_NAV
+    : routeRole === 'coordination' ? COORDINATION_NAV
+    : routeRole === 'direction' ? DIRECTION_NAV
     : [];
 
-  const hubPath = role === 'pilot' ? '/app/departements/fij/pilote'
-    : role === 'coordination' ? '/app/departements/fij/coordination'
-    : '/app/departements/fij/direction';
+  const hubPath = routeRole === 'pilot' ? '/app/departements/fij/pilote'
+    : routeRole === 'coordination' ? '/app/departements/fij/coordination'
+    : routeRole === 'direction' ? '/app/departements/fij/direction'
+    : '/app/departements/fij';
 
-  const hubLabel = role === 'pilot' ? '← Espace pilote'
-    : role === 'coordination' ? '← Coordination'
-    : '← Direction';
+  const hubLabel = routeRole === 'pilot' ? '← Espace pilote'
+    : routeRole === 'coordination' ? '← Coordination'
+    : routeRole === 'direction' ? '← Direction'
+    : '← FIJ';
 
+  // Le contrôle d'accès utilise le rôle réel de l'utilisateur
   const hasAccess = !requiredRoles || requiredRoles.includes(role);
 
   if (!hasAccess) {

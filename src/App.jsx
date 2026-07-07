@@ -38,6 +38,8 @@ import FijAlertes from '@/pages/fij/Alertes';
 import FijTransferts from '@/pages/fij/Transferts';
 import FijDetail from '@/pages/fij/FijDetail';
 import FijCrForm from '@/pages/fij/FijCrForm';
+import FijPiloteHome from '@/pages/fij/PiloteHome';
+import FijDirectionHome from '@/pages/fij/DirectionHome';
 import ListeDepartements from '@/pages/departements/ListeDepartements';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
@@ -85,21 +87,51 @@ const AuthenticatedApp = () => {
           <Route path="/app/profil" element={<MonProfil />} />
           <Route path="/app/departements" element={<ListeDepartements />} />
           <Route path="/app/departements/fij" element={<FijHome />} />
-          <Route path="/app/departements/fij/tableau-de-bord" element={<FijTableauBord />} />
-          <Route path="/app/departements/fij/mes-fij" element={<FijMesFij />} />
-          <Route path="/app/departements/fij/registre" element={<FijRegistre />} />
-          <Route path="/app/departements/fij/cr-hebdomadaires" element={<FijCrHebdomadaires />} />
-          <Route path="/app/departements/fij/ouvertures" element={<FijOuvertures />} />
-          <Route path="/app/departements/fij/consecrations" element={<FijConsecrations />} />
-          <Route path="/app/departements/fij/pause" element={<FijPause />} />
-          <Route path="/app/departements/fij/pilotes" element={<FijPilotes />} />
-          <Route path="/app/departements/fij/communications" element={<FijCommunications />} />
-          <Route path="/app/departements/fij/reporting" element={<FijReporting />} />
-          <Route path="/app/departements/fij/documents" element={<FijDocuments />} />
-          <Route path="/app/departements/fij/alertes" element={<FijAlertes />} />
-          <Route path="/app/departements/fij/transferts" element={<FijTransferts />} />
+
+          {/* === Espace Pilote FIJ === */}
+          <Route path="/app/departements/fij/pilote" element={<FijPiloteHome />} />
+          <Route path="/app/departements/fij/pilote/mes-fij" element={<FijMesFij />} />
+          <Route path="/app/departements/fij/pilote/cr" element={<FijCrHebdomadaires />} />
+          <Route path="/app/departements/fij/pilote/communications" element={<FijCommunications />} />
+          <Route path="/app/departements/fij/pilote/documents" element={<FijDocuments />} />
+          <Route path="/app/departements/fij/pilote/alertes" element={<FijAlertes />} />
+
+          {/* === Espace Coordination FIJ === */}
+          <Route path="/app/departements/fij/coordination" element={<FijTableauBord />} />
+          <Route path="/app/departements/fij/coordination/registre" element={<FijRegistre />} />
+          <Route path="/app/departements/fij/coordination/cr" element={<FijCrHebdomadaires />} />
+          <Route path="/app/departements/fij/coordination/ouvertures" element={<FijOuvertures />} />
+          <Route path="/app/departements/fij/coordination/consecrations" element={<FijConsecrations />} />
+          <Route path="/app/departements/fij/coordination/pause" element={<FijPause />} />
+          <Route path="/app/departements/fij/coordination/pilotes" element={<FijPilotes />} />
+          <Route path="/app/departements/fij/coordination/communications" element={<FijCommunications />} />
+          <Route path="/app/departements/fij/coordination/documents" element={<FijDocuments />} />
+          <Route path="/app/departements/fij/coordination/alertes" element={<FijAlertes />} />
+          <Route path="/app/departements/fij/coordination/reporting" element={<FijReporting />} />
+          <Route path="/app/departements/fij/coordination/transferts" element={<FijTransferts />} />
+
+          {/* === Espace Direction FIJ === */}
+          <Route path="/app/departements/fij/direction" element={<FijDirectionHome />} />
+          <Route path="/app/departements/fij/direction/tableau-de-bord" element={<FijTableauBord />} />
+
+          {/* === Routes partagées === */}
           <Route path="/app/departements/fij/fij/:id" element={<FijDetail />} />
           <Route path="/app/departements/fij/fij/:id/cr/nouveau" element={<FijCrForm />} />
+
+          {/* === Redirections anciennes routes === */}
+          <Route path="/app/departements/fij/tableau-de-bord" element={<Navigate to="/app/departements/fij/coordination" replace />} />
+          <Route path="/app/departements/fij/mes-fij" element={<Navigate to="/app/departements/fij/pilote/mes-fij" replace />} />
+          <Route path="/app/departements/fij/registre" element={<Navigate to="/app/departements/fij/coordination/registre" replace />} />
+          <Route path="/app/departements/fij/cr-hebdomadaires" element={<Navigate to="/app/departements/fij/coordination/cr" replace />} />
+          <Route path="/app/departements/fij/ouvertures" element={<Navigate to="/app/departements/fij/coordination/ouvertures" replace />} />
+          <Route path="/app/departements/fij/consecrations" element={<Navigate to="/app/departements/fij/coordination/consecrations" replace />} />
+          <Route path="/app/departements/fij/pause" element={<Navigate to="/app/departements/fij/coordination/pause" replace />} />
+          <Route path="/app/departements/fij/pilotes" element={<Navigate to="/app/departements/fij/coordination/pilotes" replace />} />
+          <Route path="/app/departements/fij/communications" element={<Navigate to="/app/departements/fij/coordination/communications" replace />} />
+          <Route path="/app/departements/fij/reporting" element={<Navigate to="/app/departements/fij/coordination/reporting" replace />} />
+          <Route path="/app/departements/fij/documents" element={<Navigate to="/app/departements/fij/coordination/documents" replace />} />
+          <Route path="/app/departements/fij/alertes" element={<Navigate to="/app/departements/fij/coordination/alertes" replace />} />
+          <Route path="/app/departements/fij/transferts" element={<Navigate to="/app/departements/fij/coordination/transferts" replace />} />
           <Route path="/app/departements/:slug" element={<PageDepartement />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
           <Route path="/app/direction" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><BureauDashboard /></RoleGuard>} />

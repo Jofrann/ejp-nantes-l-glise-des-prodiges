@@ -51,8 +51,8 @@ export default function FijDetail() {
 
   // Retour logique selon le rôle
   const parentFijPath = accessLevel === 'pilot'
-    ? '/app/departements/fij/mes-fij'
-    : '/app/departements/fij/registre';
+    ? '/app/departements/fij/pilote/mes-fij'
+    : '/app/departements/fij/coordination/registre';
   const parentFijLabel = accessLevel === 'pilot' ? '← Mes FIJ' : '← Registre';
 
   return (
@@ -113,12 +113,12 @@ export default function FijDetail() {
               className="flex items-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-3 py-2 transition-colors">
               <FileText className="w-3.5 h-3.5" /> Remplir le CR
             </Link>
-            <Link to="/app/departements/fij/alertes"
+            <Link to={accessLevel === 'pilot' ? '/app/departements/fij/pilote/alertes' : '/app/departements/fij/coordination/alertes'}
               className="flex items-center gap-1.5 text-xs text-muted-foreground border border-border rounded-lg px-3 py-2 hover:bg-surface transition-colors">
               <AlertTriangle className="w-3.5 h-3.5" /> Signaler un besoin
             </Link>
             {isCoord && (
-              <Link to="/app/departements/fij/registre"
+              <Link to="/app/departements/fij/coordination/registre"
                 className="flex items-center gap-1.5 text-xs text-muted-foreground border border-border rounded-lg px-3 py-2 hover:bg-surface transition-colors">
                 <Edit className="w-3.5 h-3.5" /> Modifier
               </Link>

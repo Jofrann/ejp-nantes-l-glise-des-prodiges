@@ -76,7 +76,7 @@ export default function TableauBord() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xs text-muted-foreground uppercase tracking-widest">CR manquants cette semaine</h2>
-          <Link to="/app/departements/fij/cr-hebdomadaires" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
+          <Link to="/app/departements/fij/coordination/cr" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
             Voir tout <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -110,7 +110,7 @@ export default function TableauBord() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Alertes critiques</h2>
-            <Link to="/app/departements/fij/alertes" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
+            <Link to="/app/departements/fij/coordination/alertes" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
               Voir tout <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
