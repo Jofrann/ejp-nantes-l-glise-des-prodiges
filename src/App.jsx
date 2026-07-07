@@ -23,7 +23,21 @@ import MonProfil from '@/pages/MonProfil';
 import EspaceServiteurSas from '@/pages/EspaceServiteurSas';
 import AppDashboard from '@/pages/AppDashboard';
 import FijHome from '@/pages/fij/FijHome';
-import FijPlaceholder from '@/pages/fij/FijPlaceholder';
+import FijTableauBord from '@/pages/fij/TableauBord';
+import FijMesFij from '@/pages/fij/MesFij';
+import FijRegistre from '@/pages/fij/Registre';
+import FijCrHebdomadaires from '@/pages/fij/CrHebdomadaires';
+import FijOuvertures from '@/pages/fij/Ouvertures';
+import FijConsecrations from '@/pages/fij/Consecrations';
+import FijPause from '@/pages/fij/Pause';
+import FijPilotes from '@/pages/fij/Pilotes';
+import FijCommunications from '@/pages/fij/Communications';
+import FijReporting from '@/pages/fij/Reporting';
+import FijDocuments from '@/pages/fij/Documents';
+import FijAlertes from '@/pages/fij/Alertes';
+import FijTransferts from '@/pages/fij/Transferts';
+import FijDetail from '@/pages/fij/FijDetail';
+import FijCrForm from '@/pages/fij/FijCrForm';
 import ListeDepartements from '@/pages/departements/ListeDepartements';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
@@ -71,7 +85,21 @@ const AuthenticatedApp = () => {
           <Route path="/app/profil" element={<MonProfil />} />
           <Route path="/app/departements" element={<ListeDepartements />} />
           <Route path="/app/departements/fij" element={<FijHome />} />
-          <Route path="/app/departements/fij/:subpage" element={<FijPlaceholder />} />
+          <Route path="/app/departements/fij/tableau-de-bord" element={<FijTableauBord />} />
+          <Route path="/app/departements/fij/mes-fij" element={<FijMesFij />} />
+          <Route path="/app/departements/fij/registre" element={<FijRegistre />} />
+          <Route path="/app/departements/fij/cr-hebdomadaires" element={<FijCrHebdomadaires />} />
+          <Route path="/app/departements/fij/ouvertures" element={<FijOuvertures />} />
+          <Route path="/app/departements/fij/consecrations" element={<FijConsecrations />} />
+          <Route path="/app/departements/fij/pause" element={<FijPause />} />
+          <Route path="/app/departements/fij/pilotes" element={<FijPilotes />} />
+          <Route path="/app/departements/fij/communications" element={<FijCommunications />} />
+          <Route path="/app/departements/fij/reporting" element={<FijReporting />} />
+          <Route path="/app/departements/fij/documents" element={<FijDocuments />} />
+          <Route path="/app/departements/fij/alertes" element={<FijAlertes />} />
+          <Route path="/app/departements/fij/transferts" element={<FijTransferts />} />
+          <Route path="/app/departements/fij/fij/:id" element={<FijDetail />} />
+          <Route path="/app/departements/fij/fij/:id/cr/nouveau" element={<FijCrForm />} />
           <Route path="/app/departements/:slug" element={<PageDepartement />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
           <Route path="/app/direction" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><BureauDashboard /></RoleGuard>} />

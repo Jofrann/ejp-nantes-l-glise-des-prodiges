@@ -1,0 +1,57 @@
+{
+  "name": "FijTransfer",
+  "type": "object",
+  "properties": {
+    "person_name": {
+      "type": "string",
+      "description": "Nom de la personne concern\u00e9e"
+    },
+    "fij_source_id": {
+      "type": "string",
+      "description": "ID FIJ source"
+    },
+    "fij_source_name": {
+      "type": "string",
+      "description": "Nom FIJ source"
+    },
+    "fij_target_id": {
+      "type": "string",
+      "description": "ID FIJ cible"
+    },
+    "fij_target_name": {
+      "type": "string",
+      "description": "Nom FIJ cible"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Raison du transfert"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "refused",
+        "completed"
+      ],
+      "default": "pending",
+      "description": "Statut"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Responsable du suivi"
+    },
+    "validation_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de validation"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes"
+    }
+  },
+  "required": [
+    "person_name"
+  ]
+}

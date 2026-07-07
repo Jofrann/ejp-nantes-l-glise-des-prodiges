@@ -42,6 +42,31 @@ export function isAccountSuspended(user) {
   return user?.account_status === 'suspended';
 }
 
+// === Helpers FIJ ===
+
+// Direction = Bergère ou Admin (décideurs finaux)
+export function isFijDirection(user) {
+  return hasAnyRole(user, ['bergere', 'admin']);
+}
+
+// Coordination = bureau, bergere ou admin (voient toutes les FIJ)
+export function isFijCoordination(user) {
+  return isBureauLike(user);
+}
+
+// Pilote = utilisateur rattaché comme pilot ou co-pilot sur au moins une FIJ
+export function isFijPilot(user, fijs) {
+  if (!user || !fijs) return false;
+  return fijs.some(f => f.pilot_user_id === user.id || (f.co_pilot_user_ids || []).includes(user.id));
+}
+
+export function getFijAccessLevel(user, fijs) {
+  if (isFijDirection(user)) return 'direction';
+  if (isFijCoordination(user)) return 'coordination';
+  if (isFijPilot(user, fijs)) return 'pilot';
+  return 'none';
+}
+
 // Retourne le rôle le plus élevé pour l'affichage
 export function getPrimaryRoleLabel(user) {
   const roles = getRoles(user);
