@@ -51,11 +51,12 @@ const AuthenticatedApp = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Toutes les routes protégées */}
+      {/* Vitrine publique */}
+      <Route path="/" element={<Home />} />
+
+      {/* Routes protégées (espace interne) */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route element={<RoleLayout />}>
-          <Route path="/" element={<Home />} />
-
           {/* Routes héritées (pages.config) */}
           {Object.entries(Pages).filter(([p]) => p !== 'Home').map(([path, Page]) => (
             <Route key={path} path={`/${path}`} element={<Page />} />

@@ -18,7 +18,7 @@ export default function EditerDepartement() {
   const navigate = useNavigate();
   const isNew = id === 'nouveau';
 
-  const [form, setForm] = useState({ name: '', description: '', mission: '', icon: 'Users', color: 'amber', cover_url: '', is_active: true, display_order: 0 });
+  const [form, setForm] = useState({ name: '', description: '', mission: '', icon: 'Users', color: 'amber', cover_url: '', is_active: true, display_order: 0, attente_superieure: '', rythme_travail: '', critere_excellence: '', responsabilites: '', livrables: '' });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [msg, setMsg] = useState('');
@@ -109,6 +109,33 @@ export default function EditerDepartement() {
               value={form.mission || ''}
               onChange={e => setForm(f => ({ ...f, mission: e.target.value }))}
             />
+          </div>
+
+          {/* Architecture de mission */}
+          <div className="pt-4 border-t border-white/5">
+            <p className="text-xs text-amber-400/70 uppercase tracking-wider mb-4">Architecture de mission</p>
+            <div className="space-y-5">
+              <div>
+                <label className="text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Attente supérieure</label>
+                <input className={inputCls} placeholder="Ce que ce département vise en priorité..." value={form.attente_superieure || ''} onChange={e => setForm(f => ({ ...f, attente_superieure: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Rythme de travail</label>
+                <input className={inputCls} placeholder="Ex: hebdomadaire, ponctuel, saisonnier..." value={form.rythme_travail || ''} onChange={e => setForm(f => ({ ...f, rythme_travail: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Critère d'excellence</label>
+                <input className={inputCls} placeholder="Ce qui définit la réussite..." value={form.critere_excellence || ''} onChange={e => setForm(f => ({ ...f, critere_excellence: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Responsabilités</label>
+                <textarea className={inputCls} rows={2} placeholder="Responsabilités clés des membres..." value={form.responsabilites || ''} onChange={e => setForm(f => ({ ...f, responsabilites: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Livrables attendus</label>
+                <textarea className={inputCls} rows={2} placeholder="Productions concrètes attendues..." value={form.livrables || ''} onChange={e => setForm(f => ({ ...f, livrables: e.target.value }))} />
+              </div>
+            </div>
           </div>
 
           {/* Couleur */}

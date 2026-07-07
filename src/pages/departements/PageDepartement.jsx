@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, MessageCircle, Users } from 'lucide-react';
+import { Settings, MessageCircle, Users, Lock, Target, Clock, Award, ListChecks, Package } from 'lucide-react';
 import DeptHero from '@/components/departements/DeptHero';
 import ReferentGrid from '@/components/departements/ReferentGrid';
 import MembresGrid from '@/components/departements/MembresGrid';
@@ -10,6 +10,7 @@ import AjouterMembreModal from '@/components/departements/AjouterMembreModal';
 import DeptChat from '@/components/departements/DeptChat';
 import DeptIcon from '@/components/departements/DeptIcon';
 import GestionMembres from '@/components/departements/GestionMembres';
+import MissionCard from '@/components/departements/MissionCard';
 
 const COLOR_MAP = {
   amber:  { border: 'border-amber-400/20', text: 'text-amber-400', bg: 'bg-amber-400/10', glow: 'bg-amber-400/5' },
@@ -87,6 +88,19 @@ export default function PageDepartement() {
   const canManage = isAdmin || user?.role === 'referent';
   const existingUserIds = members.map(m => m.user_id).filter(Boolean);
 
+  // Protection d'accès : un serviteur ne peut entrer que dans un département auquel il est rattaché
+  const isMember = members.some(m => m.user_id === user?.id);
+  if (!isAdmin && !isMember) return (
+    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-gray-500 px-5 text-center">
+      <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-5">
+        <Lock className="w-6 h-6 text-red-400/60" />
+      </div>
+      <p className="text-sm font-semibold text-white mb-1">Accès restreint</p>
+      <p className="text-xs text-gray-500 mb-5 max-w-xs">Tu ne fais pas partie de ce département. Contacte un responsable pour le rejoindre.</p>
+      <Link to="/departements" className="text-amber-400 text-sm">← Retour aux départements</Link>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* Glow ambiant */}
@@ -146,6 +160,30 @@ export default function PageDepartement() {
         </div>
 
         <div className="px-5">
+          {/* Architecture de mission */}
+          {(dept.attente_superieure || dept.rythme_travail || dept.critere_excellence || dept.responsabilites || dept.livrables) && (
+            <div className="mb-8">
+              <p className="text-xs text-gray-600 uppercase tracking-widest mb-4">Espace de mission</p>
+              <div className="space-y-3">
+                {dept.attente_superieure && (
+                  <MissionCard icon={Target} label="Attente supérieure" text={dept.attente_superieure} colors={colors} />
+                )}
+                {dept.rythme_travail && (
+                  <MissionCard icon={Clock} label="Rythme de travail" text={dept.rythme_travail} colors={colors} />
+                )}
+                {dept.critere_excellence && (
+                  <MissionCard icon={Award} label="Critère d'excellence" text={dept.critere_excellence} colors={colors} />
+                )}
+                {dept.responsabilites && (
+                  <MissionCard icon={ListChecks} label="Responsabilités" text={dept.responsabilites} colors={colors} />
+                )}
+                {dept.livrables && (
+                  <MissionCard icon={Package} label="Livrables attendus" text={dept.livrables} colors={colors} />
+                )}
+              </div>
+            </div>
+          )}
+
           <ReferentGrid
             referents={referents}
             colors={colors}

@@ -25,16 +25,25 @@ const QUICK_LINKS = [
 export default function EspaceServiteur() {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
+  const [myDepts, setMyDepts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
       base44.entities.Event.list('-event_date', 3),
-    ]).then(([u, evs]) => {
+      base44.entities.DepartmentMember.filter({ is_active: true }, null, 200),
+      base44.entities.Department.list('display_order', 50),
+    ]).then(([u, evs, members, depts]) => {
       setUser(u);
       const upcoming = (evs || []).filter(e => e.is_active && e.event_date >= new Date().toISOString().split('T')[0]);
       setEvents(upcoming.slice(0, 3));
+
+      // Départements rattachés au serviteur
+      const myMemberRecords = (members || []).filter(m => m.user_id === u?.id);
+      const myDeptIds = myMemberRecords.map(m => m.department_id);
+      const myDepartments = (depts || []).filter(d => d.is_active && myDeptIds.includes(d.id));
+      setMyDepts(myDepartments);
       setLoading(false);
     });
   }, []);
@@ -116,6 +125,42 @@ export default function EspaceServiteur() {
             ))}
           </div>
         </motion.div>
+
+        {/* Mes départements */}
+        {myDepts.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xs text-gray-500 uppercase tracking-widest">Mes départements</h2>
+              <Link to="/departements" className="text-xs text-amber-400/70 hover:text-amber-400 flex items-center gap-1 transition-colors">
+                Voir tout <ChevronRight className="w-3 h-3" />
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {myDepts.map((dept, i) => (
+                <motion.div
+                  key={dept.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + i * 0.07 }}
+                >
+                  <Link
+                    to={`/departement/${dept.id}`}
+                    className="flex items-center gap-3 bg-white/3 border border-white/8 rounded-2xl p-4 hover:border-white/15 transition-colors group"
+                  >
+                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center">
+                      <Users className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <div className="min-0 flex-1">
+                      <p className="text-sm font-semibold text-white truncate">{dept.name}</p>
+                      {dept.description && <p className="text-xs text-gray-500 truncate">{dept.description}</p>}
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-colors flex-shrink-0" />
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Prochains événements */}
         {events.length > 0 && (

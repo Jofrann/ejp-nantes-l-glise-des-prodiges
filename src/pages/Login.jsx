@@ -18,7 +18,7 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
-      window.location.href = "/";
+      window.location.href = "/espace-serviteur";
     } catch (err) {
       setError(err.message || "Email ou mot de passe invalide");
     } finally {
@@ -27,7 +27,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/");
+    base44.auth.loginWithProvider("google", "/espace-serviteur");
   };
 
   return (

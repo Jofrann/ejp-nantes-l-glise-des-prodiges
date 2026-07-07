@@ -28,7 +28,12 @@ export default function ListeDepartements() {
       base44.entities.DepartmentMember.filter({ is_active: true }, null, 200),
     ]).then(([u, deps, members]) => {
       setUser(u);
-      setDepts((deps || []).filter(d => d.is_active));
+      const allDepts = (deps || []).filter(d => d.is_active);
+      // Filtrer selon les rattachements (sauf admin/bureau qui voient tout)
+      const isAdmin = u?.role === 'admin' || u?.role === 'bureau';
+      const myDeptIds = (members || []).filter(m => m.user_id === u?.id).map(m => m.department_id);
+      const visibleDepts = isAdmin ? allDepts : allDepts.filter(d => myDeptIds.includes(d.id));
+      setDepts(visibleDepts);
       const c = {};
       const r = {};
       (members || []).forEach(m => {
@@ -80,7 +85,8 @@ export default function ListeDepartements() {
         {depts.length === 0 ? (
           <div className="text-center py-20 text-gray-600">
             <Users className="w-12 h-12 mx-auto mb-4 opacity-20" />
-            <p className="text-sm">Aucun département pour l'instant.</p>
+            <p className="text-sm">Aucun département rattaché pour l'instant.</p>
+            {!isAdmin && <p className="text-xs text-gray-700 mt-2">Contacte un responsable pour rejoindre une équipe.</p>}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

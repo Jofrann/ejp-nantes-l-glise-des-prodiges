@@ -27,6 +27,26 @@
       "type": "string",
       "description": "Image de couverture (banni\u00e8re du d\u00e9partement)"
     },
+    "attente_superieure": {
+      "type": "string",
+      "description": "L'attente sup\u00e9rieure : ce que ce d\u00e9partement vise en priorit\u00e9"
+    },
+    "rythme_travail": {
+      "type": "string",
+      "description": "Rythme de travail (ex: hebdomadaire, ponctuel, saisonnier)"
+    },
+    "critere_excellence": {
+      "type": "string",
+      "description": "Crit\u00e8re d'excellence : ce qui d\u00e9finit la r\u00e9ussite dans ce d\u00e9partement"
+    },
+    "responsabilites": {
+      "type": "string",
+      "description": "Responsabilit\u00e9s cl\u00e9s des membres du d\u00e9partement"
+    },
+    "livrables": {
+      "type": "string",
+      "description": "Livrables attendus (productions concr\u00e8tes)"
+    },
     "is_active": {
       "type": "boolean",
       "default": true
