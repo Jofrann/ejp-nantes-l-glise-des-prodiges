@@ -1,0 +1,71 @@
+{
+  "name": "FijAlert",
+  "type": "object",
+  "properties": {
+    "fij_house_id": {
+      "type": "string",
+      "description": "ID de la FIJ concern\u00e9e"
+    },
+    "fij_name": {
+      "type": "string",
+      "description": "Nom de la FIJ (d\u00e9normalis\u00e9)"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "missing_report",
+        "low_attendance",
+        "pause_risk",
+        "opening_blocked",
+        "pastoral_attention"
+      ],
+      "description": "Type d'alerte"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ],
+      "default": "warning",
+      "description": "S\u00e9v\u00e9rit\u00e9"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "resolved"
+      ],
+      "default": "open",
+      "description": "Statut"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "ID assign\u00e9"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "ID du cr\u00e9ateur"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date de r\u00e9solution"
+    }
+  },
+  "required": [
+    "fij_house_id",
+    "type",
+    "title"
+  ]
+}

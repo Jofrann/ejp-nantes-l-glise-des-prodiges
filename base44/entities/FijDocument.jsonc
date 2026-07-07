@@ -1,0 +1,53 @@
+{
+  "name": "FijDocument",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre du document"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "procedure",
+        "form",
+        "report",
+        "archive",
+        "theme"
+      ],
+      "default": "procedure",
+      "description": "Cat\u00e9gorie"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL du fichier"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "all_fij",
+        "pilots",
+        "coordination",
+        "direction"
+      ],
+      "default": "all_fij",
+      "description": "Visibilit\u00e9"
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "ID de l'uploader"
+    },
+    "uploaded_by_name": {
+      "type": "string",
+      "description": "Nom de l'uploader"
+    }
+  },
+  "required": [
+    "title",
+    "file_url"
+  ]
+}

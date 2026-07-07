@@ -79,7 +79,7 @@ export default function BureauDashboard() {
             className="bg-white/3 border border-white/8 rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-white font-semibold text-sm">Prochains événements</h2>
-              <Link to="/admin" className="text-xs text-purple-400 flex items-center gap-1 hover:text-purple-300">
+              <Link to="/app/admin" className="text-xs text-purple-400 flex items-center gap-1 hover:text-purple-300">
                 Gérer <ChevronRight className="w-3 h-3" />
               </Link>
             </div>
@@ -110,9 +110,9 @@ export default function BureauDashboard() {
             <h2 className="text-white font-semibold text-sm mb-4">Accès rapides</h2>
             <div className="space-y-2">
               {[
-                { label: 'Page vitrine admin', path: '/admin', desc: 'Gérer le contenu public', icon: TrendingUp },
-                { label: 'Départements', path: '/departements', desc: 'Équipes & membres', icon: Users },
-                { label: 'Mon profil', path: '/profil', desc: 'Modifier mes informations', icon: Users },
+                { label: 'Page vitrine admin', path: '/app/admin', desc: 'Gérer le contenu public', icon: TrendingUp },
+                { label: 'Départements', path: '/app/departements', desc: 'Équipes & membres', icon: Users },
+                { label: 'Mon profil', path: '/app/profil', desc: 'Modifier mes informations', icon: Users },
               ].map(({ label, path, desc, icon: Icon }) => (
                 <Link key={path} to={path}
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors group">

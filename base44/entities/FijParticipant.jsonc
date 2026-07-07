@@ -1,0 +1,82 @@
+{
+  "name": "FijParticipant",
+  "type": "object",
+  "properties": {
+    "fij_house_id": {
+      "type": "string",
+      "description": "ID de la FIJ"
+    },
+    "fij_name": {
+      "type": "string",
+      "description": "Nom de la FIJ (d\u00e9normalis\u00e9)"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nom complet"
+    },
+    "phone": {
+      "type": "string",
+      "description": "T\u00e9l\u00e9phone"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email"
+    },
+    "age": {
+      "type": "number",
+      "description": "Age"
+    },
+    "city": {
+      "type": "string",
+      "description": "Ville"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female",
+        "other"
+      ],
+      "description": "Sexe"
+    },
+    "status_pipeline": {
+      "type": "string",
+      "enum": [
+        "visiteur",
+        "regulier",
+        "engage",
+        "serviteur",
+        "a_suivre"
+      ],
+      "default": "visiteur",
+      "description": "Statut dans le parcours"
+    },
+    "first_visit_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de premi\u00e8re visite"
+    },
+    "last_seen_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de derni\u00e8re pr\u00e9sence"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes de suivi"
+    },
+    "assigned_to_user_id": {
+      "type": "string",
+      "description": "ID du responsable de suivi"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "fij_house_id",
+    "full_name"
+  ]
+}

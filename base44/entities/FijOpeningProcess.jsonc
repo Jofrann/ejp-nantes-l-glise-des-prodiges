@@ -1,0 +1,86 @@
+{
+  "name": "FijOpeningProcess",
+  "type": "object",
+  "properties": {
+    "fij_house_id": {
+      "type": "string",
+      "description": "ID de la FIJ"
+    },
+    "fij_name": {
+      "type": "string",
+      "description": "Nom de la FIJ (d\u00e9normalis\u00e9)"
+    },
+    "request_title": {
+      "type": "string",
+      "description": "Titre de la demande"
+    },
+    "requester_name": {
+      "type": "string",
+      "description": "Nom du demandeur"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "initiated",
+        "pilot_identified",
+        "prayer_planned",
+        "prayer_completed",
+        "consecration_requested",
+        "consecration_completed",
+        "validated",
+        "rejected"
+      ],
+      "default": "initiated",
+      "description": "Statut du processus"
+    },
+    "pilot_identified": {
+      "type": "boolean",
+      "default": false
+    },
+    "file_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "prayer_24h_planned": {
+      "type": "boolean",
+      "default": false
+    },
+    "prayer_24h_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "consecration_requested": {
+      "type": "boolean",
+      "default": false
+    },
+    "consecration_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "final_validation_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "decision_by": {
+      "type": "string",
+      "description": "ID du d\u00e9cideur"
+    },
+    "decision_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de d\u00e9cision"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes"
+    }
+  },
+  "required": [
+    "request_title"
+  ]
+}

@@ -69,7 +69,7 @@ export default function ProfilDepartements({ userId }) {
                 transition={{ delay: i * 0.05 }}
               >
                 <Link
-                  to={`/departement/${dept.id}`}
+                  to={`/app/departements/${dept.slug || dept.id}`}
                   className={`flex items-center gap-4 bg-white/3 border ${colors.border} rounded-2xl px-4 py-3.5 hover:bg-white/6 transition-all group`}
                 >
                   {/* Icône dept */}

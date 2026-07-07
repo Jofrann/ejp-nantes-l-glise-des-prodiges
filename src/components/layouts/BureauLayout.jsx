@@ -5,10 +5,10 @@ import { Home, Users, BarChart3, Settings, User } from 'lucide-react';
 import AppHeader from './AppHeader';
 
 const navItems = [
-  { path: '/bureau', label: 'Dashboard', icon: BarChart3 },
-  { path: '/departements', label: 'Départements', icon: Users },
-  { path: '/profil', label: 'Mon Profil', icon: User },
-  { path: '/admin', label: 'Admin vitrine', icon: Settings },
+  { path: '/app/direction', label: 'Direction', icon: BarChart3 },
+  { path: '/app/departements', label: 'Départements', icon: Users },
+  { path: '/app/profil', label: 'Mon Profil', icon: User },
+  { path: '/app/admin', label: 'Admin vitrine', icon: Settings },
   { path: '/', label: 'Site public', icon: Home },
 ];
 

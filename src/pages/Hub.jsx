@@ -12,9 +12,9 @@ import { isBureauLike, getPrimaryRoleLabel } from '@/lib/permissions';
 
 const NAV = [
   { id: 'feed', label: 'Hub', icon: LayoutDashboard, to: '/hub' },
-  { id: 'departements', label: 'Départements', icon: Users2, to: '/departements' },
-  { id: 'workspace', label: 'Mon Espace', icon: Briefcase, to: '/espace-serviteur' },
-  { id: 'profil', label: 'Mon Profil', icon: Settings, to: '/profil' },
+  { id: 'departements', label: 'Départements', icon: Users2, to: '/app/departements' },
+  { id: 'workspace', label: 'Mon Espace', icon: Briefcase, to: '/app' },
+  { id: 'profil', label: 'Mon Profil', icon: Settings, to: '/app/profil' },
 ];
 
 export default function Hub() {
@@ -121,7 +121,7 @@ export default function Hub() {
               {departments.slice(0, 4).map(d => (
                 <Link
                   key={d.id}
-                  to={`/departement/${d.id}`}
+                  to={`/app/departements/${d.slug || d.id}`}
                   className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-gray-500 hover:text-white hover:bg-white/5 transition-all truncate"
                 >
                   <div className="w-2 h-2 rounded-full bg-amber-400/50 flex-shrink-0" />
@@ -187,7 +187,7 @@ export default function Hub() {
             <button className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
               <Bell className="w-4 h-4" />
             </button>
-            <Link to="/profil" className="flex items-center gap-2 bg-amber-400/10 border border-amber-400/20 rounded-xl px-3 py-1.5 hover:bg-amber-400/15 transition-all">
+            <Link to="/app/profil" className="flex items-center gap-2 bg-amber-400/10 border border-amber-400/20 rounded-xl px-3 py-1.5 hover:bg-amber-400/15 transition-all">
               <div className="w-5 h-5 rounded-full overflow-hidden bg-amber-400/20 flex items-center justify-center">
                 {user?.photo_url ? (
                   <img src={user.photo_url} alt="" className="w-full h-full object-cover" />

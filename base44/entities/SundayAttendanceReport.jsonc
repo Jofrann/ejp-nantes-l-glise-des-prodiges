@@ -1,0 +1,70 @@
+{
+  "name": "SundayAttendanceReport",
+  "type": "object",
+  "properties": {
+    "service_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date du culte"
+    },
+    "service_time": {
+      "type": "string",
+      "description": "Heure du culte"
+    },
+    "total_people": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre total de personnes pr\u00e9sentes"
+    },
+    "new_visitors": {
+      "type": "number",
+      "default": 0,
+      "description": "Nouveaux visiteurs"
+    },
+    "servants_expected": {
+      "type": "number",
+      "default": 0,
+      "description": "Serviteurs attendus"
+    },
+    "servants_present": {
+      "type": "number",
+      "default": 0,
+      "description": "Serviteurs pr\u00e9sents"
+    },
+    "servants_absent": {
+      "type": "number",
+      "default": 0,
+      "description": "Serviteurs absents"
+    },
+    "first_time_contacts": {
+      "type": "number",
+      "default": 0,
+      "description": "Premiers contacts"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes / observations"
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "ID du r\u00e9dacteur"
+    },
+    "submitted_by_name": {
+      "type": "string",
+      "description": "Nom du r\u00e9dacteur"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "validated"
+      ],
+      "default": "submitted",
+      "description": "Statut"
+    }
+  },
+  "required": [
+    "service_date"
+  ]
+}

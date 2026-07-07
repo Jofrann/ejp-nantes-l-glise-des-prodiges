@@ -6,9 +6,36 @@
       "type": "string",
       "description": "Nom de la FIJ (ex: FIJ Nantes Centre)"
     },
+    "slug": {
+      "type": "string",
+      "description": "Identifiant URL"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "opening",
+        "active",
+        "paused",
+        "closed"
+      ],
+      "default": "active",
+      "description": "Statut de la FIJ"
+    },
     "city": {
       "type": "string",
       "description": "Ville"
+    },
+    "address": {
+      "type": "string",
+      "description": "Adresse de r\u00e9union"
+    },
+    "meeting_day": {
+      "type": "string",
+      "description": "Jour de r\u00e9union (ex: Vendredi)"
+    },
+    "meeting_time": {
+      "type": "string",
+      "description": "Heure de r\u00e9union (ex: 19:00)"
     },
     "country": {
       "type": "string",
@@ -23,9 +50,28 @@
       "type": "number",
       "description": "Longitude GPS"
     },
+    "pilot_user_id": {
+      "type": "string",
+      "description": "ID du pilote"
+    },
+    "pilot_name": {
+      "type": "string",
+      "description": "Nom du pilote (d\u00e9normalis\u00e9)"
+    },
+    "pilot_email": {
+      "type": "string",
+      "description": "Email du pilote"
+    },
+    "co_pilot_user_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs des co-pilotes"
+    },
     "leader_name": {
       "type": "string",
-      "description": "Nom du responsable"
+      "description": "Nom du responsable (legacy)"
     },
     "member_count": {
       "type": "number",
@@ -39,6 +85,24 @@
     "photo_url": {
       "type": "string",
       "description": "Photo de groupe"
+    },
+    "last_report_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date du dernier CR re\u00e7u"
+    },
+    "opening_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date d'ouverture de la FIJ"
+    },
+    "pause_reason": {
+      "type": "string",
+      "description": "Raison de la mise en pause"
+    },
+    "reactivation_plan": {
+      "type": "string",
+      "description": "Plan de r\u00e9activation"
     },
     "is_nantes": {
       "type": "boolean",

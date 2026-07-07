@@ -27,9 +27,7 @@ export function isBureauLike(user) {
 }
 
 export function getRedirectPath(user) {
-  if (isAdmin(user)) return '/admin';
-  if (hasAnyRole(user, ['bureau', 'bergere'])) return '/bureau';
-  return '/espace-serviteur';
+  return '/app';
 }
 
 export function isAccountActive(user) {

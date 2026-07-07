@@ -5,9 +5,9 @@ import { Home, Users, User, BookOpen } from 'lucide-react';
 import AppHeader from './AppHeader';
 
 const navItems = [
-  { path: '/espace-serviteur', label: 'Tableau de bord', icon: Home },
-  { path: '/departements', label: 'Départements', icon: Users },
-  { path: '/profil', label: 'Mon Profil', icon: User },
+  { path: '/app', label: 'Tableau de bord', icon: Home },
+  { path: '/app/departements', label: 'Départements', icon: Users },
+  { path: '/app/profil', label: 'Mon Profil', icon: User },
   { path: '/', label: 'Site public', icon: BookOpen },
 ];
 

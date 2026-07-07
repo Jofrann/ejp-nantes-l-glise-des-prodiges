@@ -1,0 +1,70 @@
+{
+  "name": "FijCommunication",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "theme",
+        "announcement",
+        "reminder",
+        "recap"
+      ],
+      "default": "announcement",
+      "description": "Type de communication"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre"
+    },
+    "content": {
+      "type": "string",
+      "description": "Contenu"
+    },
+    "target_scope": {
+      "type": "string",
+      "enum": [
+        "all_pilots",
+        "specific_fij",
+        "coordination"
+      ],
+      "default": "all_pilots",
+      "description": "Port\u00e9e de la communication"
+    },
+    "target_fij_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs des FIJ cibl\u00e9es (si specific_fij)"
+    },
+    "sent_by": {
+      "type": "string",
+      "description": "ID de l'exp\u00e9diteur"
+    },
+    "sent_by_name": {
+      "type": "string",
+      "description": "Nom de l'exp\u00e9diteur"
+    },
+    "scheduled_for": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date d'envoi planifi\u00e9"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "sent",
+        "scheduled"
+      ],
+      "default": "draft",
+      "description": "Statut"
+    }
+  },
+  "required": [
+    "type",
+    "title",
+    "content"
+  ]
+}

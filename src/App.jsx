@@ -20,7 +20,10 @@ import Home from '@/pages/Home';
 import AdminHome from '@/pages/AdminHome';
 import BureauDashboard from '@/pages/BureauDashboard';
 import MonProfil from '@/pages/MonProfil';
-import EspaceServiteur from '@/pages/EspaceServiteur';
+import EspaceServiteurSas from '@/pages/EspaceServiteurSas';
+import AppDashboard from '@/pages/AppDashboard';
+import FijHome from '@/pages/fij/FijHome';
+import FijPlaceholder from '@/pages/fij/FijPlaceholder';
 import ListeDepartements from '@/pages/departements/ListeDepartements';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
@@ -54,6 +57,7 @@ const AuthenticatedApp = () => {
 
       {/* Vitrine publique */}
       <Route path="/" element={<Home />} />
+      <Route path="/espace-serviteur" element={<EspaceServiteurSas />} />
 
       {/* Routes protégées (espace interne) */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
@@ -63,14 +67,21 @@ const AuthenticatedApp = () => {
             <Route key={path} path={`/${path}`} element={<Page />} />
           ))}
 
-          <Route path="/admin" element={<RoleGuard allowedRoles={['admin']}><AdminHome /></RoleGuard>} />
-          <Route path="/bureau" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><BureauDashboard /></RoleGuard>} />
-          <Route path="/profil" element={<MonProfil />} />
-          <Route path="/espace-serviteur" element={<EspaceServiteur />} />
-          <Route path="/departements" element={<ListeDepartements />} />
-          <Route path="/departement/:id" element={<PageDepartement />} />
-          <Route path="/departement/:id/editer" element={<EditerDepartement />} />
+          <Route path="/app" element={<AppDashboard />} />
+          <Route path="/app/profil" element={<MonProfil />} />
+          <Route path="/app/departements" element={<ListeDepartements />} />
+          <Route path="/app/departements/fij" element={<FijHome />} />
+          <Route path="/app/departements/fij/:subpage" element={<FijPlaceholder />} />
+          <Route path="/app/departements/:slug" element={<PageDepartement />} />
+          <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
+          <Route path="/app/direction" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><BureauDashboard /></RoleGuard>} />
+          <Route path="/app/admin" element={<RoleGuard allowedRoles={['admin']}><AdminHome /></RoleGuard>} />
           <Route path="/hub" element={<Hub />} />
+          {/* Redirections anciennes routes */}
+          <Route path="/admin" element={<Navigate to="/app/admin" replace />} />
+          <Route path="/bureau" element={<Navigate to="/app/direction" replace />} />
+          <Route path="/profil" element={<Navigate to="/app/profil" replace />} />
+          <Route path="/departements" element={<Navigate to="/app/departements" replace />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Route>

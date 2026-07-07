@@ -6,6 +6,10 @@
       "type": "string",
       "description": "Nom du d\u00e9partement (ex: Louange, Accueil, FIJ)"
     },
+    "slug": {
+      "type": "string",
+      "description": "Identifiant URL (ex: louange, accueil, fij)"
+    },
     "description": {
       "type": "string",
       "description": "Description courte (sous-titre)"
@@ -46,6 +50,22 @@
     "livrables": {
       "type": "string",
       "description": "Livrables attendus (productions concr\u00e8tes)"
+    },
+    "service_standard": {
+      "type": "string",
+      "description": "Standard de service attendu dans ce d\u00e9partement"
+    },
+    "default_tabs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Onglets par d\u00e9faut affich\u00e9s (mission, equipe, actions, reporting, ressources, communication, parametres)",
+      "default": [
+        "mission",
+        "equipe",
+        "communication"
+      ]
     },
     "is_active": {
       "type": "boolean",

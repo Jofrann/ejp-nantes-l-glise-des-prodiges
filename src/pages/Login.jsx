@@ -43,7 +43,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/espace-serviteur");
+    base44.auth.loginWithProvider("google", "/app");
   };
 
   if (pendingUser) {

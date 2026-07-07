@@ -73,7 +73,7 @@ export default function ListeDepartements() {
             </div>
             {isAdmin && (
               <Link
-                to="/departement/nouveau"
+                to="/app/departements/nouveau/parametres"
                 className="flex items-center gap-2 text-xs bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/25 text-amber-400 px-4 py-2.5 rounded-xl transition-all font-medium flex-shrink-0"
               >
                 <Plus className="w-3.5 h-3.5" /> Nouveau département
@@ -104,7 +104,7 @@ export default function ListeDepartements() {
                   transition={{ delay: i * 0.06 }}
                 >
                   <Link
-                    to={`/departement/${dept.id}`}
+                    to={`/app/departements/${dept.slug || dept.id}`}
                     className={`group flex flex-col h-full bg-zinc-900/60 border ${colors.border} rounded-2xl overflow-hidden hover:brightness-110 transition-all`}
                   >
                     {/* Couverture */}

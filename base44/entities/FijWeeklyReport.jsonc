@@ -1,0 +1,104 @@
+{
+  "name": "FijWeeklyReport",
+  "type": "object",
+  "properties": {
+    "fij_house_id": {
+      "type": "string",
+      "description": "ID de la FIJ"
+    },
+    "fij_name": {
+      "type": "string",
+      "description": "Nom de la FIJ (d\u00e9normalis\u00e9)"
+    },
+    "week_start": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e9but de la semaine"
+    },
+    "meeting_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de la r\u00e9union"
+    },
+    "participants_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre de participants"
+    },
+    "new_visitors_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Nouveaux visiteurs"
+    },
+    "servants_present_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Serviteurs pr\u00e9sents"
+    },
+    "theme_shared": {
+      "type": "boolean",
+      "default": false,
+      "description": "Le th\u00e8me de la semaine a-t-il \u00e9t\u00e9 partag\u00e9 ?"
+    },
+    "theme_title": {
+      "type": "string",
+      "description": "Titre du th\u00e8me abord\u00e9"
+    },
+    "summary": {
+      "type": "string",
+      "description": "R\u00e9sum\u00e9 de la r\u00e9union"
+    },
+    "highlights": {
+      "type": "string",
+      "description": "Points forts"
+    },
+    "difficulties": {
+      "type": "string",
+      "description": "Difficult\u00e9s"
+    },
+    "needs": {
+      "type": "string",
+      "description": "Besoins"
+    },
+    "prayer_points": {
+      "type": "string",
+      "description": "Sujets de pri\u00e8re"
+    },
+    "people_to_follow": {
+      "type": "string",
+      "description": "Personnes \u00e0 suivre"
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "ID du pilote"
+    },
+    "submitted_by_name": {
+      "type": "string",
+      "description": "Nom du pilote"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "validated",
+        "correction_required",
+        "late"
+      ],
+      "default": "draft",
+      "description": "Statut du CR"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "ID du relecteur"
+    },
+    "review_comment": {
+      "type": "string",
+      "description": "Commentaire de relecture"
+    }
+  },
+  "required": [
+    "fij_house_id",
+    "week_start"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "name": "DepartmentReport",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement"
+    },
+    "department_name": {
+      "type": "string",
+      "description": "Nom du d\u00e9partement (d\u00e9normalis\u00e9)"
+    },
+    "period_type": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "monthly",
+        "event"
+      ],
+      "default": "weekly",
+      "description": "Type de p\u00e9riode"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e9but de la p\u00e9riode"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Fin de la p\u00e9riode"
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "ID de l'utilisateur ayant soumis"
+    },
+    "submitted_by_name": {
+      "type": "string",
+      "description": "Nom du r\u00e9dacteur (d\u00e9normalis\u00e9)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "validated",
+        "correction_required"
+      ],
+      "default": "draft",
+      "description": "Statut du rapport"
+    },
+    "metrics_json": {
+      "type": "object",
+      "description": "Indicateurs cl\u00e9s (format libre par d\u00e9partement)"
+    },
+    "summary": {
+      "type": "string",
+      "description": "R\u00e9sum\u00e9 de la p\u00e9riode"
+    },
+    "difficulties": {
+      "type": "string",
+      "description": "Difficult\u00e9s rencontr\u00e9es"
+    },
+    "needs": {
+      "type": "string",
+      "description": "Besoins identifi\u00e9s"
+    },
+    "alerts": {
+      "type": "string",
+      "description": "Alertes remont\u00e9es \u00e0 la direction"
+    }
+  },
+  "required": [
+    "department_id",
+    "period_type"
+  ]
+}

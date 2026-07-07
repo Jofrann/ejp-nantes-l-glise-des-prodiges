@@ -23,7 +23,7 @@ const COLOR_MAP = {
 };
 
 export default function PageDepartement() {
-  const { id } = useParams();
+  const { slug: id } = useParams();
   const [dept, setDept] = useState(null);
   const [members, setMembers] = useState([]);
   const [user, setUser] = useState(null);
@@ -78,7 +78,7 @@ export default function PageDepartement() {
   if (!dept) return (
     <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-gray-500">
       <p className="mb-4">Département introuvable.</p>
-      <Link to="/departements" className="text-amber-400 text-sm">← Retour</Link>
+      <Link to="/app/departements" className="text-amber-400 text-sm">← Retour</Link>
     </div>
   );
 
@@ -99,7 +99,7 @@ export default function PageDepartement() {
       </div>
       <p className="text-sm font-semibold text-white mb-1">Accès restreint</p>
       <p className="text-xs text-gray-500 mb-5 max-w-xs">Tu ne fais pas partie de ce département. Contacte un responsable pour le rejoindre.</p>
-      <Link to="/departements" className="text-amber-400 text-sm">← Retour aux départements</Link>
+      <Link to="/app/departements" className="text-amber-400 text-sm">← Retour aux départements</Link>
     </div>
   );
 
@@ -139,7 +139,7 @@ export default function PageDepartement() {
           {/* Bouton édition admin */}
           {isAdmin && (
             <Link
-              to={`/departement/${id}/editer`}
+              to={`/app/departements/${id}/parametres`}
               className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-white border border-white/10 hover:border-white/20 bg-white/3 hover:bg-white/8 rounded-xl transition-all"
             >
               <Settings className="w-3.5 h-3.5" />

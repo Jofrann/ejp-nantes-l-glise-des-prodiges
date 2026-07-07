@@ -4,18 +4,18 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Calendar, Users, BookOpen, Bell, ChevronRight,
-  MapPin, Clock, Star, User
+  MapPin, Clock, Star, User, BarChart3, Settings
 } from 'lucide-react';
-import { getPrimaryRoleLabel } from '@/lib/permissions';
+import { getPrimaryRoleLabel, isBureauLike, isAdmin } from '@/lib/permissions';
 
 const QUICK_LINKS = [
   { icon: Bell, label: 'EJP Hub', sub: 'Feed & communauté', to: '/hub', color: 'from-amber-400/20 to-amber-600/5 border-amber-400/30' },
-  { icon: Users, label: 'Départements', sub: 'Équipes & membres', to: '/departements', color: 'from-purple-400/15 to-purple-600/5 border-purple-400/20' },
+  { icon: Users, label: 'Départements', sub: 'Équipes & membres', to: '/app/departements', color: 'from-purple-400/15 to-purple-600/5 border-purple-400/20' },
   { icon: Calendar, label: 'Agenda', sub: 'Prochains cultes & events', to: '/#agenda', color: 'from-blue-400/15 to-blue-600/5 border-blue-400/20' },
-  { icon: User, label: 'Mon profil', sub: 'Éditer mes infos', to: '/profil', color: 'from-rose-400/15 to-rose-600/5 border-rose-400/20' },
+  { icon: User, label: 'Mon profil', sub: 'Éditer mes infos', to: '/app/profil', color: 'from-rose-400/15 to-rose-600/5 border-rose-400/20' },
 ];
 
-export default function EspaceServiteur() {
+export default function AppDashboard() {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
   const [myDepts, setMyDepts] = useState([]);
@@ -32,7 +32,6 @@ export default function EspaceServiteur() {
       const upcoming = (evs || []).filter(e => e.is_active && e.event_date >= new Date().toISOString().split('T')[0]);
       setEvents(upcoming.slice(0, 3));
 
-      // Départements rattachés au serviteur
       const myMemberRecords = (members || []).filter(m => m.user_id === u?.id);
       const myDeptIds = myMemberRecords.map(m => m.department_id);
       const myDepartments = (depts || []).filter(d => d.is_active && myDeptIds.includes(d.id));
@@ -44,6 +43,8 @@ export default function EspaceServiteur() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
   const firstName = user?.full_name?.split(' ')[0] || 'Serviteur';
+  const showDirection = isBureauLike(user);
+  const showAdmin = isAdmin(user);
 
   if (loading) {
     return (
@@ -57,14 +58,12 @@ export default function EspaceServiteur() {
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* Hero d'accueil */}
       <div className="relative overflow-hidden">
-        {/* Fond décoratif */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-amber-400/6 rounded-full blur-[100px]" />
         </div>
 
         <div className="relative max-w-2xl mx-auto px-5 pt-12 pb-10">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-            {/* Avatar + Salutation */}
             <div className="flex items-center gap-4 mb-8">
               <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400/25 flex-shrink-0">
                 {user?.photo_url ? (
@@ -76,7 +75,7 @@ export default function EspaceServiteur() {
                 )}
               </div>
               <div>
-                <p className="text-xs text-amber-400/70 uppercase tracking-widest mb-0.5">Espace Serviteur</p>
+                <p className="text-xs text-amber-400/70 uppercase tracking-widest mb-0.5">Tableau de bord</p>
                 <h1 className="text-xl font-semibold text-white leading-tight">
                   {greeting}, {firstName} 👋
                 </h1>
@@ -88,7 +87,6 @@ export default function EspaceServiteur() {
               </div>
             </div>
 
-            {/* Message de vision */}
             <div className="bg-amber-400/6 border border-amber-400/15 rounded-2xl px-5 py-4 mb-8">
               <p className="font-display text-[#F7F4EF]/80 text-lg font-light italic leading-relaxed">
                 "Chacun selon le don qu'il a reçu, employez-le à vous servir les uns les autres."
@@ -100,6 +98,35 @@ export default function EspaceServiteur() {
       </div>
 
       <div className="max-w-2xl mx-auto px-5 pb-16 space-y-8">
+
+        {/* Accès direction / admin */}
+        {(showDirection || showAdmin) && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+            <h2 className="text-xs text-gray-500 uppercase tracking-widest mb-4">Espace direction</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {showDirection && (
+                <Link
+                  to="/app/direction"
+                  className="group bg-gradient-to-br from-purple-400/15 to-purple-600/5 border border-purple-400/20 rounded-2xl p-4 transition-all hover:brightness-110 active:scale-[0.98]"
+                >
+                  <BarChart3 className="w-5 h-5 text-purple-400/80 mb-3" />
+                  <p className="text-sm font-semibold text-white">Tableau direction</p>
+                  <p className="text-xs text-gray-400 mt-0.5">Synthèse globale</p>
+                </Link>
+              )}
+              {showAdmin && (
+                <Link
+                  to="/app/admin"
+                  className="group bg-gradient-to-br from-red-400/15 to-red-600/5 border border-red-400/20 rounded-2xl p-4 transition-all hover:brightness-110 active:scale-[0.98]"
+                >
+                  <Settings className="w-5 h-5 text-red-400/80 mb-3" />
+                  <p className="text-sm font-semibold text-white">Administration</p>
+                  <p className="text-xs text-gray-400 mt-0.5">Gérer l'application</p>
+                </Link>
+              )}
+            </div>
+          </motion.div>
+        )}
 
         {/* Accès rapides */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
@@ -124,7 +151,7 @@ export default function EspaceServiteur() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xs text-gray-500 uppercase tracking-widest">Mes départements</h2>
-              <Link to="/departements" className="text-xs text-amber-400/70 hover:text-amber-400 flex items-center gap-1 transition-colors">
+              <Link to="/app/departements" className="text-xs text-amber-400/70 hover:text-amber-400 flex items-center gap-1 transition-colors">
                 Voir tout <ChevronRight className="w-3 h-3" />
               </Link>
             </div>
@@ -137,7 +164,7 @@ export default function EspaceServiteur() {
                   transition={{ delay: 0.2 + i * 0.07 }}
                 >
                   <Link
-                    to={`/departement/${dept.id}`}
+                    to={`/app/departements/${dept.slug || dept.id}`}
                     className="flex items-center gap-3 bg-white/3 border border-white/8 rounded-2xl p-4 hover:border-white/15 transition-colors group"
                   >
                     <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center">
@@ -173,7 +200,6 @@ export default function EspaceServiteur() {
                   transition={{ delay: 0.25 + i * 0.07 }}
                   className="bg-white/3 border border-white/8 rounded-2xl p-4 flex items-center gap-4 hover:border-white/15 transition-colors"
                 >
-                  {/* Date badge */}
                   <div className="flex-shrink-0 w-12 text-center bg-amber-400/10 border border-amber-400/20 rounded-xl py-2">
                     <p className="text-xs text-amber-400/70 font-medium">
                       {new Date(ev.event_date).toLocaleDateString('fr-FR', { month: 'short' }).toUpperCase()}

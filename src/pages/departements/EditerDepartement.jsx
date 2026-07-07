@@ -15,7 +15,7 @@ const COLOR_DOTS = {
 const inputCls = "w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400/50";
 
 export default function EditerDepartement() {
-  const { id } = useParams();
+  const { slug: id } = useParams();
   const navigate = useNavigate();
   const isNew = id === 'nouveau';
 
@@ -65,7 +65,7 @@ export default function EditerDepartement() {
     setSaving(true);
     if (isNew) {
       const created = await base44.entities.Department.create(form);
-      navigate(`/departement/${created.id}`);
+      navigate(`/app/departements/${created.id}`);
     } else {
       await base44.entities.Department.update(form.id, form);
       setMsg('Sauvegardé !');
@@ -77,7 +77,7 @@ export default function EditerDepartement() {
   const handleDelete = async () => {
     if (!confirm('Supprimer ce département ? Cette action est irréversible.')) return;
     await base44.entities.Department.delete(form.id);
-    navigate('/departements');
+    navigate('/app/departements');
   };
 
   if (!user) return (
@@ -90,7 +90,7 @@ export default function EditerDepartement() {
     <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-gray-500 px-5 text-center">
       <p className="text-sm font-semibold text-white mb-1">Accès réservé</p>
       <p className="text-xs text-gray-500 mb-5 max-w-xs">Seuls les responsables peuvent modifier ce département.</p>
-      <Link to={isNew ? '/departements' : `/departement/${id}`} className="text-amber-400 text-sm">← Retour</Link>
+      <Link to={isNew ? '/app/departements' : `/app/departements/${id}`} className="text-amber-400 text-sm">← Retour</Link>
     </div>
   );
 
@@ -101,7 +101,7 @@ export default function EditerDepartement() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link
-            to={isNew ? '/departements' : `/departement/${id}`}
+            to={isNew ? '/app/departements' : `/app/departements/${id}`}
             className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Retour
