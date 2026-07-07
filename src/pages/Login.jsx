@@ -14,7 +14,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [pendingUser, setPendingUser] = useState(null);
 
-  const inputCls = "w-full h-12 px-4 rounded-xl border border-white/10 bg-white/5 text-[#F7F4EF] placeholder:text-[#6B6B6B] text-sm focus:outline-none focus:ring-2 focus:ring-[#C8A96A]/30 focus:border-[#C8A96A]/40 transition";
+  const inputCls = "w-full h-12 px-4 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary/40 transition";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,25 +55,25 @@ export default function Login() {
       footer={
         <>
           Pas encore de compte ?{" "}
-          <Link to="/register" className="text-[#C8A96A] font-medium hover:underline">
+          <Link to="/register" className="text-secondary font-medium hover:underline">
             Créer mon compte serviteur
           </Link>
         </>
       }>
 
-      <p className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A] font-medium mb-3">EJP Nantes</p>
-      <h1 className="font-display text-3xl text-[#F7F4EF] font-light mb-2">Bienvenue dans l'espace serviteur</h1>
-      <p className="text-sm text-[#B8B8B8] mb-8">Retrouve tes départements, ton équipe et les informations liées à ton service.</p>
+      <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
+      <h1 className="font-display text-3xl text-foreground font-light mb-2">Bienvenue dans l'espace serviteur</h1>
+      <p className="text-sm text-muted-foreground mb-8">Retrouve tes départements, ton équipe et les informations liées à ton service.</p>
 
       {error &&
-        <div className="mb-4 p-3 rounded-xl bg-red-500/10 text-red-400 text-sm border border-red-500/20">
+        <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">
           {error}
         </div>
       }
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-xs text-[#B8B8B8] font-medium" htmlFor="email">Email</label>
+          <label className="text-xs text-muted-foreground font-medium" htmlFor="email">Email</label>
           <input
             id="email"
             type="email"
@@ -88,7 +88,7 @@ export default function Login() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs text-[#B8B8B8] font-medium" htmlFor="password">Mot de passe</label>
+          <label className="text-xs text-muted-foreground font-medium" htmlFor="password">Mot de passe</label>
           <input
             id="password"
             type="password"
@@ -102,7 +102,7 @@ export default function Login() {
         </div>
 
         <div className="flex items-center justify-end w-full">
-          <Link to="/forgot-password" className="text-xs text-[#B8B8B8] hover:text-[#C8A96A] transition">
+          <Link to="/forgot-password" className="text-xs text-muted-foreground hover:text-secondary transition">
             Mot de passe oublié ?
           </Link>
         </div>
@@ -110,22 +110,22 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-12 rounded-xl bg-[#C8A96A] hover:bg-[#D4B97A] text-[#0B0B0C] font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
+          className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
 
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Connexion...</> : "Se connecter"}
         </button>
       </form>
 
       <div className="my-5 flex items-center gap-3">
-        <div className="flex-1 h-px bg-white/10" />
-        <span className="text-xs text-[#6B6B6B] uppercase">ou</span>
-        <div className="flex-1 h-px bg-white/10" />
+        <div className="flex-1 h-px bg-border" />
+        <span className="text-xs text-muted-foreground/60 uppercase">ou</span>
+        <div className="flex-1 h-px bg-border" />
       </div>
 
       <button
         type="button"
         onClick={handleGoogle}
-        className="w-full h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-[#F7F4EF] font-medium text-sm transition flex items-center justify-center gap-2">
+        className="w-full h-12 rounded-xl bg-card border border-border hover:bg-surface text-foreground font-medium text-sm transition flex items-center justify-center gap-2">
 
         <GoogleIcon className="w-5 h-5" />
         Continuer avec Google

@@ -18,7 +18,7 @@ export default function ForgotPassword() {
     try {
       await base44.auth.resetPasswordRequest(email);
     } catch {
-      // Always show success regardless
+      // Toujours afficher le succès
     } finally {
       setLoading(false);
       setSent(true);
@@ -27,23 +27,24 @@ export default function ForgotPassword() {
 
   return (
     <AuthLayout
-      icon={Mail}
-      title="Reset password"
-      subtitle="We'll send you a link to reset it"
       footer={
-        <Link to="/login" className="text-primary font-medium hover:underline">
-          <ArrowLeft className="w-3 h-3 inline mr-1" />Back to log in
+        <Link to="/login" className="text-secondary font-medium hover:underline">
+          <ArrowLeft className="w-3 h-3 inline mr-1" />Retour à la connexion
         </Link>
       }
     >
+      <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
+      <h1 className="font-display text-3xl text-foreground font-light mb-2">Mot de passe oublié</h1>
+      <p className="text-sm text-muted-foreground mb-8">Tu recevras un lien pour réinitialiser ton mot de passe.</p>
+
       {sent ? (
-        <p className="text-sm text-foreground text-center">
-          If an account exists with that email, you'll receive a password reset link shortly.
+        <p className="text-sm text-muted-foreground text-center">
+          Si un compte existe avec cet email, tu recevras un lien de réinitialisation dans quelques instants.
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email">Adresse email</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
               <Input
@@ -51,7 +52,7 @@ export default function ForgotPassword() {
                 type="email"
                 autoComplete="email"
                 autoFocus
-                placeholder="you@example.com"
+                placeholder="ton@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10 h-12"
@@ -63,10 +64,10 @@ export default function ForgotPassword() {
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Sending...
+                Envoi...
               </>
             ) : (
-              "Send reset link"
+              "Envoyer le lien"
             )}
           </Button>
         </form>

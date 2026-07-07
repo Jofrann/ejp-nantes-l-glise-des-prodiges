@@ -24,7 +24,7 @@ export default function Register() {
   const [otpCode, setOtpCode] = useState("");
   const [pendingUser, setPendingUser] = useState(null);
 
-  const inputCls = "w-full h-12 px-4 rounded-xl border border-white/10 bg-white/5 text-[#F7F4EF] placeholder:text-[#6B6B6B] text-sm focus:outline-none focus:ring-2 focus:ring-[#C8A96A]/30 focus:border-[#C8A96A]/40 transition";
+  const inputCls = "w-full h-12 px-4 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary/40 transition";
 
   useEffect(() => {
     base44.entities.Department.filter({ is_active: true }, 'display_order', 50)
@@ -67,7 +67,6 @@ export default function Register() {
       const result = await base44.auth.verifyOtp({ email, otpCode });
       if (result?.access_token) base44.auth.setToken(result.access_token);
 
-      // Mettre à jour le profil avec les infos du candidat
       try {
         await base44.auth.updateMe({
           first_name: firstName,
@@ -80,7 +79,6 @@ export default function Register() {
         // Non bloquant — le compte existe déjà
       }
 
-      // Créer la demande de service
       const deptNames = departments
         .filter(d => selectedDepts.includes(d.id))
         .map(d => d.name);
@@ -130,17 +128,17 @@ export default function Register() {
     return (
       <AuthLayout
         footer={
-          <button onClick={() => setShowOtp(false)} className="text-[#B8B8B8] hover:text-[#F7F4EF] text-sm">
+          <button onClick={() => setShowOtp(false)} className="text-muted-foreground hover:text-foreground text-sm">
             ← Retour
           </button>
         }>
 
-        <p className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A] font-medium mb-3">Vérification</p>
-        <h1 className="font-display text-3xl text-[#F7F4EF] font-light mb-2">Confirme ton email</h1>
-        <p className="text-sm text-[#B8B8B8] mb-8">Un code a été envoyé à <span className="text-[#F7F4EF] font-medium">{email}</span></p>
+        <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">Vérification</p>
+        <h1 className="font-display text-3xl text-foreground font-light mb-2">Confirme ton email</h1>
+        <p className="text-sm text-muted-foreground mb-8">Un code a été envoyé à <span className="text-foreground font-medium">{email}</span></p>
 
         {error &&
-          <div className="mb-4 p-3 rounded-xl bg-red-500/10 text-red-400 text-sm border border-red-500/20">{error}</div>
+          <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">{error}</div>
         }
 
         <div className="flex justify-center mb-6">
@@ -159,14 +157,14 @@ export default function Register() {
         <button
           onClick={handleVerify}
           disabled={loading || otpCode.length < 6}
-          className="w-full h-12 rounded-xl bg-[#C8A96A] hover:bg-[#D4B97A] text-[#0B0B0C] font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
+          className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
 
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Vérification...</> : "Valider mon inscription"}
         </button>
 
-        <p className="text-center text-sm text-[#B8B8B8] mt-4">
+        <p className="text-center text-sm text-muted-foreground mt-4">
           Code non reçu ?{" "}
-          <button onClick={handleResend} className="text-[#C8A96A] font-medium hover:underline">Renvoyer</button>
+          <button onClick={handleResend} className="text-secondary font-medium hover:underline">Renvoyer</button>
         </p>
       </AuthLayout>
     );
@@ -177,54 +175,54 @@ export default function Register() {
       footer={
         <>
           Déjà un compte ?{" "}
-          <Link to="/login" className="text-[#C8A96A] font-medium hover:underline">Se connecter</Link>
+          <Link to="/login" className="text-secondary font-medium hover:underline">Se connecter</Link>
         </>
       }>
 
-      <p className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A] font-medium mb-3">EJP Nantes</p>
-      <h1 className="font-display text-3xl text-[#F7F4EF] font-light mb-2">Créer mon compte serviteur</h1>
-      <p className="text-sm text-[#B8B8B8] mb-6">Le compte sera validé par un responsable avant accès complet.</p>
+      <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
+      <h1 className="font-display text-3xl text-foreground font-light mb-2">Créer mon compte serviteur</h1>
+      <p className="text-sm text-muted-foreground mb-6">Le compte sera validé par un responsable avant accès complet.</p>
 
       {error &&
-        <div className="mb-4 p-3 rounded-xl bg-red-500/10 text-red-400 text-sm border border-red-500/20">{error}</div>
+        <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">{error}</div>
       }
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
-            <label className="text-xs text-[#B8B8B8] font-medium">Prénom</label>
+            <label className="text-xs text-muted-foreground font-medium">Prénom</label>
             <input type="text" autoComplete="given-name" placeholder="Jean" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className={inputCls} />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs text-[#B8B8B8] font-medium">Nom</label>
+            <label className="text-xs text-muted-foreground font-medium">Nom</label>
             <input type="text" autoComplete="family-name" placeholder="Dupont" value={lastName} onChange={(e) => setLastName(e.target.value)} required className={inputCls} />
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs text-[#B8B8B8] font-medium">Email</label>
+          <label className="text-xs text-muted-foreground font-medium">Email</label>
           <input type="email" autoComplete="email" placeholder="ton@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputCls} />
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs text-[#B8B8B8] font-medium">Téléphone</label>
+          <label className="text-xs text-muted-foreground font-medium">Téléphone</label>
           <input type="tel" autoComplete="tel" placeholder="06 12 34 56 78" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
-            <label className="text-xs text-[#B8B8B8] font-medium">Mot de passe</label>
+            <label className="text-xs text-muted-foreground font-medium">Mot de passe</label>
             <input type="password" autoComplete="new-password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required className={inputCls} />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs text-[#B8B8B8] font-medium">Confirmer</label>
+            <label className="text-xs text-muted-foreground font-medium">Confirmer</label>
             <input type="password" autoComplete="new-password" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className={inputCls} />
           </div>
         </div>
 
         {departments.length > 0 && (
           <div className="space-y-2">
-            <label className="text-xs text-[#B8B8B8] font-medium">Départements souhaités <span className="text-[#6B6B6B]">(optionnel)</span></label>
+            <label className="text-xs text-muted-foreground font-medium">Départements souhaités <span className="text-muted-foreground/60">(optionnel)</span></label>
             <div className="flex flex-wrap gap-2">
               {departments.map(dept => (
                 <button
@@ -233,8 +231,8 @@ export default function Register() {
                   onClick={() => toggleDept(dept.id)}
                   className={`text-xs px-3 py-1.5 rounded-lg border transition ${
                     selectedDepts.includes(dept.id)
-                      ? 'bg-[#C8A96A]/20 border-[#C8A96A]/40 text-[#C8A96A]'
-                      : 'bg-white/5 border-white/10 text-[#B8B8B8] hover:border-white/20'
+                      ? 'bg-secondary/15 border-secondary/40 text-secondary'
+                      : 'bg-card border-border text-muted-foreground hover:border-secondary/30 hover:text-foreground'
                   }`}
                 >
                   {dept.name}
@@ -245,7 +243,7 @@ export default function Register() {
         )}
 
         <div className="space-y-1.5">
-          <label className="text-xs text-[#B8B8B8] font-medium">Pourquoi souhaites-tu servir ? <span className="text-[#6B6B6B]">(optionnel)</span></label>
+          <label className="text-xs text-muted-foreground font-medium">Pourquoi souhaites-tu servir ? <span className="text-muted-foreground/60">(optionnel)</span></label>
           <textarea
             rows={2}
             placeholder="Quelques mots sur ta motivation..."
@@ -258,22 +256,22 @@ export default function Register() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-12 rounded-xl bg-[#C8A96A] hover:bg-[#D4B97A] text-[#0B0B0C] font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
+          className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
 
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Création...</> : "Créer mon compte"}
         </button>
       </form>
 
       <div className="my-5 flex items-center gap-3">
-        <div className="flex-1 h-px bg-white/10" />
-        <span className="text-xs text-[#6B6B6B] uppercase">ou</span>
-        <div className="flex-1 h-px bg-white/10" />
+        <div className="flex-1 h-px bg-border" />
+        <span className="text-xs text-muted-foreground/60 uppercase">ou</span>
+        <div className="flex-1 h-px bg-border" />
       </div>
 
       <button
         type="button"
         onClick={handleGoogle}
-        className="w-full h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-[#F7F4EF] font-medium text-sm transition flex items-center justify-center gap-2">
+        className="w-full h-12 rounded-xl bg-card border border-border hover:bg-surface text-foreground font-medium text-sm transition flex items-center justify-center gap-2">
 
         <GoogleIcon className="w-5 h-5" />
         Continuer avec Google
