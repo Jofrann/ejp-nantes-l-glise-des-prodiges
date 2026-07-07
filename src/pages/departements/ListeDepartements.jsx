@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Users, Plus, ChevronRight, Crown } from 'lucide-react';
 import DeptIcon from '@/components/departements/DeptIcon';
+import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 import { isBureauLike } from '@/lib/permissions';
 
 const COLOR_MAP = {
@@ -60,6 +61,16 @@ export default function ListeDepartements() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       <div className="max-w-4xl mx-auto px-5 pt-10 pb-20">
+
+        {/* Fil d'Ariane */}
+        <PageBreadcrumb
+          items={[
+            { label: 'Tableau de bord', to: '/app' },
+            { label: 'Départements', to: '/app/departements' },
+          ]}
+          backTo="/app"
+          backLabel="← Tableau de bord"
+        />
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-10">

@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Upload, Trash2 } from 'lucide-react';
 import { isBureauLike } from '@/lib/permissions';
+import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 
 const COLORS = ['amber', 'blue', 'purple', 'rose', 'green', 'indigo'];
 const ICONS = ['Music', 'Users', 'Heart', 'Star', 'BookOpen', 'Mic', 'Video', 'Camera', 'Coffee', 'Smile', 'Gift', 'Globe', 'Zap', 'Sun', 'Shield', 'Flower2', 'Baby', 'Home', 'Megaphone', 'Layers'];
@@ -14,10 +15,17 @@ const COLOR_DOTS = {
 
 const inputCls = "w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400/50";
 
+async function findDepartmentBySlugOrId(slugOrId) {
+  let res = await base44.entities.Department.filter({ id: slugOrId });
+  if (res?.[0]) return res[0];
+  res = await base44.entities.Department.filter({ slug: slugOrId });
+  return res?.[0] || null;
+}
+
 export default function EditerDepartement() {
-  const { slug: id } = useParams();
+  const { slug: slugOrId } = useParams();
   const navigate = useNavigate();
-  const isNew = id === 'nouveau';
+  const isNew = slugOrId === 'nouveau';
 
   const [form, setForm] = useState({ name: '', description: '', mission: '', icon: 'Users', color: 'amber', cover_url: '', is_active: true, display_order: 0, attente_superieure: '', rythme_travail: '', critere_excellence: '', responsabilites: '', livrables: '' });
   const [saving, setSaving] = useState(false);
@@ -27,29 +35,25 @@ export default function EditerDepartement() {
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    base44.auth.me().then(u => {
+    base44.auth.me().then(async u => {
       setUser(u);
       if (isBureauLike(u)) {
         setAuthorized(true);
         if (!isNew) {
-          base44.entities.Department.filter({ id }).then(res => {
-            if (res?.[0]) setForm({ ...res[0] });
-          });
+          const found = await findDepartmentBySlugOrId(slugOrId);
+          if (found) setForm({ ...found });
         }
       } else if (!isNew) {
-        Promise.all([
-          base44.entities.Department.filter({ id }),
-          base44.entities.DepartmentMember.filter({ department_id: id, is_active: true })
-        ]).then(([res, members]) => {
-          if (res?.[0]) setForm({ ...res[0] });
-          const isReferent = (members || []).some(m => m.user_id === u?.id && m.role_in_dept === 'referent');
-          setAuthorized(isReferent);
-        });
+        const found = await findDepartmentBySlugOrId(slugOrId);
+        if (found) setForm({ ...found });
+        const members = await base44.entities.DepartmentMember.filter({ department_id: found?.id, is_active: true });
+        const isReferent = (members || []).some(m => m.user_id === u?.id && m.role_in_dept === 'referent');
+        setAuthorized(isReferent);
       } else {
         setAuthorized(false);
       }
     });
-  }, [id]);
+  }, [slugOrId]);
 
   const uploadCover = async (e) => {
     const file = e.target.files?.[0];
@@ -90,34 +94,48 @@ export default function EditerDepartement() {
     <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-gray-500 px-5 text-center">
       <p className="text-sm font-semibold text-white mb-1">Accès réservé</p>
       <p className="text-xs text-gray-500 mb-5 max-w-xs">Seuls les responsables peuvent modifier ce département.</p>
-      <Link to={isNew ? '/app/departements' : `/app/departements/${id}`} className="text-amber-400 text-sm">← Retour</Link>
+      <Link to={isNew ? '/app/departements' : `/app/departements/${form.slug || form.id || slugOrId}`} className="text-amber-400 text-sm">← Retour</Link>
     </div>
   );
+
+  const deptPath = form.slug || form.id || slugOrId;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       <div className="max-w-xl mx-auto px-5 pt-8 pb-20">
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <Link
-            to={isNew ? '/app/departements' : `/app/departements/${id}`}
-            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" /> Retour
-          </Link>
-          <div className="flex items-center gap-3">
-            {msg && <span className="text-xs text-green-400">{msg}</span>}
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center gap-2 bg-amber-400 text-black text-sm font-semibold px-4 py-2 rounded-xl hover:bg-amber-300 transition-all disabled:opacity-50"
-            >
-              <Save className="w-3.5 h-3.5" />
-              {saving ? 'Sauvegarde...' : isNew ? 'Créer' : 'Sauvegarder'}
-            </button>
-          </div>
-        </div>
+        {/* Fil d'Ariane */}
+        <PageBreadcrumb
+          items={
+            isNew
+              ? [
+                  { label: 'Tableau de bord', to: '/app' },
+                  { label: 'Départements', to: '/app/departements' },
+                  { label: 'Nouveau département', to: '/app/departements/nouveau/parametres' },
+                ]
+              : [
+                  { label: 'Tableau de bord', to: '/app' },
+                  { label: 'Départements', to: '/app/departements' },
+                  { label: form.name || 'Département', to: `/app/departements/${deptPath}` },
+                  { label: 'Paramètres', to: `/app/departements/${deptPath}/parametres` },
+                ]
+          }
+          backTo={isNew ? '/app/departements' : `/app/departements/${deptPath}`}
+          backLabel={isNew ? '← Départements' : '← Département'}
+          rightAction={
+            <div className="flex items-center gap-3">
+              {msg && <span className="text-xs text-green-400">{msg}</span>}
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center gap-2 bg-amber-400 text-black text-sm font-semibold px-4 py-2 rounded-xl hover:bg-amber-300 transition-all disabled:opacity-50"
+              >
+                <Save className="w-3.5 h-3.5" />
+                {saving ? 'Sauvegarde...' : isNew ? 'Créer' : 'Sauvegarder'}
+              </button>
+            </div>
+          }
+        />
 
         <h1 className="text-xl font-bold text-white mb-6">{isNew ? 'Nouveau département' : 'Modifier le département'}</h1>
 

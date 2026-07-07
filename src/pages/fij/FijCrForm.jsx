@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { LoadingSpinner } from '@/components/fij/FijPageShell';
+import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 import { ArrowLeft, Save, FileText } from 'lucide-react';
 
 export default function FijCrForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [fij, setFij] = useState(null);
   const [existingReport, setExistingReport] = useState(null);
   const [user, setUser] = useState(null);
@@ -103,13 +105,20 @@ export default function FijCrForm() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-2xl mx-auto px-4 py-2.5 flex items-center gap-3">
-          <Link to={`/app/departements/fij/fij/${id}`} className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5" /> {fij.name}
-          </Link>
-          <div className="flex-1" />
-          <span className="text-xs text-gray-500">CR semaine du {new Date(weekStart).toLocaleDateString('fr-FR')}</span>
+      <div className="sticky top-14 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-2xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+          <PageBreadcrumb
+            items={[
+              { label: 'Tableau de bord', to: '/app' },
+              { label: 'Départements', to: '/app/departements' },
+              { label: 'FIJ', to: '/app/departements/fij' },
+              { label: fij.name, to: `/app/departements/fij/fij/${id}` },
+              { label: 'Nouveau CR', to: location.pathname },
+            ]}
+            backTo={`/app/departements/fij/fij/${id}`}
+            backLabel="← Fiche FIJ"
+          />
+          <span className="text-xs text-gray-500 flex-shrink-0">CR du {new Date(weekStart).toLocaleDateString('fr-FR')}</span>
         </div>
       </div>
 

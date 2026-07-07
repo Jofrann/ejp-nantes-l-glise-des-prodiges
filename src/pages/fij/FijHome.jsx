@@ -10,6 +10,7 @@ import {
 import { getFijAccessLevel } from '@/lib/permissions';
 import { LoadingSpinner, EmptyState } from '@/components/fij/FijPageShell';
 import { FIJ_NAV } from '@/components/fij/FijPageShell';
+import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 import { useLocation } from 'react-router-dom';
 
 export default function FijHome() {
@@ -72,16 +73,23 @@ export default function FijHome() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* Header sticky avec nav */}
-      <div className="sticky top-0 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
+      <div className="sticky top-14 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="flex items-center gap-3 py-2.5">
-            <Link to="/app/departements" className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors flex-shrink-0">
-              <ArrowRight className="w-3 h-3 rotate-180" /> Départements
-            </Link>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-sm font-semibold text-white truncate">Familles d'Impact Jeunes</h1>
-            </div>
-          </div>
+          {/* Fil d'Ariane */}
+          <PageBreadcrumb
+            items={[
+              { label: 'Tableau de bord', to: '/app' },
+              { label: 'Départements', to: '/app/departements' },
+              { label: 'FIJ', to: '/app/departements/fij' },
+            ]}
+            backTo="/app/departements"
+            backLabel="← Tous les départements"
+            rightAction={
+              <Link to="/app" className="text-xs text-gray-500 hover:text-amber-400 transition-colors">
+                Tableau de bord EJP
+              </Link>
+            }
+          />
           <div className="flex gap-1 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
             {navItems.map(item => {
               const active = location.pathname === item.to;

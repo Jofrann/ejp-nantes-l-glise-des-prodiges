@@ -7,6 +7,7 @@ import { useFijData } from '@/hooks/useFijData';
 import { getFijAccessLevel } from '@/lib/permissions';
 import { FIJ_NAV } from '@/components/fij/FijPageShell';
 import { ArrowLeft, Users, FileText, AlertTriangle, MapPin, Clock, Edit, Plus, PauseCircle } from 'lucide-react';
+import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 import { useLocation } from 'react-router-dom';
 
 export default function FijDetail() {
@@ -51,19 +52,28 @@ export default function FijDetail() {
 
   const navItems = FIJ_NAV.filter(item => item.roles === 'all' || item.roles.includes(accessLevel));
 
+  // Retour logique selon le rôle
+  const parentFijPath = accessLevel === 'pilot'
+    ? '/app/departements/fij/mes-fij'
+    : '/app/departements/fij/registre';
+  const parentFijLabel = accessLevel === 'pilot' ? '← Mes FIJ' : '← Registre';
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* Header sticky */}
-      <div className="sticky top-0 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
+      <div className="sticky top-14 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="flex items-center gap-3 py-2.5">
-            <Link to="/app/departements/fij" className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors flex-shrink-0">
-              <ArrowLeft className="w-3.5 h-3.5" /> FIJ
-            </Link>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-sm font-semibold text-white truncate">{fij.name}</h1>
-            </div>
-          </div>
+          {/* Fil d'Ariane */}
+          <PageBreadcrumb
+            items={[
+              { label: 'Tableau de bord', to: '/app' },
+              { label: 'Départements', to: '/app/departements' },
+              { label: 'FIJ', to: '/app/departements/fij' },
+              { label: fij.name, to: `/app/departements/fij/fij/${fij.id}` },
+            ]}
+            backTo={parentFijPath}
+            backLabel={parentFijLabel}
+          />
           <div className="flex gap-1 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
             {navItems.map(item => {
               const active = location.pathname === item.to;

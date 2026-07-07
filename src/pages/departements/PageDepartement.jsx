@@ -12,6 +12,16 @@ import DeptChat from '@/components/departements/DeptChat';
 import DeptIcon from '@/components/departements/DeptIcon';
 import GestionMembres from '@/components/departements/GestionMembres';
 import MissionCard from '@/components/departements/MissionCard';
+import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
+
+async function findDepartmentBySlugOrId(slugOrId) {
+  // Essayer d'abord par id
+  let res = await base44.entities.Department.filter({ id: slugOrId });
+  if (res?.[0]) return res[0];
+  // Puis par slug
+  res = await base44.entities.Department.filter({ slug: slugOrId });
+  return res?.[0] || null;
+}
 
 const COLOR_MAP = {
   amber:  { border: 'border-amber-400/20', text: 'text-amber-400', bg: 'bg-amber-400/10', glow: 'bg-amber-400/5' },
@@ -23,8 +33,9 @@ const COLOR_MAP = {
 };
 
 export default function PageDepartement() {
-  const { slug: id } = useParams();
+  const { slug: slugOrId } = useParams();
   const [dept, setDept] = useState(null);
+  const [resolvedId, setResolvedId] = useState(null);
   const [members, setMembers] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,39 +44,43 @@ export default function PageDepartement() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [lastSeenDate, setLastSeenDate] = useState(null);
 
-  const load = () => {
-    Promise.all([
+  const load = async () => {
+    const [u, found] = await Promise.all([
       base44.auth.me(),
-      base44.entities.Department.filter({ id }),
-      base44.entities.DepartmentMember.filter({ department_id: id, is_active: true }),
-    ]).then(([u, depts, mems]) => {
-      setUser(u);
-      setDept(depts?.[0] || null);
-      setMembers(mems || []);
-      setLoading(false);
+      findDepartmentBySlugOrId(slugOrId),
+    ]);
+    setUser(u);
+    setDept(found);
+    if (!found) { setLoading(false); return; }
+    const deptId = found.id;
+    setResolvedId(deptId);
 
-      // Charger les messages non lus
-      const key = `dept_chat_seen_${id}`;
-      const seen = localStorage.getItem(key);
-      setLastSeenDate(seen);
-      base44.entities.DeptMessage.filter({ department_id: id }, '-created_date', 50).then(msgs => {
-        if (!seen) { setUnreadCount(msgs?.length || 0); return; }
-        const count = (msgs || []).filter(m => new Date(m.created_date) > new Date(seen)).length;
-        setUnreadCount(count);
-      });
+    const mems = await base44.entities.DepartmentMember.filter({ department_id: deptId, is_active: true });
+    setMembers(mems || []);
+    setLoading(false);
+
+    // Charger les messages non lus
+    const key = `dept_chat_seen_${deptId}`;
+    const seen = localStorage.getItem(key);
+    setLastSeenDate(seen);
+    base44.entities.DeptMessage.filter({ department_id: deptId }, '-created_date', 50).then(msgs => {
+      if (!seen) { setUnreadCount(msgs?.length || 0); return; }
+      const count = (msgs || []).filter(m => new Date(m.created_date) > new Date(seen)).length;
+      setUnreadCount(count);
     });
   };
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => { load(); }, [slugOrId]);
 
   const reloadMembers = () => {
-    base44.entities.DepartmentMember.filter({ department_id: id, is_active: true }).then(setMembers);
+    if (!resolvedId) return;
+    base44.entities.DepartmentMember.filter({ department_id: resolvedId, is_active: true }).then(setMembers);
   };
 
   const openChat = () => {
     setShowChat(true);
     setUnreadCount(0);
-    const key = `dept_chat_seen_${id}`;
+    const key = `dept_chat_seen_${resolvedId}`;
     localStorage.setItem(key, new Date().toISOString());
   };
 
@@ -89,6 +104,7 @@ export default function PageDepartement() {
   const isReferentOfDept = members.some(m => m.user_id === user?.id && m.role_in_dept === 'referent');
   const canManage = isAdmin || isReferentOfDept;
   const existingUserIds = members.map(m => m.user_id).filter(Boolean);
+  const id = resolvedId;
 
   // Protection d'accès : un serviteur ne peut entrer que dans un département auquel il est rattaché
   const isMember = members.some(m => m.user_id === user?.id);
@@ -111,40 +127,57 @@ export default function PageDepartement() {
       </div>
 
       {/* Header fixe (uniquement sur cette page) */}
-      <div className="sticky top-0 z-30 bg-zinc-950/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-2xl mx-auto px-4 py-2.5 flex items-center gap-3">
-          {/* Identité compacte */}
-          <div className={`w-8 h-8 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0`}>
-            <DeptIcon name={dept.icon} className={`w-4 h-4 ${colors.text}`} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-white truncate">{dept.name}</p>
-            <p className="text-xs text-gray-500">{members.length} membre{members.length > 1 ? 's' : ''}</p>
-          </div>
+      <div className="sticky top-14 z-30 bg-zinc-950/80 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-2xl mx-auto px-4">
+          {/* Fil d'Ariane */}
+          <PageBreadcrumb
+            items={[
+              { label: 'Tableau de bord', to: '/app' },
+              { label: 'Départements', to: '/app/departements' },
+              { label: dept.name, to: `/app/departements/${dept.slug || dept.id}` },
+            ]}
+            backTo="/app/departements"
+            backLabel="← Départements"
+            rightAction={
+              <Link to="/app" className="text-xs text-gray-500 hover:text-amber-400 transition-colors">
+                Tableau de bord
+              </Link>
+            }
+          />
+          {/* Ligne identité + actions */}
+          <div className="py-2.5 flex items-center gap-3">
+            <div className={`w-8 h-8 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0`}>
+              <DeptIcon name={dept.icon} className={`w-4 h-4 ${colors.text}`} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white truncate">{dept.name}</p>
+              <p className="text-xs text-gray-500">{members.length} membre{members.length > 1 ? 's' : ''}</p>
+            </div>
 
-          {/* Bouton tchat */}
-          <button
-            onClick={openChat}
-            className={`relative flex items-center gap-1.5 text-xs ${colors.bg} border ${colors.border} ${colors.text} px-3 py-2 rounded-xl hover:brightness-125 transition-all`}
-          >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Groupe</span>
-            {unreadCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </span>
-            )}
-          </button>
-
-          {/* Bouton édition admin */}
-          {isAdmin && (
-            <Link
-              to={`/app/departements/${id}/parametres`}
-              className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-white border border-white/10 hover:border-white/20 bg-white/3 hover:bg-white/8 rounded-xl transition-all"
+            {/* Bouton tchat */}
+            <button
+              onClick={openChat}
+              className={`relative flex items-center gap-1.5 text-xs ${colors.bg} border ${colors.border} ${colors.text} px-3 py-2 rounded-xl hover:brightness-125 transition-all`}
             >
-              <Settings className="w-3.5 h-3.5" />
-            </Link>
-          )}
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Groupe</span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+
+            {/* Bouton édition admin */}
+            {isAdmin && (
+              <Link
+                to={`/app/departements/${dept.slug || dept.id}/parametres`}
+                className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-white border border-white/10 hover:border-white/20 bg-white/3 hover:bg-white/8 rounded-xl transition-all"
+              >
+                <Settings className="w-3.5 h-3.5" />
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 

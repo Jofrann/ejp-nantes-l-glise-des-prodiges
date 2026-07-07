@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
+import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 import {
   Home as HomeIcon, BarChart3, Users, FileText, Plus, Heart,
   PauseCircle, UserCheck, Mail, TrendingUp, FolderOpen, AlertTriangle,
@@ -69,17 +70,20 @@ export default function FijPageShell({ accessLevel, title, subtitle, children, a
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* Header sticky avec navigation */}
-      <div className="sticky top-0 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
+      <div className="sticky top-14 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="flex items-center gap-3 py-2.5">
-            <Link to="/app/departements/fij" className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors flex-shrink-0">
-              <ArrowLeft className="w-3.5 h-3.5" /> FIJ
-            </Link>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-sm font-semibold text-white truncate">{title}</h1>
-            </div>
-            {actions && <div className="flex-shrink-0">{actions}</div>}
-          </div>
+          {/* Fil d'Ariane */}
+          <PageBreadcrumb
+            items={[
+              { label: 'Tableau de bord', to: '/app' },
+              { label: 'Départements', to: '/app/departements' },
+              { label: 'FIJ', to: '/app/departements/fij' },
+              { label: title, to: location.pathname },
+            ]}
+            backTo="/app/departements/fij"
+            backLabel="← FIJ"
+            rightAction={actions}
+          />
           {/* Navigation horizontale scrollable */}
           <div className="flex gap-1 overflow-x-auto pb-2 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
             {navItems.map(item => {
