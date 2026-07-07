@@ -25,27 +25,27 @@ export default function GestionMembres({ members, colors, departmentId, existing
   };
 
   return (
-    <div className="border border-white/10 rounded-2xl overflow-hidden mb-6">
+    <div className="border border-border rounded-2xl overflow-hidden mb-6 bg-card shadow-sm">
       {/* Header section */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-white/3 hover:bg-white/5 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 bg-surface hover:bg-surface/70 transition-colors"
       >
         <div className="flex items-center gap-2">
           <div className={`w-5 h-5 rounded-lg ${colors.bg} flex items-center justify-center`}>
             <User className={`w-3 h-3 ${colors.text}`} />
           </div>
-          <span className="text-sm font-semibold text-white">Gestion des membres</span>
-          <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">{members.length}</span>
+          <span className="text-sm font-semibold text-foreground">Gestion des membres</span>
+          <span className="text-xs text-muted-foreground bg-surface px-2 py-0.5 rounded-full">{members.length}</span>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={(e) => { e.stopPropagation(); onOpenAdd(); }}
-            className={`flex items-center gap-1.5 text-xs ${colors.bg} border ${colors.border} ${colors.text} px-2.5 py-1.5 rounded-lg hover:brightness-125 transition-all`}
+            className={`flex items-center gap-1.5 text-xs ${colors.bg} border ${colors.border} ${colors.text} px-2.5 py-1.5 rounded-lg hover:brightness-110 transition-all`}
           >
             <UserPlus className="w-3 h-3" /> Ajouter
           </button>
-          {open ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+          {open ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
         </div>
       </button>
 
@@ -60,7 +60,7 @@ export default function GestionMembres({ members, colors, departmentId, existing
             className="overflow-hidden"
           >
             {members.length === 0 ? (
-              <div className="px-4 py-8 text-center text-gray-600">
+              <div className="px-4 py-8 text-center text-muted-foreground">
                 <p className="text-sm">Aucun membre dans ce département.</p>
                 <button
                   onClick={onOpenAdd}
@@ -70,13 +70,13 @@ export default function GestionMembres({ members, colors, departmentId, existing
                 </button>
               </div>
             ) : (
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-border">
                 {members.map(m => {
                   const initials = m.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?';
                   const isReferent = m.role_in_dept === 'referent';
 
                   return (
-                    <div key={m.id} className="flex items-center gap-3 px-4 py-3 hover:bg-white/3 transition-colors">
+                    <div key={m.id} className="flex items-center gap-3 px-4 py-3 hover:bg-surface/50 transition-colors">
                       {/* Avatar */}
                       <div className={`w-9 h-9 rounded-full flex-shrink-0 overflow-hidden border ${colors.border}`}>
                         {m.photo_url ? (
@@ -91,14 +91,14 @@ export default function GestionMembres({ members, colors, departmentId, existing
                       {/* Infos */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <p className="text-sm font-medium text-white truncate">{m.full_name}</p>
+                          <p className="text-sm font-medium text-foreground truncate">{m.full_name}</p>
                           {isReferent && (
                             <span className={`flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded-full ${colors.bg} ${colors.text} flex-shrink-0`}>
                               <Crown className="w-2 h-2" /> Réf.
                             </span>
                           )}
                         </div>
-                        {m.note && <p className="text-xs text-gray-600 truncate">{m.note}</p>}
+                        {m.note && <p className="text-xs text-muted-foreground truncate">{m.note}</p>}
                       </div>
 
                       {/* Actions */}
@@ -110,8 +110,8 @@ export default function GestionMembres({ members, colors, departmentId, existing
                           title={isReferent ? 'Rétrograder en membre' : 'Promouvoir référent'}
                           className={`text-xs px-2 py-1 rounded-lg border transition-all disabled:opacity-50 ${
                             isReferent
-                              ? 'border-white/10 text-gray-500 hover:text-white hover:border-white/20 bg-white/3'
-                              : `${colors.border} ${colors.text} ${colors.bg} hover:brightness-125`
+                              ? 'border-border text-muted-foreground hover:text-foreground hover:border-secondary/30 bg-surface'
+                              : `${colors.border} ${colors.text} ${colors.bg} hover:brightness-110`
                           }`}
                         >
                           <Crown className="w-3 h-3" />
@@ -121,10 +121,10 @@ export default function GestionMembres({ members, colors, departmentId, existing
                         <button
                           onClick={() => handleRemove(m)}
                           disabled={removing === m.id}
-                          className="w-7 h-7 flex items-center justify-center text-gray-600 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all disabled:opacity-50"
+                          className="w-7 h-7 flex items-center justify-center text-muted-foreground hover:text-danger hover:bg-danger/10 rounded-lg transition-all disabled:opacity-50"
                         >
                           {removing === m.id
-                            ? <div className="w-3 h-3 border border-gray-500 border-t-transparent rounded-full animate-spin" />
+                            ? <div className="w-3 h-3 border border-muted-foreground border-t-transparent rounded-full animate-spin" />
                             : <Trash2 className="w-3.5 h-3.5" />
                           }
                         </button>

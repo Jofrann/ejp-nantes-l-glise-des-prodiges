@@ -46,7 +46,7 @@ export default function NewPostForm({ currentUser, type = 'parvis', onPost, canP
   };
 
   return (
-    <div className="bg-white/[0.04] border border-white/8 rounded-2xl p-4">
+    <div className="bg-card border border-border rounded-2xl p-4 shadow-sm">
       {isAdmin && (
         <div className="flex gap-2 mb-3">
           {['parvis', 'announcement'].map(t => (
@@ -55,22 +55,22 @@ export default function NewPostForm({ currentUser, type = 'parvis', onPost, canP
               onClick={() => setPostType(t)}
               className={`text-[10px] uppercase tracking-wider px-3 py-1 rounded-full border transition-all ${
                 postType === t
-                  ? 'bg-amber-400/20 border-amber-400/40 text-amber-300'
-                  : 'bg-white/5 border-white/10 text-gray-500 hover:text-white'
+                  ? 'bg-secondary/15 border-secondary/40 text-secondary'
+                  : 'bg-surface border-border text-muted-foreground hover:text-foreground'
               }`}
             >
-              {t === 'parvis' ? '🏠 Le Parvis' : '📢 Officiel'}
+              {t === 'parvis' ? 'Le Parvis' : 'Officiel'}
             </button>
           ))}
         </div>
       )}
 
       <div className="flex gap-3">
-        <div className="w-8 h-8 rounded-full bg-amber-400/15 border border-amber-400/20 flex items-center justify-center flex-shrink-0 mt-1">
+        <div className="w-8 h-8 rounded-full bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0 mt-1">
           {currentUser?.photo_url ? (
             <img src={currentUser.photo_url} alt="" className="w-full h-full rounded-full object-cover" />
           ) : (
-            <span className="text-xs font-bold text-amber-400">{currentUser?.full_name?.[0] || '?'}</span>
+            <span className="text-xs font-bold text-secondary">{currentUser?.full_name?.[0] || '?'}</span>
           )}
         </div>
         <div className="flex-1">
@@ -79,7 +79,7 @@ export default function NewPostForm({ currentUser, type = 'parvis', onPost, canP
             onChange={e => setContent(e.target.value)}
             placeholder={postType === 'announcement' ? "Publier une annonce officielle…" : "Partage quelque chose avec la communauté…"}
             rows={3}
-            className="w-full bg-transparent text-sm text-white placeholder-gray-600 focus:outline-none resize-none leading-relaxed"
+            className="w-full bg-transparent text-sm text-foreground placeholder-muted-foreground/60 focus:outline-none resize-none leading-relaxed"
           />
 
           {mediaUrl && (
@@ -91,18 +91,18 @@ export default function NewPostForm({ currentUser, type = 'parvis', onPost, canP
               )}
               <button
                 onClick={() => { setMediaUrl(''); setMediaType(''); }}
-                className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-full flex items-center justify-center text-gray-400 hover:text-white"
+                className="absolute -top-2 -right-2 w-5 h-5 bg-card border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground"
               >
                 <X className="w-3 h-3" />
               </button>
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-3 border-t border-white/5 pt-3">
+          <div className="flex items-center justify-between mt-3 border-t border-border pt-3">
             <div className="flex gap-3">
               <button
                 onClick={() => fileRef.current?.click()}
-                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-amber-400 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-secondary transition-colors"
                 disabled={uploading}
               >
                 <Image className="w-4 h-4" />
@@ -110,7 +110,7 @@ export default function NewPostForm({ currentUser, type = 'parvis', onPost, canP
               </button>
               <button
                 onClick={() => fileRef.current?.click()}
-                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-amber-400 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-secondary transition-colors"
                 disabled={uploading}
               >
                 <Video className="w-4 h-4" />
@@ -122,7 +122,7 @@ export default function NewPostForm({ currentUser, type = 'parvis', onPost, canP
             <button
               onClick={submit}
               disabled={!content.trim() || posting}
-              className="flex items-center gap-2 bg-amber-400 text-black text-xs font-semibold px-4 py-2 rounded-xl hover:bg-amber-300 transition-all disabled:opacity-30"
+              className="flex items-center gap-2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all disabled:opacity-30"
             >
               <Send className="w-3.5 h-3.5" />
               {posting ? 'Envoi…' : 'Publier'}

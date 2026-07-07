@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Upload, Trash2, Film, Image } from 'lucide-react';
+import { Upload, Trash2, Film } from 'lucide-react';
 
 export default function GalleryAdmin({ gallery, setGallery }) {
   const [uploading, setUploading] = useState(false);
@@ -39,8 +39,8 @@ export default function GalleryAdmin({ gallery, setGallery }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-white font-semibold">Galerie ({gallery.length})</h2>
-        <label className={`flex items-center gap-2 bg-amber-400 text-black text-xs font-semibold px-3 py-2 rounded-xl hover:bg-amber-300 cursor-pointer ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+        <h2 className="text-foreground font-semibold">Galerie ({gallery.length})</h2>
+        <label className={`flex items-center gap-2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-2 rounded-xl hover:bg-primary/90 cursor-pointer ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
           <Upload className="w-3.5 h-3.5" />
           {uploading ? 'Upload en cours...' : 'Choisir des fichiers'}
           <input ref={inputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={e => uploadFiles(e.target.files)} disabled={uploading} />
@@ -54,20 +54,20 @@ export default function GalleryAdmin({ gallery, setGallery }) {
         onDrop={handleDrop}
         onClick={() => !uploading && inputRef.current?.click()}
         className={`border-2 border-dashed rounded-2xl p-8 mb-6 text-center cursor-pointer transition-all duration-200 ${
-          dragOver ? 'border-amber-400 bg-amber-400/10' : 'border-white/15 hover:border-white/30 bg-white/3'
+          dragOver ? 'border-secondary bg-secondary/10' : 'border-border hover:border-secondary/40 bg-surface/50'
         } ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
       >
-        <Upload className={`w-7 h-7 mx-auto mb-3 ${dragOver ? 'text-amber-400' : 'text-gray-600'}`} />
-        <p className="text-sm text-gray-400">
+        <Upload className={`w-7 h-7 mx-auto mb-3 ${dragOver ? 'text-secondary' : 'text-muted-foreground'}`} />
+        <p className="text-sm text-muted-foreground">
           {uploading ? 'Upload en cours...' : 'Glissez des photos/vidéos ici, ou cliquez pour parcourir'}
         </p>
-        <p className="text-xs text-gray-600 mt-1">JPG, PNG, MP4, MOV…</p>
+        <p className="text-xs text-muted-foreground/60 mt-1">JPG, PNG, MP4, MOV…</p>
       </div>
 
       {/* Grille */}
       <div className="grid grid-cols-3 gap-3">
         {gallery.map(m => (
-          <div key={m.id} className="relative group rounded-xl overflow-hidden aspect-square bg-white/5">
+          <div key={m.id} className="relative group rounded-xl overflow-hidden aspect-square bg-surface border border-border">
             {m.type === 'video' ? (
               <>
                 <video
@@ -87,11 +87,10 @@ export default function GalleryAdmin({ gallery, setGallery }) {
                 alt={m.title || ''}
                 loading="lazy"
                 className="w-full h-full object-cover"
-                onError={e => { e.target.src = ''; e.target.parentElement.style.background = '#1a1a1a'; }}
               />
             )}
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <button onClick={() => remove(m.id)} className="bg-red-500/80 text-white p-2 rounded-lg">
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button onClick={() => remove(m.id)} className="bg-danger/80 text-white p-2 rounded-lg">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>

@@ -15,8 +15,8 @@ const TABS = [
 
 function Section({ title, children }) {
   return (
-    <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-5">
-      <h3 className="text-white font-semibold text-sm mb-5 uppercase tracking-wider opacity-60">{title}</h3>
+    <div className="bg-card border border-border rounded-2xl p-6 mb-5 shadow-sm">
+      <h3 className="text-foreground font-semibold text-sm mb-5 uppercase tracking-wider opacity-60">{title}</h3>
       {children}
     </div>
   );
@@ -25,13 +25,13 @@ function Section({ title, children }) {
 function Field({ label, children }) {
   return (
     <div className="mb-4">
-      <label className="text-xs text-gray-500 uppercase tracking-wider block mb-1.5">{label}</label>
+      <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">{label}</label>
       {children}
     </div>
   );
 }
 
-const inputCls = "w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400/50";
+const inputCls = "w-full bg-white border border-border text-foreground placeholder-muted-foreground/60 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary/50";
 
 export default function AdminHome() {
   const [tab, setTab] = useState('hero');
@@ -80,7 +80,6 @@ export default function AdminHome() {
     const file = e.target.files?.[0];
     if (!file) return;
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    // Met à jour le state ET sauvegarde immédiatement en BDD
     setConfig(c => {
       const updated = { ...c, [field]: file_url };
       if (updated.id) {
@@ -91,21 +90,21 @@ export default function AdminHome() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="border-b border-white/10 px-6 py-4 flex items-center justify-between">
+      <div className="border-b border-border px-6 py-4 flex items-center justify-between bg-card/80 backdrop-blur-sm sticky top-14 z-30">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-amber-400/20 border border-amber-400/30 flex items-center justify-center">
-            <span className="text-amber-400 font-bold text-xs">EJP</span>
+          <div className="w-8 h-8 rounded-full bg-secondary/15 border border-secondary/30 flex items-center justify-center">
+            <span className="text-secondary font-bold text-xs">EJP</span>
           </div>
-          <span className="text-white font-semibold">Admin — Page vitrine</span>
+          <span className="text-foreground font-semibold">Admin — Page vitrine</span>
         </div>
         <div className="flex items-center gap-3">
-          {msg && <span className="text-xs text-green-400">{msg}</span>}
+          {msg && <span className="text-xs text-success">{msg}</span>}
           <button
             onClick={saveConfig}
             disabled={saving}
-            className="flex items-center gap-2 bg-amber-400 text-black text-sm font-semibold px-4 py-2 rounded-xl hover:bg-amber-300 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 bg-primary text-primary-foreground text-sm font-semibold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Sauvegarde...' : 'Sauvegarder'}
@@ -115,12 +114,12 @@ export default function AdminHome() {
 
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-52 border-r border-white/10 min-h-[calc(100vh-60px)] p-4 flex flex-col gap-1">
+        <div className="w-52 border-r border-border min-h-[calc(100vh-120px)] p-4 flex flex-col gap-1 bg-card/50">
           {TABS.map(t => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all ${tab === t.id ? 'bg-amber-400/15 text-amber-400' : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all ${tab === t.id ? 'bg-secondary/10 text-secondary' : 'text-muted-foreground hover:text-foreground hover:bg-surface'}`}
             >
               <t.icon className="w-4 h-4" />
               {t.label}
@@ -144,23 +143,23 @@ export default function AdminHome() {
                   {config.hero_video_url && (
                     <video
                       src={config.hero_video_url}
-                      className="w-full h-32 object-cover rounded-xl mb-2 border border-white/10"
+                      className="w-full h-32 object-cover rounded-xl mb-2 border border-border"
                       muted
                       loop
                       autoPlay
                       playsInline
                     />
                   )}
-                  <label className={`flex items-center gap-2 text-xs cursor-pointer ${uploadingVideo ? 'text-gray-500 pointer-events-none' : 'text-amber-400 hover:text-amber-300'}`}>
+                  <label className={`flex items-center gap-2 text-xs cursor-pointer ${uploadingVideo ? 'text-muted-foreground pointer-events-none' : 'text-secondary hover:text-secondary/80'}`}>
                     <Upload className="w-3.5 h-3.5" />
-                    {uploadingVideo ? 'Upload en cours… ⏳' : 'Uploader une vidéo (MP4 recommandé)'}
+                    {uploadingVideo ? 'Upload en cours…' : 'Uploader une vidéo (MP4 recommandé)'}
                     <input type="file" accept="video/*" className="hidden" disabled={uploadingVideo} onChange={async (e) => {
                       setUploadingVideo(true);
                       await uploadFile(e, 'hero_video_url');
                       setUploadingVideo(false);
                     }} />
                   </label>
-                  <p className="text-[10px] text-gray-600 mt-1.5">Conseil : vidéo &lt; 10 Mo pour un chargement rapide.</p>
+                  <p className="text-[10px] text-muted-foreground mt-1.5">Conseil : vidéo &lt; 10 Mo pour un chargement rapide.</p>
                 </Field>
               </Section>
               <Section title="Vision">
@@ -202,7 +201,7 @@ export default function AdminHome() {
                 </Field>
               </Section>
               <Section title="Berger EJP Monde">
-                <p className="text-xs text-gray-500 mb-4">Affiché côte à côte avec la bergère EJP Nantes.</p>
+                <p className="text-xs text-muted-foreground mb-4">Affiché côte à côte avec la bergère EJP Nantes.</p>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <Field label="Prénom">
                     <input className={inputCls} value={config.world_shepherd_first_name || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_first_name: e.target.value }))} />
@@ -219,7 +218,7 @@ export default function AdminHome() {
                 </Field>
                 <Field label="Photo (URL ou upload)">
                   <input className={inputCls + ' mb-2'} placeholder="https://..." value={config.world_shepherd_photo_url || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_photo_url: e.target.value }))} />
-                  <label className="flex items-center gap-2 text-xs text-amber-400 cursor-pointer hover:text-amber-300">
+                  <label className="flex items-center gap-2 text-xs text-secondary cursor-pointer hover:text-secondary/80">
                     <Upload className="w-3.5 h-3.5" />
                     Uploader une photo
                     <input type="file" accept="image/*" className="hidden" onChange={e => uploadFile(e, 'world_shepherd_photo_url')} />
@@ -228,13 +227,13 @@ export default function AdminHome() {
               </Section>
 
               <Section title="Image page Connexion / Inscription">
-                <p className="text-xs text-gray-500 mb-4">Affichée sur la colonne droite des pages Login et Register.</p>
+                <p className="text-xs text-muted-foreground mb-4">Affichée sur la colonne droite des pages Login et Register.</p>
                 <Field label="Image (URL ou upload)">
                   <input className={inputCls + ' mb-2'} placeholder="https://..." value={config.auth_page_image_url || ''} onChange={e => setConfig(c => ({ ...c, auth_page_image_url: e.target.value }))} />
                   {config.auth_page_image_url && (
-                    <img src={config.auth_page_image_url} alt="Aperçu" className="w-full h-40 object-cover rounded-xl mb-2 border border-white/10" />
+                    <img src={config.auth_page_image_url} alt="Aperçu" className="w-full h-40 object-cover rounded-xl mb-2 border border-border" />
                   )}
-                  <label className="flex items-center gap-2 text-xs text-amber-400 cursor-pointer hover:text-amber-300">
+                  <label className="flex items-center gap-2 text-xs text-secondary cursor-pointer hover:text-secondary/80">
                     <Upload className="w-3.5 h-3.5" />
                     Uploader une image
                     <input type="file" accept="image/*" className="hidden" onChange={e => uploadFile(e, 'auth_page_image_url')} />
@@ -244,8 +243,8 @@ export default function AdminHome() {
 
               <Section title="Annonce">
                 <div className="flex items-center gap-3 mb-4">
-                  <input type="checkbox" id="ann_active" checked={config.announcement_active || false} onChange={e => setConfig(c => ({ ...c, announcement_active: e.target.checked }))} className="accent-amber-400" />
-                  <label htmlFor="ann_active" className="text-sm text-gray-400">Afficher l'annonce</label>
+                  <input type="checkbox" id="ann_active" checked={config.announcement_active || false} onChange={e => setConfig(c => ({ ...c, announcement_active: e.target.checked }))} className="accent-secondary" />
+                  <label htmlFor="ann_active" className="text-sm text-muted-foreground">Afficher l'annonce</label>
                 </div>
                 <Field label="Texte de l'annonce">
                   <input className={inputCls} value={config.announcement_text || ''} onChange={e => setConfig(c => ({ ...c, announcement_text: e.target.value }))} />
@@ -290,15 +289,14 @@ function LeaderCard({ leader, onUpdate, onRemove }) {
     setUploading(true);
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     setUploading(false);
-    // Mise à jour directe sans passer par form (évite désync)
     setForm(f => ({ ...f, photo_url: file_url }));
     onUpdate(leader.id, { photo_url: file_url });
   };
 
-  const iCls = "bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm w-full";
+  const iCls = "bg-white border border-border text-foreground rounded-xl px-3 py-2 text-sm w-full focus:outline-none focus:border-secondary/50";
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
+    <div className="bg-card border border-border rounded-2xl p-5 mb-4 shadow-sm">
       <div className="grid grid-cols-2 gap-3 mb-3">
         <input className={iCls} placeholder="Prénom" value={form.first_name || ''} onChange={e => setForm(f => ({...f, first_name: e.target.value}))} onBlur={e => save({ first_name: e.target.value })} />
         <input className={iCls} placeholder="Nom" value={form.last_name || ''} onChange={e => setForm(f => ({...f, last_name: e.target.value}))} onBlur={e => save({ last_name: e.target.value })} />
@@ -308,15 +306,15 @@ function LeaderCard({ leader, onUpdate, onRemove }) {
       {/* Photo */}
       <div className="flex items-center gap-3 mb-3">
         {form.photo_url ? (
-          <img src={form.photo_url} alt="" className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-white/10" />
+          <img src={form.photo_url} alt="" className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-border" />
         ) : (
-          <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-            <Upload className="w-4 h-4 text-gray-600" />
+          <div className="w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center flex-shrink-0">
+            <Upload className="w-4 h-4 text-muted-foreground" />
           </div>
         )}
         <div className="flex-1">
           <input className={iCls + ' mb-1.5'} placeholder="URL photo" value={form.photo_url || ''} onChange={e => setForm(f => ({...f, photo_url: e.target.value}))} onBlur={e => save({ photo_url: e.target.value })} />
-          <label className={`flex items-center gap-1.5 text-xs cursor-pointer ${uploading ? 'text-gray-500' : 'text-amber-400 hover:text-amber-300'}`}>
+          <label className={`flex items-center gap-1.5 text-xs cursor-pointer ${uploading ? 'text-muted-foreground' : 'text-secondary hover:text-secondary/80'}`}>
             <Upload className="w-3 h-3" />
             {uploading ? 'Upload en cours...' : 'Uploader depuis mon PC'}
             <input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} disabled={uploading} />
@@ -326,17 +324,17 @@ function LeaderCard({ leader, onUpdate, onRemove }) {
 
       <textarea className={iCls + ' mb-3'} rows={2} placeholder="Biographie courte" value={form.bio || ''} onChange={e => setForm(f => ({...f, bio: e.target.value}))} onBlur={e => save({ bio: e.target.value })} />
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={form.is_main_shepherd || false} onChange={e => save({ is_main_shepherd: e.target.checked })} className="accent-amber-400" />
+            <input type="checkbox" checked={form.is_main_shepherd || false} onChange={e => save({ is_main_shepherd: e.target.checked })} className="accent-secondary" />
             Bergère principale
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={form.is_active !== false} onChange={e => save({ is_active: e.target.checked })} className="accent-amber-400" />
+            <input type="checkbox" checked={form.is_active !== false} onChange={e => save({ is_active: e.target.checked })} className="accent-secondary" />
             Visible
           </label>
         </div>
-        <button onClick={() => onRemove(leader.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
+        <button onClick={() => onRemove(leader.id)} className="text-danger/60 hover:text-danger transition-colors">
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
@@ -361,8 +359,8 @@ function LeadersAdmin({ leaders, setLeaders }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-white font-semibold">Leaders ({leaders.length})</h2>
-        <button onClick={add} className="flex items-center gap-2 bg-amber-400 text-black text-xs font-semibold px-3 py-2 rounded-xl hover:bg-amber-300">
+        <h2 className="text-foreground font-semibold">Leaders ({leaders.length})</h2>
+        <button onClick={add} className="flex items-center gap-2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-2 rounded-xl hover:bg-primary/90">
           <Plus className="w-3.5 h-3.5" /> Ajouter
         </button>
       </div>
@@ -376,7 +374,7 @@ function LeadersAdmin({ leaders, setLeaders }) {
 function EventCard({ event: ev, onUpdate, onRemove }) {
   const [form, setForm] = useState({ ...ev });
   const [uploading, setUploading] = useState(false);
-  const iCls = "w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm";
+  const iCls = "w-full bg-white border border-border text-foreground rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-secondary/50";
 
   const save = useCallback((patch) => {
     setForm(f => ({ ...f, ...patch }));
@@ -394,7 +392,7 @@ function EventCard({ event: ev, onUpdate, onRemove }) {
   };
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
+    <div className="bg-card border border-border rounded-2xl p-5 mb-4 shadow-sm">
       <input className={iCls + ' mb-3'} placeholder="Titre" value={form.title || ''} onChange={e => setForm(f => ({...f, title: e.target.value}))} onBlur={e => save({ title: e.target.value })} />
       <textarea className={iCls + ' mb-3'} rows={2} placeholder="Description" value={form.description || ''} onChange={e => setForm(f => ({...f, description: e.target.value}))} onBlur={e => save({ description: e.target.value })} />
       <div className="grid grid-cols-2 gap-3 mb-3">
@@ -405,10 +403,10 @@ function EventCard({ event: ev, onUpdate, onRemove }) {
 
       {/* Image */}
       <div className="flex items-center gap-3 mb-3">
-        {form.image_url && <img src={form.image_url} alt="" className="w-14 h-10 rounded-lg object-cover flex-shrink-0 border border-white/10" />}
+        {form.image_url && <img src={form.image_url} alt="" className="w-14 h-10 rounded-lg object-cover flex-shrink-0 border border-border" />}
         <div className="flex-1">
           <input className={iCls + ' mb-1.5'} placeholder="URL image" value={form.image_url || ''} onChange={e => setForm(f => ({...f, image_url: e.target.value}))} onBlur={e => save({ image_url: e.target.value })} />
-          <label className={`flex items-center gap-1.5 text-xs cursor-pointer ${uploading ? 'text-gray-500' : 'text-amber-400 hover:text-amber-300'}`}>
+          <label className={`flex items-center gap-1.5 text-xs cursor-pointer ${uploading ? 'text-muted-foreground' : 'text-secondary hover:text-secondary/80'}`}>
             <Upload className="w-3 h-3" />
             {uploading ? 'Upload en cours...' : 'Uploader une image'}
             <input type="file" accept="image/*" className="hidden" onChange={uploadImage} disabled={uploading} />
@@ -417,17 +415,17 @@ function EventCard({ event: ev, onUpdate, onRemove }) {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={form.is_featured || false} onChange={e => save({ is_featured: e.target.checked })} className="accent-amber-400" />
+            <input type="checkbox" checked={form.is_featured || false} onChange={e => save({ is_featured: e.target.checked })} className="accent-secondary" />
             À la une
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={form.is_active !== false} onChange={e => save({ is_active: e.target.checked })} className="accent-amber-400" />
+            <input type="checkbox" checked={form.is_active !== false} onChange={e => save({ is_active: e.target.checked })} className="accent-secondary" />
             Visible
           </label>
         </div>
-        <button onClick={() => onRemove(ev.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
+        <button onClick={() => onRemove(ev.id)} className="text-danger/60 hover:text-danger transition-colors">
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
@@ -452,8 +450,8 @@ function EventsAdmin({ events, setEvents }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-white font-semibold">Événements ({events.length})</h2>
-        <button onClick={add} className="flex items-center gap-2 bg-amber-400 text-black text-xs font-semibold px-3 py-2 rounded-xl hover:bg-amber-300">
+        <h2 className="text-foreground font-semibold">Événements ({events.length})</h2>
+        <button onClick={add} className="flex items-center gap-2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-2 rounded-xl hover:bg-primary/90">
           <Plus className="w-3.5 h-3.5" /> Ajouter
         </button>
       </div>
@@ -466,31 +464,31 @@ function EventsAdmin({ events, setEvents }) {
 
 function TestimonialCard({ t, onUpdate, onRemove }) {
   const [form, setForm] = useState({ ...t });
-  const iCls = "bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm";
+  const iCls = "bg-white border border-border text-foreground rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-secondary/50";
   const save = useCallback((patch) => {
     setForm(f => ({ ...f, ...patch }));
     onUpdate(t.id, patch);
   }, [t.id, onUpdate]);
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
+    <div className="bg-card border border-border rounded-2xl p-5 mb-4 shadow-sm">
       <textarea className={"w-full " + iCls + " mb-3 resize-none"} rows={3} placeholder="Témoignage" value={form.content || ''} onChange={e => setForm(f => ({...f, content: e.target.value}))} onBlur={e => save({ content: e.target.value })} />
       <div className="grid grid-cols-2 gap-3 mb-3">
         <input className={iCls} placeholder="Prénom" value={form.author_name || ''} onChange={e => setForm(f => ({...f, author_name: e.target.value}))} onBlur={e => save({ author_name: e.target.value })} />
         <input className={iCls} placeholder="Rôle" value={form.author_role || ''} onChange={e => setForm(f => ({...f, author_role: e.target.value}))} onBlur={e => save({ author_role: e.target.value })} />
       </div>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={form.is_anonymous || false} onChange={e => save({ is_anonymous: e.target.checked })} className="accent-amber-400" />
+            <input type="checkbox" checked={form.is_anonymous || false} onChange={e => save({ is_anonymous: e.target.checked })} className="accent-secondary" />
             Anonyme
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={form.is_published || false} onChange={e => save({ is_published: e.target.checked })} className="accent-amber-400" />
+            <input type="checkbox" checked={form.is_published || false} onChange={e => save({ is_published: e.target.checked })} className="accent-secondary" />
             Publié
           </label>
         </div>
-        <button onClick={() => onRemove(t.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
+        <button onClick={() => onRemove(t.id)} className="text-danger/60 hover:text-danger transition-colors">
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
@@ -515,8 +513,8 @@ function TestimonialsAdmin({ testimonials, setTestimonials }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-white font-semibold">Témoignages ({testimonials.length})</h2>
-        <button onClick={add} className="flex items-center gap-2 bg-amber-400 text-black text-xs font-semibold px-3 py-2 rounded-xl hover:bg-amber-300">
+        <h2 className="text-foreground font-semibold">Témoignages ({testimonials.length})</h2>
+        <button onClick={add} className="flex items-center gap-2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-2 rounded-xl hover:bg-primary/90">
           <Plus className="w-3.5 h-3.5" /> Ajouter
         </button>
       </div>
@@ -529,23 +527,23 @@ function TestimonialsAdmin({ testimonials, setTestimonials }) {
 
 function MinistryCard({ m, onUpdate, onRemove }) {
   const [form, setForm] = useState({ ...m });
-  const iCls = "w-full bg-white/5 border border-white/10 text-white rounded-xl px-3 py-2 text-sm";
+  const iCls = "w-full bg-white border border-border text-foreground rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-secondary/50";
   const save = useCallback((patch) => {
     setForm(f => ({ ...f, ...patch }));
     onUpdate(m.id, patch);
   }, [m.id, onUpdate]);
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-4">
+    <div className="bg-card border border-border rounded-2xl p-5 mb-4 shadow-sm">
       <input className={iCls + ' mb-3'} placeholder="Nom" value={form.name || ''} onChange={e => setForm(f => ({...f, name: e.target.value}))} onBlur={e => save({ name: e.target.value })} />
       <textarea className={iCls + ' mb-3'} rows={2} placeholder="Description" value={form.description || ''} onChange={e => setForm(f => ({...f, description: e.target.value}))} onBlur={e => save({ description: e.target.value })} />
       <input className={iCls + ' mb-3'} placeholder="Icône (ex: Music, Users, Star)" value={form.icon || ''} onChange={e => setForm(f => ({...f, icon: e.target.value}))} onBlur={e => save({ icon: e.target.value })} />
       <div className="flex items-center justify-between">
-        <label className="flex items-center gap-2 cursor-pointer text-xs text-gray-500">
-          <input type="checkbox" checked={form.is_active !== false} onChange={e => save({ is_active: e.target.checked })} className="accent-amber-400" />
+        <label className="flex items-center gap-2 cursor-pointer text-xs text-muted-foreground">
+          <input type="checkbox" checked={form.is_active !== false} onChange={e => save({ is_active: e.target.checked })} className="accent-secondary" />
           Visible
         </label>
-        <button onClick={() => onRemove(m.id)} className="text-red-400/60 hover:text-red-400 transition-colors">
+        <button onClick={() => onRemove(m.id)} className="text-danger/60 hover:text-danger transition-colors">
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
@@ -570,8 +568,8 @@ function MinistriesAdmin({ ministries, setMinistries }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-white font-semibold">Ministères ({ministries.length})</h2>
-        <button onClick={add} className="flex items-center gap-2 bg-amber-400 text-black text-xs font-semibold px-3 py-2 rounded-xl hover:bg-amber-300">
+        <h2 className="text-foreground font-semibold">Ministères ({ministries.length})</h2>
+        <button onClick={add} className="flex items-center gap-2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-2 rounded-xl hover:bg-primary/90">
           <Plus className="w-3.5 h-3.5" /> Ajouter
         </button>
       </div>
