@@ -115,7 +115,7 @@ export default function ListeDepartements() {
                   transition={{ delay: i * 0.06 }}
                 >
                   <Link
-                    to={`/app/departements/${dept.slug || dept.id}`}
+                    to={dept.slug === 'fij' ? '/app/departements/fij' : `/app/departements/${dept.slug || dept.id}`}
                     className={`group flex flex-col h-full bg-zinc-900/60 border ${colors.border} rounded-2xl overflow-hidden hover:brightness-110 transition-all`}
                   >
                     {/* Couverture */}
