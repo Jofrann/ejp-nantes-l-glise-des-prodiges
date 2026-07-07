@@ -90,7 +90,7 @@ export default function Reporting() {
         ].map(f => (
           <button key={f.v} onClick={() => setPeriod(f.v)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              period === f.v ? 'bg-amber-400/15 text-amber-400 border border-amber-400/20' : 'text-gray-500 hover:text-white border border-transparent'
+              period === f.v ? 'bg-secondary/15 text-secondary border border-secondary/20' : 'text-muted-foreground hover:text-foreground border border-transparent'
             }`}>
             {f.l}
           </button>
@@ -99,18 +99,18 @@ export default function Reporting() {
 
       {/* Indicateurs */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-        <StatCard icon={Users} label="FIJ actives" value={activeFijs.length} color="text-amber-400" />
-        <StatCard icon={Users} label="Participants" value={totalParticipants} color="text-green-400" />
-        <StatCard icon={TrendingUp} label="Nouveaux visiteurs" value={newVisitors} color="text-rose-400" />
-        <StatCard icon={FileText} label="CR reçus" value={`${crReceived}/${crExpected}`} color="text-blue-400" />
-        <StatCard icon={AlertTriangle} label="CR manquants" value={missingCr.length} color="text-red-400" />
-        <StatCard icon={AlertTriangle} label="Alertes critiques" value={criticalAlerts.length} color="text-orange-400" />
+        <StatCard icon={Users} label="FIJ actives" value={activeFijs.length} color="text-secondary" />
+        <StatCard icon={Users} label="Participants" value={totalParticipants} color="text-success" />
+        <StatCard icon={TrendingUp} label="Nouveaux visiteurs" value={newVisitors} color="text-rose-600" />
+        <StatCard icon={FileText} label="CR reçus" value={`${crReceived}/${crExpected}`} color="text-primary" />
+        <StatCard icon={AlertTriangle} label="CR manquants" value={missingCr.length} color="text-danger" />
+        <StatCard icon={AlertTriangle} label="Alertes critiques" value={criticalAlerts.length} color="text-warning" />
       </div>
 
       {/* Résumé synthétique */}
-      <div className="bg-white/3 border border-white/8 rounded-2xl p-4 mb-6">
-        <h2 className="text-xs text-gray-500 uppercase tracking-widest mb-3">Résumé synthétique</h2>
-        <p className="text-sm text-gray-300 leading-relaxed">
+      <div className="bg-card border border-border rounded-2xl p-4 mb-6 shadow-sm">
+        <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Résumé synthétique</h2>
+        <p className="text-sm text-foreground/80 leading-relaxed">
           {period === 'weekly' ? 'Cette semaine' : 'Ce mois'}, {activeFijs.length} FIJ actives ont accueilli {totalParticipants} participants
           dont {newVisitors} nouveaux visiteurs. {crReceived} CR sur {crExpected} attendus ont été reçus
           {missingCr.length > 0 ? `, avec ${missingCr.length} manquant(s)` : ', tous reçus'}.
@@ -121,15 +121,15 @@ export default function Reporting() {
       {/* FIJ en difficulté */}
       {strugglingFijs.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xs text-gray-500 uppercase tracking-widest mb-3">FIJ en difficulté</h2>
+          <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">FIJ en difficulté</h2>
           <div className="space-y-2">
             {strugglingFijs.map(f => (
               <Link key={f.id} to={`/app/departements/fij/fij/${f.id}`}
-                className="flex items-center gap-3 bg-orange-500/5 border border-orange-500/15 rounded-xl p-3 hover:border-orange-500/30 transition-colors">
-                <AlertTriangle className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                className="flex items-center gap-3 bg-warning/5 border border-warning/20 rounded-xl p-3 hover:border-warning/40 transition-colors">
+                <AlertTriangle className="w-4 h-4 text-warning flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{f.name}</p>
-                  <p className="text-xs text-gray-500">{f.city}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{f.name}</p>
+                  <p className="text-xs text-muted-foreground">{f.city}</p>
                 </div>
               </Link>
             ))}
@@ -139,10 +139,10 @@ export default function Reporting() {
 
       {/* Actions */}
       <div className="flex gap-2">
-        <button onClick={sendToDirection} className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-black bg-amber-400 hover:bg-amber-300 rounded-xl py-2.5 transition-colors">
+        <button onClick={sendToDirection} className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl py-2.5 transition-colors">
           <Send className="w-3.5 h-3.5" /> Envoyer à la direction
         </button>
-        <button onClick={exportCsv} className="flex items-center justify-center gap-1.5 text-xs text-gray-400 border border-white/10 rounded-xl px-4 py-2.5 hover:bg-white/5 transition-colors">
+        <button onClick={exportCsv} className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground border border-border rounded-xl px-4 py-2.5 hover:bg-surface transition-colors">
           <Download className="w-3.5 h-3.5" /> CSV
         </button>
       </div>
@@ -152,10 +152,10 @@ export default function Reporting() {
 
 function StatCard({ icon: Icon, label, value, color }) {
   return (
-    <div className="bg-white/3 border border-white/8 rounded-xl p-3">
+    <div className="bg-card border border-border rounded-xl p-3 shadow-sm">
       <Icon className={`w-4 h-4 ${color} mb-1.5`} />
-      <p className="text-xl font-bold text-white">{value}</p>
-      <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-0.5">{label}</p>
+      <p className="text-xl font-bold text-foreground">{value}</p>
+      <p className="text-[10px] text-muted-foreground uppercase tracking-wide mt-0.5">{label}</p>
     </div>
   );
 }

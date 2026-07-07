@@ -58,45 +58,45 @@ export default function Pause() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
-              className="bg-white/3 border border-purple-400/15 rounded-2xl p-4"
+              className="bg-card border border-purple-400/20 rounded-2xl p-4 shadow-sm"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
-                  <p className="text-sm font-semibold text-white">{fij.name}</p>
-                  <p className="text-xs text-gray-500">{fij.city} · Pilote: {fij.pilot_name || '—'}</p>
+                  <p className="text-sm font-semibold text-foreground">{fij.name}</p>
+                  <p className="text-xs text-muted-foreground">{fij.city} · Pilote: {fij.pilot_name || '—'}</p>
                 </div>
-                <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-purple-500/10 text-purple-400">En pause</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-purple-500/10 text-purple-600">En pause</span>
               </div>
 
               {fij.pause_reason && (
                 <div className="mb-3">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wide mb-0.5">Raison</p>
-                  <p className="text-xs text-gray-400">{fij.pause_reason}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Raison</p>
+                  <p className="text-xs text-muted-foreground">{fij.pause_reason}</p>
                 </div>
               )}
 
               {fij.reactivation_plan && (
                 <div className="mb-3">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wide mb-0.5">Plan de réactivation</p>
-                  <p className="text-xs text-gray-400">{fij.reactivation_plan}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">Plan de réactivation</p>
+                  <p className="text-xs text-muted-foreground">{fij.reactivation_plan}</p>
                 </div>
               )}
 
               {fij.last_report_date && (
-                <p className="text-xs text-gray-600 mb-3">Dernier CR: {new Date(fij.last_report_date).toLocaleDateString('fr-FR')}</p>
+                <p className="text-xs text-muted-foreground mb-3">Dernier CR: {new Date(fij.last_report_date).toLocaleDateString('fr-FR')}</p>
               )}
 
               <div className="flex flex-wrap gap-2">
-                <button onClick={() => saveReactivationPlan(fij)} className="text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2.5 py-1.5 transition-colors">
+                <button onClick={() => saveReactivationPlan(fij)} className="text-xs text-muted-foreground hover:text-foreground border border-border rounded-lg px-2.5 py-1.5 transition-colors">
                   Plan de réactivation
                 </button>
-                <button onClick={() => relance(fij)} className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 border border-blue-500/20 rounded-lg px-2.5 py-1.5 transition-colors">
+                <button onClick={() => relance(fij)} className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 border border-primary/30 rounded-lg px-2.5 py-1.5 transition-colors">
                   <Mail className="w-3 h-3" /> Relancer
                 </button>
-                <button onClick={() => reactivate(fij)} className="flex items-center gap-1 text-xs text-green-400 hover:text-green-300 border border-green-500/20 rounded-lg px-2.5 py-1.5 transition-colors">
+                <button onClick={() => reactivate(fij)} className="flex items-center gap-1 text-xs text-success hover:text-success/80 border border-success/30 rounded-lg px-2.5 py-1.5 transition-colors">
                   <PlayCircle className="w-3 h-3" /> Réactiver
                 </button>
-                <button onClick={() => proposeClosure(fij)} className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 border border-red-500/20 rounded-lg px-2.5 py-1.5 transition-colors">
+                <button onClick={() => proposeClosure(fij)} className="flex items-center gap-1 text-xs text-danger hover:text-danger/80 border border-danger/30 rounded-lg px-2.5 py-1.5 transition-colors">
                   <XCircle className="w-3 h-3" /> Fermer
                 </button>
               </div>

@@ -87,32 +87,32 @@ export default function Pilotes() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className="bg-white/3 border border-white/8 rounded-xl p-3"
+              className="bg-card border border-border rounded-xl p-3 shadow-sm"
             >
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-sm font-bold text-amber-400">{pilot.name?.[0]?.toUpperCase() || '?'}</span>
+                <div className="w-9 h-9 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-sm font-bold text-secondary">{pilot.name?.[0]?.toUpperCase() || '?'}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white">{pilot.name}</p>
-                  {pilot.email && <p className="text-xs text-gray-500 truncate">{pilot.email}</p>}
+                  <p className="text-sm font-medium text-foreground">{pilot.name}</p>
+                  {pilot.email && <p className="text-xs text-muted-foreground truncate">{pilot.email}</p>}
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-gray-500">{pilot.fijs.length} FIJ</span>
-                    <span className="text-xs text-gray-600">·</span>
-                    <span className="text-xs text-gray-500">{pilot.reportCount} CR remis</span>
+                    <span className="text-xs text-muted-foreground">{pilot.fijs.length} FIJ</span>
+                    <span className="text-xs text-muted-foreground">·</span>
+                    <span className="text-xs text-muted-foreground">{pilot.reportCount} CR remis</span>
                   </div>
                   <div className="flex flex-wrap gap-1 mt-1.5">
                     {pilot.fijs.map(f => (
-                      <span key={f.id} className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/5 text-gray-400 border border-white/8">{f.name}</span>
+                      <span key={f.id} className="text-[10px] px-1.5 py-0.5 rounded-md bg-surface text-muted-foreground border border-border">{f.name}</span>
                     ))}
                   </div>
                 </div>
               </div>
               <div className="flex gap-2 mt-2">
-                <button onClick={() => sendMessage(pilot)} className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 border border-blue-500/20 rounded-lg px-2.5 py-1.5 transition-colors">
+                <button onClick={() => sendMessage(pilot)} className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 border border-primary/30 rounded-lg px-2.5 py-1.5 transition-colors">
                   <Mail className="w-3 h-3" /> Message
                 </button>
-                <button onClick={() => signalRenfort(pilot)} className="flex items-center gap-1 text-xs text-orange-400 hover:text-orange-300 border border-orange-500/20 rounded-lg px-2.5 py-1.5 transition-colors">
+                <button onClick={() => signalRenfort(pilot)} className="flex items-center gap-1 text-xs text-warning hover:text-warning/80 border border-warning/30 rounded-lg px-2.5 py-1.5 transition-colors">
                   <AlertTriangle className="w-3 h-3" /> Renfort
                 </button>
               </div>

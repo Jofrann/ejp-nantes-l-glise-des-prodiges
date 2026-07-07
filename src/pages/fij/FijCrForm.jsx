@@ -69,14 +69,14 @@ export default function FijCrForm() {
   if (loading) return <LoadingSpinner />;
 
   if (!fij) return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-gray-500">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center text-muted-foreground">
       <p className="mb-4">FIJ introuvable.</p>
-      <Link to="/app/departements/fij" className="text-amber-400 text-sm">← Retour</Link>
+      <Link to="/app/departements/fij" className="text-secondary text-sm">← Retour</Link>
     </div>
   );
 
-  const inputCls = "w-full h-11 px-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30";
-  const labelCls = "text-xs text-gray-500 mb-1 block";
+  const inputCls = "w-full h-11 px-3 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary";
+  const labelCls = "text-xs text-muted-foreground mb-1 block";
 
   const save = async (newStatus) => {
     setSaving(true);
@@ -103,9 +103,9 @@ export default function FijCrForm() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="sticky top-14 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-white/5">
+      <div className="sticky top-14 z-30 bg-card/90 backdrop-blur-md border-b border-border">
         <div className="max-w-2xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
           <PageBreadcrumb
             items={[
@@ -118,17 +118,17 @@ export default function FijCrForm() {
             backTo={`/app/departements/fij/fij/${id}`}
             backLabel="← Fiche FIJ"
           />
-          <span className="text-xs text-gray-500 flex-shrink-0">CR du {new Date(weekStart).toLocaleDateString('fr-FR')}</span>
+          <span className="text-xs text-muted-foreground flex-shrink-0">CR du {new Date(weekStart).toLocaleDateString('fr-FR')}</span>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <div className="flex items-center gap-2 mb-1">
-            <FileText className="w-4 h-4 text-amber-400" />
-            <h1 className="text-lg font-semibold text-white">Compte-rendu hebdomadaire</h1>
+            <FileText className="w-4 h-4 text-secondary" />
+            <h1 className="text-lg font-semibold text-foreground">Compte-rendu hebdomadaire</h1>
           </div>
-          <p className="text-xs text-gray-500">{fij.name} · {new Date(weekStart).toLocaleDateString('fr-FR')}</p>
+          <p className="text-xs text-muted-foreground">{fij.name} · {new Date(weekStart).toLocaleDateString('fr-FR')}</p>
         </motion.div>
 
         <div className="space-y-5">
@@ -155,10 +155,10 @@ export default function FijCrForm() {
           </div>
 
           {/* Thème */}
-          <div className="bg-white/3 border border-white/8 rounded-xl p-4">
+          <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
             <label className="flex items-center gap-2 cursor-pointer mb-3">
-              <input type="checkbox" checked={form.theme_shared} onChange={e => setForm(f => ({ ...f, theme_shared: e.target.checked }))} className="w-4 h-4 accent-amber-400" />
-              <span className="text-sm text-gray-300">Le thème de la semaine a été partagé</span>
+              <input type="checkbox" checked={form.theme_shared} onChange={e => setForm(f => ({ ...f, theme_shared: e.target.checked }))} className="w-4 h-4 accent-secondary" />
+              <span className="text-sm text-foreground/80">Le thème de la semaine a été partagé</span>
             </label>
             {form.theme_shared && (
               <div>
@@ -207,19 +207,19 @@ export default function FijCrForm() {
       </div>
 
       {/* Actions fixes en bas */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-zinc-950/90 backdrop-blur-md border-t border-white/5">
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-card/90 backdrop-blur-md border-t border-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex gap-2">
           <button
             onClick={() => save('draft')}
             disabled={saving}
-            className="flex-1 flex items-center justify-center gap-1.5 text-sm text-gray-400 border border-white/10 rounded-xl py-3 hover:bg-white/5 transition-colors disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-1.5 text-sm text-muted-foreground border border-border rounded-xl py-3 hover:bg-surface transition-colors disabled:opacity-50"
           >
             <Save className="w-4 h-4" /> Brouillon
           </button>
           <button
             onClick={() => save('submitted')}
             disabled={saving}
-            className="flex-1 flex items-center justify-center gap-1.5 text-sm font-medium text-black bg-amber-400 hover:bg-amber-300 rounded-xl py-3 transition-colors disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-1.5 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl py-3 transition-colors disabled:opacity-50"
           >
             <Save className="w-4 h-4" /> Soumettre
           </button>

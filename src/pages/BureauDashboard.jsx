@@ -27,7 +27,7 @@ export default function BureauDashboard() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[60vh]">
-        <div className="w-6 h-6 border border-purple-500/30 border-t-purple-400 rounded-full animate-spin" />
+        <div className="w-6 h-6 border border-border border-t-primary rounded-full animate-spin" />
       </div>
     );
   }
@@ -36,22 +36,22 @@ export default function BureauDashboard() {
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
 
   const STAT_CARDS = [
-    { label: 'Leaders', value: stats.leaders, icon: Users, color: 'from-purple-500/20 to-purple-600/10', border: 'border-purple-500/20', text: 'text-purple-400' },
-    { label: 'Événements actifs', value: stats.events, icon: Calendar, color: 'from-amber-500/20 to-amber-600/10', border: 'border-amber-500/20', text: 'text-amber-400' },
-    { label: 'Ministères', value: stats.ministries, icon: BookOpen, color: 'from-blue-500/20 to-blue-600/10', border: 'border-blue-500/20', text: 'text-blue-400' },
-    { label: 'FIJ réseau', value: stats.fiJs, icon: Heart, color: 'from-rose-500/20 to-rose-600/10', border: 'border-rose-500/20', text: 'text-rose-400' },
+    { label: 'Leaders', value: stats.leaders, icon: Users, color: 'from-primary/10 to-primary/5', border: 'border-primary/20', text: 'text-primary' },
+    { label: 'Événements actifs', value: stats.events, icon: Calendar, color: 'from-secondary/10 to-secondary/5', border: 'border-secondary/20', text: 'text-secondary' },
+    { label: 'Ministères', value: stats.ministries, icon: BookOpen, color: 'from-blue-500/10 to-blue-500/5', border: 'border-blue-400/20', text: 'text-blue-600' },
+    { label: 'FIJ réseau', value: stats.fiJs, icon: Heart, color: 'from-rose-500/10 to-rose-500/5', border: 'border-rose-400/20', text: 'text-rose-600' },
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-950 px-4 py-8 md:px-8">
+    <div className="min-h-screen bg-background px-4 py-8 md:px-8">
       <div className="max-w-screen-lg mx-auto">
 
         {/* Bienvenue */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-          <h1 className="text-2xl font-semibold text-white">
-            {greeting}, {user?.full_name?.split(' ')[0] || 'Bureau'} 👋
+          <h1 className="text-2xl font-semibold text-foreground">
+            {greeting}, {user?.full_name?.split(' ')[0] || 'Bureau'}
           </h1>
-          <p className="text-sm text-gray-500 mt-1">Tableau de bord du Bureau — EJP Nantes</p>
+          <p className="text-sm text-muted-foreground mt-1">Tableau de bord du Bureau — EJP Nantes</p>
         </motion.div>
 
         {/* Stats */}
@@ -62,11 +62,11 @@ export default function BureauDashboard() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.06 * i }}
-              className={`bg-gradient-to-br ${s.color} border ${s.border} rounded-2xl p-5`}
+              className={`bg-gradient-to-br ${s.color} border ${s.border} rounded-2xl p-5 shadow-sm`}
             >
               <s.icon className={`w-5 h-5 ${s.text} mb-3`} />
-              <p className="text-2xl font-bold text-white">{s.value}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
+              <p className="text-2xl font-bold text-foreground">{s.value}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
             </motion.div>
           ))}
         </div>
@@ -76,28 +76,28 @@ export default function BureauDashboard() {
 
           {/* Prochains événements */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-            className="bg-white/3 border border-white/8 rounded-2xl p-5">
+            className="bg-card border border-border rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-white font-semibold text-sm">Prochains événements</h2>
-              <Link to="/app/admin" className="text-xs text-purple-400 flex items-center gap-1 hover:text-purple-300">
+              <h2 className="text-foreground font-semibold text-sm">Prochains événements</h2>
+              <Link to="/app/admin" className="text-xs text-primary flex items-center gap-1 hover:text-primary/80">
                 Gérer <ChevronRight className="w-3 h-3" />
               </Link>
             </div>
-            {events.length === 0 && <p className="text-xs text-gray-600">Aucun événement programmé.</p>}
+            {events.length === 0 && <p className="text-xs text-muted-foreground">Aucun événement programmé.</p>}
             <div className="space-y-3">
               {events.map(e => (
                 <div key={e.id} className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/20 flex flex-col items-center justify-center flex-shrink-0">
-                    <p className="text-[10px] text-amber-400 font-bold leading-none">
+                  <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex flex-col items-center justify-center flex-shrink-0">
+                    <p className="text-[10px] text-secondary font-bold leading-none">
                       {new Date(e.event_date).getDate()}
                     </p>
-                    <p className="text-[9px] text-amber-400/60 uppercase">
+                    <p className="text-[9px] text-secondary/60 uppercase">
                       {new Date(e.event_date).toLocaleString('fr-FR', { month: 'short' })}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-white font-medium">{e.title}</p>
-                    <p className="text-xs text-gray-600">{e.location || '—'}</p>
+                    <p className="text-sm text-foreground font-medium">{e.title}</p>
+                    <p className="text-xs text-muted-foreground">{e.location || '—'}</p>
                   </div>
                 </div>
               ))}
@@ -106,8 +106,8 @@ export default function BureauDashboard() {
 
           {/* Accès rapides */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            className="bg-white/3 border border-white/8 rounded-2xl p-5">
-            <h2 className="text-white font-semibold text-sm mb-4">Accès rapides</h2>
+            className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+            <h2 className="text-foreground font-semibold text-sm mb-4">Accès rapides</h2>
             <div className="space-y-2">
               {[
                 { label: 'Page vitrine admin', path: '/app/admin', desc: 'Gérer le contenu public', icon: TrendingUp },
@@ -115,15 +115,15 @@ export default function BureauDashboard() {
                 { label: 'Mon profil', path: '/app/profil', desc: 'Modifier mes informations', icon: Users },
               ].map(({ label, path, desc, icon: Icon }) => (
                 <Link key={path} to={path}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors group">
-                  <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-                    <Icon className="w-3.5 h-3.5 text-purple-400" />
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface transition-colors group">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+                    <Icon className="w-3.5 h-3.5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-white font-medium">{label}</p>
-                    <p className="text-xs text-gray-600">{desc}</p>
+                    <p className="text-sm text-foreground font-medium">{label}</p>
+                    <p className="text-xs text-muted-foreground">{desc}</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-700 ml-auto group-hover:text-gray-400 transition-colors" />
+                  <ChevronRight className="w-4 h-4 text-muted-foreground/50 ml-auto group-hover:text-foreground transition-colors" />
                 </Link>
               ))}
             </div>

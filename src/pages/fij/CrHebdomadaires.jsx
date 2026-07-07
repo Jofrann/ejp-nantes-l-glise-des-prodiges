@@ -80,28 +80,28 @@ export default function CrHebdomadaires() {
     >
       {/* Navigation semaines */}
       <div className="flex items-center justify-between mb-4">
-        <button onClick={() => setWeekOffset(o => o - 1)} className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors">
+        <button onClick={() => setWeekOffset(o => o - 1)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
           <ChevronLeft className="w-4 h-4" /> Précédent
         </button>
-        <span className="text-xs font-medium text-white">{weekOffset === 0 ? 'Cette semaine' : weekOffset < 0 ? `S${weekOffset}` : `S+${weekOffset}`}</span>
-        <button onClick={() => setWeekOffset(o => o + 1)} className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors">
+        <span className="text-xs font-medium text-foreground">{weekOffset === 0 ? 'Cette semaine' : weekOffset < 0 ? `S${weekOffset}` : `S+${weekOffset}`}</span>
+        <button onClick={() => setWeekOffset(o => o + 1)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
           Suivant <ChevronRight className="w-4 h-4" />
         </button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="bg-white/3 border border-white/8 rounded-xl p-3 text-center">
-          <p className="text-xl font-bold text-green-400">{submitted}</p>
-          <p className="text-[10px] text-gray-500 uppercase">Soumis</p>
+        <div className="bg-card border border-border rounded-xl p-3 text-center shadow-sm">
+          <p className="text-xl font-bold text-success">{submitted}</p>
+          <p className="text-[10px] text-muted-foreground uppercase">Soumis</p>
         </div>
-        <div className="bg-white/3 border border-white/8 rounded-xl p-3 text-center">
-          <p className="text-xl font-bold text-amber-400">{drafts}</p>
-          <p className="text-[10px] text-gray-500 uppercase">Brouillons</p>
+        <div className="bg-card border border-border rounded-xl p-3 text-center shadow-sm">
+          <p className="text-xl font-bold text-secondary">{drafts}</p>
+          <p className="text-[10px] text-muted-foreground uppercase">Brouillons</p>
         </div>
-        <div className="bg-white/3 border border-white/8 rounded-xl p-3 text-center">
-          <p className="text-xl font-bold text-red-400">{missing}</p>
-          <p className="text-[10px] text-gray-500 uppercase">Manquants</p>
+        <div className="bg-card border border-border rounded-xl p-3 text-center shadow-sm">
+          <p className="text-xl font-bold text-danger">{missing}</p>
+          <p className="text-[10px] text-muted-foreground uppercase">Manquants</p>
         </div>
       </div>
 
@@ -116,7 +116,7 @@ export default function CrHebdomadaires() {
             key={f.v}
             onClick={() => setStatusFilter(f.v)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-              statusFilter === f.v ? 'bg-amber-400/15 text-amber-400 border border-amber-400/20' : 'text-gray-500 hover:text-white border border-transparent'
+              statusFilter === f.v ? 'bg-secondary/15 text-secondary border border-secondary/20' : 'text-muted-foreground hover:text-foreground border border-transparent'
             }`}
           >
             {f.l}
@@ -135,30 +135,30 @@ export default function CrHebdomadaires() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.02 }}
-              className="bg-white/3 border border-white/8 rounded-xl p-3"
+              className="bg-card border border-border rounded-xl p-3 shadow-sm"
             >
               <div className="flex items-center gap-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{fij.name}</p>
-                  <p className="text-xs text-gray-500">{fij.pilot_name || 'Pilote non assigné'}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{fij.name}</p>
+                  <p className="text-xs text-muted-foreground">{fij.pilot_name || 'Pilote non assigné'}</p>
                 </div>
                 <div className="flex-shrink-0">
                   {report ? (
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                      report.status === 'validated' ? 'bg-green-500/10 text-green-400'
-                      : report.status === 'submitted' ? 'bg-blue-500/10 text-blue-400'
-                      : report.status === 'correction_required' ? 'bg-orange-500/10 text-orange-400'
-                      : 'bg-amber-500/10 text-amber-400'
+                      report.status === 'validated' ? 'bg-success/10 text-success'
+                      : report.status === 'submitted' ? 'bg-primary/10 text-primary'
+                      : report.status === 'correction_required' ? 'bg-warning/10 text-warning'
+                      : 'bg-secondary/10 text-secondary'
                     }`}>
                       {report.status === 'validated' ? 'Validé' : report.status === 'submitted' ? 'Soumis' : report.status === 'correction_required' ? 'À corriger' : 'Brouillon'}
                     </span>
                   ) : (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-red-500/10 text-red-400">Manquant</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-danger/10 text-danger">Manquant</span>
                   )}
                 </div>
               </div>
               {report && (
-                <div className="mt-2 flex items-center gap-3 text-xs text-gray-500">
+                <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
                   <span>{report.participants_count || 0} participants</span>
                   <span>{report.new_visitors_count || 0} nouveaux</span>
                   {report.summary && <span className="truncate flex-1">· {report.summary}</span>}
@@ -167,26 +167,26 @@ export default function CrHebdomadaires() {
               <div className="mt-2 flex items-center gap-2">
                 {!report ? (
                   <>
-                    <Link to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`} className="flex items-center gap-1 text-xs font-medium text-black bg-amber-400 hover:bg-amber-300 rounded-lg px-2.5 py-1.5 transition-colors">
+                    <Link to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`} className="flex items-center gap-1 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-2.5 py-1.5 transition-colors">
                       <Edit className="w-3 h-3" /> Remplir
                     </Link>
                     {isCoord && (
-                      <button onClick={() => handleRelance(fij)} className="flex items-center gap-1 text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2.5 py-1.5 transition-colors">
+                      <button onClick={() => handleRelance(fij)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded-lg px-2.5 py-1.5 transition-colors">
                         <Mail className="w-3 h-3" /> Relancer
                       </button>
                     )}
                   </>
                 ) : (
                   <>
-                    <Link to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`} className="flex items-center gap-1 text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2.5 py-1.5 transition-colors">
+                    <Link to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded-lg px-2.5 py-1.5 transition-colors">
                       <Edit className="w-3 h-3" /> Voir / éditer
                     </Link>
                     {isCoord && report.status === 'submitted' && (
                       <>
-                        <button onClick={() => handleValidate(report.id)} className="flex items-center gap-1 text-xs text-green-400 hover:text-green-300 border border-green-500/20 rounded-lg px-2.5 py-1.5 transition-colors">
+                        <button onClick={() => handleValidate(report.id)} className="flex items-center gap-1 text-xs text-success hover:text-success/80 border border-success/30 rounded-lg px-2.5 py-1.5 transition-colors">
                           <CheckCircle className="w-3 h-3" /> Valider
                         </button>
-                        <button onClick={() => handleCorrection(report.id)} className="flex items-center gap-1 text-xs text-orange-400 hover:text-orange-300 border border-orange-500/20 rounded-lg px-2.5 py-1.5 transition-colors">
+                        <button onClick={() => handleCorrection(report.id)} className="flex items-center gap-1 text-xs text-warning hover:text-warning/80 border border-warning/30 rounded-lg px-2.5 py-1.5 transition-colors">
                           <AlertTriangle className="w-3 h-3" /> Correction
                         </button>
                       </>

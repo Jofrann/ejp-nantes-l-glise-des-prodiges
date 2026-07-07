@@ -39,12 +39,12 @@ export default function TableauBord() {
   if (loading || dataLoading) return <LoadingSpinner />;
 
   const stats = [
-    { label: 'FIJ actives', value: activeFijs.length, icon: Users, color: 'text-amber-400' },
-    { label: 'En ouverture', value: openingFijs.length, icon: TrendingUp, color: 'text-blue-400' },
-    { label: 'En pause', value: pausedFijs.length, icon: AlertTriangle, color: 'text-purple-400' },
-    { label: 'Participants', value: totalParticipants, icon: Users, color: 'text-green-400' },
-    { label: 'Nouveaux visiteurs', value: newVisitors, icon: Users, color: 'text-rose-400' },
-    { label: 'Taux de CR', value: crRate + '%', icon: FileText, color: 'text-amber-400' },
+    { label: 'FIJ actives', value: activeFijs.length, icon: Users, color: 'text-secondary' },
+    { label: 'En ouverture', value: openingFijs.length, icon: TrendingUp, color: 'text-primary' },
+    { label: 'En pause', value: pausedFijs.length, icon: AlertTriangle, color: 'text-purple-600' },
+    { label: 'Participants', value: totalParticipants, icon: Users, color: 'text-success' },
+    { label: 'Nouveaux visiteurs', value: newVisitors, icon: Users, color: 'text-rose-600' },
+    { label: 'Taux de CR', value: crRate + '%', icon: FileText, color: 'text-secondary' },
   ];
 
   const missingCrFijs = activeFijs.filter(f => !reports.some(r => r.fij_house_id === f.id));
@@ -63,11 +63,11 @@ export default function TableauBord() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.03 }}
-            className="bg-white/3 border border-white/8 rounded-2xl p-4"
+            className="bg-card border border-border rounded-2xl p-4 shadow-sm"
           >
             <s.icon className={`w-4 h-4 ${s.color} mb-2`} />
-            <p className="text-2xl font-bold text-white">{s.value}</p>
-            <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1">{s.label}</p>
+            <p className="text-2xl font-bold text-foreground">{s.value}</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">{s.label}</p>
           </motion.div>
         ))}
       </div>
@@ -75,13 +75,13 @@ export default function TableauBord() {
       {/* CR manquants */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xs text-gray-500 uppercase tracking-widest">CR manquants cette semaine</h2>
-          <Link to="/app/departements/fij/cr-hebdomadaires" className="text-xs text-amber-400/70 hover:text-amber-400 flex items-center gap-1">
+          <h2 className="text-xs text-muted-foreground uppercase tracking-widest">CR manquants cette semaine</h2>
+          <Link to="/app/departements/fij/cr-hebdomadaires" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
             Voir tout <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
         {missingCrFijs.length === 0 ? (
-          <div className="bg-green-500/5 border border-green-500/15 rounded-xl p-4 text-sm text-green-400/80">
+          <div className="bg-success/5 border border-success/20 rounded-xl p-4 text-sm text-success">
             ✓ Tous les CR ont été reçus cette semaine !
           </div>
         ) : (
@@ -90,14 +90,14 @@ export default function TableauBord() {
               <Link
                 key={fij.id}
                 to={`/app/departements/fij/fij/${fij.id}`}
-                className="flex items-center gap-3 bg-white/3 border border-white/8 rounded-xl p-3 hover:border-amber-400/20 transition-colors"
+                className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-secondary/30 transition-colors shadow-sm"
               >
-                <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/20 flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                <div className="w-8 h-8 rounded-lg bg-warning/10 border border-warning/20 flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="w-3.5 h-3.5 text-warning" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{fij.name}</p>
-                  <p className="text-xs text-gray-500">{fij.pilot_name || 'Pilote non assigné'}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{fij.name}</p>
+                  <p className="text-xs text-muted-foreground">{fij.pilot_name || 'Pilote non assigné'}</p>
                 </div>
               </Link>
             ))}
@@ -109,18 +109,18 @@ export default function TableauBord() {
       {criticalAlerts.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xs text-gray-500 uppercase tracking-widest">Alertes critiques</h2>
-            <Link to="/app/departements/fij/alertes" className="text-xs text-amber-400/70 hover:text-amber-400 flex items-center gap-1">
+            <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Alertes critiques</h2>
+            <Link to="/app/departements/fij/alertes" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
               Voir tout <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
           <div className="space-y-2">
             {criticalAlerts.slice(0, 5).map(alert => (
-              <div key={alert.id} className="flex items-start gap-3 bg-red-500/5 border border-red-500/15 rounded-xl p-3">
-                <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+              <div key={alert.id} className="flex items-start gap-3 bg-danger/5 border border-danger/20 rounded-xl p-3">
+                <AlertTriangle className="w-4 h-4 text-danger flex-shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white">{alert.title}</p>
-                  {alert.description && <p className="text-xs text-gray-500 mt-0.5">{alert.description}</p>}
+                  <p className="text-sm font-medium text-foreground">{alert.title}</p>
+                  {alert.description && <p className="text-xs text-muted-foreground mt-0.5">{alert.description}</p>}
                 </div>
               </div>
             ))}
@@ -130,7 +130,7 @@ export default function TableauBord() {
 
       {/* Top 5 à suivre */}
       <div>
-        <h2 className="text-xs text-gray-500 uppercase tracking-widest mb-4">FIJ à suivre</h2>
+        <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-4">FIJ à suivre</h2>
         <div className="space-y-2">
           {activeFijs.slice(0, 5).map(fij => {
             const fijReports = reports.filter(r => r.fij_house_id === fij.id);
@@ -139,16 +139,16 @@ export default function TableauBord() {
               <Link
                 key={fij.id}
                 to={`/app/departements/fij/fij/${fij.id}`}
-                className="flex items-center gap-3 bg-white/3 border border-white/8 rounded-xl p-3 hover:border-white/15 transition-colors"
+                className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-secondary/30 transition-colors shadow-sm"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{fij.name}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm font-medium text-foreground truncate">{fij.name}</p>
+                  <p className="text-xs text-muted-foreground">
                     {fij.city} · {fij.member_count || 0} membres
                     {lastReport && ` · ${lastReport.participants_count || 0} cette semaine`}
                   </p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
               </Link>
             );
           })}

@@ -47,7 +47,7 @@ export default function Ouvertures() {
       subtitle="Suivi des processus d'ouverture de nouvelles familles"
       requiredRoles={['coordination', 'direction']}
       actions={
-        <button onClick={() => setShowForm(true)} className="flex items-center gap-1.5 text-xs font-medium text-black bg-amber-400 hover:bg-amber-300 rounded-lg px-3 py-1.5 transition-colors">
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-3 py-1.5 transition-colors">
           <Plus className="w-3.5 h-3.5" /> Nouvelle
         </button>
       }
@@ -62,14 +62,14 @@ export default function Ouvertures() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
-              className="bg-white/3 border border-white/8 rounded-2xl p-4"
+              className="bg-card border border-border rounded-2xl p-4 shadow-sm"
             >
               <div className="flex items-start justify-between gap-2 mb-3">
                 <div>
-                  <p className="text-sm font-semibold text-white">{proc.request_title || proc.fij_name || 'Ouverture'}</p>
-                  {proc.requester_name && <p className="text-xs text-gray-500 mt-0.5">Demandé par {proc.requester_name}</p>}
+                  <p className="text-sm font-semibold text-foreground">{proc.request_title || proc.fij_name || 'Ouverture'}</p>
+                  {proc.requester_name && <p className="text-xs text-muted-foreground mt-0.5">Demandé par {proc.requester_name}</p>}
                 </div>
-                <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-blue-500/10 text-blue-400 whitespace-nowrap">
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary whitespace-nowrap">
                   {proc.status === 'initiated' ? 'Initié' : proc.status === 'pilot_identified' ? 'Pilote identifié' : proc.status === 'prayer_planned' ? 'Prière planifiée' : proc.status === 'prayer_completed' ? 'Prière faite' : proc.status === 'consecration_requested' ? 'Consécration demandée' : proc.status === 'consecration_completed' ? 'Consacrée' : proc.status}
                 </span>
               </div>
@@ -87,7 +87,7 @@ export default function Ouvertures() {
               {proc.consecration_completed && proc.status !== 'validated' && (
                 <button
                   onClick={() => submitValidation(proc)}
-                  className="mt-3 w-full flex items-center justify-center gap-1.5 text-xs font-medium text-black bg-green-400 hover:bg-green-300 rounded-xl py-2.5 transition-colors"
+                  className="mt-3 w-full flex items-center justify-center gap-1.5 text-xs font-medium text-primary-foreground bg-success hover:bg-success/90 rounded-xl py-2.5 transition-colors"
                 >
                   <CheckCircle className="w-3.5 h-3.5" /> Valider l'ouverture
                 </button>
@@ -110,12 +110,12 @@ function ChecklistItem({ label, done, onClick, icon: Icon }) {
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-2.5 p-2 rounded-lg transition-colors text-left ${done ? 'bg-green-500/5' : 'bg-white/3 hover:bg-white/5'}`}
+      className={`w-full flex items-center gap-2.5 p-2 rounded-lg transition-colors text-left ${done ? 'bg-success/5' : 'bg-surface hover:bg-muted'}`}
     >
-      <div className={`w-5 h-5 rounded-md border flex items-center justify-center flex-shrink-0 ${done ? 'bg-green-400 border-green-400' : 'border-white/15'}`}>
-        {done && <CheckCircle className="w-3 h-3 text-black" />}
+      <div className={`w-5 h-5 rounded-md border flex items-center justify-center flex-shrink-0 ${done ? 'bg-success border-success' : 'border-border'}`}>
+        {done && <CheckCircle className="w-3 h-3 text-white" />}
       </div>
-      <span className={`text-xs ${done ? 'text-green-400' : 'text-gray-400'}`}>{label}</span>
+      <span className={`text-xs ${done ? 'text-success' : 'text-muted-foreground'}`}>{label}</span>
     </button>
   );
 }
@@ -136,36 +136,36 @@ function OpeningFormModal({ fijs, onClose, onSaved }) {
     setSaving(false);
   };
 
-  const inputCls = "w-full h-10 px-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30";
+  const inputCls = "w-full h-10 px-3 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary";
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center" onClick={onClose}>
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center" onClick={onClose}>
       <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
-        onClick={e => e.stopPropagation()} className="bg-zinc-950 border border-white/10 rounded-t-2xl sm:rounded-2xl w-full max-w-md">
-        <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white">Nouvelle ouverture</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white"><X className="w-4 h-4" /></button>
+        onClick={e => e.stopPropagation()} className="bg-card border border-border rounded-t-2xl sm:rounded-2xl w-full max-w-md shadow-xl">
+        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-foreground">Nouvelle ouverture</h2>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
         </div>
         <div className="p-5 space-y-4">
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">Titre de la demande *</label>
+            <label className="text-xs text-muted-foreground mb-1 block">Titre de la demande *</label>
             <input className={inputCls} value={form.request_title} onChange={e => setForm(f => ({ ...f, request_title: e.target.value }))} placeholder="Ouverture FIJ Lyon" />
           </div>
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">FIJ concernée (optionnel)</label>
+            <label className="text-xs text-muted-foreground mb-1 block">FIJ concernée (optionnel)</label>
             <select className={inputCls} value={form.fij_house_id} onChange={e => setForm(f => ({ ...f, fij_house_id: e.target.value }))}>
               <option value="">— Nouvelle FIJ —</option>
               {fijs.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">Demandeur</label>
+            <label className="text-xs text-muted-foreground mb-1 block">Demandeur</label>
             <input className={inputCls} value={form.requester_name} onChange={e => setForm(f => ({ ...f, requester_name: e.target.value }))} placeholder="Nom du demandeur" />
           </div>
         </div>
-        <div className="px-5 py-4 border-t border-white/5 flex gap-2">
-          <button onClick={onClose} className="flex-1 text-sm text-gray-400 border border-white/10 rounded-xl py-2.5 hover:bg-white/5">Annuler</button>
-          <button onClick={save} disabled={saving || !form.request_title} className="flex-1 text-sm font-medium text-black bg-amber-400 hover:bg-amber-300 rounded-xl py-2.5 disabled:opacity-50">
+        <div className="px-5 py-4 border-t border-border flex gap-2">
+          <button onClick={onClose} className="flex-1 text-sm text-muted-foreground border border-border rounded-xl py-2.5 hover:bg-surface">Annuler</button>
+          <button onClick={save} disabled={saving || !form.request_title} className="flex-1 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl py-2.5 disabled:opacity-50">
             {saving ? '...' : 'Créer'}
           </button>
         </div>

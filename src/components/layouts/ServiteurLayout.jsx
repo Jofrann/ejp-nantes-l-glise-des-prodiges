@@ -13,16 +13,16 @@ const navItems = [
 
 const roleConfig = {
   label: 'Serviteur',
-  accentClass: 'text-amber-400',
-  avatarClass: 'bg-amber-400/20 border-amber-400/30 text-amber-400',
-  navActiveClass: 'bg-amber-400/10 text-amber-300 border border-amber-400/20',
+  accentClass: 'text-secondary',
+  avatarClass: 'bg-secondary/10 border-secondary/30 text-secondary',
+  navActiveClass: 'bg-secondary/10 text-secondary border border-secondary/20',
 };
 
 export default function ServiteurLayout({ children, user }) {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <AppHeader user={user} navItems={navItems} roleConfig={roleConfig} />
       <motion.main
         key={location.pathname}

@@ -23,10 +23,10 @@ export default function ReferentGrid({ referents, colors, isAdmin, onDelete }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06 }}
-              className={`relative flex items-center gap-4 bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-2xl p-4`}
+              className={`relative flex items-center gap-4 bg-card bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-2xl p-4 shadow-sm`}
             >
               {/* Avatar large */}
-              <div className={`w-14 h-14 rounded-2xl flex-shrink-0 overflow-hidden border ${colors.border} shadow-lg`}>
+              <div className={`w-14 h-14 rounded-2xl flex-shrink-0 overflow-hidden border ${colors.border} shadow-sm`}>
                 {m.photo_url ? (
                   <img src={m.photo_url} alt={m.full_name} className="w-full h-full object-cover" />
                 ) : (
@@ -37,9 +37,9 @@ export default function ReferentGrid({ referents, colors, isAdmin, onDelete }) {
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white truncate">{m.full_name}</p>
+                <p className="text-sm font-bold text-foreground truncate">{m.full_name}</p>
                 {m.note && <p className={`text-xs ${colors.text} opacity-80 truncate mt-0.5`}>{m.note}</p>}
-                <div className={`inline-flex items-center gap-1 mt-1.5 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/20 ${colors.text}`}>
+                <div className={`inline-flex items-center gap-1 mt-1.5 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-surface ${colors.text} border ${colors.border}`}>
                   <Crown className="w-2.5 h-2.5" /> Référent
                 </div>
               </div>
@@ -64,7 +64,7 @@ function DeleteButton({ onDelete }) {
   return (
     <button
       onClick={onDelete}
-      className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-gray-700 hover:text-red-400 transition-colors rounded-lg hover:bg-red-400/10"
+      className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-danger transition-colors rounded-lg hover:bg-danger/10"
     >
       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

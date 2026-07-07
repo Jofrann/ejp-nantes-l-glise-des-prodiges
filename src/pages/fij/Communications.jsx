@@ -47,7 +47,7 @@ export default function Communications() {
       title="Communications"
       subtitle="Thèmes, annonces et rappels destinés aux pilotes"
       actions={isCoord ? (
-        <button onClick={() => setShowForm(true)} className="flex items-center gap-1.5 text-xs font-medium text-black bg-amber-400 hover:bg-amber-300 rounded-lg px-3 py-1.5 transition-colors">
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-3 py-1.5 transition-colors">
           <Plus className="w-3.5 h-3.5" /> Nouveau
         </button>
       ) : undefined}
@@ -63,7 +63,7 @@ export default function Communications() {
         ].map(f => (
           <button key={f.v} onClick={() => setFilter(f.v)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-              filter === f.v ? 'bg-amber-400/15 text-amber-400 border border-amber-400/20' : 'text-gray-500 hover:text-white border border-transparent'
+              filter === f.v ? 'bg-secondary/15 text-secondary border border-secondary/20' : 'text-muted-foreground hover:text-foreground border border-transparent'
             }`}>
             {f.l}
           </button>
@@ -80,29 +80,29 @@ export default function Communications() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.02 }}
-              className="bg-white/3 border border-white/8 rounded-xl p-3"
+              className="bg-card border border-border rounded-xl p-3 shadow-sm"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                      comm.type === 'theme' ? 'bg-purple-500/10 text-purple-400'
-                      : comm.type === 'announcement' ? 'bg-blue-500/10 text-blue-400'
-                      : comm.type === 'reminder' ? 'bg-amber-500/10 text-amber-400'
-                      : 'bg-green-500/10 text-green-400'
+                      comm.type === 'theme' ? 'bg-purple-500/10 text-purple-600'
+                      : comm.type === 'announcement' ? 'bg-primary/10 text-primary'
+                      : comm.type === 'reminder' ? 'bg-secondary/10 text-secondary'
+                      : 'bg-success/10 text-success'
                     }`}>
                       {comm.type === 'theme' ? 'Thème' : comm.type === 'announcement' ? 'Annonce' : comm.type === 'reminder' ? 'Rappel' : 'Récap'}
                     </span>
-                    {comm.status === 'sent' && <span className="text-[10px] text-green-400">Envoyé</span>}
-                    {comm.status === 'scheduled' && <span className="text-[10px] text-blue-400 flex items-center gap-0.5"><Clock className="w-2.5 h-2.5" /> Programmé</span>}
-                    {comm.status === 'draft' && <span className="text-[10px] text-gray-500">Brouillon</span>}
+                    {comm.status === 'sent' && <span className="text-[10px] text-success">Envoyé</span>}
+                    {comm.status === 'scheduled' && <span className="text-[10px] text-primary flex items-center gap-0.5"><Clock className="w-2.5 h-2.5" /> Programmé</span>}
+                    {comm.status === 'draft' && <span className="text-[10px] text-muted-foreground">Brouillon</span>}
                   </div>
-                  <p className="text-sm font-medium text-white mt-1">{comm.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{comm.content}</p>
-                  {comm.sent_by_name && <p className="text-[10px] text-gray-600 mt-1">par {comm.sent_by_name}</p>}
+                  <p className="text-sm font-medium text-foreground mt-1">{comm.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{comm.content}</p>
+                  {comm.sent_by_name && <p className="text-[10px] text-muted-foreground mt-1">par {comm.sent_by_name}</p>}
                 </div>
                 {isCoord && comm.status === 'draft' && (
-                  <button onClick={() => sendNow(comm)} className="flex items-center gap-1 text-xs text-green-400 hover:text-green-300 border border-green-500/20 rounded-lg px-2 py-1 transition-colors flex-shrink-0">
+                  <button onClick={() => sendNow(comm)} className="flex items-center gap-1 text-xs text-success hover:text-success/80 border border-success/30 rounded-lg px-2 py-1 transition-colors flex-shrink-0">
                     <Send className="w-3 h-3" /> Envoyer
                   </button>
                 )}
@@ -122,7 +122,7 @@ export default function Communications() {
 function CommFormModal({ fijs, userName, onClose, onSaved }) {
   const [form, setForm] = useState({ type: 'announcement', title: '', content: '', target_scope: 'all_pilots', target_fij_ids: [] });
   const [saving, setSaving] = useState(false);
-  const inputCls = "w-full h-10 px-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30";
+  const inputCls = "w-full h-10 px-3 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary";
 
   const save = async () => {
     setSaving(true);
@@ -136,16 +136,16 @@ function CommFormModal({ fijs, userName, onClose, onSaved }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center" onClick={onClose}>
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center" onClick={onClose}>
       <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
-        onClick={e => e.stopPropagation()} className="bg-zinc-950 border border-white/10 rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[85vh] overflow-y-auto">
-        <div className="sticky top-0 bg-zinc-950 border-b border-white/5 px-5 py-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white">Nouvelle communication</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white"><X className="w-4 h-4" /></button>
+        onClick={e => e.stopPropagation()} className="bg-card border border-border rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[85vh] overflow-y-auto shadow-xl">
+        <div className="sticky top-0 bg-card border-b border-border px-5 py-4 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-foreground">Nouvelle communication</h2>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
         </div>
         <div className="p-5 space-y-4">
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">Type</label>
+            <label className="text-xs text-muted-foreground mb-1 block">Type</label>
             <select className={inputCls} value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
               <option value="theme">Thème hebdomadaire</option>
               <option value="announcement">Annonce officielle</option>
@@ -154,15 +154,15 @@ function CommFormModal({ fijs, userName, onClose, onSaved }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">Titre *</label>
+            <label className="text-xs text-muted-foreground mb-1 block">Titre *</label>
             <input className={inputCls} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Titre" />
           </div>
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">Contenu *</label>
+            <label className="text-xs text-muted-foreground mb-1 block">Contenu *</label>
             <textarea className={inputCls + ' h-28 resize-none'} value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} placeholder="Contenu du message..." />
           </div>
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">Destinataires</label>
+            <label className="text-xs text-muted-foreground mb-1 block">Destinataires</label>
             <select className={inputCls} value={form.target_scope} onChange={e => setForm(f => ({ ...f, target_scope: e.target.value, target_fij_ids: [] }))}>
               <option value="all_pilots">Tous les pilotes</option>
               <option value="specific_fij">FIJ spécifiques</option>
@@ -172,17 +172,17 @@ function CommFormModal({ fijs, userName, onClose, onSaved }) {
           {form.target_scope === 'specific_fij' && (
             <div className="space-y-1 max-h-40 overflow-y-auto">
               {fijs.map(f => (
-                <label key={f.id} className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/5">
-                  <input type="checkbox" checked={form.target_fij_ids.includes(f.id)} onChange={() => toggleFij(f.id)} className="w-4 h-4 accent-amber-400" />
-                  <span className="text-sm text-gray-400">{f.name}</span>
+                <label key={f.id} className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-surface">
+                  <input type="checkbox" checked={form.target_fij_ids.includes(f.id)} onChange={() => toggleFij(f.id)} className="w-4 h-4 accent-secondary" />
+                  <span className="text-sm text-muted-foreground">{f.name}</span>
                 </label>
               ))}
             </div>
           )}
         </div>
-        <div className="sticky bottom-0 bg-zinc-950 border-t border-white/5 px-5 py-4 flex gap-2">
-          <button onClick={onClose} className="flex-1 text-sm text-gray-400 border border-white/10 rounded-xl py-2.5 hover:bg-white/5">Annuler</button>
-          <button onClick={save} disabled={saving || !form.title || !form.content} className="flex-1 text-sm font-medium text-black bg-amber-400 hover:bg-amber-300 rounded-xl py-2.5 disabled:opacity-50">
+        <div className="sticky bottom-0 bg-card border-t border-border px-5 py-4 flex gap-2">
+          <button onClick={onClose} className="flex-1 text-sm text-muted-foreground border border-border rounded-xl py-2.5 hover:bg-surface">Annuler</button>
+          <button onClick={save} disabled={saving || !form.title || !form.content} className="flex-1 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl py-2.5 disabled:opacity-50">
             {saving ? '...' : 'Créer brouillon'}
           </button>
         </div>

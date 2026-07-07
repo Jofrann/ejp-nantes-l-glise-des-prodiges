@@ -51,32 +51,32 @@ export default function MesFij() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="bg-white/3 border border-white/8 rounded-2xl overflow-hidden"
+                className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm"
               >
                 {/* En-tête FIJ */}
-                <div className="p-4 border-b border-white/5">
+                <div className="p-4 border-b border-border">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-white">{fij.name}</p>
+                      <p className="text-sm font-semibold text-foreground">{fij.name}</p>
                       <div className="flex items-center gap-3 mt-1">
                         <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                          fij.status === 'active' ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-                          : fij.status === 'opening' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                          : fij.status === 'paused' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
-                          : 'bg-gray-500/10 text-gray-400 border border-gray-500/20'
+                          fij.status === 'active' ? 'bg-success/10 text-success border border-success/20'
+                          : fij.status === 'opening' ? 'bg-primary/10 text-primary border border-primary/20'
+                          : fij.status === 'paused' ? 'bg-purple-500/10 text-purple-600 border border-purple-500/20'
+                          : 'bg-muted text-muted-foreground border border-border'
                         }`}>
                           {fij.status === 'active' ? 'Active' : fij.status === 'opening' ? 'En ouverture' : fij.status === 'paused' ? 'En pause' : 'Fermée'}
                         </span>
-                        {fij.city && <span className="text-xs text-gray-500 flex items-center gap-0.5"><MapPin className="w-3 h-3" /> {fij.city}</span>}
+                        {fij.city && <span className="text-xs text-muted-foreground flex items-center gap-0.5"><MapPin className="w-3 h-3" /> {fij.city}</span>}
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="text-lg font-bold text-amber-400">{fij.member_count || 0}</p>
-                      <p className="text-[10px] text-gray-500 uppercase">membres</p>
+                      <p className="text-lg font-bold text-secondary">{fij.member_count || 0}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase">membres</p>
                     </div>
                   </div>
                   {(fij.meeting_day || fij.meeting_time) && (
-                    <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
                       <Clock className="w-3 h-3" />
                       {fij.meeting_day || '—'}{fij.meeting_time ? ` à ${fij.meeting_time}` : ''}
                     </div>
@@ -84,18 +84,18 @@ export default function MesFij() {
                 </div>
 
                 {/* Statut CR */}
-                <div className="px-4 py-3 bg-white/2 border-b border-white/5">
+                <div className="px-4 py-3 bg-surface border-b border-border">
                   {thisWeekReport ? (
                     <div className="flex items-center gap-2 text-xs">
-                      <span className={`w-2 h-2 rounded-full ${thisWeekReport.status === 'submitted' ? 'bg-green-400' : 'bg-amber-400'}`} />
-                      <span className="text-gray-400">
+                      <span className={`w-2 h-2 rounded-full ${thisWeekReport.status === 'submitted' ? 'bg-success' : 'bg-secondary'}`} />
+                      <span className="text-muted-foreground">
                         CR de cette semaine : {thisWeekReport.status === 'submitted' ? 'Soumis' : thisWeekReport.status === 'validated' ? 'Validé' : 'Brouillon'}
                       </span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="w-2 h-2 rounded-full bg-red-400" />
-                      <span className="text-gray-400">CR de cette semaine non rempli</span>
+                      <span className="w-2 h-2 rounded-full bg-danger" />
+                      <span className="text-muted-foreground">CR de cette semaine non rempli</span>
                     </div>
                   )}
                 </div>
@@ -104,13 +104,13 @@ export default function MesFij() {
                 <div className="p-3 flex gap-2">
                   <Link
                     to={`/app/departements/fij/fij/${fij.id}`}
-                    className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl py-2.5 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-foreground bg-surface hover:bg-muted border border-border rounded-xl py-2.5 transition-colors"
                   >
                     <Users className="w-3.5 h-3.5" /> Ouvrir
                   </Link>
                   <Link
                     to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`}
-                    className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-black bg-amber-400 hover:bg-amber-300 rounded-xl py-2.5 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl py-2.5 transition-colors"
                   >
                     <FileText className="w-3.5 h-3.5" /> {thisWeekReport ? 'Éditer CR' : 'Remplir CR'}
                   </Link>
