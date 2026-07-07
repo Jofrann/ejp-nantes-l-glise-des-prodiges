@@ -27,8 +27,11 @@ export default function Home() {
   const [fiJs, setFiJs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [introDone, setIntroD] = useState(false);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
+  const fetchData = () => {
+    setLoading(true);
+    setError(false);
     Promise.all([
       base44.entities.ChurchConfig.list(),
       base44.entities.Leader.list('display_order', 20),
@@ -45,13 +48,29 @@ export default function Home() {
       setGallery(g || []);
       setTestimonials(t || []);
       setFiJs(f || []);
+    }).catch(() => {
+      setError(true);
     }).finally(() => setLoading(false));
-  }, []);
+  };
+
+  useEffect(() => { fetchData(); }, []);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0B0B0C] flex items-center justify-center">
         <div className="w-6 h-6 border border-[#C8A96A]/30 border-t-[#C8A96A] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#0B0B0C] flex flex-col items-center justify-center text-center px-6">
+        <p className="text-[#C8A96A] font-display text-2xl mb-3">Connexion impossible</p>
+        <p className="text-gray-500 text-sm mb-6 max-w-xs">Une erreur réseau est survenue. Vérifie ta connexion et réessaie.</p>
+        <button onClick={fetchData} className="bg-[#C8A96A] text-[#0B0B0C] text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-[#D4B97A] transition-colors">
+          Réessayer
+        </button>
       </div>
     );
   }
