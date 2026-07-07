@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, MessageCircle, Users, Lock, Target, Clock, Award, ListChecks, Package } from 'lucide-react';
+import { isBureauLike } from '@/lib/permissions';
 import DeptHero from '@/components/departements/DeptHero';
 import ReferentGrid from '@/components/departements/ReferentGrid';
 import MembresGrid from '@/components/departements/MembresGrid';
@@ -84,8 +85,9 @@ export default function PageDepartement() {
   const colors = COLOR_MAP[dept.color] || COLOR_MAP.amber;
   const referents = members.filter(m => m.role_in_dept === 'referent');
   const simpleMembers = members.filter(m => m.role_in_dept === 'membre');
-  const isAdmin = user?.role === 'admin' || user?.role === 'bureau';
-  const canManage = isAdmin || user?.role === 'referent';
+  const isAdmin = isBureauLike(user);
+  const isReferentOfDept = members.some(m => m.user_id === user?.id && m.role_in_dept === 'referent');
+  const canManage = isAdmin || isReferentOfDept;
   const existingUserIds = members.map(m => m.user_id).filter(Boolean);
 
   // Protection d'accès : un serviteur ne peut entrer que dans un département auquel il est rattaché

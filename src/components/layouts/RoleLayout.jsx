@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { isBureauLike, hasRole } from '@/lib/permissions';
 import ServiteurLayout from './ServiteurLayout';
 import ReferentLayout from './ReferentLayout';
 import BureauLayout from './BureauLayout';
@@ -25,13 +26,11 @@ export default function RoleLayout() {
     );
   }
 
-  const role = user?.role || 'serviteur';
-
-  if (role === 'bureau') {
+  if (isBureauLike(user)) {
     return <BureauLayout user={user}>{children}</BureauLayout>;
   }
 
-  if (role === 'referent') {
+  if (hasRole(user, 'referent')) {
     return <ReferentLayout user={user}>{children}</ReferentLayout>;
   }
 

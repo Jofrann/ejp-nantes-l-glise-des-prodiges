@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Upload, Trash2 } from 'lucide-react';
+import { isBureauLike } from '@/lib/permissions';
 
 const COLORS = ['amber', 'blue', 'purple', 'rose', 'green', 'indigo'];
 const ICONS = ['Music', 'Users', 'Heart', 'Star', 'BookOpen', 'Mic', 'Video', 'Camera', 'Coffee', 'Smile', 'Gift', 'Globe', 'Zap', 'Sun', 'Shield', 'Flower2', 'Baby', 'Home', 'Megaphone', 'Layers'];
@@ -22,13 +23,32 @@ export default function EditerDepartement() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [msg, setMsg] = useState('');
+  const [user, setUser] = useState(null);
+  const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    if (!isNew) {
-      base44.entities.Department.filter({ id }).then(res => {
-        if (res?.[0]) setForm({ ...res[0] });
-      });
-    }
+    base44.auth.me().then(u => {
+      setUser(u);
+      if (isBureauLike(u)) {
+        setAuthorized(true);
+        if (!isNew) {
+          base44.entities.Department.filter({ id }).then(res => {
+            if (res?.[0]) setForm({ ...res[0] });
+          });
+        }
+      } else if (!isNew) {
+        Promise.all([
+          base44.entities.Department.filter({ id }),
+          base44.entities.DepartmentMember.filter({ department_id: id, is_active: true })
+        ]).then(([res, members]) => {
+          if (res?.[0]) setForm({ ...res[0] });
+          const isReferent = (members || []).some(m => m.user_id === u?.id && m.role_in_dept === 'referent');
+          setAuthorized(isReferent);
+        });
+      } else {
+        setAuthorized(false);
+      }
+    });
   }, [id]);
 
   const uploadCover = async (e) => {
@@ -59,6 +79,20 @@ export default function EditerDepartement() {
     await base44.entities.Department.delete(form.id);
     navigate('/departements');
   };
+
+  if (!user) return (
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="w-7 h-7 border-2 border-white/15 border-t-amber-400/80 rounded-full animate-spin" />
+    </div>
+  );
+
+  if (!authorized) return (
+    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-gray-500 px-5 text-center">
+      <p className="text-sm font-semibold text-white mb-1">Accès réservé</p>
+      <p className="text-xs text-gray-500 mb-5 max-w-xs">Seuls les responsables peuvent modifier ce département.</p>
+      <Link to={isNew ? '/departements' : `/departement/${id}`} className="text-amber-400 text-sm">← Retour</Link>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">

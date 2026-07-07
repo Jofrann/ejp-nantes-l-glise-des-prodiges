@@ -6,14 +6,7 @@ import {
   Calendar, Users, BookOpen, Bell, ChevronRight,
   MapPin, Clock, Star, User
 } from 'lucide-react';
-
-const ROLE_LABELS = {
-  admin: 'Admin',
-  bureau: 'Bureau',
-  referent: 'Référent',
-  serviteur: 'Serviteur',
-  user: 'Membre',
-};
+import { getPrimaryRoleLabel } from '@/lib/permissions';
 
 const QUICK_LINKS = [
   { icon: Bell, label: 'EJP Hub', sub: 'Feed & communauté', to: '/hub', color: 'from-amber-400/20 to-amber-600/5 border-amber-400/30' },
@@ -89,7 +82,7 @@ export default function EspaceServiteur() {
                 </h1>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="text-xs text-gray-500 bg-white/5 border border-white/10 rounded-full px-2.5 py-0.5">
-                    {ROLE_LABELS[user?.role] || 'Serviteur'} — EJP Nantes
+                    {getPrimaryRoleLabel(user)} — EJP Nantes
                   </span>
                 </div>
               </div>

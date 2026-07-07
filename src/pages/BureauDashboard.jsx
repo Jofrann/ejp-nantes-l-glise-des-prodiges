@@ -111,7 +111,7 @@ export default function BureauDashboard() {
             <div className="space-y-2">
               {[
                 { label: 'Page vitrine admin', path: '/admin', desc: 'Gérer le contenu public', icon: TrendingUp },
-                { label: 'Annuaire membres', path: '/bureau/annuaire', desc: 'Voir les profils', icon: Users },
+                { label: 'Départements', path: '/departements', desc: 'Équipes & membres', icon: Users },
                 { label: 'Mon profil', path: '/profil', desc: 'Modifier mes informations', icon: Users },
               ].map(({ label, path, desc, icon: Icon }) => (
                 <Link key={path} to={path}

@@ -15,6 +15,7 @@ import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import RoleLayout from '@/components/layouts/RoleLayout';
+import RoleGuard from '@/components/RoleGuard';
 import Home from '@/pages/Home';
 import AdminHome from '@/pages/AdminHome';
 import BureauDashboard from '@/pages/BureauDashboard';
@@ -62,8 +63,8 @@ const AuthenticatedApp = () => {
             <Route key={path} path={`/${path}`} element={<Page />} />
           ))}
 
-          <Route path="/admin" element={<AdminHome />} />
-          <Route path="/bureau" element={<BureauDashboard />} />
+          <Route path="/admin" element={<RoleGuard allowedRoles={['admin']}><AdminHome /></RoleGuard>} />
+          <Route path="/bureau" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><BureauDashboard /></RoleGuard>} />
           <Route path="/profil" element={<MonProfil />} />
           <Route path="/espace-serviteur" element={<EspaceServiteur />} />
           <Route path="/departements" element={<ListeDepartements />} />

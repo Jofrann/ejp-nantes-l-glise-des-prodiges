@@ -4,13 +4,17 @@ import { base44 } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
+import PendingAccount from "@/components/PendingAccount";
+import { getRedirectPath, isAccountPending, isAccountSuspended } from "@/lib/permissions";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pendingUser, setPendingUser] = useState(null);
+
+  const inputCls = "w-full h-12 px-4 rounded-xl border border-white/10 bg-white/5 text-[#F7F4EF] placeholder:text-[#6B6B6B] text-sm focus:outline-none focus:ring-2 focus:ring-[#C8A96A]/30 focus:border-[#C8A96A]/40 transition";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,10 +22,22 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
-      window.location.href = "/espace-serviteur";
+      const user = await base44.auth.me();
+
+      if (isAccountPending(user)) {
+        setPendingUser(user);
+        setLoading(false);
+        return;
+      }
+      if (isAccountSuspended(user)) {
+        setError("Ton compte a été suspendu. Contacte un responsable.");
+        setLoading(false);
+        return;
+      }
+
+      window.location.href = getRedirectPath(user);
     } catch (err) {
       setError(err.message || "Email ou mot de passe invalide");
-    } finally {
       setLoading(false);
     }
   };
@@ -30,51 +46,49 @@ export default function Login() {
     base44.auth.loginWithProvider("google", "/espace-serviteur");
   };
 
+  if (pendingUser) {
+    return <PendingAccount userName={pendingUser.first_name} />;
+  }
+
   return (
     <AuthLayout
       footer={
-      <>
-          Don't have an account?{" "}
-          <Link to="/register" className="text-red-500 font-medium hover:underline">
-            Sign up for free!
+        <>
+          Pas encore de compte ?{" "}
+          <Link to="/register" className="text-[#C8A96A] font-medium hover:underline">
+            Créer mon compte serviteur
           </Link>
         </>
       }>
-      
-      {/* Titre */}
-      <h1 className="text-4xl font-bold tracking-tight text-zinc-900 mb-1">
-        WELCOME BACK
-      </h1>
-      <p className="text-sm mb-8 text-orange-700">Glad to see you again, young prodigy.
 
-      </p>
+      <p className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A] font-medium mb-3">EJP Nantes</p>
+      <h1 className="font-display text-3xl text-[#F7F4EF] font-light mb-2">Bienvenue dans l'espace serviteur</h1>
+      <p className="text-sm text-[#B8B8B8] mb-8">Retrouve tes départements, ton équipe et les informations liées à ton service.</p>
 
-      {/* Erreur */}
       {error &&
-      <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-500 text-sm border border-red-100">
+        <div className="mb-4 p-3 rounded-xl bg-red-500/10 text-red-400 text-sm border border-red-500/20">
           {error}
         </div>
       }
 
-      {/* Formulaire */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-zinc-800" htmlFor="email">Email</label>
+        <div className="space-y-1.5">
+          <label className="text-xs text-[#B8B8B8] font-medium" htmlFor="email">Email</label>
           <input
             id="email"
             type="email"
             autoComplete="email"
             autoFocus
-            placeholder="Enter your email"
+            placeholder="ton@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition" />
-          
+            className={inputCls}
+          />
         </div>
 
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-zinc-800" htmlFor="password">Password</label>
+        <div className="space-y-1.5">
+          <label className="text-xs text-[#B8B8B8] font-medium" htmlFor="password">Mot de passe</label>
           <input
             id="password"
             type="password"
@@ -83,52 +97,39 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full h-12 px-4 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition" />
-          
+            className={inputCls}
+          />
         </div>
 
-        {/* Remember me + Forgot */}
-        <div className="flex items-center justify-between w-full">
-          <label className="flex items-center gap-2 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="w-4 h-4 rounded border-zinc-300 accent-red-500" />
-            
-            <span className="text-sm text-zinc-600">Remember me</span>
-          </label>
-          <Link to="/forgot-password" className="text-sm text-zinc-600 hover:text-red-500 transition">
-            Forgot password
+        <div className="flex items-center justify-end w-full">
+          <Link to="/forgot-password" className="text-xs text-[#B8B8B8] hover:text-[#C8A96A] transition">
+            Mot de passe oublié ?
           </Link>
         </div>
 
-        {/* Bouton Sign in */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-12 rounded-2xl hover:bg-red-600 text-white font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2 bg-orange-500">
-          
-          {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Connexion...</> : "Sign in"}
+          className="w-full h-12 rounded-xl bg-[#C8A96A] hover:bg-[#D4B97A] text-[#0B0B0C] font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
+
+          {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Connexion...</> : "Se connecter"}
         </button>
       </form>
 
-      {/* Séparateur */}
-      <div className="my-4 flex items-center gap-3">
-        <div className="flex-1 h-px bg-zinc-200" />
-        <span className="text-xs text-zinc-400 uppercase">or</span>
-        <div className="flex-1 h-px bg-zinc-200" />
+      <div className="my-5 flex items-center gap-3">
+        <div className="flex-1 h-px bg-white/10" />
+        <span className="text-xs text-[#6B6B6B] uppercase">ou</span>
+        <div className="flex-1 h-px bg-white/10" />
       </div>
 
-      {/* Bouton Google */}
       <button
         type="button"
         onClick={handleGoogle}
-        className="w-full h-12 rounded-2xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 font-medium text-sm transition flex items-center justify-center gap-2">
-        
-        <GoogleIcon className="w-5 h-5" />
-        Sign in with Google
-      </button>
-    </AuthLayout>);
+        className="w-full h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-[#F7F4EF] font-medium text-sm transition flex items-center justify-center gap-2">
 
+        <GoogleIcon className="w-5 h-5" />
+        Continuer avec Google
+      </button>
+    </AuthLayout>
+  );
 }

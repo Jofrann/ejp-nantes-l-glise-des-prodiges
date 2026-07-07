@@ -5,16 +5,50 @@
     "role": {
       "type": "string",
       "enum": [
-        "bureau",
+        "serviteur",
         "referent",
-        "serviteur"
+        "bureau",
+        "bergere",
+        "admin"
       ],
       "default": "serviteur",
-      "description": "R\u00f4le de l'utilisateur dans l'\u00e9glise"
+      "description": "R\u00f4le principal (compatibilit\u00e9 \u2014 utiliser 'roles' pour les r\u00f4les cumulables)"
     },
-    "department": {
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "serviteur",
+          "referent",
+          "bureau",
+          "bergere",
+          "admin"
+        ]
+      },
+      "default": [
+        "serviteur"
+      ],
+      "description": "R\u00f4les cumulables de l'utilisateur"
+    },
+    "account_status": {
       "type": "string",
-      "description": "D\u00e9partement ou minist\u00e8re de l'utilisateur"
+      "enum": [
+        "pending",
+        "active",
+        "suspended",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Statut du compte \u2014 un nouveau compte est en attente de validation"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "Pr\u00e9nom"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Nom de famille"
     },
     "phone": {
       "type": "string",

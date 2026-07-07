@@ -1,5 +1,5 @@
 {
-  "name": "Bio-Longevity Nature (Copy)",
+  "name": "EJP Nantes",
   "site": {
     "installCommand": "npm install",
     "buildCommand": "npm run build",

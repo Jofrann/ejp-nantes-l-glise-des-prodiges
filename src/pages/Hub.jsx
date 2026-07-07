@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import PostCard from '@/components/hub/PostCard';
 import NewPostForm from '@/components/hub/NewPostForm';
+import { isBureauLike, getPrimaryRoleLabel } from '@/lib/permissions';
 
 const NAV = [
   { id: 'feed', label: 'Hub', icon: LayoutDashboard, to: '/hub' },
@@ -29,17 +30,22 @@ export default function Hub() {
     Promise.all([
       base44.auth.me(),
       base44.entities.Post.list('-created_date', 30),
-      base44.entities.Department.filter({ is_active: true }, 'display_order', 10),
-    ]).then(([u, p, d]) => {
+      base44.entities.Department.filter({ is_active: true }, 'display_order', 50),
+      base44.entities.DepartmentMember.filter({ is_active: true }, null, 200),
+    ]).then(([u, p, d, members]) => {
       setUser(u);
       setPosts(p || []);
-      setDepartments(d || []);
+      const allDepts = d || [];
+      const admin = isBureauLike(u);
+      const myDeptIds = (members || []).filter(m => m.user_id === u?.id).map(m => m.department_id);
+      const visibleDepts = admin ? allDepts : allDepts.filter(dept => myDeptIds.includes(dept.id));
+      setDepartments(visibleDepts);
       setLoading(false);
     });
   }, []);
 
   const filteredPosts = posts.filter(p => p.type === tab);
-  const canPostAnnouncement = ['admin', 'bureau'].includes(user?.role);
+  const canPostAnnouncement = isBureauLike(user);
 
   const handleNewPost = (post) => {
     setPosts(prev => [post, ...prev]);
@@ -84,7 +90,7 @@ export default function Hub() {
             </div>
             <div className="min-w-0">
               <p className="text-xs font-semibold text-white truncate">{user?.full_name}</p>
-              <p className="text-[10px] text-gray-500 capitalize">{user?.role || 'Membre'}</p>
+              <p className="text-[10px] text-gray-500">{getPrimaryRoleLabel(user)}</p>
             </div>
           </div>
         </div>

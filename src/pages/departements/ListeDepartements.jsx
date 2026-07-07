@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Users, Plus, ChevronRight, Crown } from 'lucide-react';
 import DeptIcon from '@/components/departements/DeptIcon';
+import { isBureauLike } from '@/lib/permissions';
 
 const COLOR_MAP = {
   amber:  { border: 'border-amber-400/25',  text: 'text-amber-400',  bg: 'bg-amber-400/10',  glow: 'from-amber-400/10' },
@@ -29,10 +30,10 @@ export default function ListeDepartements() {
     ]).then(([u, deps, members]) => {
       setUser(u);
       const allDepts = (deps || []).filter(d => d.is_active);
-      // Filtrer selon les rattachements (sauf admin/bureau qui voient tout)
-      const isAdmin = u?.role === 'admin' || u?.role === 'bureau';
+      // Filtrer selon les rattachements (sauf bureau/bergere/admin qui voient tout)
+      const admin = isBureauLike(u);
       const myDeptIds = (members || []).filter(m => m.user_id === u?.id).map(m => m.department_id);
-      const visibleDepts = isAdmin ? allDepts : allDepts.filter(d => myDeptIds.includes(d.id));
+      const visibleDepts = admin ? allDepts : allDepts.filter(d => myDeptIds.includes(d.id));
       setDepts(visibleDepts);
       const c = {};
       const r = {};
@@ -54,7 +55,7 @@ export default function ListeDepartements() {
     </div>
   );
 
-  const isAdmin = user?.role === 'admin' || user?.role === 'bureau';
+  const isAdmin = isBureauLike(user);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">

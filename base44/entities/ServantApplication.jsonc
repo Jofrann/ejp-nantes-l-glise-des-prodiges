@@ -1,0 +1,69 @@
+{
+  "name": "ServantApplication",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "Pr\u00e9nom du candidat"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Nom du candidat"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email du candidat"
+    },
+    "phone": {
+      "type": "string",
+      "description": "T\u00e9l\u00e9phone"
+    },
+    "desired_departments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs des d\u00e9partements souhait\u00e9s"
+    },
+    "desired_department_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Noms des d\u00e9partements souhait\u00e9s (d\u00e9normalis\u00e9)"
+    },
+    "message": {
+      "type": "string",
+      "description": "Motivation / message du candidat"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Statut de la demande"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID du User cr\u00e9\u00e9"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "ID du responsable ayant trait\u00e9"
+    },
+    "reviewed_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de traitement"
+    }
+  },
+  "required": [
+    "first_name",
+    "last_name",
+    "email"
+  ]
+}
