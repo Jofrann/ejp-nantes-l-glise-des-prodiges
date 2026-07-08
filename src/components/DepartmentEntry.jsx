@@ -19,7 +19,11 @@ export default function DepartmentEntry() {
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
+    // Recherche par slug, puis par ID (certains départements n'ont pas de slug défini)
     base44.entities.Department.filter({ slug }).then((results) => {
+      if (results?.[0]) { setDept(results[0]); setLoading(false); return; }
+      return base44.entities.Department.filter({ id: slug });
+    }).then((results) => {
       setDept(results?.[0] || null);
       setLoading(false);
     }).catch(() => setLoading(false));

@@ -17,6 +17,7 @@ export function isFijDepartment(dept) {
     slug === 'familles-impact-jeunes' ||
     slug === 'foyers-intercession-jeune' ||
     name.includes('fij') ||
+    name.includes("famille d'impact") ||
     name.includes("familles d'impact") ||
     name.includes("foyer d'intercession")
   );
