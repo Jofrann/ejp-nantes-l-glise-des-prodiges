@@ -1,0 +1,86 @@
+{
+  "name": "FijMember",
+  "type": "object",
+  "properties": {
+    "legacy_id": {
+      "type": "string",
+      "description": "ID ancien syst\u00e8me (migration)"
+    },
+    "fij_id": {
+      "type": "string",
+      "description": "ID de la FIJ"
+    },
+    "fij_name": {
+      "type": "string",
+      "description": "Nom de la FIJ (d\u00e9normalis\u00e9)"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nom complet"
+    },
+    "phone": {
+      "type": "string",
+      "description": "T\u00e9l\u00e9phone"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email"
+    },
+    "age": {
+      "type": "number",
+      "description": "Age"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female",
+        "other"
+      ],
+      "description": "Sexe"
+    },
+    "city": {
+      "type": "string",
+      "description": "Ville"
+    },
+    "entry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date d'entr\u00e9e dans la FI"
+    },
+    "growth_status": {
+      "type": "string",
+      "enum": [
+        "passif",
+        "regulier",
+        "disciple",
+        "serviteur",
+        "reproducteur"
+      ],
+      "default": "passif",
+      "description": "Statut de croissance dans le parcours"
+    },
+    "training_potential": {
+      "type": "string",
+      "description": "Potentiel de formation"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes de suivi simples"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Membre actif ?"
+    }
+  },
+  "required": [
+    "fij_id",
+    "full_name"
+  ]
+}

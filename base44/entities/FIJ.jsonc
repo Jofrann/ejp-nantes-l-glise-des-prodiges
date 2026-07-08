@@ -2,13 +2,21 @@
   "name": "FIJ",
   "type": "object",
   "properties": {
+    "legacy_id": {
+      "type": "string",
+      "description": "ID ancien syst\u00e8me (migration)"
+    },
     "name": {
       "type": "string",
-      "description": "Nom de la FIJ (ex: FIJ Nantes Centre)"
+      "description": "Nom de la FIJ (ex: FIJ Beaujoire)"
     },
     "slug": {
       "type": "string",
       "description": "Identifiant URL"
+    },
+    "campus": {
+      "type": "string",
+      "description": "Campus / zone g\u00e9ographique"
     },
     "status": {
       "type": "string",
@@ -31,7 +39,7 @@
     },
     "meeting_day": {
       "type": "string",
-      "description": "Jour de r\u00e9union (ex: Vendredi)"
+      "description": "Jour de r\u00e9union (ex: Jeudi)"
     },
     "meeting_time": {
       "type": "string",
@@ -62,16 +70,33 @@
       "type": "string",
       "description": "Email du pilote"
     },
+    "copilot_user_id": {
+      "type": "string",
+      "description": "ID du copilote"
+    },
+    "copilot_name": {
+      "type": "string",
+      "description": "Nom du copilote (d\u00e9normalis\u00e9)"
+    },
+    "copilot_email": {
+      "type": "string",
+      "description": "Email du copilote"
+    },
     "co_pilot_user_ids": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "description": "IDs des co-pilotes"
+      "description": "IDs des co-pilotes (legacy, pr\u00e9f\u00e9rer copilot_user_id)"
     },
     "leader_name": {
       "type": "string",
       "description": "Nom du responsable (legacy)"
+    },
+    "member_goal": {
+      "type": "number",
+      "description": "Objectif de membres",
+      "default": 13
     },
     "member_count": {
       "type": "number",
@@ -99,6 +124,10 @@
     "pause_reason": {
       "type": "string",
       "description": "Raison de la mise en pause"
+    },
+    "closure_reason": {
+      "type": "string",
+      "description": "Raison de fermeture"
     },
     "reactivation_plan": {
       "type": "string",

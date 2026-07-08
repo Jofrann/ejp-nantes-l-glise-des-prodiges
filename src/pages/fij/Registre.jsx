@@ -75,7 +75,7 @@ export default function Registre() {
                     Modifier
                   </button>
                   <Link
-                    to={`/app/departements/fij/fij/${fij.id}`}
+                    to={`/app/departements/fij/coordination/registre/${fij.id}`}
                     className="text-xs text-secondary hover:text-secondary/80 px-2 py-1 rounded-lg hover:bg-secondary/5 transition-colors"
                   >
                     Ouvrir

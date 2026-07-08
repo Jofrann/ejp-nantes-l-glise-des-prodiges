@@ -17,7 +17,7 @@ export const PILOTE_NAV = [
 export const COORDINATION_NAV = [
   { to: '/app/departements/fij/coordination', label: 'Tableau', end: true },
   { to: '/app/departements/fij/coordination/registre', label: 'Registre' },
-  { to: '/app/departements/fij/coordination/cr', label: 'CR' },
+  { to: '/app/departements/fij/coordination/cr-jeudi', label: 'CR Jeudi' },
   { to: '/app/departements/fij/coordination/relances', label: 'Relances' },
   { to: '/app/departements/fij/coordination/ouvertures', label: 'Ouvertures' },
   { to: '/app/departements/fij/coordination/consecrations', label: 'Consécrations' },

@@ -40,6 +40,11 @@ import FijDetail from '@/pages/fij/FijDetail';
 import FijCrForm from '@/pages/fij/FijCrForm';
 import FijPiloteHome from '@/pages/fij/PiloteHome';
 import FijRelances from '@/pages/fij/Relances';
+import FijBureau from '@/pages/fij/FijBureau';
+import CrJeudiForm from '@/pages/fij/CrJeudiForm';
+import CrJeudiDetail from '@/pages/fij/CrJeudiDetail';
+import CrJeudiList from '@/pages/fij/CrJeudiList';
+import MemberDetail from '@/pages/fij/MemberDetail';
 import ListeDepartements from '@/pages/departements/ListeDepartements';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import DepartmentEntry from '@/components/DepartmentEntry';
@@ -119,6 +124,16 @@ const AuthenticatedApp = () => {
           {/* === Routes partagées === */}
           <Route path="/app/departements/fij/fij/:id" element={<FijDetail />} />
           <Route path="/app/departements/fij/fij/:id/cr/nouveau" element={<FijCrForm />} />
+
+          {/* === Bureau FI dédié (Phase 6 V2) === */}
+          <Route path="/app/departements/fij/pilote/mes-fij/:fijId" element={<FijBureau />} />
+          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/cr-jeudi/nouveau" element={<CrJeudiForm />} />
+          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/cr-jeudi/:reportId" element={<CrJeudiDetail />} />
+          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/membres/:memberId" element={<MemberDetail />} />
+          <Route path="/app/departements/fij/coordination/registre/:fijId" element={<FijBureau />} />
+          <Route path="/app/departements/fij/coordination/registre/:fijId/cr-jeudi/nouveau" element={<CrJeudiForm />} />
+          <Route path="/app/departements/fij/coordination/registre/:fijId/cr-jeudi/:reportId" element={<CrJeudiDetail />} />
+          <Route path="/app/departements/fij/coordination/cr-jeudi" element={<CrJeudiList />} />
 
           {/* === Redirections anciennes routes === */}
           <Route path="/app/departements/fij/tableau-de-bord" element={<Navigate to="/app/departements/fij/coordination" replace />} />

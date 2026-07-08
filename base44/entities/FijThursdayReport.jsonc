@@ -1,0 +1,79 @@
+{
+  "name": "FijThursdayReport",
+  "type": "object",
+  "properties": {
+    "legacy_id": {
+      "type": "string",
+      "description": "ID ancien syst\u00e8me (migration)"
+    },
+    "fij_id": {
+      "type": "string",
+      "description": "ID de la FIJ"
+    },
+    "fij_name": {
+      "type": "string",
+      "description": "Nom de la FIJ (d\u00e9normalis\u00e9)"
+    },
+    "thursday_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date du jeudi"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "validated"
+      ],
+      "default": "draft",
+      "description": "Statut du CR"
+    },
+    "submitted_by_user_id": {
+      "type": "string",
+      "description": "ID du pilote ayant soumis"
+    },
+    "submitted_by_name": {
+      "type": "string",
+      "description": "Nom du pilote"
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date de soumission"
+    },
+    "total_members": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre total de membres"
+    },
+    "present_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Membres pr\u00e9sents"
+    },
+    "absent_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Membres absents"
+    },
+    "late_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Membres en retard"
+    },
+    "attendance_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Taux de pr\u00e9sence (%)"
+    },
+    "general_note": {
+      "type": "string",
+      "description": "Note g\u00e9n\u00e9rale du CR"
+    }
+  },
+  "required": [
+    "fij_id",
+    "thursday_date"
+  ]
+}

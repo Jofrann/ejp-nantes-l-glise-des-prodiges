@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { getFijAccessLevel, isFijCoordination } from '@/lib/permissions';
+import { isFijCoordination } from '@/lib/permissions';
+import { isFijCoordinationRole, isFijDirectionRole, isPilotOfFij, getFijAccessLevelV2 } from '@/lib/fijPermissions';
 
 export function useFijData() {
   const [user, setUser] = useState(null);
@@ -13,15 +14,17 @@ export function useFijData() {
       const u = await base44.auth.me();
       setUser(u);
 
-      // Si coordination/direction : charger toutes les FIJ
-      // Si pilote : charger uniquement ses FIJ
-      if (isFijCoordination(u)) {
-        const all = await base44.entities.FIJ.list('display_order', 100);
-        setFijs((all || []).filter(x => x.is_active !== false));
+      const allFijs = await base44.entities.FIJ.list('display_order', 100);
+
+      // Coordination ou direction : toutes les FIJ
+      // Pilote : uniquement ses FIJ (pilot, copilot, ou co_pilot_user_ids)
+      if (isFijCoordinationRole(u) || isFijDirectionRole(u)) {
+        setFijs((allFijs || []).filter(x => x.is_active !== false));
       } else {
-        // Pilote : filtrer côté requête par pilot_user_id
-        const owned = await base44.entities.FIJ.filter({ pilot_user_id: u.id }, 'display_order', 100).catch(() => []);
-        setFijs((owned || []).filter(x => x.is_active !== false));
+        const owned = (allFijs || []).filter(f =>
+          f.is_active !== false && isPilotOfFij(u, f)
+        );
+        setFijs(owned);
       }
     } catch {
       setFijs([]);
@@ -32,6 +35,6 @@ export function useFijData() {
 
   useEffect(() => { load(); }, []);
 
-  const accessLevel = getFijAccessLevel(user, fijs);
+  const accessLevel = getFijAccessLevelV2(user, fijs);
   return { user, fijs, loading, accessLevel, reload: load };
 }

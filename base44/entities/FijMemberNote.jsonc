@@ -1,0 +1,62 @@
+{
+  "name": "FijMemberNote",
+  "type": "object",
+  "properties": {
+    "fij_id": {
+      "type": "string",
+      "description": "ID de la FIJ"
+    },
+    "member_id": {
+      "type": "string",
+      "description": "ID du FijMember"
+    },
+    "member_name": {
+      "type": "string",
+      "description": "Nom du membre (d\u00e9normalis\u00e9)"
+    },
+    "author_user_id": {
+      "type": "string",
+      "description": "ID de l'auteur"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nom de l'auteur"
+    },
+    "author_role": {
+      "type": "string",
+      "description": "R\u00f4le de l'auteur"
+    },
+    "note_type": {
+      "type": "string",
+      "enum": [
+        "suivi",
+        "appel",
+        "rencontre",
+        "integration",
+        "absence",
+        "transfert",
+        "autre"
+      ],
+      "default": "suivi",
+      "description": "Type de note"
+    },
+    "content": {
+      "type": "string",
+      "description": "Contenu de la note"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "pilote_fij",
+        "coordination_fij"
+      ],
+      "default": "pilote_fij",
+      "description": "Visibilit\u00e9"
+    }
+  },
+  "required": [
+    "fij_id",
+    "member_id",
+    "content"
+  ]
+}

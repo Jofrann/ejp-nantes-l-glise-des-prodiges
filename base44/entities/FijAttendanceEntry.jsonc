@@ -1,0 +1,50 @@
+{
+  "name": "FijAttendanceEntry",
+  "type": "object",
+  "properties": {
+    "legacy_id": {
+      "type": "string",
+      "description": "ID ancien syst\u00e8me (migration)"
+    },
+    "report_id": {
+      "type": "string",
+      "description": "ID du FijThursdayReport"
+    },
+    "fij_id": {
+      "type": "string",
+      "description": "ID de la FIJ"
+    },
+    "member_id": {
+      "type": "string",
+      "description": "ID du FijMember"
+    },
+    "member_name": {
+      "type": "string",
+      "description": "Nom du membre (d\u00e9normalis\u00e9)"
+    },
+    "thursday_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date du jeudi"
+    },
+    "present": {
+      "type": "boolean",
+      "default": true,
+      "description": "Pr\u00e9sent ?"
+    },
+    "late": {
+      "type": "boolean",
+      "default": false,
+      "description": "En retard ?"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Commentaire simple"
+    }
+  },
+  "required": [
+    "report_id",
+    "fij_id",
+    "member_id"
+  ]
+}
