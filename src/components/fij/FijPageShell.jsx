@@ -18,6 +18,7 @@ export const COORDINATION_NAV = [
   { to: '/app/departements/fij/coordination', label: 'Tableau', end: true },
   { to: '/app/departements/fij/coordination/registre', label: 'Registre' },
   { to: '/app/departements/fij/coordination/cr', label: 'CR' },
+  { to: '/app/departements/fij/coordination/relances', label: 'Relances' },
   { to: '/app/departements/fij/coordination/ouvertures', label: 'Ouvertures' },
   { to: '/app/departements/fij/coordination/consecrations', label: 'Consécrations' },
   { to: '/app/departements/fij/coordination/pause', label: 'Pause' },
@@ -29,10 +30,7 @@ export const COORDINATION_NAV = [
   { to: '/app/departements/fij/coordination/transferts', label: 'Transferts' },
 ];
 
-export const DIRECTION_NAV = [
-  { to: '/app/departements/fij/direction', label: 'Synthèse', end: true },
-  { to: '/app/departements/fij/direction/tableau-de-bord', label: 'Indicateurs' },
-];
+// L'espace Direction FIJ a été supprimé — les leaders consultent les indicateurs dans /app/direction
 
 export function LoadingSpinner() {
   return (
@@ -61,22 +59,18 @@ export function RoleShell({ role, title, subtitle, children, actions, requiredRo
   // Permet à la direction d'utiliser l'espace coordination avec la bonne navigation.
   const routeRole = location.pathname.includes('/pilote') ? 'pilot'
     : location.pathname.includes('/coordination') ? 'coordination'
-    : location.pathname.includes('/direction') ? 'direction'
     : role;
 
   const navItems = routeRole === 'pilot' ? PILOTE_NAV
     : routeRole === 'coordination' ? COORDINATION_NAV
-    : routeRole === 'direction' ? DIRECTION_NAV
     : [];
 
   const hubPath = routeRole === 'pilot' ? '/app/departements/fij/pilote'
     : routeRole === 'coordination' ? '/app/departements/fij/coordination'
-    : routeRole === 'direction' ? '/app/departements/fij/direction'
     : '/app/departements/fij';
 
   const hubLabel = routeRole === 'pilot' ? '← Espace pilote'
     : routeRole === 'coordination' ? '← Coordination'
-    : routeRole === 'direction' ? '← Direction'
     : '← FIJ';
 
   // Le contrôle d'accès utilise le rôle réel de l'utilisateur

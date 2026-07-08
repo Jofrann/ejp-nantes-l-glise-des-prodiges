@@ -112,14 +112,17 @@ export function canDeleteDepartmentData(user, departmentId, record, memberships 
 
 // === Helpers FIJ ===
 
-// Direction = Bergère ou Admin (décideurs finaux)
+// Direction globale = Bureau, Bergère ou Admin (voient les indicateurs dans /app/direction)
 export function isFijDirection(user) {
-  return hasAnyRole(user, ['bergere', 'admin']);
+  return isBureauLike(user);
 }
 
-// Coordination = bureau, bergere ou admin (voient toutes les FIJ)
+// Coordination FIJ = rôle spécifique fij_coordination ou admin (gestion opérationnelle)
+// Le bureau NE doit PAS être automatiquement coordination FIJ.
 export function isFijCoordination(user) {
-  return isBureauLike(user);
+  if (!user) return false;
+  if (isAdmin(user)) return true;
+  return hasRole(user, 'fij_coordination');
 }
 
 // Pilote = utilisateur rattaché comme pilot ou co-pilot sur au moins une FIJ
@@ -134,9 +137,9 @@ export function isFijPilotOf(user, fij) {
 }
 
 export function getFijAccessLevel(user, fijs) {
-  if (isFijDirection(user)) return 'direction';
   if (isFijCoordination(user)) return 'coordination';
   if (isFijPilot(user, fijs)) return 'pilot';
+  if (isFijDirection(user)) return 'direction';
   return 'none';
 }
 

@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Users, Calendar, BookOpen, TrendingUp, Bell, ChevronRight, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import FijDirectionSummary from '@/components/direction/FijDirectionSummary';
 
 export default function BureauDashboard() {
   const [user, setUser] = useState(null);
@@ -104,8 +105,13 @@ export default function BureauDashboard() {
             </div>
           </motion.div>
 
+          {/* Synthèse FIJ */}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            <FijDirectionSummary />
+          </motion.div>
+
           {/* Accès rapides */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
             className="bg-card border border-border rounded-2xl p-5 shadow-sm">
             <h2 className="text-foreground font-semibold text-sm mb-4">Accès rapides</h2>
             <div className="space-y-2">

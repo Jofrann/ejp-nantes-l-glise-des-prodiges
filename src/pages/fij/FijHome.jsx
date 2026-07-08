@@ -3,10 +3,10 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, Users, FileText, AlertTriangle, BarChart3,
-  Compass, Shield, Award, Target
+  ArrowRight, Users, FileText, AlertTriangle, Shield,
+  BarChart3, Compass, Award, Target, Lock
 } from 'lucide-react';
-import { getFijAccessLevel } from '@/lib/permissions';
+import { isFijPilot, isFijCoordination, isFijDirection } from '@/lib/permissions';
 import { LoadingSpinner } from '@/components/fij/FijPageShell';
 import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 
@@ -15,6 +15,7 @@ export default function FijHome() {
   const [fijs, setFijs] = useState([]);
   const [reports, setReports] = useState([]);
   const [alerts, setAlerts] = useState([]);
+  const [comms, setComms] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const weekStart = getMonday(new Date());
@@ -25,27 +26,33 @@ export default function FijHome() {
       base44.entities.FIJ.list('display_order', 100),
       base44.entities.FijWeeklyReport.filter({ week_start: weekStart }, '-created_date', 200).catch(() => []),
       base44.entities.FijAlert.filter({ status: 'open' }, '-created_date', 50).catch(() => []),
-    ]).then(([u, f, r, a]) => {
+      base44.entities.FijCommunication.filter({ status: 'sent' }, '-created_date', 20).catch(() => []),
+    ]).then(([u, f, r, a, c]) => {
       setUser(u);
       setFijs((f || []).filter(x => x.is_active !== false));
       setReports(r || []);
       setAlerts(a || []);
+      setComms(c || []);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
 
   if (loading) return <LoadingSpinner />;
 
-  const accessLevel = getFijAccessLevel(user, fijs);
-
   const activeFijs = fijs.filter(f => !f.status || f.status === 'active');
+  const openingFijs = fijs.filter(f => f.status === 'opening');
   const myFijs = fijs.filter(f => f.pilot_user_id === user?.id || (f.co_pilot_user_ids || []).includes(user?.id));
-  const crReceived = reports.length;
-  const crExpected = activeFijs.length;
   const missingCr = activeFijs.filter(f => !reports.some(r => r.fij_house_id === f.id));
+  const myMissingCr = myFijs.filter(f => !reports.some(r => r.fij_house_id === f.id));
   const criticalAlerts = alerts.filter(a => a.severity === 'critical');
   const totalParticipants = reports.reduce((s, r) => s + (r.participants_count || 0), 0);
   const newVisitors = reports.reduce((s, r) => s + (r.new_visitors_count || 0), 0);
+  const myAlerts = alerts.filter(a => myFijs.some(f => f.id === a.fij_house_id));
+
+  const isPilot = isFijPilot(user, fijs);
+  const isCoord = isFijCoordination(user);
+  const isDir = isFijDirection(user) && !isCoord;
+  const hasNoAccess = !isPilot && !isCoord && !isDir;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -60,11 +67,6 @@ export default function FijHome() {
             ]}
             backTo="/app/departements"
             backLabel="← Tous les départements"
-            rightAction={
-              <Link to="/app" className="text-xs text-muted-foreground hover:text-secondary transition-colors">
-                Tableau de bord EJP
-              </Link>
-            }
           />
         </div>
       </div>
@@ -74,13 +76,13 @@ export default function FijHome() {
           {/* En-tête */}
           <div>
             <p className="text-xs text-secondary uppercase tracking-widest mb-2">Département</p>
-            <h1 className="text-2xl font-heading font-bold text-foreground">Foyer d'Intercession et de Jeûne</h1>
+            <h1 className="text-2xl font-heading font-bold text-foreground">FIJ</h1>
             <p className="text-sm text-muted-foreground mt-2">
-              Les FIJ sont des maisons de prière et de formation réparties sur le territoire. Le pôle FIJ coordonne l'ouverture, le suivi et la vie spirituelle de chaque foyer.
+              Familles d'Impact Jeunes — suivi des maisons, pilotes, comptes rendus et données opérationnelles.
             </p>
           </div>
 
-          {/* Bloc mission */}
+          {/* Bloc mission court */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <MissionMini icon={Target} label="Mission" text="Développer un réseau de foyers de prière vivants et fidèles." />
             <MissionMini icon={Award} label="Standard" text="Chaque FIJ produit un CR hebdomadaire et suit ses participants." />
@@ -94,94 +96,79 @@ export default function FijHome() {
 
             <div className="space-y-3">
               {/* Pilote */}
-              {accessLevel === 'pilot' && (
-                <AccessCard
-                  to="/app/departements/fij/pilote"
-                  icon={Users}
-                  title="Espace Pilote"
-                  desc="Gérez vos FIJ, remplissez vos comptes rendus et consultez les communications."
-                  primary
-                />
-              )}
-
-              {/* Coordination */}
-              {accessLevel === 'coordination' && (
-                <AccessCard
-                  to="/app/departements/fij/coordination"
-                  icon={Shield}
-                  title="Espace Coordination"
-                  desc="Gérez le registre, les ouvertures, les consécrations, les CR et le reporting."
-                  primary
-                />
-              )}
-
-              {/* Direction */}
-              {accessLevel === 'direction' && (
+              {isPilot && (
                 <>
                   <AccessCard
-                    to="/app/departements/fij/direction"
-                    icon={BarChart3}
-                    title="Tableau Direction FIJ"
-                    desc="Indicateurs globaux, alertes critiques, décisions à valider."
+                    to="/app/departements/fij/pilote"
+                    icon={Users}
+                    title="Entrer dans mon espace pilote"
+                    desc="Gérez vos FIJ, remplissez vos comptes rendus et consultez les communications."
                     primary
                   />
-                  <AccessCard
-                    to="/app/departements/fij/coordination"
-                    icon={Shield}
-                    title="Espace Coordination"
-                    desc="Accès opérationnel complet au réseau FIJ."
-                  />
+                  <div className="grid grid-cols-3 gap-3">
+                    <KeyStat value={myFijs.length} label="Mes FIJ" />
+                    <KeyStat value={myMissingCr.length} label="CR à remplir" />
+                    <KeyStat value={myAlerts.length} label="Alertes" />
+                  </div>
                 </>
               )}
 
+              {/* Coordination */}
+              {isCoord && (
+                <>
+                  <AccessCard
+                    to="/app/departements/fij/coordination"
+                    icon={Shield}
+                    title="Entrer dans l'espace coordination"
+                    desc="Gérez le registre, les ouvertures, les consécrations, les CR et le reporting."
+                    primary
+                  />
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <KeyStat value={activeFijs.length} label="FIJ actives" />
+                    <KeyStat value={missingCr.length} label="CR manquants" />
+                    <KeyStat value={criticalAlerts.length} label="Alertes" />
+                    <KeyStat value={openingFijs.length} label="Ouvertures" />
+                  </div>
+                </>
+              )}
+
+              {/* Direction (bergère/bureau/leader sans rôle coordination) */}
+              {isDir && (
+                <AccessCard
+                  to="/app/direction"
+                  icon={BarChart3}
+                  title="Voir la synthèse FIJ dans le tableau direction"
+                  desc="Indicateurs globaux, alertes critiques, décisions à valider — consultables dans votre espace direction."
+                  primary
+                />
+              )}
+
               {/* Aucun rôle */}
-              {accessLevel === 'none' && (
-                <div className="text-center py-6">
-                  <p className="text-sm font-medium text-foreground mb-1">Aucun rôle FIJ attribué</p>
-                  <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                    Si vous êtes pilote ou copilote, votre accès sera configuré par la coordination.
+              {hasNoAccess && (
+                <div className="text-center py-8">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-surface border border-border mb-4">
+                    <Lock className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm font-semibold text-foreground mb-1">Aucun accès FIJ actif</p>
+                  <p className="text-xs text-muted-foreground max-w-sm mx-auto mb-5">
+                    Si vous êtes pilote ou membre de la coordination FIJ, demandez à un administrateur de configurer votre rôle.
                   </p>
+                  <Link to="/app/departements" className="text-secondary text-sm font-medium">
+                    ← Retour aux départements
+                  </Link>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Chiffres clés selon rôle */}
-          {accessLevel === 'pilot' && (
+          {/* Chiffres clés globaux pour coordination */}
+          {isCoord && (
             <div>
-              <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Chiffres clés</h2>
+              <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Indicateurs réseau</h2>
               <div className="grid grid-cols-3 gap-3">
-                <KeyStat value={myFijs.length} label="Mes FIJ" />
-                <KeyStat value={myFijs.filter(f => !reports.some(r => r.fij_house_id === f.id)).length} label="CR à remplir" />
-                <KeyStat value={reports.filter(r => myFijs.some(f => f.id === r.fij_house_id)).length} label="CR soumis" />
-              </div>
-            </div>
-          )}
-
-          {accessLevel === 'coordination' && (
-            <div>
-              <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Chiffres clés</h2>
-              <div className="grid grid-cols-3 gap-3">
-                <KeyStat value={activeFijs.length} label="FIJ actives" />
-                <KeyStat value={`${crReceived}/${crExpected}`} label="CR reçus" />
-                <KeyStat value={missingCr.length} label="CR manquants" />
-              </div>
-              <div className="grid grid-cols-3 gap-3 mt-3">
                 <KeyStat value={totalParticipants} label="Participants" />
                 <KeyStat value={newVisitors} label="Nouveaux" />
-                <KeyStat value={alerts.length} label="Alertes" />
-              </div>
-            </div>
-          )}
-
-          {accessLevel === 'direction' && (
-            <div>
-              <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Indicateurs</h2>
-              <div className="grid grid-cols-2 gap-3">
-                <KeyStat value={activeFijs.length} label="FIJ actives" />
-                <KeyStat value={totalParticipants} label="Participants" />
-                <KeyStat value={`${crReceived}/${crExpected}`} label="CR reçus" />
-                <KeyStat value={criticalAlerts.length} label="Alertes critiques" />
+                <KeyStat value={`${reports.length}/${activeFijs.length}`} label="CR reçus" />
               </div>
             </div>
           )}

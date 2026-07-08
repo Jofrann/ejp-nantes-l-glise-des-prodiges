@@ -39,7 +39,7 @@ import FijTransferts from '@/pages/fij/Transferts';
 import FijDetail from '@/pages/fij/FijDetail';
 import FijCrForm from '@/pages/fij/FijCrForm';
 import FijPiloteHome from '@/pages/fij/PiloteHome';
-import FijDirectionHome from '@/pages/fij/DirectionHome';
+import FijRelances from '@/pages/fij/Relances';
 import ListeDepartements from '@/pages/departements/ListeDepartements';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import DepartmentEntry from '@/components/DepartmentEntry';
@@ -101,6 +101,7 @@ const AuthenticatedApp = () => {
           <Route path="/app/departements/fij/coordination" element={<FijTableauBord />} />
           <Route path="/app/departements/fij/coordination/registre" element={<FijRegistre />} />
           <Route path="/app/departements/fij/coordination/cr" element={<FijCrHebdomadaires />} />
+          <Route path="/app/departements/fij/coordination/relances" element={<FijRelances />} />
           <Route path="/app/departements/fij/coordination/ouvertures" element={<FijOuvertures />} />
           <Route path="/app/departements/fij/coordination/consecrations" element={<FijConsecrations />} />
           <Route path="/app/departements/fij/coordination/pause" element={<FijPause />} />
@@ -111,9 +112,9 @@ const AuthenticatedApp = () => {
           <Route path="/app/departements/fij/coordination/reporting" element={<FijReporting />} />
           <Route path="/app/departements/fij/coordination/transferts" element={<FijTransferts />} />
 
-          {/* === Espace Direction FIJ === */}
-          <Route path="/app/departements/fij/direction" element={<FijDirectionHome />} />
-          <Route path="/app/departements/fij/direction/tableau-de-bord" element={<FijTableauBord />} />
+          {/* === Redirection ancien espace Direction FIJ vers /app/direction === */}
+          <Route path="/app/departements/fij/direction" element={<Navigate to="/app/direction" replace />} />
+          <Route path="/app/departements/fij/direction/tableau-de-bord" element={<Navigate to="/app/direction" replace />} />
 
           {/* === Routes partagées === */}
           <Route path="/app/departements/fij/fij/:id" element={<FijDetail />} />
