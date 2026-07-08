@@ -6,6 +6,7 @@ import { Users, Plus, ChevronRight, Crown } from 'lucide-react';
 import DeptIcon from '@/components/departements/DeptIcon';
 import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 import { isBureauLike } from '@/lib/permissions';
+import { getDepartmentRoute } from '@/lib/departmentRouting';
 
 const COLOR_MAP = {
   amber:  { border: 'border-secondary/25',  text: 'text-secondary',  bg: 'bg-secondary/10',  glow: 'from-secondary/10' },
@@ -114,7 +115,7 @@ export default function ListeDepartements() {
                   transition={{ delay: i * 0.06 }}
                 >
                   <Link
-                    to={dept.slug === 'fij' ? '/app/departements/fij' : `/app/departements/${dept.slug || dept.id}`}
+                    to={getDepartmentRoute(dept)}
                     className={`group flex flex-col h-full bg-card border ${colors.border} rounded-2xl overflow-hidden hover:shadow-md transition-all shadow-sm`}
                   >
                     {/* Couverture */}

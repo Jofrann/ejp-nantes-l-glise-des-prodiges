@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Crown, Users, ArrowRight } from 'lucide-react';
 import DeptIcon from '@/components/departements/DeptIcon';
+import { getDepartmentRoute } from '@/lib/departmentRouting';
 
 const COLOR_MAP = {
   amber:  { border: 'border-secondary/20', text: 'text-secondary', bg: 'bg-secondary/10' },
@@ -69,7 +70,7 @@ export default function ProfilDepartements({ userId }) {
                 transition={{ delay: i * 0.05 }}
               >
                 <Link
-                  to={`/app/departements/${dept.slug || dept.id}`}
+                  to={getDepartmentRoute(dept)}
                   className={`flex items-center gap-4 bg-card border ${colors.border} rounded-2xl px-4 py-3.5 hover:shadow-sm transition-all group shadow-sm`}
                 >
                   {/* Icône dept */}

@@ -7,6 +7,7 @@ import {
   MapPin, Clock, Star, User, BarChart3, Settings
 } from 'lucide-react';
 import { getPrimaryRoleLabel, isBureauLike, isAdmin } from '@/lib/permissions';
+import { getDepartmentRoute } from '@/lib/departmentRouting';
 
 const QUICK_LINKS = [
   { icon: Bell, label: 'EJP Hub', sub: 'Feed & communauté', to: '/hub', color: 'from-secondary/10 to-secondary/5 border-secondary/20' },
@@ -164,7 +165,7 @@ export default function AppDashboard() {
                   transition={{ delay: 0.2 + i * 0.07 }}
                 >
                   <Link
-                    to={`/app/departements/${dept.slug || dept.id}`}
+                    to={getDepartmentRoute(dept)}
                     className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:border-secondary/30 hover:shadow-sm transition-all group shadow-sm"
                   >
                     <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">

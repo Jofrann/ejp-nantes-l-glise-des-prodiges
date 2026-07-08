@@ -42,6 +42,7 @@ import FijPiloteHome from '@/pages/fij/PiloteHome';
 import FijDirectionHome from '@/pages/fij/DirectionHome';
 import ListeDepartements from '@/pages/departements/ListeDepartements';
 import PageDepartement from '@/pages/departements/PageDepartement';
+import DepartmentEntry from '@/components/DepartmentEntry';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
 import Hub from '@/pages/Hub';
 
@@ -132,7 +133,7 @@ const AuthenticatedApp = () => {
           <Route path="/app/departements/fij/documents" element={<Navigate to="/app/departements/fij/coordination/documents" replace />} />
           <Route path="/app/departements/fij/alertes" element={<Navigate to="/app/departements/fij/coordination/alertes" replace />} />
           <Route path="/app/departements/fij/transferts" element={<Navigate to="/app/departements/fij/coordination/transferts" replace />} />
-          <Route path="/app/departements/:slug" element={<PageDepartement />} />
+          <Route path="/app/departements/:slug" element={<DepartmentEntry />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
           <Route path="/app/direction" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><BureauDashboard /></RoleGuard>} />
           <Route path="/app/admin" element={<RoleGuard allowedRoles={['admin']}><AdminHome /></RoleGuard>} />
