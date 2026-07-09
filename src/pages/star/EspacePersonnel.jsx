@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Upload, Save, Palette, Layout, Star } from 'lucide-react';
+import { Settings, Save, Check, Palette, Layout, Star } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const WIDGETS = [
@@ -17,137 +17,202 @@ const WIDGETS = [
 ];
 
 const ACCENTS = [
-  { key: 'gold', label: 'Doré', color: 'bg-secondary' },
-  { key: 'blue', label: 'Bleu nuit', color: 'bg-primary' },
-  { key: 'green', label: 'Vert', color: 'bg-success' },
-  { key: 'rose', label: 'Rose', color: 'bg-rose-500' },
-  { key: 'purple', label: 'Violet', color: 'bg-purple-500' },
+  { key: 'gold', label: 'Doré', cls: 'bg-secondary' },
+  { key: 'blue', label: 'Bleu nuit', cls: 'bg-primary' },
+  { key: 'green', label: 'Vert', cls: 'bg-success' },
+  { key: 'rose', label: 'Rose', cls: 'bg-rose-500' },
+  { key: 'purple', label: 'Violet', cls: 'bg-purple-500' },
 ];
 
 export default function EspacePersonnel() {
   const [user, setUser] = useState(null);
-  const [form, setForm] = useState({ full_name: '', bio: '', photo_url: '', verset: '' });
-  const [visibleWidgets, setVisibleWidgets] = useState(WIDGETS.filter(w => w.default).map(w => w.key));
-  const [accent, setAccent] = useState('gold');
+  const [pref, setPref] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    base44.auth.me().then(u => {
+    Promise.all([
+      base44.auth.me(),
+      base44.entities.UserWorkspacePreference.list('-updated_date', 1),
+    ]).then(([u, prefs]) => {
       setUser(u);
-      setForm({
-        full_name: u?.full_name || '',
-        bio: u?.bio || '',
-        photo_url: u?.photo_url || '',
-        verset: u?.verset || '',
-      });
-    });
+      const existing = prefs && prefs.length > 0 ? prefs[0] : null;
+      if (existing) {
+        setPref(existing);
+      } else {
+        setPref({
+          verset: '',
+          phrase_saison: '',
+          accent_color: 'gold',
+          default_agenda_view: 'list',
+          display_density: 'comfortable',
+          visible_widgets: WIDGETS.filter(w => w.default).map(w => w.key),
+          notif_email: true,
+          notif_presence_reminder: true,
+          notif_training_reminder: true,
+          notif_reading_reminder: false,
+        });
+      }
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, []);
 
+  const update = (field, value) => {
+    setPref(prev => ({ ...prev, [field]: value }));
+    setSaved(false);
+  };
+
   const toggleWidget = (key) => {
-    setVisibleWidgets(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
+    const widgets = pref.visible_widgets || [];
+    update('visible_widgets', widgets.includes(key) ? widgets.filter(w => w !== key) : [...widgets, key]);
   };
 
   const save = async () => {
     setSaving(true);
-    await base44.auth.updateMe(form);
+    try {
+      if (pref.id) {
+        await base44.entities.UserWorkspacePreference.update(pref.id, pref);
+      } else {
+        const created = await base44.entities.UserWorkspacePreference.create(pref);
+        setPref(created);
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (e) { /* bubble */ }
     setSaving(false);
-    setMsg('Espace personnalisé !');
-    setTimeout(() => setMsg(''), 3000);
   };
 
-  const uploadPhoto = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setForm(f => ({ ...f, photo_url: file_url }));
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-7 h-7 border-2 border-border border-t-secondary rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-xl font-heading font-bold text-foreground mb-1">Mon espace personnel</h1>
-        <p className="text-sm text-muted-foreground">Personnalise ton bureau STAR.</p>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-xl font-heading font-bold text-foreground mb-1">Mon espace personnel</h1>
+          <p className="text-sm text-muted-foreground">Personnalise ton bureau STAR.</p>
+        </div>
+        <button onClick={save} disabled={saving}
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-white hover:bg-secondary/90'} disabled:opacity-50`}>
+          {saved ? <><Check className="w-4 h-4" /> Enregistré</> : <><Save className="w-4 h-4" /> {saving ? '...' : 'Enregistrer'}</>}
+        </button>
       </motion.div>
 
-      {/* Profil visuel */}
-      <div className="bg-card border border-border rounded-2xl p-5 shadow-sm mb-4">
-        <div className="flex items-center gap-3 mb-4">
-          <Layout className="w-4 h-4 text-secondary" />
-          <p className="text-sm font-semibold text-foreground">Profil visuel</p>
-        </div>
-        <div className="flex items-center gap-4 mb-4">
-          <div className="relative">
-            <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-border">
-              {form.photo_url ? (
-                <img src={form.photo_url} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-secondary/10 flex items-center justify-center">
-                  <span className="text-xl font-bold text-secondary">{form.full_name?.[0] || '?'}</span>
-                </div>
-              )}
+      <div className="space-y-4">
+        {/* Profil visuel */}
+        <div className="bg-card border border-border rounded-2xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Star className="w-4 h-4 text-secondary" />
+            <h3 className="text-sm font-semibold text-foreground">Profil visuel</h3>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Verset personnel</label>
+              <input value={pref.verset || ''} onChange={e => update('verset', e.target.value)}
+                className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm" placeholder="Ton verset préféré..." />
             </div>
-            <label className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-secondary flex items-center justify-center cursor-pointer shadow-lg">
-              <Upload className="w-3.5 h-3.5 text-white" />
-              <input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} />
-            </label>
-          </div>
-          <div className="flex-1">
-            <input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))}
-              placeholder="Ton nom"
-              className="w-full bg-surface border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-secondary/40" />
-          </div>
-        </div>
-        <input value={form.verset} onChange={e => setForm(f => ({ ...f, verset: e.target.value }))}
-          placeholder="Ton verset personnel (optionnel)"
-          className="w-full bg-surface border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-secondary/40 mb-2" />
-        <textarea value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
-          rows={2} placeholder="Phrase de saison (optionnel)"
-          className="w-full bg-surface border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-secondary/40 resize-none" />
-      </div>
-
-      {/* Couleur d'accent */}
-      <div className="bg-card border border-border rounded-2xl p-5 shadow-sm mb-4">
-        <div className="flex items-center gap-3 mb-3">
-          <Palette className="w-4 h-4 text-secondary" />
-          <p className="text-sm font-semibold text-foreground">Couleur d'accent</p>
-        </div>
-        <div className="flex gap-3">
-          {ACCENTS.map(a => (
-            <button key={a.key} onClick={() => setAccent(a.key)}
-              className={`w-10 h-10 rounded-xl ${a.color} ${accent === a.key ? 'ring-2 ring-offset-2 ring-secondary' : ''} transition-all`} />
-          ))}
-        </div>
-      </div>
-
-      {/* Widgets */}
-      <div className="bg-card border border-border rounded-2xl p-5 shadow-sm mb-4">
-        <div className="flex items-center gap-3 mb-3">
-          <Layout className="w-4 h-4 text-secondary" />
-          <p className="text-sm font-semibold text-foreground">Widgets affichés</p>
-        </div>
-        <div className="space-y-2">
-          {WIDGETS.map(w => (
-            <button key={w.key} onClick={() => toggleWidget(w.key)}
-              className={`w-full flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
-                visibleWidgets.includes(w.key) ? 'bg-secondary/5 border-secondary/20' : 'bg-surface border-border'
-              }`}>
-              <span className="text-lg">{w.icon}</span>
-              <span className="text-sm text-foreground flex-1 text-left">{w.label}</span>
-              <div className={`w-9 h-5 rounded-full transition-colors ${visibleWidgets.includes(w.key) ? 'bg-secondary' : 'bg-border'}`}>
-                <div className={`w-4 h-4 rounded-full bg-white m-0.5 transition-transform ${visibleWidgets.includes(w.key) ? 'translate-x-4' : ''}`} />
+            <div>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Phrase de saison</label>
+              <input value={pref.phrase_saison || ''} onChange={e => update('phrase_saison', e.target.value)}
+                className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm" placeholder="Ce que Dieu te dit pour cette saison..." />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block flex items-center gap-1.5"><Palette className="w-3 h-3" /> Couleur d'accent</label>
+              <div className="flex gap-2">
+                {ACCENTS.map(a => (
+                  <button key={a.key} onClick={() => update('accent_color', a.key)}
+                    className={`w-9 h-9 rounded-full ${a.cls} transition-all ${pref.accent_color === a.key ? 'ring-2 ring-offset-2 ring-foreground/20 scale-110' : 'opacity-60 hover:opacity-100'}`}
+                    title={a.label} />
+                ))}
               </div>
-            </button>
-          ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Widgets */}
+        <div className="bg-card border border-border rounded-2xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Layout className="w-4 h-4 text-secondary" />
+            <h3 className="text-sm font-semibold text-foreground">Widgets affichés sur l'accueil</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {WIDGETS.map(w => {
+              const visible = (pref.visible_widgets || []).includes(w.key);
+              return (
+                <button key={w.key} onClick={() => toggleWidget(w.key)}
+                  className={`flex items-center gap-2 p-3 rounded-xl border text-xs font-medium transition-all ${visible ? 'bg-secondary/10 border-secondary/20 text-foreground' : 'bg-surface border-border text-muted-foreground'}`}>
+                  <span className="text-base">{w.icon}</span>
+                  <span className="flex-1 text-left">{w.label}</span>
+                  {visible && <Check className="w-3.5 h-3.5 text-secondary" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Préférences */}
+        <div className="bg-card border border-border rounded-2xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Settings className="w-4 h-4 text-secondary" />
+            <h3 className="text-sm font-semibold text-foreground">Préférences</h3>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Vue agenda par défaut</label>
+              <select value={pref.default_agenda_view} onChange={e => update('default_agenda_view', e.target.value)}
+                className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm">
+                <option value="list">Liste</option>
+                <option value="day">Jour</option>
+                <option value="week">Semaine</option>
+                <option value="month">Mois</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Densité d'affichage</label>
+              <div className="grid grid-cols-2 gap-2">
+                {['compact', 'comfortable'].map(d => (
+                  <button key={d} onClick={() => update('display_density', d)}
+                    className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${pref.display_density === d ? 'bg-secondary/10 border-secondary/20 text-secondary' : 'bg-surface border-border text-muted-foreground'}`}>
+                    {d === 'compact' ? 'Compact' : 'Confortable'}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Notifications */}
+        <div className="bg-card border border-border rounded-2xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Notifications</h3>
+          <div className="space-y-3">
+            {[
+              { key: 'notif_email', label: 'Notifications par email' },
+              { key: 'notif_presence_reminder', label: 'Rappels de présence' },
+              { key: 'notif_training_reminder', label: 'Rappels de formation' },
+              { key: 'notif_reading_reminder', label: 'Rappel lecture quotidienne' },
+            ].map(n => (
+              <label key={n.key} className="flex items-center justify-between cursor-pointer">
+                <span className="text-xs text-foreground">{n.label}</span>
+                <button onClick={() => update(n.key, !pref[n.key])}
+                  className={`w-10 h-5 rounded-full transition-colors relative ${pref[n.key] ? 'bg-secondary' : 'bg-border'}`}>
+                  <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${pref[n.key] ? 'left-5' : 'left-0.5'}`} />
+                </button>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Save */}
       <button onClick={save} disabled={saving}
-        className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold py-2.5 rounded-xl transition-all disabled:opacity-50">
-        <Save className="w-4 h-4" /> {saving ? 'Sauvegarde...' : 'Enregistrer'}
+        className={`w-full mt-6 py-3 rounded-xl text-sm font-semibold transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-white hover:bg-secondary/90'} disabled:opacity-50`}>
+        {saved ? '✓ Préférences enregistrées' : saving ? 'Enregistrement...' : 'Enregistrer mes préférences'}
       </button>
-      {msg && <p className="text-center text-xs text-success mt-2">{msg}</p>}
     </div>
   );
 }

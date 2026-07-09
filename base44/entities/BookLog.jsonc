@@ -1,0 +1,61 @@
+{
+  "name": "BookLog",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre du livre"
+    },
+    "author": {
+      "type": "string",
+      "description": "Auteur"
+    },
+    "category": {
+      "type": "string",
+      "description": "Cat\u00e9gorie"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "reading",
+        "finished",
+        "paused",
+        "wishlist"
+      ],
+      "default": "reading",
+      "description": "Statut de lecture"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de d\u00e9but"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de fin"
+    },
+    "personal_note": {
+      "type": "string",
+      "description": "Note personnelle"
+    },
+    "recommendation_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "validated",
+        "rejected"
+      ],
+      "default": "none",
+      "description": "Statut de recommandation"
+    },
+    "recommendation_text": {
+      "type": "string",
+      "description": "Pourquoi je recommande"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

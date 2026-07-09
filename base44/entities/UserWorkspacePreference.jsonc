@@ -1,0 +1,73 @@
+{
+  "name": "UserWorkspacePreference",
+  "type": "object",
+  "properties": {
+    "verset": {
+      "type": "string",
+      "description": "Verset personnel"
+    },
+    "phrase_saison": {
+      "type": "string",
+      "description": "Phrase de saison"
+    },
+    "accent_color": {
+      "type": "string",
+      "enum": [
+        "gold",
+        "blue",
+        "green",
+        "rose",
+        "purple"
+      ],
+      "default": "gold",
+      "description": "Couleur d'accent"
+    },
+    "default_agenda_view": {
+      "type": "string",
+      "enum": [
+        "day",
+        "week",
+        "month",
+        "list"
+      ],
+      "default": "list",
+      "description": "Vue agenda par d\u00e9faut"
+    },
+    "display_density": {
+      "type": "string",
+      "enum": [
+        "compact",
+        "comfortable"
+      ],
+      "default": "comfortable",
+      "description": "Densit\u00e9 d'affichage"
+    },
+    "visible_widgets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Widgets visibles (agenda, presence, formation, objectif, lecture, rdv, ressources, responsabilite, notes, livre)"
+    },
+    "notif_email": {
+      "type": "boolean",
+      "default": true,
+      "description": "Notifications email"
+    },
+    "notif_presence_reminder": {
+      "type": "boolean",
+      "default": true,
+      "description": "Rappels de pr\u00e9sence"
+    },
+    "notif_training_reminder": {
+      "type": "boolean",
+      "default": true,
+      "description": "Rappels de formation"
+    },
+    "notif_reading_reminder": {
+      "type": "boolean",
+      "default": false,
+      "description": "Rappel lecture"
+    }
+  }
+}

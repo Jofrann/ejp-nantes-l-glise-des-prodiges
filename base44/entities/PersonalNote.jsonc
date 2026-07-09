@@ -1,0 +1,46 @@
+{
+  "name": "PersonalNote",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre"
+    },
+    "content": {
+      "type": "string",
+      "description": "Contenu"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "meditation",
+        "enseignement",
+        "priere",
+        "habitude",
+        "projet",
+        "autre"
+      ],
+      "default": "meditation",
+      "description": "Cat\u00e9gorie"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "private",
+        "shared_leader",
+        "shared_referent"
+      ],
+      "default": "private",
+      "description": "Visibilit\u00e9"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u00c9pingl\u00e9e sur l'espace personnel"
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}

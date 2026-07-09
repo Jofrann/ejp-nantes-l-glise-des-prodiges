@@ -1,0 +1,122 @@
+{
+  "name": "ServantJourney",
+  "type": "object",
+  "properties": {
+    "current_status": {
+      "type": "string",
+      "enum": [
+        "etudiant",
+        "alternant",
+        "travailleur",
+        "recherche_emploi",
+        "recherche_stage",
+        "transition",
+        "autre"
+      ],
+      "description": "Situation actuelle"
+    },
+    "city": {
+      "type": "string",
+      "description": "Ville"
+    },
+    "summary": {
+      "type": "string",
+      "description": "R\u00e9sum\u00e9 de situation"
+    },
+    "education_school": {
+      "type": "string",
+      "description": "\u00c9tablissement"
+    },
+    "education_program": {
+      "type": "string",
+      "description": "Formation"
+    },
+    "education_level": {
+      "type": "string",
+      "description": "Niveau"
+    },
+    "education_year": {
+      "type": "string",
+      "description": "Ann\u00e9e"
+    },
+    "education_needs_internship": {
+      "type": "boolean",
+      "default": false,
+      "description": "Recherche de stage"
+    },
+    "education_support_needed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Besoin d'accompagnement"
+    },
+    "work_field": {
+      "type": "string",
+      "description": "Domaine professionnel"
+    },
+    "work_job_title": {
+      "type": "string",
+      "description": "M\u00e9tier"
+    },
+    "work_company": {
+      "type": "string",
+      "description": "Entreprise"
+    },
+    "work_schedule_type": {
+      "type": "string",
+      "description": "Rythme / type de contrat"
+    },
+    "search_type": {
+      "type": "string",
+      "description": "Type de recherche (stage, alternance, emploi)"
+    },
+    "search_field": {
+      "type": "string",
+      "description": "Domaine vis\u00e9"
+    },
+    "search_deadline": {
+      "type": "string",
+      "format": "date",
+      "description": "\u00c9ch\u00e9ance"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string"
+          },
+          "willing_to_serve": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "description": "Comp\u00e9tences"
+    },
+    "availability_days": {
+      "type": "string",
+      "description": "Jours disponibles"
+    },
+    "availability_evenings": {
+      "type": "string",
+      "description": "Soir\u00e9es disponibles"
+    },
+    "availability_constraints": {
+      "type": "string",
+      "description": "Contraintes"
+    },
+    "support_needed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Besoin d'accompagnement d\u00e9clar\u00e9"
+    },
+    "support_type": {
+      "type": "string",
+      "description": "Type d'accompagnement souhait\u00e9"
+    }
+  }
+}

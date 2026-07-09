@@ -61,6 +61,8 @@ import StarParcours from '@/pages/star/Parcours';
 import StarEspacePersonnel from '@/pages/star/EspacePersonnel';
 import StarResponsabilites from '@/pages/star/Responsabilites';
 import StarOrganisation from '@/pages/star/Organisation';
+import ResponsabilitePlaceholder from '@/pages/star/ResponsabilitePlaceholder';
+import { Users, Settings as SettingsIcon, Music, GraduationCap } from 'lucide-react';
 
 const { Pages, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -176,6 +178,10 @@ const AuthenticatedApp = () => {
           {/* === Redirections anciennes routes vers responsabilités === */}
           <Route path="/app/responsabilites/fij-pilote" element={<Navigate to="/app/departements/fij/pilote" replace />} />
           <Route path="/app/responsabilites/fij-coordination" element={<Navigate to="/app/departements/fij/coordination" replace />} />
+          <Route path="/app/responsabilites/accueil" element={<ResponsabilitePlaceholder title="Accueil" description="Planning, visiteurs, reporting dimanche" icon={Users} items={['Planning accueil', 'Présences serviteurs', 'Visiteurs', 'Fiches pratiques', 'Reporting dimanche']} />} />
+          <Route path="/app/responsabilites/communication" element={<ResponsabilitePlaceholder title="Communication" description="Demandes visuelles, calendrier éditorial" icon={SettingsIcon} items={['Demandes visuelles', 'Calendrier éditorial', 'Médias', 'Publications', 'Validations']} />} />
+          <Route path="/app/responsabilites/musique" element={<ResponsabilitePlaceholder title="Prodiges Musique" description="Planning, setlists, répétitions" icon={Music} items={['Planning musique', 'Setlists', 'Répétitions', 'Chants', 'Reporting']} />} />
+          <Route path="/app/responsabilites/vie-academique" element={<ResponsabilitePlaceholder title="Vie Académique" description="Accompagnement étudiants, stages" icon={GraduationCap} items={['Suivi étudiants', 'Recherche stages', 'Accompagnement', 'CV / orientation', 'Besoins']} />} />
 
           <Route path="/app/departements/:slug" element={<DepartmentEntry />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />

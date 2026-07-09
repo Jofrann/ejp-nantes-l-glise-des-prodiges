@@ -1,0 +1,91 @@
+{
+  "name": "PersonalGoal",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre de l'objectif"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "spirituel",
+        "discipline",
+        "formation",
+        "service",
+        "academique",
+        "professionnel",
+        "relationnel",
+        "sante",
+        "autre"
+      ],
+      "default": "spirituel",
+      "description": "Cat\u00e9gorie d'objectif"
+    },
+    "why": {
+      "type": "string",
+      "description": "Pourquoi cet objectif"
+    },
+    "expected_result": {
+      "type": "string",
+      "description": "R\u00e9sultat attendu"
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date cible"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium",
+      "description": "Priorit\u00e9"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "active",
+        "paused",
+        "done",
+        "abandoned"
+      ],
+      "default": "active",
+      "description": "Statut"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "private",
+        "shared_leader",
+        "shared_referent",
+        "shared_bergere"
+      ],
+      "default": "private",
+      "description": "Visibilit\u00e9"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "description": "\u00c9tapes de l'objectif"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

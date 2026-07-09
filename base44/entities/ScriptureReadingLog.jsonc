@@ -1,0 +1,36 @@
+{
+  "name": "ScriptureReadingLog",
+  "type": "object",
+  "properties": {
+    "reading_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de lecture"
+    },
+    "passage": {
+      "type": "string",
+      "description": "Passage lu"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "read",
+        "meditated"
+      ],
+      "default": "read",
+      "description": "Statut"
+    },
+    "verse_highlight": {
+      "type": "string",
+      "description": "Verset marquant"
+    },
+    "private_note": {
+      "type": "string",
+      "description": "Note priv\u00e9e / m\u00e9ditation"
+    }
+  },
+  "required": [
+    "reading_date"
+  ]
+}

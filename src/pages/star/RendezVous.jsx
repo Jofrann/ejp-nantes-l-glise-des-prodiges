@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarClock, Plus, ChevronRight, X, Clock, Check } from 'lucide-react';
+import { CalendarClock, Plus, X, Clock, Check, AlertCircle } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 const RDV_TYPES = [
   { key: 'bergere', label: 'Bergère' },
@@ -15,128 +16,182 @@ const RDV_TYPES = [
 ];
 
 const URGENCIES = {
-  normal: { label: 'Normal', color: 'text-muted-foreground bg-surface border-border' },
-  important: { label: 'Important', color: 'text-warning bg-warning/10 border-warning/20' },
-  urgent: { label: 'Urgent', color: 'text-danger bg-danger/10 border-danger/20' },
+  normal: { label: 'Normal', cls: 'text-muted-foreground bg-surface border-border' },
+  important: { label: 'Important', cls: 'text-warning bg-warning/10 border-warning/20' },
+  urgent: { label: 'Urgent', cls: 'text-danger bg-danger/10 border-danger/20' },
+};
+
+const STATUSES = {
+  pending: { label: 'En attente', cls: 'text-warning bg-warning/10 border-warning/20' },
+  accepted: { label: 'Accepté', cls: 'text-success bg-success/10 border-success/20' },
+  proposed: { label: 'Créneau proposé', cls: 'text-info bg-info/10 border-info/20' },
+  completed: { label: 'Terminé', cls: 'text-muted-foreground bg-surface border-border' },
+  cancelled: { label: 'Annulé', cls: 'text-muted-foreground bg-surface border-border' },
+  transferred: { label: 'Transféré', cls: 'text-info bg-info/10 border-info/20' },
 };
 
 export default function RendezVous() {
   const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ type: 'bergere', subject: '', urgency: 'normal', message: '' });
+  const [form, setForm] = useState({ request_type: 'bergere', subject: '', urgency: 'normal', message: '', proposed_slots: '' });
 
-  const submit = () => {
-    if (!form.subject.trim()) return;
-    setRequests(prev => [{ id: Date.now(), ...form, status: 'pending', date: new Date() }, ...prev]);
-    setForm({ type: 'bergere', subject: '', urgency: 'normal', message: '' });
-    setShowForm(false);
+  const load = () => {
+    base44.entities.AppointmentRequest.list('-created_date', 50)
+      .then(data => { setRequests(data || []); setLoading(false); })
+      .catch(() => setLoading(false));
   };
+
+  useEffect(() => { load(); }, []);
+
+  const submit = async () => {
+    if (!form.subject.trim()) return;
+    await base44.entities.AppointmentRequest.create({ ...form, status: 'pending' });
+    setForm({ request_type: 'bergere', subject: '', urgency: 'normal', message: '', proposed_slots: '' });
+    setShowForm(false);
+    load();
+  };
+
+  const cancel = async (id) => {
+    await base44.entities.AppointmentRequest.update(id, { status: 'cancelled' });
+    load();
+  };
+
+  const pending = requests.filter(r => r.status === 'pending' || r.status === 'accepted' || r.status === 'proposed');
+  const history = requests.filter(r => r.status === 'completed' || r.status === 'cancelled' || r.status === 'transferred');
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-xl font-heading font-bold text-foreground mb-1">Rendez-vous</h1>
-        <p className="text-sm text-muted-foreground">Demande un rendez-vous avec la bonne personne, sans devoir écrire à cinq personnes.</p>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-xl font-heading font-bold text-foreground mb-1">Rendez-vous</h1>
+          <p className="text-sm text-muted-foreground">Demande un RDV sans devoir écrire à cinq personnes.</p>
+        </div>
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-secondary text-white text-xs font-medium hover:bg-secondary/90 transition-colors">
+          <Plus className="w-4 h-4" /> Demander
+        </button>
       </motion.div>
 
-      <button
-        onClick={() => setShowForm(true)}
-        className="w-full flex items-center justify-center gap-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 text-sm font-semibold py-2.5 rounded-xl transition-all mb-6"
-      >
-        <Plus className="w-4 h-4" /> Demander un rendez-vous
-      </button>
-
-      {requests.length === 0 ? (
-        <div className="text-center py-12">
-          <CalendarClock className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Aucune demande de rendez-vous.</p>
-          <p className="text-xs text-muted-foreground/70 mt-1">Tu peux en créer une quand tu en as besoin.</p>
+      {loading ? (
+        <div className="flex justify-center py-16"><div className="w-6 h-6 border-2 border-border border-t-secondary rounded-full animate-spin" /></div>
+      ) : requests.length === 0 ? (
+        <div className="text-center py-16">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-surface border border-border mb-4">
+            <CalendarClock className="w-5 h-5 text-muted-foreground" />
+          </div>
+          <p className="text-sm font-semibold text-foreground mb-1">Aucune demande</p>
+          <p className="text-xs text-muted-foreground max-w-xs mx-auto">Tu peux demander un rendez-vous quand tu en ressens le besoin.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {requests.map((r, i) => {
-            const urgency = URGENCIES[r.urgency] || URGENCIES.normal;
-            const typeLabel = RDV_TYPES.find(t => t.key === r.type)?.label || r.type;
-            return (
-              <motion.div key={r.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-                <div className="bg-card border border-border rounded-2xl p-4 shadow-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-400/20 flex items-center justify-center flex-shrink-0">
-                      <CalendarClock className="w-5 h-5 text-rose-600" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground">{r.subject}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] text-muted-foreground bg-surface px-2 py-0.5 rounded-full">{typeLabel}</span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full border ${urgency.color}`}>{urgency.label}</span>
-                      </div>
-                    </div>
-                    <span className="text-[10px] text-muted-foreground bg-surface px-2 py-0.5 rounded-full">En attente</span>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+        <div className="space-y-6">
+          {pending.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">En cours</p>
+              {pending.map(r => <RdvCard key={r.id} rdv={r} onCancel={cancel} />)}
+            </div>
+          )}
+          {history.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Historique</p>
+              <div className="opacity-70">{history.map(r => <RdvCard key={r.id} rdv={r} onCancel={cancel} />)}</div>
+            </div>
+          )}
         </div>
       )}
 
       <AnimatePresence>
         {showForm && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setShowForm(false)}
-              className="fixed inset-0 z-[60] bg-foreground/20 backdrop-blur-sm" />
-            <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-[70] bg-card rounded-t-3xl border-t border-border p-6 pb-8 max-h-[80vh] overflow-y-auto">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-semibold text-foreground">Demander un rendez-vous</h3>
-                <button onClick={() => setShowForm(false)} className="text-muted-foreground p-1"><X className="w-5 h-5" /></button>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">Type de rendez-vous</label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {RDV_TYPES.map(t => (
-                      <button key={t.key} onClick={() => setForm(f => ({ ...f, type: t.key }))}
-                        className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
-                          form.type === t.key ? 'bg-rose-500/10 text-rose-600 border-rose-400/30' : 'bg-surface text-muted-foreground border-border'
-                        }`}>{t.label}</button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">Sujet</label>
-                  <input value={form.subject} onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
-                    placeholder="Objet du rendez-vous..."
-                    className="w-full bg-surface border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400/40" />
-                </div>
-                <div>
-                  <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">Urgence</label>
-                  <div className="flex gap-2">
-                    {Object.entries(URGENCIES).map(([key, val]) => (
-                      <button key={key} onClick={() => setForm(f => ({ ...f, urgency: key }))}
-                        className={`flex-1 text-xs py-2 rounded-lg border transition-all ${
-                          form.urgency === key ? val.color : 'bg-surface text-muted-foreground border-border'
-                        }`}>{val.label}</button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">Message</label>
-                  <textarea value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                    rows={3} placeholder="Décris ton besoin..."
-                    className="w-full bg-surface border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400/40 resize-none" />
-                </div>
-                <button onClick={submit}
-                  className="w-full bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
-                  Envoyer la demande
-                </button>
-              </div>
-            </motion.div>
-          </>
+          <RdvForm form={form} setForm={setForm} onClose={() => setShowForm(false)} onSave={submit} />
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function RdvCard({ rdv, onCancel }) {
+  const typeLabel = RDV_TYPES.find(t => t.key === rdv.request_type)?.label || rdv.request_type;
+  const urg = URGENCIES[rdv.urgency] || URGENCIES.normal;
+  const st = STATUSES[rdv.status] || STATUSES.pending;
+  return (
+    <motion.div layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+      className="bg-card border border-border rounded-2xl p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <span className="text-[10px] font-semibold text-secondary">{typeLabel}</span>
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${urg.cls}`}>{urg.label}</span>
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${st.cls}`}>{st.label}</span>
+          </div>
+          <h3 className="text-sm font-semibold text-foreground">{rdv.subject}</h3>
+          {rdv.message && <p className="text-xs text-muted-foreground mt-1">{rdv.message}</p>}
+          {rdv.proposed_slots && <p className="text-[11px] text-muted-foreground mt-2 flex items-center gap-1"><Clock className="w-3 h-3" /> Disponibilités : {rdv.proposed_slots}</p>}
+          {rdv.review_comment && <p className="text-[11px] text-success mt-2 flex items-center gap-1"><Check className="w-3 h-3" /> {rdv.review_comment}</p>}
+        </div>
+        {(rdv.status === 'pending') && (
+          <button onClick={() => onCancel(rdv.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors flex-shrink-0" title="Annuler">
+            <X className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+function RdvForm({ form, setForm, onClose, onSave }) {
+  return (
+    <>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
+        className="fixed inset-0 z-[60] bg-foreground/20 backdrop-blur-sm" />
+      <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+        className="fixed bottom-0 left-0 right-0 z-[70] bg-card rounded-t-3xl border-t border-border p-6 pb-8 max-h-[85vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-sm font-semibold text-foreground">Demander un rendez-vous</h3>
+          <button onClick={onClose} className="text-muted-foreground p-1"><X className="w-5 h-5" /></button>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Type de rendez-vous</label>
+            <select value={form.request_type} onChange={e => setForm({ ...form, request_type: e.target.value })}
+              className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm">
+              {RDV_TYPES.map(t => <option key={t.key} value={t.key}>{t.label}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Sujet *</label>
+            <input value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })}
+              className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm" placeholder="Objet du rendez-vous" autoFocus />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Niveau d'urgence</label>
+            <div className="grid grid-cols-3 gap-2">
+              {Object.entries(URGENCIES).map(([key, val]) => (
+                <button key={key} onClick={() => setForm({ ...form, urgency: key })}
+                  className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${form.urgency === key ? val.cls + ' ring-2 ring-offset-1 ring-secondary/30' : 'bg-surface border-border text-muted-foreground'}`}>
+                  {val.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Message</label>
+            <textarea value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}
+              className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm" rows={3} placeholder="Précise ta demande..." />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Disponibilités</label>
+            <input value={form.proposed_slots} onChange={e => setForm({ ...form, proposed_slots: e.target.value })}
+              className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm" placeholder="Ex: Soirées cette semaine, samedi matin..." />
+          </div>
+          <div className="flex items-start gap-2 p-3 rounded-lg bg-info/5 border border-info/10">
+            <AlertCircle className="w-4 h-4 text-info flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] text-muted-foreground">Ta demande reste confidentielle. Elle sera visible uniquement par la personne concernée.</p>
+          </div>
+          <button onClick={onSave} disabled={!form.subject.trim()}
+            className="w-full py-3 rounded-xl bg-secondary text-white text-sm font-semibold hover:bg-secondary/90 disabled:opacity-40 transition-colors">
+            Envoyer la demande
+          </button>
+        </div>
+      </motion.div>
+    </>
   );
 }
