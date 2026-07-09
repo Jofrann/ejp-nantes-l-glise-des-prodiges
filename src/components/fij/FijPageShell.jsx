@@ -12,6 +12,7 @@ export const PILOTE_NAV = [
   { to: '/app/departements/fij/pilote/communications', label: 'Communications' },
   { to: '/app/departements/fij/pilote/documents', label: 'Documents' },
   { to: '/app/departements/fij/pilote/alertes', label: 'Alertes' },
+  { to: '/app/departements/fij/coordination/pilotes', label: 'Pilotes' },
 ];
 
 export const COORDINATION_NAV = [
