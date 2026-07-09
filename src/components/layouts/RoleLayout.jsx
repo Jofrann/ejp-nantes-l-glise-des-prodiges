@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { isBureauLike, hasRole } from '@/lib/permissions';
-import ServiteurLayout from './ServiteurLayout';
-import ReferentLayout from './ReferentLayout';
+import { isBureauLike } from '@/lib/permissions';
+import StarOSLayout from './StarOSLayout';
 import BureauLayout from './BureauLayout';
 
 export default function RoleLayout() {
@@ -26,13 +25,11 @@ export default function RoleLayout() {
     );
   }
 
+  // Le bureau/bergère/admin garde le BureauLayout avec sa navigation spécifique
   if (isBureauLike(user)) {
     return <BureauLayout user={user}>{children}</BureauLayout>;
   }
 
-  if (hasRole(user, 'referent')) {
-    return <ReferentLayout user={user}>{children}</ReferentLayout>;
-  }
-
-  return <ServiteurLayout user={user}>{children}</ServiteurLayout>;
+  // Tous les autres serviteurs utilisent STAR OS
+  return <StarOSLayout user={user}>{children}</StarOSLayout>;
 }

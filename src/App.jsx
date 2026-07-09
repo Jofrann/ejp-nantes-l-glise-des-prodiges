@@ -50,6 +50,17 @@ import PageDepartement from '@/pages/departements/PageDepartement';
 import DepartmentEntry from '@/components/DepartmentEntry';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
 import Hub from '@/pages/Hub';
+import StarAgenda from '@/pages/star/Agenda';
+import StarPresences from '@/pages/star/Presences';
+import StarFormations from '@/pages/star/Formations';
+import StarCroissance from '@/pages/star/Croissance';
+import StarObjectifs from '@/pages/star/Objectifs';
+import StarRendezVous from '@/pages/star/RendezVous';
+import StarRessources from '@/pages/star/Ressources';
+import StarParcours from '@/pages/star/Parcours';
+import StarEspacePersonnel from '@/pages/star/EspacePersonnel';
+import StarResponsabilites from '@/pages/star/Responsabilites';
+import StarOrganisation from '@/pages/star/Organisation';
 
 const { Pages, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -149,6 +160,23 @@ const AuthenticatedApp = () => {
           <Route path="/app/departements/fij/documents" element={<Navigate to="/app/departements/fij/coordination/documents" replace />} />
           <Route path="/app/departements/fij/alertes" element={<Navigate to="/app/departements/fij/coordination/alertes" replace />} />
           <Route path="/app/departements/fij/transferts" element={<Navigate to="/app/departements/fij/coordination/transferts" replace />} />
+          {/* === Routes STAR OS — Espace personnel serviteur === */}
+          <Route path="/app/agenda" element={<StarAgenda />} />
+          <Route path="/app/presences" element={<StarPresences />} />
+          <Route path="/app/formations" element={<StarFormations />} />
+          <Route path="/app/croissance" element={<StarCroissance />} />
+          <Route path="/app/objectifs" element={<StarObjectifs />} />
+          <Route path="/app/rendez-vous" element={<StarRendezVous />} />
+          <Route path="/app/ressources" element={<StarRessources />} />
+          <Route path="/app/parcours" element={<StarParcours />} />
+          <Route path="/app/espace-personnel" element={<StarEspacePersonnel />} />
+          <Route path="/app/responsabilites" element={<StarResponsabilites />} />
+          <Route path="/app/organisation" element={<StarOrganisation />} />
+
+          {/* === Redirections anciennes routes vers responsabilités === */}
+          <Route path="/app/responsabilites/fij-pilote" element={<Navigate to="/app/departements/fij/pilote" replace />} />
+          <Route path="/app/responsabilites/fij-coordination" element={<Navigate to="/app/departements/fij/coordination" replace />} />
+
           <Route path="/app/departements/:slug" element={<DepartmentEntry />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
           <Route path="/app/direction" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><BureauDashboard /></RoleGuard>} />

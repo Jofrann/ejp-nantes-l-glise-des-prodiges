@@ -1,0 +1,90 @@
+{
+  "app": {
+    "label": "Accueil STAR",
+    "route": "/app",
+    "primaryNav": [
+      {
+        "label": "Accueil",
+        "route": "/app"
+      },
+      {
+        "label": "Agenda",
+        "route": "/app/agenda"
+      },
+      {
+        "label": "Présences",
+        "route": "/app/presences"
+      },
+      {
+        "label": "Formations",
+        "route": "/app/formations"
+      },
+      {
+        "label": "Croissance",
+        "route": "/app/croissance"
+      },
+      {
+        "label": "Rendez-vous",
+        "route": "/app/rendez-vous"
+      },
+      {
+        "label": "Plus",
+        "children": [
+          {
+            "label": "Objectifs",
+            "route": "/app/objectifs"
+          },
+          {
+            "label": "Ressources",
+            "route": "/app/ressources"
+          },
+          {
+            "label": "Parcours",
+            "route": "/app/parcours"
+          },
+          {
+            "label": "Responsabilités",
+            "route": "/app/responsabilites"
+          },
+          {
+            "label": "Mon espace",
+            "route": "/app/espace-personnel"
+          },
+          {
+            "label": "Profil",
+            "route": "/app/profil"
+          }
+        ]
+      }
+    ],
+    "conditionalNav": [
+      {
+        "label": "Direction",
+        "route": "/app/direction",
+        "roles": [
+          "leader",
+          "bureau",
+          "bergere",
+          "admin"
+        ]
+      },
+      {
+        "label": "Administration",
+        "route": "/app/admin",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "label": "FIJ pilote",
+        "route": "/app/responsabilites/fij-pilote",
+        "responsibility": "fij_pilot"
+      },
+      {
+        "label": "FIJ coordination",
+        "route": "/app/responsabilites/fij-coordination",
+        "responsibility": "fij_coordination"
+      }
+    ]
+  }
+}

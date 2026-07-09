@@ -3,49 +3,51 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  Calendar, Users, BookOpen, Bell, ChevronRight,
-  MapPin, Clock, Star, User, BarChart3, Settings
+  Calendar, CheckCircle, GraduationCap, Sprout, CalendarClock,
+  BookOpen, Bell, ChevronRight, MapPin, Clock, Target,
+  Briefcase, Sparkles, AlertCircle
 } from 'lucide-react';
-import { getPrimaryRoleLabel, isBureauLike, isAdmin } from '@/lib/permissions';
-import { getDepartmentRoute } from '@/lib/departmentRouting';
-
-const QUICK_LINKS = [
-  { icon: Bell, label: 'EJP Hub', sub: 'Feed & communauté', to: '/hub', color: 'from-secondary/10 to-secondary/5 border-secondary/20' },
-  { icon: Users, label: 'Départements', sub: 'Équipes & membres', to: '/app/departements', color: 'from-primary/10 to-primary/5 border-primary/20' },
-  { icon: Calendar, label: 'Agenda', sub: 'Prochains cultes & events', to: '/#agenda', color: 'from-blue-500/10 to-blue-500/5 border-blue-400/20' },
-  { icon: User, label: 'Mon profil', sub: 'Éditer mes infos', to: '/app/profil', color: 'from-rose-500/10 to-rose-500/5 border-rose-400/20' },
-];
+import { Settings } from 'lucide-react';
+import { getPrimaryRoleLabel, isBureauLike, isAdmin, hasRole, isFijPilot } from '@/lib/permissions';
 
 export default function AppDashboard() {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
-  const [myDepts, setMyDepts] = useState([]);
+  const [fijs, setFijs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
-      base44.entities.Event.list('-event_date', 3),
-      base44.entities.DepartmentMember.filter({ is_active: true }, null, 200),
-      base44.entities.Department.list('display_order', 50),
-    ]).then(([u, evs, members, depts]) => {
+      base44.entities.Event.list('-event_date', 5),
+      base44.entities.FIJ.filter({ is_active: true }, '-created_date', 50),
+    ]).then(([u, evs, f]) => {
       setUser(u);
-      const upcoming = (evs || []).filter(e => e.is_active && e.event_date >= new Date().toISOString().split('T')[0]);
-      setEvents(upcoming.slice(0, 3));
-
-      const myMemberRecords = (members || []).filter(m => m.user_id === u?.id);
-      const myDeptIds = myMemberRecords.map(m => m.department_id);
-      const myDepartments = (depts || []).filter(d => d.is_active && myDeptIds.includes(d.id));
-      setMyDepts(myDepartments);
+      const today = new Date().toISOString().split('T')[0];
+      const upcoming = (evs || []).filter(e => e.is_active && e.event_date >= today);
+      setEvents(upcoming.slice(0, 4));
+      setFijs(f || []);
       setLoading(false);
-    });
+    }).catch(() => setLoading(false));
   }, []);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
   const firstName = user?.full_name?.split(' ')[0] || 'Serviteur';
-  const showDirection = isBureauLike(user);
-  const showAdmin = isAdmin(user);
+  const isPilot = isFijPilot(user, fijs);
+  const today = new Date();
+  const isThursday = today.getDay() === 4;
+  const todayStr = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  // Actions du jour
+  const todoItems = [];
+  if (events.length > 0) {
+    todoItems.push({ icon: CheckCircle, title: 'Confirmer ma présence', sub: 'Prochain événement', to: '/app/presences', urgency: 'normal', action: 'Confirmer' });
+  }
+  if (isPilot && isThursday) {
+    todoItems.push({ icon: Briefcase, title: 'Remplir le CR du jeudi', sub: 'C\'est jeudi — remplis ton CR FIJ', to: '/app/responsabilites', urgency: 'high', action: 'Remplir' });
+  }
+  todoItems.push({ icon: Sprout, title: 'Lire ma Parole du jour', sub: 'Ta croissance spirituelle', to: '/app/croissance', urgency: 'normal', action: 'Continuer' });
 
   if (loading) {
     return (
@@ -57,161 +59,109 @@ export default function AppDashboard() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Hero d'accueil */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-secondary/5 rounded-full blur-[100px]" />
-        </div>
+      <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
 
-        <div className="relative max-w-2xl mx-auto px-5 pt-12 pb-10">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-secondary/25 flex-shrink-0">
-                {user?.photo_url ? (
-                  <img src={user.photo_url} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full bg-secondary/10 flex items-center justify-center">
-                    <span className="text-xl font-bold text-secondary">{firstName[0]}</span>
-                  </div>
-                )}
-              </div>
-              <div>
-                <p className="text-xs text-secondary uppercase tracking-widest mb-0.5">Tableau de bord</p>
-                <h1 className="text-xl font-semibold text-foreground leading-tight">
-                  {greeting}, {firstName}
-                </h1>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <span className="text-xs text-muted-foreground bg-surface border border-border rounded-full px-2.5 py-0.5">
-                    {getPrimaryRoleLabel(user)} — EJP Nantes
-                  </span>
+        {/* En-tête personnel */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-secondary/25 flex-shrink-0">
+              {user?.photo_url ? (
+                <img src={user.photo_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-secondary/10 flex items-center justify-center">
+                  <span className="text-xl font-bold text-secondary">{firstName[0]}</span>
                 </div>
-              </div>
-            </div>
-
-            <div className="bg-card border border-border rounded-2xl px-5 py-4 mb-8 shadow-sm">
-              <p className="font-display text-foreground/70 text-lg font-light italic leading-relaxed">
-                "Chacun selon le don qu'il a reçu, employez-le à vous servir les uns les autres."
-              </p>
-              <p className="text-xs text-secondary mt-2 text-right">— 1 Pierre 4:10</p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      <div className="max-w-2xl mx-auto px-5 pb-16 space-y-8">
-
-        {/* Accès direction / admin */}
-        {(showDirection || showAdmin) && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-            <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-4">Espace direction</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {showDirection && (
-                <Link
-                  to="/app/direction"
-                  className="group bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-4 transition-all hover:shadow-md hover:border-primary/30 active:scale-[0.98]"
-                >
-                  <BarChart3 className="w-5 h-5 text-primary mb-3" />
-                  <p className="text-sm font-semibold text-foreground">Tableau direction</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Synthèse globale</p>
-                </Link>
-              )}
-              {showAdmin && (
-                <Link
-                  to="/app/admin"
-                  className="group bg-gradient-to-br from-danger/10 to-danger/5 border border-danger/20 rounded-2xl p-4 transition-all hover:shadow-md hover:border-danger/30 active:scale-[0.98]"
-                >
-                  <Settings className="w-5 h-5 text-danger mb-3" />
-                  <p className="text-sm font-semibold text-foreground">Administration</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Gérer l'application</p>
-                </Link>
               )}
             </div>
-          </motion.div>
-        )}
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-secondary uppercase tracking-widest mb-0.5">Accueil STAR</p>
+              <h1 className="text-xl font-heading font-bold text-foreground leading-tight">
+                {greeting}, {firstName}
+              </h1>
+              <p className="text-xs text-muted-foreground capitalize mt-0.5">{todayStr}</p>
+            </div>
+          </div>
 
-        {/* Accès rapides */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-4">Accès rapides</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {QUICK_LINKS.map(({ icon: Icon, label, sub, to, color }) => (
+          <div className="bg-card border border-border rounded-2xl px-5 py-4 shadow-sm">
+            <p className="font-display text-foreground/70 text-base font-light italic leading-relaxed">
+              "Chacun selon le don qu'il a reçu, employez-le à vous servir les uns les autres."
+            </p>
+            <p className="text-xs text-secondary mt-2 text-right">— 1 Pierre 4:10</p>
+          </div>
+
+          {/* Statut rapide */}
+          {todoItems.length > 0 && (
+            <div className="flex items-center gap-2 mt-3">
+              <span className="flex items-center gap-1.5 text-xs text-warning bg-warning/10 border border-warning/20 rounded-full px-3 py-1">
+                <AlertCircle className="w-3 h-3" />
+                {todoItems.length} action{todoItems.length > 1 ? 's' : ''} à traiter
+              </span>
+            </div>
+          )}
+
+          {/* Boutons rapides */}
+          <div className="flex gap-2 mt-4">
+            <Link to="/app/agenda" className="flex items-center gap-1.5 text-xs font-medium text-foreground bg-card border border-border rounded-xl px-3 py-2 hover:border-secondary/30 transition-colors">
+              <Calendar className="w-3.5 h-3.5" /> Voir mon agenda
+            </Link>
+            <Link to="/app/presences" className="flex items-center gap-1.5 text-xs font-medium text-foreground bg-card border border-border rounded-xl px-3 py-2 hover:border-secondary/30 transition-colors">
+              <AlertCircle className="w-3.5 h-3.5" /> Déclarer une absence
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* À faire aujourd'hui */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">À faire aujourd'hui</h2>
+          <div className="space-y-2">
+            {todoItems.map((item, i) => (
               <Link
-                key={to}
-                to={to}
-                className={`group bg-gradient-to-br ${color} border rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98]`}
+                key={i}
+                to={item.to}
+                className={`flex items-center gap-3 bg-card border rounded-xl p-3.5 hover:shadow-sm transition-all group ${
+                  item.urgency === 'high' ? 'border-warning/30' : 'border-border'
+                }`}
               >
-                <Icon className="w-5 h-5 text-muted-foreground mb-3 group-hover:text-foreground transition-colors" />
-                <p className="text-sm font-semibold text-foreground">{label}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                  item.urgency === 'high' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary'
+                }`}>
+                  <item.icon className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-foreground truncate">{item.title}</p>
+                  <p className="text-xs text-muted-foreground truncate">{item.sub}</p>
+                </div>
+                <span className="text-xs font-medium text-secondary flex items-center gap-1">
+                  {item.action} <ChevronRight className="w-3 h-3" />
+                </span>
               </Link>
             ))}
           </div>
         </motion.div>
 
-        {/* Mes départements */}
-        {myDepts.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes départements</h2>
-              <Link to="/app/departements" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1 transition-colors">
-                Voir tout <ChevronRight className="w-3 h-3" />
-              </Link>
-            </div>
-            <div className="space-y-3">
-              {myDepts.map((dept, i) => (
-                <motion.div
-                  key={dept.id}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + i * 0.07 }}
-                >
-                  <Link
-                    to={getDepartmentRoute(dept)}
-                    className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:border-secondary/30 hover:shadow-sm transition-all group shadow-sm"
-                  >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
-                      <Users className="w-4 h-4 text-secondary" />
-                    </div>
-                    <div className="min-0 flex-1">
-                      <p className="text-sm font-semibold text-foreground truncate">{dept.name}</p>
-                      {dept.description && <p className="text-xs text-muted-foreground truncate">{dept.description}</p>}
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Prochains événements */}
+        {/* Mini agenda */}
         {events.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Prochains événements</h2>
-              <Link to="/#agenda" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1 transition-colors">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mon agenda</h2>
+              <Link to="/app/agenda" className="text-xs text-secondary flex items-center gap-1">
                 Voir tout <ChevronRight className="w-3 h-3" />
               </Link>
             </div>
-            <div className="space-y-3">
-              {events.map((ev, i) => (
-                <motion.div
-                  key={ev.id}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.25 + i * 0.07 }}
-                  className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 hover:border-secondary/30 hover:shadow-sm transition-all shadow-sm"
-                >
-                  <div className="flex-shrink-0 w-12 text-center bg-secondary/10 border border-secondary/20 rounded-xl py-2">
-                    <p className="text-xs text-secondary font-medium">
-                      {new Date(ev.event_date).toLocaleDateString('fr-FR', { month: 'short' }).toUpperCase()}
+            <div className="space-y-2">
+              {events.slice(0, 3).map((ev) => (
+                <div key={ev.id} className="bg-card border border-border rounded-xl p-3.5 flex items-center gap-3 shadow-sm">
+                  <div className="flex-shrink-0 w-12 text-center bg-secondary/10 border border-secondary/20 rounded-xl py-1.5">
+                    <p className="text-[10px] text-secondary font-medium uppercase">
+                      {new Date(ev.event_date).toLocaleDateString('fr-FR', { month: 'short' })}
                     </p>
-                    <p className="text-lg font-bold text-secondary leading-none">
+                    <p className="text-base font-bold text-secondary leading-none">
                       {new Date(ev.event_date).getDate()}
                     </p>
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-foreground truncate">{ev.title}</p>
-                    <div className="flex items-center gap-3 mt-1">
+                    <div className="flex items-center gap-3 mt-0.5">
                       {ev.event_time && (
                         <span className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Clock className="w-3 h-3" /> {ev.event_time}
@@ -224,19 +174,68 @@ export default function AppDashboard() {
                       )}
                     </div>
                   </div>
-                  {ev.is_featured && <Star className="w-4 h-4 text-secondary fill-current flex-shrink-0" />}
-                </motion.div>
+                </div>
               ))}
             </div>
           </motion.div>
         )}
 
-        {/* Bloc Communauté */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+        {/* Accès rapides */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Mes modules</h2>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { icon: Calendar, label: 'Agenda', to: '/app/agenda', color: 'from-blue-500/10 to-blue-500/5 border-blue-400/20 text-blue-600' },
+              { icon: CheckCircle, label: 'Présences', to: '/app/presences', color: 'from-green-500/10 to-green-500/5 border-green-400/20 text-green-600' },
+              { icon: GraduationCap, label: 'Formations', to: '/app/formations', color: 'from-indigo-500/10 to-indigo-500/5 border-indigo-400/20 text-indigo-600' },
+              { icon: Sprout, label: 'Croissance', to: '/app/croissance', color: 'from-emerald-500/10 to-emerald-500/5 border-emerald-400/20 text-emerald-600' },
+              { icon: Target, label: 'Objectifs', to: '/app/objectifs', color: 'from-amber-500/10 to-amber-500/5 border-amber-400/20 text-amber-600' },
+              { icon: CalendarClock, label: 'RDV', to: '/app/rendez-vous', color: 'from-rose-500/10 to-rose-500/5 border-rose-400/20 text-rose-600' },
+              { icon: BookOpen, label: 'Ressources', to: '/app/ressources', color: 'from-purple-500/10 to-purple-500/5 border-purple-400/20 text-purple-600' },
+              { icon: Map, label: 'Parcours', to: '/app/parcours', color: 'from-cyan-500/10 to-cyan-500/5 border-cyan-400/20 text-cyan-600' },
+              { icon: Briefcase, label: 'Responsabilités', to: '/app/responsabilites', color: 'from-secondary/10 to-secondary/5 border-secondary/20 text-secondary' },
+            ].map(({ icon: Icon, label, to, color }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`flex flex-col items-center gap-2 bg-gradient-to-br ${color} border rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.97]`}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="text-[10px] font-semibold text-center leading-tight">{label}</span>
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Espace direction / admin */}
+        {(isBureauLike(user) || isAdmin(user)) && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Espace direction</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {isBureauLike(user) && (
+                <Link to="/app/direction" className="group bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-4 transition-all hover:shadow-md">
+                  <Briefcase className="w-5 h-5 text-primary mb-3" />
+                  <p className="text-sm font-semibold text-foreground">Direction</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Vue consolidée</p>
+                </Link>
+              )}
+              {isAdmin(user) && (
+                <Link to="/app/admin" className="group bg-gradient-to-br from-danger/10 to-danger/5 border border-danger/20 rounded-2xl p-4 transition-all hover:shadow-md">
+                  <Settings className="w-5 h-5 text-danger mb-3" />
+                  <p className="text-sm font-semibold text-foreground">Administration</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Gérer l'app</p>
+                </Link>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Communauté */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
           <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-primary" />
+                <Sparkles className="w-4 h-4 text-primary" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-foreground">La communauté EJP</p>
@@ -244,7 +243,7 @@ export default function AppDashboard() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              Retrouve tous les serviteurs, explore les ministères et reste connecté à la vie de l'Église.
+              Retrouve tous les serviteurs et reste connecté à la vie de l'Église.
             </p>
             <Link
               to="/"

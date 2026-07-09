@@ -1,0 +1,17 @@
+data,module,private/share/org,visible_by,create,read,update,delete
+personal_notes,Croissance,private,owner,owner,owner,owner,owner
+scripture_reading_logs,Croissance,private,owner; aggregate_optional_if_consent,owner,owner,owner,owner
+personal_goals,Objectifs,private/share,owner; shared_users_if_chosen,owner,owner/shared,owner,owner
+attendance_responses,Présences,org,owner; responsible_scope; direction_aggregate,owner,owner/responsible_scope,owner/responsible_scope,admin
+calendar_events,Agenda,org/private,audience_scope,admin/responsible/owner_private,audience_scope,creator/admin,creator/admin
+personal_calendar_blocks,Agenda,private,owner,owner,owner,owner,owner
+training_enrollments,Formations,org,owner; trainer; responsible_scope,admin/trainer,owner/trainer,trainer/admin,admin
+training_summaries,Formations,org/share,owner; trainer,owner,owner/trainer,owner_if_draft/trainer_review,admin
+appointment_requests,Rendez-vous,share/confidential,requester; recipient; authorized_care,requester,requester/recipient,requester_if_pending/recipient,admin_limited
+resources,Ressources,org,audience_scope,admin/responsible,audience_scope,admin/responsible,admin
+servant_journeys,Parcours,share/org,owner; authorized_support,owner,owner/authorized_support,owner,owner/admin
+responsibility_assignments,Responsabilités,org,owner; responsible; admin,admin/responsible,owner/responsible/admin,admin/responsible,admin
+fij_groups,FIJ,org,pilot_own; fij_coordination; direction_aggregate,fij_coordination,pilot_own/fij_coordination,fij_coordination,admin
+fij_thursday_reports,FIJ,org,pilot_own; fij_coordination; direction_aggregate,fij_pilot,pilot_own/fij_coordination,pilot_if_draft/fij_coordination,admin
+fij_member_notes,FIJ,restricted,pilot_own; fij_coordination,fij_pilot/fij_coordination,pilot_own/fij_coordination,creator/fij_coordination,admin
+alerts,Supervision,org,scope_responsible; direction,system/responsible,scope_responsible/direction,scope_responsible,admin

@@ -1,0 +1,30 @@
+route,page,section,button,destination,permission,data_action
+/app,Accueil STAR,En-tête,Personnaliser mon espace,/app/espace-personnel,connected_user,read workspace preferences
+/app,Accueil STAR,Actions du jour,Confirmer,/app/presences,event_participant,create/update attendance_response
+/app,Accueil STAR,Actions du jour,Continuer,/app/formations,training_enrolled,read training_enrollment
+/app,Accueil STAR,Actions du jour,Remplir CR du jeudi,/app/responsabilites/fij-pilote/cr-jeudi/nouveau,fij_pilot,create fij_thursday_report
+/app,Accueil STAR,Mini agenda,Voir mon agenda,/app/agenda,connected_user,read calendar_events
+/app,Accueil STAR,Rendez-vous,Demander un rendez-vous,/app/rendez-vous/nouveau,connected_user,create appointment_request
+/app/agenda,Agenda,Vue semaine,Confirmer présence,/app/presences,event_participant,update attendance_response
+/app/agenda,Agenda,Vue semaine,Je serai absent,/app/presences/absence,event_participant,create absence response
+/app/agenda,Agenda,Vue semaine,Ajouter un bloc personnel,/app/agenda/nouveau-bloc,connected_user,create personal_calendar_block
+/app/presences,Présences,À confirmer,Je serai présent,same_page,event_participant,update attendance_response
+/app/presences,Présences,À confirmer,Je serai absent,same_page,event_participant,update attendance_response with reason
+/app/presences,Présences,Historique,Voir détails,/app/presences/:id,owner_or_responsible,read attendance_response
+/app/formations,Formations,Mes formations,Continuer,/app/formations/:formationId,training_enrolled,read training_modules
+/app/formations/:id/modules/:moduleId,Module formation,Résumé,Envoyer pour validation,same_page,training_enrolled,create/update training_summary
+/app/croissance,Croissance,Parole,J’ai lu aujourd’hui,same_page,connected_user,create scripture_reading_log
+/app/croissance,Croissance,Notes,Ajouter une note,/app/croissance/notes/nouvelle,connected_user,create personal_note private
+/app/objectifs,Objectifs,Objectifs actifs,Créer un objectif,/app/objectifs/nouveau,connected_user,create personal_goal
+/app/objectifs/:id,Objectif détail,Étapes,Ajouter une étape,same_page,goal_owner,create goal_step
+/app/rendez-vous,Rendez-vous,Demandes,Demander un rendez-vous,/app/rendez-vous/nouveau,connected_user,create appointment_request
+/app/ressources,Ressources,Liens,Ouvrir,external_or_resource_url,audience_allowed,read resource
+/app/parcours,Parcours,Situation,Mettre à jour,same_page,connected_user,update servant_journey
+/app/espace-personnel,Espace personnel,Widgets,Ajouter un widget,same_page,connected_user,create user_widget
+/app/responsabilites,Responsabilités,Outils actifs,Ouvrir,tool_route,assigned_responsibility,read responsibility_assignment
+/app/responsabilites/fij-pilote,FIJ pilote,Accueil FIJ,Remplir le CR du jeudi,/app/responsabilites/fij-pilote/cr-jeudi/nouveau,fij_pilot,create fij_thursday_report
+/app/responsabilites/fij-pilote,FIJ pilote,Membres,Ajouter note,/app/responsabilites/fij-pilote/membres/:id/note,fij_pilot,create fij_member_note
+/app/responsabilites/fij-coordination,FIJ coordination,Tableau opérationnel,Relancer pilotes,same_page,fij_coordination,create fij_reminder
+/app/responsabilites/fij-coordination,FIJ coordination,Reporting,Exporter reporting,download,fij_coordination,read/export fij reports
+/app/direction,Direction,Vue globale,Voir présences,/app/direction/presences,leader_or_bureau,read aggregate attendance
+/app/admin,Administration,Utilisateurs,Créer utilisateur,/app/admin/users/new,admin,create user
