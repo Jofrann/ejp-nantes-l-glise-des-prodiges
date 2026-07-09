@@ -9,6 +9,10 @@ const PCNC_PROGRAMS = [
   { id: 'pcnc101', title: 'PCNC 101', desc: 'Approfondissement', progress: 0, status: 'recommended' },
   { id: 'pcnc201', title: 'PCNC 201', desc: 'Maturation', progress: 0, status: 'recommended' },
   { id: 'serviteur', title: 'Formation Serviteur', desc: 'Bases du service', progress: 0, status: 'recommended' },
+  { id: 'accueil', title: 'Formation Accueil', desc: "Service d'accueil", progress: 0, status: 'recommended' },
+  { id: 'communication', title: 'Formation Communication', desc: 'Médias et publications', progress: 0, status: 'recommended' },
+  { id: 'musique', title: 'Formation Musique', desc: 'Louange et technique', progress: 0, status: 'recommended' },
+  { id: 'coordination', title: 'Formation Coordination', desc: "Gestion d'équipe", progress: 0, status: 'restricted' },
   { id: 'fij_pilot', title: 'Formation Pilote FIJ', desc: 'Gestion d\'une FIJ', progress: 0, status: 'restricted' },
 ];
 

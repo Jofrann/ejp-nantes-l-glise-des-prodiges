@@ -1,0 +1,46 @@
+{
+  "name": "PersonalHabit",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nom de l'habitude"
+    },
+    "frequency": {
+      "type": "string",
+      "description": "Fr\u00e9quence (ex: quotidien, hebdomadaire, ponctuel)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "lecture_biblique",
+        "priere",
+        "lecture_livre",
+        "sport",
+        "discipline",
+        "etude",
+        "autre"
+      ],
+      "default": "discipline",
+      "description": "Cat\u00e9gorie d'habitude"
+    },
+    "last_check_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Derni\u00e8re date de coche"
+    },
+    "streak_count": {
+      "type": "number",
+      "default": 0,
+      "description": "S\u00e9rie actuelle (jours cons\u00e9cutifs)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Habitude active"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

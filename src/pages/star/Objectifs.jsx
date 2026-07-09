@@ -27,7 +27,8 @@ export default function Objectifs() {
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: '', category: 'spirituel', why: '', expected_result: '', target_date: '', priority: 'medium' });
+  const [form, setForm] = useState({ title: '', category: 'spirituel', why: '', expected_result: '', target_date: '', priority: 'medium', visibility: 'private', steps: [] });
+  const [newStep, setNewStep] = useState('');
 
   const load = () => {
     base44.entities.PersonalGoal.list('-created_date', 100)
@@ -40,7 +41,8 @@ export default function Objectifs() {
   const createGoal = async () => {
     if (!form.title.trim()) return;
     await base44.entities.PersonalGoal.create({ ...form, status: 'active' });
-    setForm({ title: '', category: 'spirituel', why: '', expected_result: '', target_date: '', priority: 'medium' });
+    setForm({ title: '', category: 'spirituel', why: '', expected_result: '', target_date: '', priority: 'medium', visibility: 'private', steps: [] });
+    setNewStep('');
     setShowForm(false);
     load();
   };
@@ -102,7 +104,7 @@ export default function Objectifs() {
 
       <AnimatePresence>
         {showForm && (
-          <GoalForm form={form} setForm={setForm} onClose={() => setShowForm(false)} onSave={createGoal} />
+          <GoalForm form={form} setForm={setForm} newStep={newStep} setNewStep={setNewStep} onClose={() => setShowForm(false)} onSave={createGoal} />
         )}
       </AnimatePresence>
     </div>
@@ -149,7 +151,7 @@ function GoalCard({ goal, onStatus, onDelete }) {
   );
 }
 
-function GoalForm({ form, setForm, onClose, onSave }) {
+function GoalForm({ form, setForm, newStep, setNewStep, onClose, onSave }) {
   return (
     <>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
@@ -197,6 +199,37 @@ function GoalForm({ form, setForm, onClose, onSave }) {
                 <option value="medium">Moyenne</option>
                 <option value="high">Haute</option>
               </select>
+            </div>
+          </div>
+          <div>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Visibilité</label>
+            <select value={form.visibility} onChange={e => setForm({ ...form, visibility: e.target.value })}
+              className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm">
+              <option value="private">Privé (par défaut)</option>
+              <option value="shared_leader">Partagé avec un leader</option>
+              <option value="shared_referent">Partagé avec mon référent</option>
+              <option value="shared_bergere">Partagé avec la Bergère</option>
+            </select>
+          </div>
+          <div>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Étapes</label>
+            <div className="space-y-2 mb-2">
+              {(form.steps || []).map((step, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <span className="flex-1 text-xs text-foreground px-3 py-2 rounded-lg bg-surface border border-border">{step.title}</span>
+                  <button onClick={() => setForm({ ...form, steps: form.steps.filter((_, i) => i !== idx) })}
+                    className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive"><X className="w-3.5 h-3.5" /></button>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input value={newStep} onChange={e => setNewStep(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && newStep.trim()) { e.preventDefault(); setForm({ ...form, steps: [...(form.steps || []), { title: newStep.trim(), done: false }] }); setNewStep(''); } }}
+                className="flex-1 px-3 py-2 rounded-lg border border-input bg-background text-sm" placeholder="Nouvelle étape..." />
+              <button onClick={() => { if (newStep.trim()) { setForm({ ...form, steps: [...(form.steps || []), { title: newStep.trim(), done: false }] }); setNewStep(''); } }}
+                className="px-3 py-2 rounded-lg bg-surface border border-border text-xs font-medium text-muted-foreground hover:text-secondary hover:border-secondary/30 transition-colors">
+                <Plus className="w-4 h-4" />
+              </button>
             </div>
           </div>
           <button onClick={onSave} disabled={!form.title.trim()}

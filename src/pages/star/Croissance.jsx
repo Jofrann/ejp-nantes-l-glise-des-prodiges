@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout, BookOpen, Plus, X, BookMarked, Check, Calendar } from 'lucide-react';
+import { Sprout, BookOpen, Plus, X, BookMarked, Check, Calendar, Repeat } from 'lucide-react';
+import HabitudesTab from '@/components/star/HabitudesTab';
 import { base44 } from '@/api/base44Client';
 
 const TABS = [
   { key: 'parole', label: 'Parole', icon: Sprout },
   { key: 'notes', label: 'Notes', icon: BookOpen },
   { key: 'livres', label: 'Livres', icon: BookMarked },
+  { key: 'habitudes', label: 'Habitudes', icon: Repeat },
 ];
 
 export default function Croissance() {
@@ -31,6 +33,7 @@ export default function Croissance() {
       {tab === 'parole' && <ParoleTab />}
       {tab === 'notes' && <NotesTab />}
       {tab === 'livres' && <LivresTab />}
+      {tab === 'habitudes' && <HabitudesTab />}
     </div>
   );
 }
