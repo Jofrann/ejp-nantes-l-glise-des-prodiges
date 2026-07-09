@@ -4,11 +4,10 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Calendar, CheckCircle, GraduationCap, Sprout, CalendarClock,
-  BookOpen, Bell, ChevronRight, MapPin, Clock, Target,
-  Briefcase, Sparkles, AlertCircle
+  BookOpen, ChevronRight, MapPin, Clock, Target,
+  Briefcase, Sparkles, AlertCircle, Map, Settings as SettingsIcon
 } from 'lucide-react';
-import { Settings } from 'lucide-react';
-import { getPrimaryRoleLabel, isBureauLike, isAdmin, hasRole, isFijPilot } from '@/lib/permissions';
+import { isBureauLike, isAdmin, isFijPilot } from '@/lib/permissions';
 
 export default function AppDashboard() {
   const [user, setUser] = useState(null);
@@ -101,6 +100,9 @@ export default function AppDashboard() {
 
           {/* Boutons rapides */}
           <div className="flex gap-2 mt-4">
+            <Link to="/app/espace-personnel" className="flex items-center gap-1.5 text-xs font-medium text-foreground bg-card border border-border rounded-xl px-3 py-2 hover:border-secondary/30 transition-colors">
+              <SettingsIcon className="w-3.5 h-3.5" /> Personnaliser mon espace
+            </Link>
             <Link to="/app/agenda" className="flex items-center gap-1.5 text-xs font-medium text-foreground bg-card border border-border rounded-xl px-3 py-2 hover:border-secondary/30 transition-colors">
               <Calendar className="w-3.5 h-3.5" /> Voir mon agenda
             </Link>
@@ -221,7 +223,7 @@ export default function AppDashboard() {
               )}
               {isAdmin(user) && (
                 <Link to="/app/admin" className="group bg-gradient-to-br from-danger/10 to-danger/5 border border-danger/20 rounded-2xl p-4 transition-all hover:shadow-md">
-                  <Settings className="w-5 h-5 text-danger mb-3" />
+                  <SettingsIcon className="w-5 h-5 text-danger mb-3" />
                   <p className="text-sm font-semibold text-foreground">Administration</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Gérer l'app</p>
                 </Link>

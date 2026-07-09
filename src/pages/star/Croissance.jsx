@@ -145,7 +145,7 @@ function NotesTab() {
   const [form, setForm] = useState({ title: '', content: '', category: 'meditation' });
 
   const load = () => {
-    base44.entities.PersonalNote.filter({ is_pinned: false }, '-created_date', 50)
+    base44.entities.PersonalNote.list('-created_date', 50)
       .then(data => { setNotes(data || []); setLoading(false); })
       .catch(() => setLoading(false));
   };

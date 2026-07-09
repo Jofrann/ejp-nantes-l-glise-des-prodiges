@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Briefcase, ChevronRight, Users, Heart, Music, GraduationCap, Settings, ShieldAlert } from 'lucide-react';
+import { Briefcase, ChevronRight, Users, Heart, Music, GraduationCap, Settings } from 'lucide-react';
 import { isFijPilot, isFijCoordination, isBureauLike, isAdmin, hasRole } from '@/lib/permissions';
 
 const TOOL_META = {
