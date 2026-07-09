@@ -6,6 +6,7 @@ import { Calendar, Clock, MapPin, ChevronRight, CalendarDays, ChevronLeft, Chevr
 import { startOfWeek, endOfWeek, eachDayOfInterval, isSameDay, addDays, addWeeks, addMonths, startOfMonth, endOfMonth } from 'date-fns';
 
 const VIEWS = [
+  { key: 'day', label: 'Jour' },
   { key: 'list', label: 'Liste' },
   { key: 'week', label: 'Semaine' },
   { key: 'month', label: 'Mois' },
@@ -73,14 +74,16 @@ export default function Agenda() {
           <div className="flex items-center gap-2">
             <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-surface text-muted-foreground"><ChevronLeft className="w-4 h-4" /></button>
             <span className="text-xs font-medium text-foreground min-w-[120px] text-center">
-              {view === 'week' ? refDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : refDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+              {view === 'day' ? refDate.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' }) : view === 'week' ? refDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : refDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
             </span>
             <button onClick={() => navigate(1)} className="p-1.5 rounded-lg hover:bg-surface text-muted-foreground"><ChevR className="w-4 h-4" /></button>
           </div>
         )}
       </div>
 
-      {dateKeys.length === 0 && view === 'list' ? (
+      {view === 'day' ? (
+        <DayView grouped={grouped} refDate={refDate} />
+      ) : dateKeys.length === 0 && view === 'list' ? (
         <EmptyState />
       ) : view === 'list' ? (
         <ListView grouped={grouped} dateKeys={dateKeys} />
@@ -101,6 +104,58 @@ function EmptyState() {
       </div>
       <p className="text-sm font-semibold text-foreground mb-1">Aucun événement prévu</p>
       <p className="text-xs text-muted-foreground">Ton agenda est à jour pour le moment.</p>
+    </div>
+  );
+}
+
+function DayView({ grouped, refDate }) {
+  const dateStr = refDate.toISOString().split('T')[0];
+  const dayEvents = grouped[dateStr] || [];
+  const today = new Date();
+  const isToday = dateStr === today.toISOString().split('T')[0];
+
+  return (
+    <div className="bg-card border border-border rounded-2xl overflow-hidden">
+      <div className="px-4 py-3 border-b border-border flex items-center gap-2">
+        <p className="text-sm font-semibold text-foreground capitalize">
+          {refDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+        </p>
+        {isToday && <span className="text-[10px] text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">Aujourd'hui</span>}
+      </div>
+      {dayEvents.length === 0 ? (
+        <div className="py-12 text-center">
+          <p className="text-xs text-muted-foreground">Aucun événement ce jour.</p>
+        </div>
+      ) : (
+        <div className="max-h-[500px] overflow-y-auto scrollbar-none">
+          {HOURS.map(hour => {
+            const hourEvents = dayEvents.filter(ev => ev.event_time && parseInt(ev.event_time.split(':')[0]) === hour);
+            const noTimeEvents = hour === HOURS[0] ? dayEvents.filter(ev => !ev.event_time) : [];
+            return (
+              <div key={hour} className="flex border-b border-border last:border-b-0 min-h-[48px]">
+                <div className="w-12 flex-shrink-0 px-2 py-1.5 text-[10px] text-muted-foreground border-r border-border text-right">
+                  {String(hour).padStart(2, '0')}:00
+                </div>
+                <div className="flex-1 p-1 space-y-1">
+                  {noTimeEvents.map(ev => (
+                    <div key={ev.id} className="bg-secondary/10 border border-secondary/20 rounded-lg p-2">
+                      <p className="text-xs font-semibold text-foreground truncate">{ev.title}</p>
+                      {ev.location && <p className="text-[10px] text-muted-foreground flex items-center gap-1"><MapPin className="w-2.5 h-2.5" /> {ev.location}</p>}
+                    </div>
+                  ))}
+                  {hourEvents.map(ev => (
+                    <div key={ev.id} className="bg-secondary/10 border border-secondary/20 rounded-lg p-2">
+                      <p className="text-xs font-semibold text-secondary">{ev.event_time}</p>
+                      <p className="text-xs font-semibold text-foreground truncate">{ev.title}</p>
+                      {ev.location && <p className="text-[10px] text-muted-foreground flex items-center gap-1"><MapPin className="w-2.5 h-2.5" /> {ev.location}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -13,6 +13,7 @@ export default function AppDashboard() {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
   const [fijs, setFijs] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,12 +21,14 @@ export default function AppDashboard() {
       base44.auth.me(),
       base44.entities.Event.list('-event_date', 5),
       base44.entities.FIJ.filter({ is_active: true }, '-created_date', 50),
-    ]).then(([u, evs, f]) => {
+      base44.entities.AppointmentRequest.filter({ status: 'pending' }, '-created_date', 5),
+    ]).then(([u, evs, f, appts]) => {
       setUser(u);
       const today = new Date().toISOString().split('T')[0];
       const upcoming = (evs || []).filter(e => e.is_active && e.event_date >= today);
       setEvents(upcoming.slice(0, 4));
       setFijs(f || []);
+      setAppointments(appts || []);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -177,6 +180,62 @@ export default function AppDashboard() {
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Formations */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes formations</h2>
+            <Link to="/app/formations" className="text-xs text-secondary flex items-center gap-1">
+              Voir tout <ChevronRight className="w-3 h-3" />
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {[
+              { title: 'PCNC 001', desc: 'Fondations du parcours' },
+              { title: 'PCNC 101', desc: 'Approfondissement' },
+              { title: 'PCNC 201', desc: 'Maturation' },
+            ].map((prog, i) => (
+              <Link key={i} to="/app/formations" className="flex items-center gap-3 bg-card border border-border rounded-xl p-3.5 hover:shadow-sm transition-all">
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-400/20 flex items-center justify-center flex-shrink-0">
+                  <GraduationCap className="w-4 h-4 text-indigo-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-foreground truncate">{prog.title}</p>
+                  <p className="text-xs text-muted-foreground truncate">{prog.desc}</p>
+                </div>
+                <span className="text-xs font-medium text-indigo-600 flex items-center gap-1">
+                  Commencer <ChevronRight className="w-3 h-3" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Rendez-vous */}
+        {appointments.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }}>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes rendez-vous</h2>
+              <Link to="/app/rendez-vous" className="text-xs text-secondary flex items-center gap-1">
+                Voir tout <ChevronRight className="w-3 h-3" />
+              </Link>
+            </div>
+            <div className="space-y-2">
+              {appointments.map((appt) => (
+                <Link key={appt.id} to="/app/rendez-vous" className="flex items-center gap-3 bg-card border border-border rounded-xl p-3.5 hover:shadow-sm transition-all">
+                  <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-400/20 flex items-center justify-center flex-shrink-0">
+                    <CalendarClock className="w-4 h-4 text-rose-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground truncate">{appt.subject}</p>
+                    <p className="text-xs text-muted-foreground truncate">En attente · {appt.request_type}</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                </Link>
               ))}
             </div>
           </motion.div>

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Users, Calendar, BookOpen, TrendingUp, Bell, ChevronRight, Heart } from 'lucide-react';
+import { Users, Calendar, BookOpen, TrendingUp, Bell, ChevronRight, Heart, CalendarClock, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import FijDirectionSummary from '@/components/direction/FijDirectionSummary';
 
 export default function BureauDashboard() {
   const [user, setUser] = useState(null);
-  const [stats, setStats] = useState({ leaders: 0, events: 0, ministries: 0, fiJs: 0 });
+  const [stats, setStats] = useState({ leaders: 0, events: 0, ministries: 0, fiJs: 0, pendingRdv: 0, fijAlerts: 0, sundayReports: 0 });
   const [events, setEvents] = useState([]);
+  const [pendingAppointments, setPendingAppointments] = useState([]);
+  const [fijAlerts, setFijAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,10 +20,19 @@ export default function BureauDashboard() {
       base44.entities.Event.filter({ is_active: true }, 'event_date', 5),
       base44.entities.Ministry.list('display_order', 50),
       base44.entities.FIJ.list('display_order', 50),
-    ]).then(([u, l, e, m, f]) => {
+      base44.entities.AppointmentRequest.filter({ status: 'pending' }, '-created_date', 10),
+      base44.entities.FijAlert.filter({ status: 'open' }, '-created_date', 10),
+      base44.entities.SundayAttendanceReport.list('-service_date', 5),
+    ]).then(([u, l, e, m, f, appts, alerts, sunReports]) => {
       setUser(u);
-      setStats({ leaders: l.length, events: e.length, ministries: m.length, fiJs: f.length });
+      setStats({
+        leaders: l.length, events: e.length, ministries: m.length, fiJs: f.length,
+        pendingRdv: (appts || []).length, fijAlerts: (alerts || []).length,
+        sundayReports: (sunReports || []).length,
+      });
       setEvents(e);
+      setPendingAppointments(appts || []);
+      setFijAlerts(alerts || []);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -39,7 +50,7 @@ export default function BureauDashboard() {
   const STAT_CARDS = [
     { label: 'Leaders', value: stats.leaders, icon: Users, color: 'from-primary/10 to-primary/5', border: 'border-primary/20', text: 'text-primary' },
     { label: 'Événements actifs', value: stats.events, icon: Calendar, color: 'from-secondary/10 to-secondary/5', border: 'border-secondary/20', text: 'text-secondary' },
-    { label: 'Ministères', value: stats.ministries, icon: BookOpen, color: 'from-blue-500/10 to-blue-500/5', border: 'border-blue-400/20', text: 'text-blue-600' },
+    { label: 'RDV en attente', value: stats.pendingRdv, icon: CalendarClock, color: 'from-amber-500/10 to-amber-500/5', border: 'border-amber-400/20', text: 'text-amber-600' },
     { label: 'FIJ réseau', value: stats.fiJs, icon: Heart, color: 'from-rose-500/10 to-rose-500/5', border: 'border-rose-400/20', text: 'text-rose-600' },
   ];
 
@@ -110,8 +121,67 @@ export default function BureauDashboard() {
             <FijDirectionSummary />
           </motion.div>
 
-          {/* Accès rapides */}
+          {/* RDV en attente + Alertes */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+            className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-foreground font-semibold text-sm">Demandes de rendez-vous</h2>
+              <span className="text-xs text-amber-600 bg-amber-500/10 px-2 py-0.5 rounded-full">{stats.pendingRdv} en attente</span>
+            </div>
+            {pendingAppointments.length === 0 ? (
+              <p className="text-xs text-muted-foreground">Aucune demande en attente.</p>
+            ) : (
+              <div className="space-y-2">
+                {pendingAppointments.slice(0, 4).map(a => (
+                  <div key={a.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-surface transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-400/20 flex items-center justify-center flex-shrink-0">
+                      <CalendarClock className="w-3.5 h-3.5 text-amber-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-foreground font-medium truncate">{a.subject}</p>
+                      <p className="text-xs text-muted-foreground">{a.request_type}{a.urgency === 'urgent' ? ' · Urgent' : ''}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+
+          {/* Alertes FIJ */}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
+            className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-foreground font-semibold text-sm">Alertes FIJ</h2>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${stats.fijAlerts > 0 ? 'text-danger bg-danger/10' : 'text-success bg-success/10'}`}>
+                {stats.fijAlerts > 0 ? `${stats.fijAlerts} ouverte${stats.fijAlerts > 1 ? 's' : ''}` : 'Aucune'}
+              </span>
+            </div>
+            {fijAlerts.length === 0 ? (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <CheckCircle className="w-3.5 h-3.5 text-success" />
+                Aucune alerte active.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {fijAlerts.slice(0, 4).map(a => (
+                  <div key={a.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-surface transition-colors">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      a.severity === 'critical' ? 'bg-danger/10 border border-danger/20' : a.severity === 'warning' ? 'bg-warning/10 border border-warning/20' : 'bg-info/10 border border-info/20'
+                    }`}>
+                      <AlertTriangle className={`w-3.5 h-3.5 ${a.severity === 'critical' ? 'text-danger' : a.severity === 'warning' ? 'text-warning' : 'text-info'}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-foreground font-medium truncate">{a.title}</p>
+                      <p className="text-xs text-muted-foreground truncate">{a.fij_name || 'FIJ'}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+
+          {/* Accès rapides */}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
             className="bg-card border border-border rounded-2xl p-5 shadow-sm">
             <h2 className="text-foreground font-semibold text-sm mb-4">Accès rapides</h2>
             <div className="space-y-2">

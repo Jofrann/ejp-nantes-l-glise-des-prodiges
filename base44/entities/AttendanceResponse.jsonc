@@ -1,0 +1,54 @@
+{
+  "name": "AttendanceResponse",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "ID de l'\u00e9v\u00e9nement"
+    },
+    "event_title": {
+      "type": "string",
+      "description": "Titre de l'\u00e9v\u00e9nement (d\u00e9normalis\u00e9)"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de l'\u00e9v\u00e9nement"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "present",
+        "absent",
+        "late",
+        "no_response"
+      ],
+      "default": "no_response",
+      "description": "Statut de pr\u00e9sence"
+    },
+    "reason_category": {
+      "type": "string",
+      "enum": [
+        "travail",
+        "etudes",
+        "sante",
+        "famille",
+        "deplacement",
+        "service_ailleurs",
+        "autre"
+      ],
+      "description": "Motif d'absence"
+    },
+    "estimated_arrival_time": {
+      "type": "string",
+      "description": "Heure estim\u00e9e d'arriv\u00e9e (retard)"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Commentaire optionnel"
+    }
+  },
+  "required": [
+    "event_id"
+  ]
+}
