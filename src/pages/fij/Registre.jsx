@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import FijPageShell, { LoadingSpinner, EmptyState } from '@/components/fij/FijPageShell';
 import { useFijData } from '@/hooks/useFijData';
 import { Users, Plus, MapPin, Clock, X, Heart, PauseCircle, PlayCircle } from 'lucide-react';
+import PilotSelect from '@/components/fij/PilotSelect';
 
 export default function Registre() {
   const { fijs, loading, accessLevel, reload } = useFijData();
@@ -107,14 +108,36 @@ function FijFormModal({ fij, onClose, onSaved }) {
     status: fij?.status || 'active',
     meeting_day: fij?.meeting_day || '',
     meeting_time: fij?.meeting_time || '',
+    pilot_user_id: fij?.pilot_user_id || '',
     pilot_name: fij?.pilot_name || '',
     pilot_email: fij?.pilot_email || '',
+    copilot_user_id: fij?.copilot_user_id || '',
+    copilot_name: fij?.copilot_name || '',
+    copilot_email: fij?.copilot_email || '',
     member_count: fij?.member_count || 0,
     address: fij?.address || '',
     description: fij?.description || '',
     is_nantes: fij?.is_nantes || false,
   });
   const [saving, setSaving] = useState(false);
+
+  const selectPilot = (u) => {
+    setForm(f => ({
+      ...f,
+      pilot_user_id: u?.id || '',
+      pilot_name: u?.full_name || '',
+      pilot_email: u?.email || '',
+    }));
+  };
+
+  const selectCopilot = (u) => {
+    setForm(f => ({
+      ...f,
+      copilot_user_id: u?.id || '',
+      copilot_name: u?.full_name || '',
+      copilot_email: u?.email || '',
+    }));
+  };
 
   const save = async () => {
     setSaving(true);
@@ -174,14 +197,16 @@ function FijFormModal({ fij, onClose, onSaved }) {
               <input className={inputCls} value={form.meeting_time} onChange={e => setForm(f => ({ ...f, meeting_time: e.target.value }))} placeholder="19:00" />
             </div>
           </div>
-          <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Nom du pilote</label>
-            <input className={inputCls} value={form.pilot_name} onChange={e => setForm(f => ({ ...f, pilot_name: e.target.value }))} placeholder="Jean Dupont" />
-          </div>
-          <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Email du pilote</label>
-            <input className={inputCls} value={form.pilot_email} onChange={e => setForm(f => ({ ...f, pilot_email: e.target.value }))} placeholder="pilote@email.com" />
-          </div>
+          <PilotSelect
+            label="Pilote"
+            userId={form.pilot_user_id}
+            onSelect={selectPilot}
+          />
+          <PilotSelect
+            label="Copilote"
+            userId={form.copilot_user_id}
+            onSelect={selectCopilot}
+          />
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">Adresse</label>
             <input className={inputCls} value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} placeholder="12 rue Example" />
