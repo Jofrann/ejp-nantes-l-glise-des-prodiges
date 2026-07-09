@@ -22,7 +22,7 @@ export default function MesFij() {
   if (loading || dataLoading) return <LoadingSpinner />;
 
   const myFijs = fijs.filter(f =>
-    f.pilot_user_id === user?.id || (f.co_pilot_user_ids || []).includes(user?.id)
+    f.pilot_user_id === user?.id || f.copilot_user_id === user?.id || (f.co_pilot_user_ids || []).includes(user?.id)
   );
 
   const weekStart = getMonday(new Date());

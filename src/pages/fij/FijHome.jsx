@@ -41,7 +41,7 @@ export default function FijHome() {
 
   const activeFijs = fijs.filter(f => !f.status || f.status === 'active');
   const openingFijs = fijs.filter(f => f.status === 'opening');
-  const myFijs = fijs.filter(f => f.pilot_user_id === user?.id || (f.co_pilot_user_ids || []).includes(user?.id));
+  const myFijs = fijs.filter(f => f.pilot_user_id === user?.id || f.copilot_user_id === user?.id || (f.co_pilot_user_ids || []).includes(user?.id));
   const missingCr = activeFijs.filter(f => !reports.some(r => r.fij_house_id === f.id));
   const myMissingCr = myFijs.filter(f => !reports.some(r => r.fij_house_id === f.id));
   const criticalAlerts = alerts.filter(a => a.severity === 'critical');

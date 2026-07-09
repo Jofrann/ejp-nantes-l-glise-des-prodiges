@@ -125,15 +125,23 @@ export function isFijCoordination(user) {
   return hasRole(user, 'fij_coordination');
 }
 
-// Pilote = utilisateur rattaché comme pilot ou co-pilot sur au moins une FIJ
+// Pilote = utilisateur rattaché comme pilot, copilot ou co-pilot sur au moins une FIJ
 export function isFijPilot(user, fijs) {
   if (!user || !fijs) return false;
-  return fijs.some(f => f.pilot_user_id === user.id || (f.co_pilot_user_ids || []).includes(user.id));
+  return fijs.some(f =>
+    f.pilot_user_id === user.id ||
+    f.copilot_user_id === user.id ||
+    (f.co_pilot_user_ids || []).includes(user.id)
+  );
 }
 
 export function isFijPilotOf(user, fij) {
   if (!user || !fij) return false;
-  return fij.pilot_user_id === user.id || (fij.co_pilot_user_ids || []).includes(user.id);
+  return (
+    fij.pilot_user_id === user.id ||
+    fij.copilot_user_id === user.id ||
+    (fij.co_pilot_user_ids || []).includes(user.id)
+  );
 }
 
 export function getFijAccessLevel(user, fijs) {
@@ -190,7 +198,7 @@ export function getVisibleFijsForUser(user, allFijs) {
   if (isFijCoordination(user)) return allFijs.filter(f => f.is_active !== false);
   return allFijs.filter(f =>
     f.is_active !== false &&
-    (f.pilot_user_id === user.id || (f.co_pilot_user_ids || []).includes(user.id))
+    (f.pilot_user_id === user.id || f.copilot_user_id === user.id || (f.co_pilot_user_ids || []).includes(user.id))
   );
 }
 

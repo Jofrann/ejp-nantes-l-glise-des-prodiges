@@ -29,7 +29,7 @@ export default function PiloteHome() {
   if (loading || dataLoading) return <LoadingSpinner />;
 
   const myFijs = fijs.filter(f =>
-    f.pilot_user_id === user?.id || (f.co_pilot_user_ids || []).includes(user?.id)
+    f.pilot_user_id === user?.id || f.copilot_user_id === user?.id || (f.co_pilot_user_ids || []).includes(user?.id)
   );
   const myFijIds = myFijs.map(f => f.id);
   const myReports = reports.filter(r => myFijIds.includes(r.fij_house_id));
