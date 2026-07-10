@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Settings, Users, Calendar, Image, Church, Save, Plus, Trash2, Upload, CalendarClock, GraduationCap } from 'lucide-react';
+import { Settings, Users, Calendar, Image, Church, Save, Plus, Trash2, Upload, CalendarClock, GraduationCap, UserPlus } from 'lucide-react';
 import GalleryAdmin from '@/components/admin/GalleryAdmin';
 import AdminProgramsTab from '@/components/admin/AdminProgramsTab';
 import AdminAppointmentsTab from '@/components/admin/AdminAppointmentsTab';
 import AdminFormationsTab from '@/components/admin/AdminFormationsTab';
 import AdminRessourcesTab from '@/components/admin/AdminRessourcesTab';
+import FirstVisitIntentsTab from '@/components/admin/FirstVisitIntentsTab';
 import { motion } from 'framer-motion';
 
 const TABS = [
@@ -19,6 +20,7 @@ const TABS = [
   { id: 'testimonials', label: 'Témoignages', icon: Settings },
   { id: 'ministries', label: 'Ministères', icon: Settings },
   { id: 'gallery', label: 'Galerie', icon: Image },
+  { id: 'visit-intents', label: 'Intentions de visite', icon: UserPlus },
 ];
 
 function Section({ title, children }) {
@@ -279,6 +281,9 @@ export default function AdminHome() {
           )}
           {tab === 'gallery' && (
             <GalleryAdmin gallery={gallery} setGallery={setGallery} />
+          )}
+          {tab === 'visit-intents' && (
+            <FirstVisitIntentsTab />
           )}
         </div>
       </div>
@@ -549,6 +554,7 @@ function MinistryCard({ m, onUpdate, onRemove }) {
     <div className="bg-card border border-border rounded-2xl p-5 mb-4 shadow-sm">
       <input className={iCls + ' mb-3'} placeholder="Nom" value={form.name || ''} onChange={e => setForm(f => ({...f, name: e.target.value}))} onBlur={e => save({ name: e.target.value })} />
       <textarea className={iCls + ' mb-3'} rows={2} placeholder="Description" value={form.description || ''} onChange={e => setForm(f => ({...f, description: e.target.value}))} onBlur={e => save({ description: e.target.value })} />
+      <input className={iCls + ' mb-3'} placeholder="Fruit produit (ex: Chaque visiteur se sent chez lui)" value={form.benefit_text || ''} onChange={e => setForm(f => ({...f, benefit_text: e.target.value}))} onBlur={e => save({ benefit_text: e.target.value })} />
       <input className={iCls + ' mb-3'} placeholder="Icône (ex: Music, Users, Star)" value={form.icon || ''} onChange={e => setForm(f => ({...f, icon: e.target.value}))} onBlur={e => save({ icon: e.target.value })} />
       <div className="flex items-center justify-between">
         <label className="flex items-center gap-2 cursor-pointer text-xs text-muted-foreground">

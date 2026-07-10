@@ -1,0 +1,47 @@
+{
+  "name": "FirstVisitIntent",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "Pr\u00e9nom du visiteur"
+    },
+    "contact": {
+      "type": "string",
+      "description": "T\u00e9l\u00e9phone ou email"
+    },
+    "coming_status": {
+      "type": "string",
+      "enum": [
+        "seul",
+        "accompagne",
+        "incertain"
+      ],
+      "default": "incertain",
+      "description": "Le visiteur vient seul, accompagn\u00e9 ou ne sait pas encore"
+    },
+    "message": {
+      "type": "string",
+      "description": "Question ou message optionnel"
+    },
+    "source_section": {
+      "type": "string",
+      "description": "Section d'origine du formulaire (hero, venir, cta_final, etc.)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "welcomed",
+        "archived"
+      ],
+      "default": "new",
+      "description": "Statut de traitement"
+    }
+  },
+  "required": [
+    "first_name",
+    "contact"
+  ]
+}

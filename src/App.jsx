@@ -17,6 +17,7 @@ import ResetPassword from '@/pages/ResetPassword';
 import RoleLayout from '@/components/layouts/RoleLayout';
 import RoleGuard from '@/components/RoleGuard';
 import Home from '@/pages/Home';
+import Venir from '@/pages/Venir';
 import AdminHome from '@/pages/AdminHome';
 import MonProfil from '@/pages/MonProfil';
 import EspaceServiteurSas from '@/pages/EspaceServiteurSas';
@@ -93,6 +94,7 @@ const AuthenticatedApp = () => {
 
       {/* Vitrine publique */}
       <Route path="/" element={<Home />} />
+      <Route path="/venir" element={<Venir />} />
       <Route path="/espace-serviteur" element={<EspaceServiteurSas />} />
 
       {/* Routes protégées (espace interne) */}

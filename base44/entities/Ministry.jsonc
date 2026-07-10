@@ -10,6 +10,10 @@
       "type": "string",
       "description": "Description courte"
     },
+    "benefit_text": {
+      "type": "string",
+      "description": "Fruit produit / b\u00e9n\u00e9fice concret du minist\u00e8re"
+    },
     "icon": {
       "type": "string",
       "description": "Nom de l'ic\u00f4ne Lucide"

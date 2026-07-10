@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import IntroOverlay from '@/components/home/IntroOverlay';
-import HeroSection from '@/components/home/HeroSection';
-import VisionSection from '@/components/home/VisionSection';
-import CulteSection from '@/components/home/CulteSection';
-import EventsSection from '@/components/home/EventsSection';
-import CalendarSection from '@/components/home/CalendarSection';
-import TestimonialsSection from '@/components/home/TestimonialsSection';
-import ShepherdSection from '@/components/home/ShepherdSection';
-import LeadersSection from '@/components/home/LeadersSection';
-import MinistriesSection from '@/components/home/MinistriesSection';
-import GallerySection from '@/components/home/GallerySection';
-import FIJSection from '@/components/home/FIJSection';
-import NantesSection from '@/components/home/NantesSection';
-import AddressSection from '@/components/home/AddressSection';
-import ContactSection from '@/components/home/ContactSection';
-import HomeFooter from '@/components/home/HomeFooter';
+import PublicHeader from '@/components/public/PublicHeader';
+import StickyCTA from '@/components/public/StickyCTA';
+import HeroLumineux from '@/components/public/sections/HeroLumineux';
+import CeDimanche from '@/components/public/sections/CeDimanche';
+import PremiereFois from '@/components/public/sections/PremiereFois';
+import ImmersionScroll from '@/components/public/sections/ImmersionScroll';
+import VisionEJP from '@/components/public/sections/VisionEJP';
+import VivreIci from '@/components/public/sections/VivreIci';
+import Temoignages from '@/components/public/sections/Temoignages';
+import BergereLeaders from '@/components/public/sections/BergereLeaders';
+import Ministeres from '@/components/public/sections/Ministeres';
+import GalerieVivante from '@/components/public/sections/GalerieVivante';
+import NantesSection from '@/components/public/sections/NantesSection';
+import FAQSection from '@/components/public/sections/FAQSection';
+import CTAFinal from '@/components/public/sections/CTAFinal';
+import PublicFooter from '@/components/public/sections/PublicFooter';
 
 export default function Home() {
   const [config, setConfig] = useState(null);
@@ -24,9 +24,7 @@ export default function Home() {
   const [ministries, setMinistries] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
-  const [fiJs, setFiJs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [introDone, setIntroD] = useState(false);
   const [error, setError] = useState(false);
 
   const fetchData = () => {
@@ -37,17 +35,15 @@ export default function Home() {
       base44.entities.Leader.list('display_order', 20),
       base44.entities.Event.filter({ is_active: true }, 'event_date', 10),
       base44.entities.Ministry.list('display_order', 20),
-      base44.entities.GalleryMedia.filter({ is_active: true }, '-created_date', 12),
+      base44.entities.GalleryMedia.filter({ is_active: true }, 'display_order', 12),
       base44.entities.Testimonial.filter({ is_published: true }, 'display_order', 20),
-      base44.entities.FIJ.filter({ is_active: true }, 'display_order', 50),
-    ]).then(([c, l, e, m, g, t, f]) => {
+    ]).then(([c, l, e, m, g, t]) => {
       setConfig(c?.[0] || null);
       setLeaders(l || []);
       setEvents(e || []);
       setMinistries(m || []);
       setGallery(g || []);
       setTestimonials(t || []);
-      setFiJs(f || []);
     }).catch(() => {
       setError(true);
     }).finally(() => setLoading(false));
@@ -57,96 +53,72 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0B0B0C] flex items-center justify-center">
-        <div className="w-6 h-6 border border-[#C8A96A]/30 border-t-[#C8A96A] rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#FBFAF7] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[#E8E2D5] border-t-[#D8B76A] rounded-full animate-spin" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#0B0B0C] flex flex-col items-center justify-center text-center px-6">
-        <p className="text-[#C8A96A] font-display text-2xl mb-3">Connexion impossible</p>
-        <p className="text-gray-500 text-sm mb-6 max-w-xs">Une erreur réseau est survenue. Vérifie ta connexion et réessaie.</p>
-        <button onClick={fetchData} className="bg-[#C8A96A] text-[#0B0B0C] text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-[#D4B97A] transition-colors">
+      <div className="min-h-screen bg-[#FBFAF7] flex flex-col items-center justify-center text-center px-6">
+        <p className="font-display text-[#D8B76A] text-2xl mb-3">Connexion impossible</p>
+        <p className="text-[#4B5563] text-sm mb-6 max-w-xs">Une erreur réseau est survenue. Vérifie ta connexion et réessaie.</p>
+        <button onClick={fetchData} className="bg-[#101827] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#1a2740] transition-colors">
           Réessayer
         </button>
       </div>
     );
   }
 
-  const shepherd = leaders.find(l => l.is_main_shepherd);
-
-  const mediaUrl = config?.hero_video_url;
-  const isImage = mediaUrl && /\.(jpe?g|png|webp|gif|avif)(\?.*)?$/i.test(mediaUrl);
-
   return (
-    <div className="bg-[#0B0B0C] overflow-x-hidden">
-      {/* Fond fixe cinématique — photo ou vidéo */}
-      {mediaUrl && (
-        <div className="fixed inset-0 w-full h-screen -z-20 pointer-events-none overflow-hidden">
-          {isImage ? (
-            <img src={mediaUrl} alt="" className="w-full h-full object-cover" />
-          ) : (
-            <video autoPlay loop muted playsInline className="w-full h-full object-cover" src={mediaUrl} />
-          )}
-          <div className="absolute inset-0 bg-[#0B0B0C]/55" />
-        </div>
-      )}
-      {/* Intro cinématique */}
-      {!introDone && <IntroOverlay onDone={() => setIntroD(true)} />}
+    <div className="bg-[#FBFAF7] overflow-x-hidden">
+      <PublicHeader />
 
-      {/* Bannière annonce */}
-      {config?.announcement_active && config?.announcement_text && (
-        <div className="fixed top-0 left-0 right-0 z-[60] bg-[#C8A96A] text-[#0B0B0C] text-[10px] font-medium text-center py-2 px-4 tracking-[0.2em] uppercase">
-          {config.announcement_text}
-        </div>
-      )}
+      {/* 1. Hero cinématique lumineux */}
+      <HeroLumineux config={config} />
 
-      {/* 1. Hero */}
-      <HeroSection config={config} visible={introDone} />
+      {/* 2. Carte "Ce dimanche" */}
+      <CeDimanche config={config} />
 
-      {/* 3. Vision */}
-      <VisionSection title={config?.vision_title} text={config?.vision_text} />
+      {/* 3. Tu viens pour la première fois ? */}
+      <PremiereFois />
 
-      {/* 4. Prochain culte */}
-      <CulteSection config={config} />
+      {/* 4. Section immersive au scroll */}
+      <ImmersionScroll />
 
-      {/* 5. Calendrier */}
-      <CalendarSection events={events} />
+      {/* 5. Vision de l'EJP Nantes */}
+      <VisionEJP config={config} />
 
-      {/* 5b. Événements à la une (grid) */}
-      <EventsSection events={events} />
+      {/* 6. Ce que tu peux vivre ici */}
+      <VivreIci />
 
-      {/* 6. Témoignages */}
-      <TestimonialsSection testimonials={testimonials} />
+      {/* 7. Témoignages */}
+      <Temoignages testimonials={testimonials} />
 
-      {/* 7. Bergers */}
-      <ShepherdSection shepherd={shepherd} config={config} />
+      {/* 8. Bergère & leaders */}
+      <BergereLeaders leaders={leaders} />
 
-      {/* 8. Leaders */}
-      <LeadersSection leaders={leaders} />
+      {/* 9. Ministères / espaces de service */}
+      <Ministeres ministries={ministries} />
 
-      {/* 9. Ministères */}
-      <MinistriesSection ministries={ministries} />
+      {/* 10. Galerie vivante */}
+      <GalerieVivante media={gallery} />
 
-      {/* 10. FIJ */}
-      <FIJSection fijs={fiJs} />
-
-      {/* 11. Galerie */}
-      <GallerySection media={gallery} />
-
-      {/* 11. Nantes */}
+      {/* 11. Au cœur de Nantes */}
       <NantesSection />
 
-      {/* 12. Adresse */}
-      <AddressSection config={config} />
+      {/* 12. FAQ avant de venir */}
+      <FAQSection />
 
-      {/* 13. Contact */}
-      <ContactSection config={config} />
+      {/* 13. CTA final */}
+      <CTAFinal />
 
-      {/* Footer */}
-      <HomeFooter config={config} />
+      {/* 14. Footer */}
+      <PublicFooter config={config} />
+
+      {/* Sticky CTA mobile */}
+      <StickyCTA />
     </div>
   );
 }
