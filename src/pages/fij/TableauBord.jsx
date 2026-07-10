@@ -76,7 +76,7 @@ export default function TableauBord() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xs text-muted-foreground uppercase tracking-widest">CR manquants cette semaine</h2>
-          <Link to="/app/departements/fij/coordination/cr" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
+          <Link to="/app/responsabilites/fij-coordination/cr" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
             Voir tout <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -89,7 +89,7 @@ export default function TableauBord() {
             {missingCrFijs.slice(0, 5).map(fij => (
               <Link
                 key={fij.id}
-                to={`/app/departements/fij/fij/${fij.id}`}
+                to={`/app/responsabilites/fij-pilote/fij/${fij.id}`}
                 className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-secondary/30 transition-colors shadow-sm"
               >
                 <div className="w-8 h-8 rounded-lg bg-warning/10 border border-warning/20 flex items-center justify-center flex-shrink-0">
@@ -110,7 +110,7 @@ export default function TableauBord() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Alertes critiques</h2>
-            <Link to="/app/departements/fij/coordination/alertes" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
+            <Link to="/app/responsabilites/fij-coordination/alertes" className="text-xs text-secondary hover:text-secondary/80 flex items-center gap-1">
               Voir tout <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
@@ -138,7 +138,7 @@ export default function TableauBord() {
             return (
               <Link
                 key={fij.id}
-                to={`/app/departements/fij/fij/${fij.id}`}
+                to={`/app/responsabilites/fij-pilote/fij/${fij.id}`}
                 className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-secondary/30 transition-colors shadow-sm"
               >
                 <div className="flex-1 min-w-0">

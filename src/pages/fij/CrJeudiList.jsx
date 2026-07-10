@@ -57,7 +57,7 @@ export default function CrJeudiList() {
             {missingFijs.map(f => (
               <Link
                 key={f.id}
-                to={`/app/departements/fij/coordination/registre/${f.id}`}
+                to={`/app/responsabilites/fij-coordination/registre/${f.id}`}
                 className="text-[10px] bg-danger/10 text-danger px-2 py-0.5 rounded-full hover:bg-danger/20"
               >
                 {f.name}
@@ -102,7 +102,7 @@ function ReportRow({ report, fijs }) {
   const fij = fijs.find(f => f.id === report.fij_id);
   return (
     <Link
-      to={`/app/departements/fij/coordination/registre/${report.fij_id}/cr-jeudi/${report.id}`}
+      to={`/app/responsabilites/fij-coordination/registre/${report.fij_id}/cr-jeudi/${report.id}`}
       className="bg-card border border-border rounded-xl p-3 flex items-center gap-3 hover:border-secondary/30 transition-colors"
     >
       <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">

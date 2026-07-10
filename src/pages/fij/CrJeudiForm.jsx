@@ -73,15 +73,15 @@ export default function CrJeudiForm() {
 
   const isCoordination = isFijCoordinationRole(user);
   const basePath = isCoordination
-    ? `/app/departements/fij/coordination/registre/${fijId}`
-    : `/app/departements/fij/pilote/mes-fij/${fijId}`;
+    ? `/app/responsabilites/fij-coordination/registre/${fijId}`
+    : `/app/responsabilites/fij-pilote/mes-fij/${fijId}`;
 
   if (!fij) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center text-center px-5">
         <AlertTriangle className="w-10 h-10 text-muted-foreground mb-3" />
         <p className="text-sm font-semibold mb-1">Accès restreint</p>
-        <Link to="/app/departements/fij" className="text-secondary text-sm font-medium">← Retour FIJ</Link>
+        <Link to="/app/responsabilites" className="text-secondary text-sm font-medium">← Retour FIJ</Link>
       </div>
     );
   }
@@ -92,7 +92,7 @@ export default function CrJeudiForm() {
         <div className="max-w-2xl mx-auto px-4 py-6 pb-24">
           <PageBreadcrumb
             items={[
-              { label: 'FIJ', to: '/app/departements/fij' },
+              { label: 'FIJ', to: '/app/responsabilites' },
               { label: fij.name, to: basePath },
               { label: 'CR du jeudi', to: `${basePath}/cr-jeudi/nouveau` },
             ]}
@@ -123,18 +123,18 @@ export default function CrJeudiForm() {
         <div className="max-w-2xl mx-auto px-4 py-6 pb-24">
           <PageBreadcrumb
             items={[
-              { label: 'FIJ', to: '/app/departements/fij' },
-              { label: fij.name, to: `/app/departements/fij/pilote/mes-fij/${fijId}` },
+              { label: 'FIJ', to: '/app/responsabilites' },
+              { label: fij.name, to: `/app/responsabilites/fij-pilote/mes-fij/${fijId}` },
               { label: 'CR du jeudi', to: '#' },
             ]}
-            backTo={`/app/departements/fij/pilote/mes-fij/${fijId}`}
+            backTo={`/app/responsabilites/fij-pilote/mes-fij/${fijId}`}
             backLabel="← Bureau"
           />
           <div className="bg-card border border-border rounded-2xl p-6 text-center mt-4">
             <Users className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
             <p className="text-sm font-semibold text-foreground mb-1">Aucun membre actif</p>
             <p className="text-xs text-muted-foreground mb-4">Ajoutez d'abord des membres à cette FIJ.</p>
-            <Link to={`/app/departements/fij/pilote/mes-fij/${fijId}`} className="text-secondary text-sm font-medium">← Retour au bureau</Link>
+            <Link to={`/app/responsabilites/fij-pilote/mes-fij/${fijId}`} className="text-secondary text-sm font-medium">← Retour au bureau</Link>
           </div>
         </div>
       </div>
@@ -199,8 +199,8 @@ export default function CrJeudiForm() {
       );
 
       const basePath = isFijCoordinationRole(user)
-        ? `/app/departements/fij/coordination/registre/${fijId}`
-        : `/app/departements/fij/pilote/mes-fij/${fijId}`;
+        ? `/app/responsabilites/fij-coordination/registre/${fijId}`
+        : `/app/responsabilites/fij-pilote/mes-fij/${fijId}`;
       navigate(`${basePath}/cr-jeudi/${report.id}`);
     } catch (err) {
       alert('Erreur lors de l\'enregistrement: ' + (err.message || ''));
@@ -214,11 +214,11 @@ export default function CrJeudiForm() {
         <div className="max-w-2xl mx-auto px-4 py-2">
           <PageBreadcrumb
             items={[
-              { label: 'FIJ', to: '/app/departements/fij' },
-              { label: fij.name, to: `/app/departements/fij/pilote/mes-fij/${fijId}` },
+              { label: 'FIJ', to: '/app/responsabilites' },
+              { label: fij.name, to: `/app/responsabilites/fij-pilote/mes-fij/${fijId}` },
               { label: 'CR du jeudi', to: '#' },
             ]}
-            backTo={`/app/departements/fij/pilote/mes-fij/${fijId}`}
+            backTo={`/app/responsabilites/fij-pilote/mes-fij/${fijId}`}
             backLabel="← Bureau"
           />
         </div>

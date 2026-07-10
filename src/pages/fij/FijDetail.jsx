@@ -40,7 +40,7 @@ export default function FijDetail() {
   if (!fij) return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center text-muted-foreground">
       <p className="mb-4">FIJ introuvable.</p>
-      <Link to="/app/departements/fij" className="text-secondary text-sm">← Retour</Link>
+      <Link to="/app/responsabilites" className="text-secondary text-sm">← Retour</Link>
     </div>
   );
 
@@ -51,8 +51,8 @@ export default function FijDetail() {
 
   // Retour logique selon le rôle
   const parentFijPath = accessLevel === 'pilot'
-    ? '/app/departements/fij/pilote/mes-fij'
-    : '/app/departements/fij/coordination/registre';
+    ? '/app/responsabilites/fij-pilote/mes-fij'
+    : '/app/responsabilites/fij-coordination/registre';
   const parentFijLabel = accessLevel === 'pilot' ? '← Mes FIJ' : '← Registre';
 
   return (
@@ -65,8 +65,8 @@ export default function FijDetail() {
             items={[
               { label: 'Tableau de bord', to: '/app' },
               { label: 'Départements', to: '/app/departements' },
-              { label: 'FIJ', to: '/app/departements/fij' },
-              { label: fij.name, to: `/app/departements/fij/fij/${fij.id}` },
+              { label: 'FIJ', to: '/app/responsabilites' },
+              { label: fij.name, to: `/app/responsabilites/fij-pilote/fij/${fij.id}` },
             ]}
             backTo={parentFijPath}
             backLabel={parentFijLabel}
@@ -109,16 +109,16 @@ export default function FijDetail() {
         {/* Actions rapides */}
         {canManage && (
           <div className="flex flex-wrap gap-2 mb-6">
-            <Link to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`}
+            <Link to={`/app/responsabilites/fij-pilote/fij/${fij.id}/cr/nouveau`}
               className="flex items-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-3 py-2 transition-colors">
               <FileText className="w-3.5 h-3.5" /> Remplir le CR
             </Link>
-            <Link to={accessLevel === 'pilot' ? '/app/departements/fij/pilote/alertes' : '/app/departements/fij/coordination/alertes'}
+            <Link to={accessLevel === 'pilot' ? '/app/responsabilites/fij-pilote/alertes' : '/app/responsabilites/fij-coordination/alertes'}
               className="flex items-center gap-1.5 text-xs text-muted-foreground border border-border rounded-lg px-3 py-2 hover:bg-surface transition-colors">
               <AlertTriangle className="w-3.5 h-3.5" /> Signaler un besoin
             </Link>
             {isCoord && (
-              <Link to="/app/departements/fij/coordination/registre"
+              <Link to="/app/responsabilites/fij-coordination/registre"
                 className="flex items-center gap-1.5 text-xs text-muted-foreground border border-border rounded-lg px-3 py-2 hover:bg-surface transition-colors">
                 <Edit className="w-3.5 h-3.5" /> Modifier
               </Link>
@@ -134,7 +134,7 @@ export default function FijDetail() {
           ) : (
             <div className="space-y-2">
               {reports.slice(0, 5).map(r => (
-                <Link key={r.id} to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`}
+                <Link key={r.id} to={`/app/responsabilites/fij-pilote/fij/${fij.id}/cr/nouveau`}
                   className="block bg-card border border-border rounded-xl p-3 hover:border-secondary/30 transition-colors shadow-sm">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs text-muted-foreground">{new Date(r.meeting_date || r.week_start).toLocaleDateString('fr-FR')}</span>

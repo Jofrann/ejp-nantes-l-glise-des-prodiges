@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { isBureauLike } from '@/lib/permissions';
-import StarOSLayout from './StarOSLayout';
-import BureauLayout from './BureauLayout';
+import StarLayout from './StarLayout';
 
 export default function RoleLayout() {
-  const children = <Outlet />;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,11 +22,5 @@ export default function RoleLayout() {
     );
   }
 
-  // Le bureau/bergère/admin garde le BureauLayout avec sa navigation spécifique
-  if (isBureauLike(user)) {
-    return <BureauLayout user={user}>{children}</BureauLayout>;
-  }
-
-  // Tous les autres serviteurs utilisent STAR OS
-  return <StarOSLayout user={user}>{children}</StarOSLayout>;
+  return <StarLayout user={user}><Outlet /></StarLayout>;
 }

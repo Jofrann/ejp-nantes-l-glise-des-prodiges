@@ -12,7 +12,7 @@ export default function FijWorkspaceCard({ fij, members = [], lastReport, user }
   const isCopilot = fij.copilot_user_id === user?.id || (fij.co_pilot_user_ids || []).includes(user?.id);
   const roleLabel = isPilot ? 'Pilote' : isCopilot ? 'Copilote' : 'Pilote';
 
-  const basePath = `/app/departements/fij/pilote/mes-fij/${fij.id}`;
+  const basePath = `/app/responsabilites/fij-pilote/mes-fij/${fij.id}`;
   const attendanceRate = lastReport?.attendance_rate || 0;
 
   return (

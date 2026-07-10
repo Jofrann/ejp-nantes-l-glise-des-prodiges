@@ -124,7 +124,7 @@ export default function Reporting() {
           <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">FIJ en difficulté</h2>
           <div className="space-y-2">
             {strugglingFijs.map(f => (
-              <Link key={f.id} to={`/app/departements/fij/fij/${f.id}`}
+              <Link key={f.id} to={`/app/responsabilites/fij-pilote/fij/${f.id}`}
                 className="flex items-center gap-3 bg-warning/5 border border-warning/20 rounded-xl p-3 hover:border-warning/40 transition-colors">
                 <AlertTriangle className="w-4 h-4 text-warning flex-shrink-0" />
                 <div className="flex-1 min-w-0">

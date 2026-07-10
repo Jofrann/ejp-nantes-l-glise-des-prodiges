@@ -94,6 +94,10 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
+    background-image:
+      radial-gradient(circle at top left, rgba(200, 169, 106, 0.10), transparent 32%),
+      radial-gradient(circle at top right, rgba(27, 42, 65, 0.05), transparent 30%);
+    background-attachment: fixed;
   }
 
   .font-heading {
@@ -111,5 +115,45 @@
   }
   .scrollbar-none::-webkit-scrollbar {
     display: none;
+  }
+
+  /* === Glass Premium Design System (Phase 10 V2 — Spec 08) === */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: 0 12px 30px rgba(20, 20, 20, 0.06);
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 18px 45px rgba(27, 42, 65, 0.08);
+  }
+
+  .glass-header {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid #E7E2D8;
+    box-shadow: 0 2px 12px rgba(20, 20, 20, 0.04);
+    height: 64px;
+  }
+
+  .glass-bottom {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-top: 1px solid #E7E2D8;
+    box-shadow: 0 -2px 12px rgba(20, 20, 20, 0.04);
+  }
+
+  .glass-surface {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(248, 246, 241, 0.72));
+    border: 1px solid #E7E2D8;
+    box-shadow: 0 8px 24px rgba(20, 20, 20, 0.04);
   }
 }

@@ -97,7 +97,7 @@ export default function MemberDetail() {
       <div className="min-h-screen bg-background flex flex-col items-center justify-center text-center px-5">
         <AlertTriangle className="w-10 h-10 text-muted-foreground mb-3" />
         <p className="text-sm font-semibold mb-1">Membre introuvable</p>
-        <Link to="/app/departements/fij" className="text-secondary text-sm font-medium">← Retour FIJ</Link>
+        <Link to="/app/responsabilites" className="text-secondary text-sm font-medium">← Retour FIJ</Link>
       </div>
     );
   }
@@ -117,7 +117,7 @@ export default function MemberDetail() {
     else break;
   }
 
-  const baseBureau = `/app/departements/fij/pilote/mes-fij/${fijId}`;
+  const baseBureau = `/app/responsabilites/fij-pilote/mes-fij/${fijId}`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -125,7 +125,7 @@ export default function MemberDetail() {
         <div className="max-w-2xl mx-auto px-4 py-2">
           <PageBreadcrumb
             items={[
-              { label: 'FIJ', to: '/app/departements/fij' },
+              { label: 'FIJ', to: '/app/responsabilites' },
               { label: fij.name, to: baseBureau },
               { label: member.full_name, to: '#' },
             ]}

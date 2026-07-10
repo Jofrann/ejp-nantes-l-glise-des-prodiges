@@ -274,9 +274,9 @@ export default function AppDashboard() {
             <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Espace direction</h2>
             <div className="grid grid-cols-2 gap-3">
               {isBureauLike(user) && (
-                <Link to="/app/direction" className="group bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-4 transition-all hover:shadow-md">
+                <Link to="/app/supervision" className="group bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-4 transition-all hover:shadow-md">
                   <Briefcase className="w-5 h-5 text-primary mb-3" />
-                  <p className="text-sm font-semibold text-foreground">Direction</p>
+                  <p className="text-sm font-semibold text-foreground">Supervision</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Vue consolidée</p>
                 </Link>
               )}

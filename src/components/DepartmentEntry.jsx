@@ -38,7 +38,7 @@ export default function DepartmentEntry() {
   }
 
   if (dept && isFijDepartment(dept)) {
-    return <Navigate to="/app/departements/fij" replace />;
+    return <Navigate to="/app/responsabilites" replace />;
   }
 
   return <PageDepartement />;

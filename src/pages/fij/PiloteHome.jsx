@@ -56,7 +56,7 @@ export default function PiloteHome() {
     ? new Date(lastOverallReport.thursday_date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
     : '—';
 
-  const base = '/app/departements/fij/pilote';
+  const base = '/app/responsabilites/fij-pilote';
 
   return (
     <FijPageShell

@@ -27,7 +27,7 @@ export function getDepartmentRoute(dept) {
   if (!dept) return '/app/departements';
 
   if (isFijDepartment(dept)) {
-    return '/app/departements/fij';
+    return '/app/responsabilites';
   }
 
   return `/app/departements/${dept.slug || dept.id}`;

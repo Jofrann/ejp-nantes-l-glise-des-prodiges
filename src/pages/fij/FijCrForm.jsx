@@ -71,7 +71,7 @@ export default function FijCrForm() {
   if (!fij) return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center text-muted-foreground">
       <p className="mb-4">FIJ introuvable.</p>
-      <Link to="/app/departements/fij" className="text-secondary text-sm">← Retour</Link>
+      <Link to="/app/responsabilites" className="text-secondary text-sm">← Retour</Link>
     </div>
   );
 
@@ -95,7 +95,7 @@ export default function FijCrForm() {
       } else {
         await base44.entities.FijWeeklyReport.create(payload);
       }
-      navigate(`/app/departements/fij/fij/${id}`);
+      navigate(`/app/responsabilites/fij-pilote/fij/${id}`);
     } catch (e) {
       alert('Erreur: ' + e.message);
     }
@@ -111,11 +111,11 @@ export default function FijCrForm() {
             items={[
               { label: 'Tableau de bord', to: '/app' },
               { label: 'Départements', to: '/app/departements' },
-              { label: 'FIJ', to: '/app/departements/fij' },
-              { label: fij.name, to: `/app/departements/fij/fij/${id}` },
+              { label: 'FIJ', to: '/app/responsabilites' },
+              { label: fij.name, to: `/app/responsabilites/fij-pilote/fij/${id}` },
               { label: 'Nouveau CR', to: location.pathname },
             ]}
-            backTo={`/app/departements/fij/fij/${id}`}
+            backTo={`/app/responsabilites/fij-pilote/fij/${id}`}
             backLabel="← Fiche FIJ"
           />
           <span className="text-xs text-muted-foreground flex-shrink-0">CR du {new Date(weekStart).toLocaleDateString('fr-FR')}</span>

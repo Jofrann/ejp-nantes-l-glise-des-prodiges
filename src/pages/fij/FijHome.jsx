@@ -63,7 +63,7 @@ export default function FijHome() {
             items={[
               { label: 'Tableau de bord', to: '/app' },
               { label: 'Départements', to: '/app/departements' },
-              { label: 'FIJ', to: '/app/departements/fij' },
+              { label: 'FIJ', to: '/app/responsabilites' },
             ]}
             backTo="/app/departements"
             backLabel="← Tous les départements"
@@ -99,7 +99,7 @@ export default function FijHome() {
               {isPilot && (
                 <>
                   <AccessCard
-                    to="/app/departements/fij/pilote"
+                    to="/app/responsabilites/fij-pilote"
                     icon={Users}
                     title="Entrer dans mon espace pilote"
                     desc="Gérez vos FIJ, remplissez vos comptes rendus et consultez les communications."
@@ -117,7 +117,7 @@ export default function FijHome() {
               {isCoord && (
                 <>
                   <AccessCard
-                    to="/app/departements/fij/coordination"
+                    to="/app/responsabilites/fij-coordination"
                     icon={Shield}
                     title="Entrer dans l'espace coordination"
                     desc="Gérez le registre, les ouvertures, les consécrations, les CR et le reporting."

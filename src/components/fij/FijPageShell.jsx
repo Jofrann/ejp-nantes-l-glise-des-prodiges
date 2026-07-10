@@ -6,29 +6,29 @@ import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 
 // Navigation par rôle — chaque rôle a son propre espace
 export const PILOTE_NAV = [
-  { to: '/app/departements/fij/pilote', label: 'Accueil', end: true },
-  { to: '/app/departements/fij/pilote/mes-fij', label: 'Mes FIJ' },
-  { to: '/app/departements/fij/pilote/cr', label: 'Comptes rendus' },
-  { to: '/app/departements/fij/pilote/communications', label: 'Communications' },
-  { to: '/app/departements/fij/pilote/documents', label: 'Documents' },
-  { to: '/app/departements/fij/pilote/alertes', label: 'Alertes' },
-  { to: '/app/departements/fij/coordination/pilotes', label: 'Pilotes' },
+  { to: '/app/responsabilites/fij-pilote', label: 'Accueil', end: true },
+  { to: '/app/responsabilites/fij-pilote/mes-fij', label: 'Mes FIJ' },
+  { to: '/app/responsabilites/fij-pilote/cr', label: 'Comptes rendus' },
+  { to: '/app/responsabilites/fij-pilote/communications', label: 'Communications' },
+  { to: '/app/responsabilites/fij-pilote/documents', label: 'Documents' },
+  { to: '/app/responsabilites/fij-pilote/alertes', label: 'Alertes' },
+  { to: '/app/responsabilites/fij-coordination/pilotes', label: 'Pilotes' },
 ];
 
 export const COORDINATION_NAV = [
-  { to: '/app/departements/fij/coordination', label: 'Tableau', end: true },
-  { to: '/app/departements/fij/coordination/registre', label: 'Registre' },
-  { to: '/app/departements/fij/coordination/cr-jeudi', label: 'CR Jeudi' },
-  { to: '/app/departements/fij/coordination/relances', label: 'Relances' },
-  { to: '/app/departements/fij/coordination/ouvertures', label: 'Ouvertures' },
-  { to: '/app/departements/fij/coordination/consecrations', label: 'Consécrations' },
-  { to: '/app/departements/fij/coordination/pause', label: 'Pause' },
-  { to: '/app/departements/fij/coordination/pilotes', label: 'Pilotes' },
-  { to: '/app/departements/fij/coordination/communications', label: 'Comms' },
-  { to: '/app/departements/fij/coordination/documents', label: 'Docs' },
-  { to: '/app/departements/fij/coordination/alertes', label: 'Alertes' },
-  { to: '/app/departements/fij/coordination/reporting', label: 'Reporting' },
-  { to: '/app/departements/fij/coordination/transferts', label: 'Transferts' },
+  { to: '/app/responsabilites/fij-coordination', label: 'Tableau', end: true },
+  { to: '/app/responsabilites/fij-coordination/registre', label: 'Registre' },
+  { to: '/app/responsabilites/fij-coordination/cr-jeudi', label: 'CR Jeudi' },
+  { to: '/app/responsabilites/fij-coordination/relances', label: 'Relances' },
+  { to: '/app/responsabilites/fij-coordination/ouvertures', label: 'Ouvertures' },
+  { to: '/app/responsabilites/fij-coordination/consecrations', label: 'Consécrations' },
+  { to: '/app/responsabilites/fij-coordination/pause', label: 'Pause' },
+  { to: '/app/responsabilites/fij-coordination/pilotes', label: 'Pilotes' },
+  { to: '/app/responsabilites/fij-coordination/communications', label: 'Comms' },
+  { to: '/app/responsabilites/fij-coordination/documents', label: 'Docs' },
+  { to: '/app/responsabilites/fij-coordination/alertes', label: 'Alertes' },
+  { to: '/app/responsabilites/fij-coordination/reporting', label: 'Reporting' },
+  { to: '/app/responsabilites/fij-coordination/transferts', label: 'Transferts' },
 ];
 
 // L'espace Direction FIJ a été supprimé — les leaders consultent les indicateurs dans /app/direction
@@ -66,9 +66,9 @@ export function RoleShell({ role, title, subtitle, children, actions, requiredRo
     : routeRole === 'coordination' ? COORDINATION_NAV
     : [];
 
-  const hubPath = routeRole === 'pilot' ? '/app/departements/fij/pilote'
-    : routeRole === 'coordination' ? '/app/departements/fij/coordination'
-    : '/app/departements/fij';
+  const hubPath = routeRole === 'pilot' ? '/app/responsabilites/fij-pilote'
+    : routeRole === 'coordination' ? '/app/responsabilites/fij-coordination'
+    : '/app/responsabilites';
 
   const hubLabel = routeRole === 'pilot' ? '← Espace pilote'
     : routeRole === 'coordination' ? '← Coordination'
@@ -85,7 +85,7 @@ export function RoleShell({ role, title, subtitle, children, actions, requiredRo
         </div>
         <p className="text-sm font-semibold mb-1">Accès restreint</p>
         <p className="text-xs text-muted-foreground mb-5 max-w-xs">Cette page est réservée à la coordination et à la direction.</p>
-        <Link to="/app/departements/fij" className="text-secondary text-sm font-medium">← Retour à l'accueil FIJ</Link>
+        <Link to="/app/responsabilites" className="text-secondary text-sm font-medium">← Retour à l'accueil FIJ</Link>
       </div>
     );
   }
@@ -100,7 +100,7 @@ export function RoleShell({ role, title, subtitle, children, actions, requiredRo
             items={[
               { label: 'Tableau de bord', to: '/app' },
               { label: 'Départements', to: '/app/departements' },
-              { label: 'FIJ', to: '/app/departements/fij' },
+              { label: 'FIJ', to: '/app/responsabilites' },
               { label: breadcrumbLabel || title, to: location.pathname },
             ]}
             backTo={hubPath}

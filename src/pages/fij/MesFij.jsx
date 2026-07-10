@@ -103,13 +103,13 @@ export default function MesFij() {
                 {/* Actions */}
                 <div className="p-3 flex gap-2">
                   <Link
-                    to={`/app/departements/fij/pilote/mes-fij/${fij.id}`}
+                    to={`/app/responsabilites/fij-pilote/mes-fij/${fij.id}`}
                     className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-foreground bg-surface hover:bg-muted border border-border rounded-xl py-2.5 transition-colors"
                   >
                     <Users className="w-3.5 h-3.5" /> Ouvrir
                   </Link>
                   <Link
-                    to={`/app/departements/fij/pilote/mes-fij/${fij.id}/cr-jeudi/nouveau`}
+                    to={`/app/responsabilites/fij-pilote/mes-fij/${fij.id}/cr-jeudi/nouveau`}
                     className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl py-2.5 transition-colors"
                   >
                     <FileText className="w-3.5 h-3.5" /> CR du jeudi

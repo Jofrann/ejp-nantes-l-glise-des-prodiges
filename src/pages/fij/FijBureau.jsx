@@ -67,15 +67,15 @@ export default function FijBureau() {
         <AlertTriangle className="w-10 h-10 text-muted-foreground mb-3" />
         <p className="text-sm font-semibold mb-1">Accès restreint</p>
         <p className="text-xs text-muted-foreground mb-4">Vous n'avez pas accès à cette FIJ.</p>
-        <Link to="/app/departements/fij" className="text-secondary text-sm font-medium">← Retour FIJ</Link>
+        <Link to="/app/responsabilites" className="text-secondary text-sm font-medium">← Retour FIJ</Link>
       </div>
     );
   }
 
   const isCoordination = isFijCoordinationRole(user);
   const basePath = isCoordination
-    ? '/app/departements/fij/coordination/registre'
-    : '/app/departements/fij/pilote/mes-fij';
+    ? '/app/responsabilites/fij-coordination/registre'
+    : '/app/responsabilites/fij-pilote/mes-fij';
 
   const activeMembers = members.filter(m => m.is_active !== false);
   const lastReport = reports[0];
@@ -88,11 +88,11 @@ export default function FijBureau() {
           <PageBreadcrumb
             items={[
               { label: 'Tableau de bord', to: '/app' },
-              { label: 'FIJ', to: '/app/departements/fij' },
-              { label: isCoordination ? 'Registre' : 'Mes FI', to: isCoordination ? '/app/departements/fij/coordination/registre' : '/app/departements/fij/pilote/mes-fij' },
+              { label: 'FIJ', to: '/app/responsabilites' },
+              { label: isCoordination ? 'Registre' : 'Mes FI', to: isCoordination ? '/app/responsabilites/fij-coordination/registre' : '/app/responsabilites/fij-pilote/mes-fij' },
               { label: fij.name, to: `${basePath}/${fijId}` },
             ]}
-            backTo={isCoordination ? '/app/departements/fij/coordination/registre' : '/app/departements/fij/pilote/mes-fij'}
+            backTo={isCoordination ? '/app/responsabilites/fij-coordination/registre' : '/app/responsabilites/fij-pilote/mes-fij'}
             backLabel="← Retour"
           />
         </div>

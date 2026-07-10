@@ -18,11 +18,9 @@ import RoleLayout from '@/components/layouts/RoleLayout';
 import RoleGuard from '@/components/RoleGuard';
 import Home from '@/pages/Home';
 import AdminHome from '@/pages/AdminHome';
-import BureauDashboard from '@/pages/BureauDashboard';
 import MonProfil from '@/pages/MonProfil';
 import EspaceServiteurSas from '@/pages/EspaceServiteurSas';
 import AppDashboard from '@/pages/AppDashboard';
-import FijHome from '@/pages/fij/FijHome';
 import FijTableauBord from '@/pages/fij/TableauBord';
 import FijMesFij from '@/pages/fij/MesFij';
 import FijRegistre from '@/pages/fij/Registre';
@@ -45,11 +43,9 @@ import CrJeudiForm from '@/pages/fij/CrJeudiForm';
 import CrJeudiDetail from '@/pages/fij/CrJeudiDetail';
 import CrJeudiList from '@/pages/fij/CrJeudiList';
 import MemberDetail from '@/pages/fij/MemberDetail';
-import ListeDepartements from '@/pages/departements/ListeDepartements';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import DepartmentEntry from '@/components/DepartmentEntry';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
-import Hub from '@/pages/Hub';
 import StarAgenda from '@/pages/star/Agenda';
 import StarPresences from '@/pages/star/Presences';
 import StarFormations from '@/pages/star/Formations';
@@ -61,6 +57,7 @@ import StarParcours from '@/pages/star/Parcours';
 import StarEspacePersonnel from '@/pages/star/EspacePersonnel';
 import StarResponsabilites from '@/pages/star/Responsabilites';
 import StarOrganisation from '@/pages/star/Organisation';
+import StarSupervision from '@/pages/star/Supervision';
 import ResponsabilitePlaceholder from '@/pages/star/ResponsabilitePlaceholder';
 import { Users, Settings as SettingsIcon, Music, GraduationCap } from 'lucide-react';
 
@@ -104,64 +101,91 @@ const AuthenticatedApp = () => {
 
           <Route path="/app" element={<AppDashboard />} />
           <Route path="/app/profil" element={<MonProfil />} />
-          <Route path="/app/departements" element={<ListeDepartements />} />
-          <Route path="/app/departements/fij" element={<FijHome />} />
+          <Route path="/app/departements" element={<Navigate to="/app/responsabilites" replace />} />
+          <Route path="/app/departements/fij" element={<Navigate to="/app/responsabilites" replace />} />
 
-          {/* === Espace Pilote FIJ === */}
-          <Route path="/app/departements/fij/pilote" element={<FijPiloteHome />} />
-          <Route path="/app/departements/fij/pilote/mes-fij" element={<FijMesFij />} />
-          <Route path="/app/departements/fij/pilote/cr" element={<FijCrHebdomadaires />} />
-          <Route path="/app/departements/fij/pilote/communications" element={<FijCommunications />} />
-          <Route path="/app/departements/fij/pilote/documents" element={<FijDocuments />} />
-          <Route path="/app/departements/fij/pilote/alertes" element={<FijAlertes />} />
+          {/* === Espace Pilote FIJ (sous /app/responsabilites/fij-pilote) === */}
+          <Route path="/app/responsabilites/fij-pilote" element={<FijPiloteHome />} />
+          <Route path="/app/responsabilites/fij-pilote/mes-fij" element={<FijMesFij />} />
+          <Route path="/app/responsabilites/fij-pilote/cr" element={<FijCrHebdomadaires />} />
+          <Route path="/app/responsabilites/fij-pilote/communications" element={<FijCommunications />} />
+          <Route path="/app/responsabilites/fij-pilote/documents" element={<FijDocuments />} />
+          <Route path="/app/responsabilites/fij-pilote/alertes" element={<FijAlertes />} />
+          <Route path="/app/responsabilites/fij-pilote/mes-fij/:fijId" element={<FijBureau />} />
+          <Route path="/app/responsabilites/fij-pilote/mes-fij/:fijId/cr-jeudi/nouveau" element={<CrJeudiForm />} />
+          <Route path="/app/responsabilites/fij-pilote/mes-fij/:fijId/cr-jeudi/:reportId" element={<CrJeudiDetail />} />
+          <Route path="/app/responsabilites/fij-pilote/mes-fij/:fijId/membres/:memberId" element={<MemberDetail />} />
 
-          {/* === Espace Coordination FIJ === */}
-          <Route path="/app/departements/fij/coordination" element={<FijTableauBord />} />
-          <Route path="/app/departements/fij/coordination/registre" element={<FijRegistre />} />
-          <Route path="/app/departements/fij/coordination/cr" element={<FijCrHebdomadaires />} />
-          <Route path="/app/departements/fij/coordination/relances" element={<FijRelances />} />
-          <Route path="/app/departements/fij/coordination/ouvertures" element={<FijOuvertures />} />
-          <Route path="/app/departements/fij/coordination/consecrations" element={<FijConsecrations />} />
-          <Route path="/app/departements/fij/coordination/pause" element={<FijPause />} />
-          <Route path="/app/departements/fij/coordination/pilotes" element={<FijPilotes />} />
-          <Route path="/app/departements/fij/coordination/communications" element={<FijCommunications />} />
-          <Route path="/app/departements/fij/coordination/documents" element={<FijDocuments />} />
-          <Route path="/app/departements/fij/coordination/alertes" element={<FijAlertes />} />
-          <Route path="/app/departements/fij/coordination/reporting" element={<FijReporting />} />
-          <Route path="/app/departements/fij/coordination/transferts" element={<FijTransferts />} />
-
-          {/* === Redirection ancien espace Direction FIJ vers /app/direction === */}
-          <Route path="/app/departements/fij/direction" element={<Navigate to="/app/direction" replace />} />
-          <Route path="/app/departements/fij/direction/tableau-de-bord" element={<Navigate to="/app/direction" replace />} />
+          {/* === Espace Coordination FIJ (sous /app/responsabilites/fij-coordination) === */}
+          <Route path="/app/responsabilites/fij-coordination" element={<FijTableauBord />} />
+          <Route path="/app/responsabilites/fij-coordination/registre" element={<FijRegistre />} />
+          <Route path="/app/responsabilites/fij-coordination/cr" element={<FijCrHebdomadaires />} />
+          <Route path="/app/responsabilites/fij-coordination/relances" element={<FijRelances />} />
+          <Route path="/app/responsabilites/fij-coordination/ouvertures" element={<FijOuvertures />} />
+          <Route path="/app/responsabilites/fij-coordination/consecrations" element={<FijConsecrations />} />
+          <Route path="/app/responsabilites/fij-coordination/pause" element={<FijPause />} />
+          <Route path="/app/responsabilites/fij-coordination/pilotes" element={<FijPilotes />} />
+          <Route path="/app/responsabilites/fij-coordination/communications" element={<FijCommunications />} />
+          <Route path="/app/responsabilites/fij-coordination/documents" element={<FijDocuments />} />
+          <Route path="/app/responsabilites/fij-coordination/alertes" element={<FijAlertes />} />
+          <Route path="/app/responsabilites/fij-coordination/reporting" element={<FijReporting />} />
+          <Route path="/app/responsabilites/fij-coordination/transferts" element={<FijTransferts />} />
+          <Route path="/app/responsabilites/fij-coordination/registre/:fijId" element={<FijBureau />} />
+          <Route path="/app/responsabilites/fij-coordination/registre/:fijId/cr-jeudi/nouveau" element={<CrJeudiForm />} />
+          <Route path="/app/responsabilites/fij-coordination/registre/:fijId/cr-jeudi/:reportId" element={<CrJeudiDetail />} />
+          <Route path="/app/responsabilites/fij-coordination/cr-jeudi" element={<CrJeudiList />} />
 
           {/* === Routes partagées === */}
-          <Route path="/app/departements/fij/fij/:id" element={<FijDetail />} />
-          <Route path="/app/departements/fij/fij/:id/cr/nouveau" element={<FijCrForm />} />
+          <Route path="/app/responsabilites/fij-pilote/fij/:id" element={<FijDetail />} />
+          <Route path="/app/responsabilites/fij-pilote/fij/:id/cr/nouveau" element={<FijCrForm />} />
 
-          {/* === Bureau FI dédié (Phase 6 V2) === */}
-          <Route path="/app/departements/fij/pilote/mes-fij/:fijId" element={<FijBureau />} />
-          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/cr-jeudi/nouveau" element={<CrJeudiForm />} />
-          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/cr-jeudi/:reportId" element={<CrJeudiDetail />} />
-          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/membres/:memberId" element={<MemberDetail />} />
-          <Route path="/app/departements/fij/coordination/registre/:fijId" element={<FijBureau />} />
-          <Route path="/app/departements/fij/coordination/registre/:fijId/cr-jeudi/nouveau" element={<CrJeudiForm />} />
-          <Route path="/app/departements/fij/coordination/registre/:fijId/cr-jeudi/:reportId" element={<CrJeudiDetail />} />
-          <Route path="/app/departements/fij/coordination/cr-jeudi" element={<CrJeudiList />} />
+          {/* === Redirections anciennes routes FIJ vers /app/responsabilites === */}
+          <Route path="/app/departements/fij/pilote" element={<Navigate to="/app/responsabilites/fij-pilote" replace />} />
+          <Route path="/app/departements/fij/pilote/mes-fij" element={<Navigate to="/app/responsabilites/fij-pilote/mes-fij" replace />} />
+          <Route path="/app/departements/fij/pilote/cr" element={<Navigate to="/app/responsabilites/fij-pilote/cr" replace />} />
+          <Route path="/app/departements/fij/pilote/communications" element={<Navigate to="/app/responsabilites/fij-pilote/communications" replace />} />
+          <Route path="/app/departements/fij/pilote/documents" element={<Navigate to="/app/responsabilites/fij-pilote/documents" replace />} />
+          <Route path="/app/departements/fij/pilote/alertes" element={<Navigate to="/app/responsabilites/fij-pilote/alertes" replace />} />
+          <Route path="/app/departements/fij/pilote/mes-fij/:fijId" element={<Navigate to="/app/responsabilites/fij-pilote/mes-fij/:fijId" replace />} />
+          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/cr-jeudi/nouveau" element={<Navigate to="/app/responsabilites/fij-pilote/mes-fij/:fijId/cr-jeudi/nouveau" replace />} />
+          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/cr-jeudi/:reportId" element={<Navigate to="/app/responsabilites/fij-pilote/mes-fij/:fijId/cr-jeudi/:reportId" replace />} />
+          <Route path="/app/departements/fij/pilote/mes-fij/:fijId/membres/:memberId" element={<Navigate to="/app/responsabilites/fij-pilote/mes-fij/:fijId/membres/:memberId" replace />} />
+          <Route path="/app/departements/fij/coordination" element={<Navigate to="/app/responsabilites/fij-coordination" replace />} />
+          <Route path="/app/departements/fij/coordination/registre" element={<Navigate to="/app/responsabilites/fij-coordination/registre" replace />} />
+          <Route path="/app/departements/fij/coordination/cr" element={<Navigate to="/app/responsabilites/fij-coordination/cr" replace />} />
+          <Route path="/app/departements/fij/coordination/relances" element={<Navigate to="/app/responsabilites/fij-coordination/relances" replace />} />
+          <Route path="/app/departements/fij/coordination/ouvertures" element={<Navigate to="/app/responsabilites/fij-coordination/ouvertures" replace />} />
+          <Route path="/app/departements/fij/coordination/consecrations" element={<Navigate to="/app/responsabilites/fij-coordination/consecrations" replace />} />
+          <Route path="/app/departements/fij/coordination/pause" element={<Navigate to="/app/responsabilites/fij-coordination/pause" replace />} />
+          <Route path="/app/departements/fij/coordination/pilotes" element={<Navigate to="/app/responsabilites/fij-coordination/pilotes" replace />} />
+          <Route path="/app/departements/fij/coordination/communications" element={<Navigate to="/app/responsabilites/fij-coordination/communications" replace />} />
+          <Route path="/app/departements/fij/coordination/documents" element={<Navigate to="/app/responsabilites/fij-coordination/documents" replace />} />
+          <Route path="/app/departements/fij/coordination/alertes" element={<Navigate to="/app/responsabilites/fij-coordination/alertes" replace />} />
+          <Route path="/app/departements/fij/coordination/reporting" element={<Navigate to="/app/responsabilites/fij-coordination/reporting" replace />} />
+          <Route path="/app/departements/fij/coordination/transferts" element={<Navigate to="/app/responsabilites/fij-coordination/transferts" replace />} />
+          <Route path="/app/departements/fij/coordination/registre/:fijId" element={<Navigate to="/app/responsabilites/fij-coordination/registre/:fijId" replace />} />
+          <Route path="/app/departements/fij/coordination/registre/:fijId/cr-jeudi/nouveau" element={<Navigate to="/app/responsabilites/fij-coordination/registre/:fijId/cr-jeudi/nouveau" replace />} />
+          <Route path="/app/departements/fij/coordination/registre/:fijId/cr-jeudi/:reportId" element={<Navigate to="/app/responsabilites/fij-coordination/registre/:fijId/cr-jeudi/:reportId" replace />} />
+          <Route path="/app/departements/fij/coordination/cr-jeudi" element={<Navigate to="/app/responsabilites/fij-coordination/cr-jeudi" replace />} />
+          <Route path="/app/departements/fij/direction" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/departements/fij/direction/tableau-de-bord" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/departements/fij/fij/:id" element={<Navigate to="/app/responsabilites/fij-pilote/fij/:id" replace />} />
+          <Route path="/app/departements/fij/fij/:id/cr/nouveau" element={<Navigate to="/app/responsabilites/fij-pilote/fij/:id/cr/nouveau" replace />} />
 
-          {/* === Redirections anciennes routes === */}
-          <Route path="/app/departements/fij/tableau-de-bord" element={<Navigate to="/app/departements/fij/coordination" replace />} />
-          <Route path="/app/departements/fij/mes-fij" element={<Navigate to="/app/departements/fij/pilote/mes-fij" replace />} />
-          <Route path="/app/departements/fij/registre" element={<Navigate to="/app/departements/fij/coordination/registre" replace />} />
-          <Route path="/app/departements/fij/cr-hebdomadaires" element={<Navigate to="/app/departements/fij/coordination/cr" replace />} />
-          <Route path="/app/departements/fij/ouvertures" element={<Navigate to="/app/departements/fij/coordination/ouvertures" replace />} />
-          <Route path="/app/departements/fij/consecrations" element={<Navigate to="/app/departements/fij/coordination/consecrations" replace />} />
-          <Route path="/app/departements/fij/pause" element={<Navigate to="/app/departements/fij/coordination/pause" replace />} />
-          <Route path="/app/departements/fij/pilotes" element={<Navigate to="/app/departements/fij/coordination/pilotes" replace />} />
-          <Route path="/app/departements/fij/communications" element={<Navigate to="/app/departements/fij/coordination/communications" replace />} />
-          <Route path="/app/departements/fij/reporting" element={<Navigate to="/app/departements/fij/coordination/reporting" replace />} />
-          <Route path="/app/departements/fij/documents" element={<Navigate to="/app/departements/fij/coordination/documents" replace />} />
-          <Route path="/app/departements/fij/alertes" element={<Navigate to="/app/departements/fij/coordination/alertes" replace />} />
-          <Route path="/app/departements/fij/transferts" element={<Navigate to="/app/departements/fij/coordination/transferts" replace />} />
+          {/* === Redirections anciennes routes FIJ === */}
+          <Route path="/app/departements/fij/tableau-de-bord" element={<Navigate to="/app/responsabilites/fij-coordination" replace />} />
+          <Route path="/app/departements/fij/mes-fij" element={<Navigate to="/app/responsabilites/fij-pilote/mes-fij" replace />} />
+          <Route path="/app/departements/fij/registre" element={<Navigate to="/app/responsabilites/fij-coordination/registre" replace />} />
+          <Route path="/app/departements/fij/cr-hebdomadaires" element={<Navigate to="/app/responsabilites/fij-coordination/cr" replace />} />
+          <Route path="/app/departements/fij/ouvertures" element={<Navigate to="/app/responsabilites/fij-coordination/ouvertures" replace />} />
+          <Route path="/app/departements/fij/consecrations" element={<Navigate to="/app/responsabilites/fij-coordination/consecrations" replace />} />
+          <Route path="/app/departements/fij/pause" element={<Navigate to="/app/responsabilites/fij-coordination/pause" replace />} />
+          <Route path="/app/departements/fij/pilotes" element={<Navigate to="/app/responsabilites/fij-coordination/pilotes" replace />} />
+          <Route path="/app/departements/fij/communications" element={<Navigate to="/app/responsabilites/fij-coordination/communications" replace />} />
+          <Route path="/app/departements/fij/reporting" element={<Navigate to="/app/responsabilites/fij-coordination/reporting" replace />} />
+          <Route path="/app/departements/fij/documents" element={<Navigate to="/app/responsabilites/fij-coordination/documents" replace />} />
+          <Route path="/app/departements/fij/alertes" element={<Navigate to="/app/responsabilites/fij-coordination/alertes" replace />} />
+          <Route path="/app/departements/fij/transferts" element={<Navigate to="/app/responsabilites/fij-coordination/transferts" replace />} />
           {/* === Routes STAR OS — Espace personnel serviteur === */}
           <Route path="/app/agenda" element={<StarAgenda />} />
           <Route path="/app/presences" element={<StarPresences />} />
@@ -174,10 +198,9 @@ const AuthenticatedApp = () => {
           <Route path="/app/espace-personnel" element={<StarEspacePersonnel />} />
           <Route path="/app/responsabilites" element={<StarResponsabilites />} />
           <Route path="/app/organisation" element={<StarOrganisation />} />
+          <Route path="/app/supervision" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><StarSupervision /></RoleGuard>} />
 
           {/* === Redirections anciennes routes vers responsabilités === */}
-          <Route path="/app/responsabilites/fij-pilote" element={<Navigate to="/app/departements/fij/pilote" replace />} />
-          <Route path="/app/responsabilites/fij-coordination" element={<Navigate to="/app/departements/fij/coordination" replace />} />
           <Route path="/app/responsabilites/accueil" element={<ResponsabilitePlaceholder title="Accueil" description="Planning, visiteurs, reporting dimanche" icon={Users} items={['Planning accueil', 'Présences serviteurs', 'Visiteurs', 'Fiches pratiques', 'Reporting dimanche']} />} />
           <Route path="/app/responsabilites/communication" element={<ResponsabilitePlaceholder title="Communication" description="Demandes visuelles, calendrier éditorial" icon={SettingsIcon} items={['Demandes visuelles', 'Calendrier éditorial', 'Médias', 'Publications', 'Validations']} />} />
           <Route path="/app/responsabilites/musique" element={<ResponsabilitePlaceholder title="Prodiges Musique" description="Planning, setlists, répétitions" icon={Music} items={['Planning musique', 'Setlists', 'Répétitions', 'Chants', 'Reporting']} />} />
@@ -185,12 +208,12 @@ const AuthenticatedApp = () => {
 
           <Route path="/app/departements/:slug" element={<DepartmentEntry />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
-          <Route path="/app/direction" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><BureauDashboard /></RoleGuard>} />
+          <Route path="/app/direction" element={<Navigate to="/app/supervision" replace />} />
           <Route path="/app/admin" element={<RoleGuard allowedRoles={['admin']}><AdminHome /></RoleGuard>} />
-          <Route path="/hub" element={<Hub />} />
+          <Route path="/hub" element={<Navigate to="/app" replace />} />
           {/* Redirections anciennes routes */}
           <Route path="/admin" element={<Navigate to="/app/admin" replace />} />
-          <Route path="/bureau" element={<Navigate to="/app/direction" replace />} />
+          <Route path="/bureau" element={<Navigate to="/app/supervision" replace />} />
           <Route path="/profil" element={<Navigate to="/app/profil" replace />} />
           <Route path="/departements" element={<Navigate to="/app/departements" replace />} />
           <Route path="*" element={<PageNotFound />} />

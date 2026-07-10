@@ -90,7 +90,7 @@ export default function FijDirectionSummary() {
           </div>
           <h2 className="text-foreground font-semibold text-sm">Synthèse FIJ</h2>
         </div>
-        <Link to="/app/departements/fij" className="text-xs text-secondary flex items-center gap-1 hover:text-secondary/80">
+        <Link to="/app/responsabilites" className="text-xs text-secondary flex items-center gap-1 hover:text-secondary/80">
           Détails <ArrowRight className="w-3 h-3" />
         </Link>
       </div>

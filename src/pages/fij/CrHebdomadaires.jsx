@@ -167,7 +167,7 @@ export default function CrHebdomadaires() {
               <div className="mt-2 flex items-center gap-2">
                 {!report ? (
                   <>
-                    <Link to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`} className="flex items-center gap-1 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-2.5 py-1.5 transition-colors">
+                    <Link to={`/app/responsabilites/fij-pilote/fij/${fij.id}/cr/nouveau`} className="flex items-center gap-1 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg px-2.5 py-1.5 transition-colors">
                       <Edit className="w-3 h-3" /> Remplir
                     </Link>
                     {isCoord && (
@@ -178,7 +178,7 @@ export default function CrHebdomadaires() {
                   </>
                 ) : (
                   <>
-                    <Link to={`/app/departements/fij/fij/${fij.id}/cr/nouveau`} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded-lg px-2.5 py-1.5 transition-colors">
+                    <Link to={`/app/responsabilites/fij-pilote/fij/${fij.id}/cr/nouveau`} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded-lg px-2.5 py-1.5 transition-colors">
                       <Edit className="w-3 h-3" /> Voir / éditer
                     </Link>
                     {isCoord && report.status === 'submitted' && (
