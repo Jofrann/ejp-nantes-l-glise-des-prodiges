@@ -23,10 +23,10 @@ export default function Croissance() {
         breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Ma croissance' }]}
       />
 
-      <div className="flex gap-1 mb-6 p-1 bg-surface rounded-xl">
+      <div className="flex gap-1 mb-6 p-1 bg-surface rounded-xl overflow-x-auto scrollbar-none">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${tab === t.key ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}>
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${tab === t.key ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}>
             <t.icon className="w-3.5 h-3.5" /> {t.label}
           </button>
         ))}

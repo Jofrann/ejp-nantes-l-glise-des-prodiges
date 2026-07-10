@@ -9,12 +9,12 @@ import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/star/PageHeader';
 
 const STATUS_CONFIG = {
-  not_started: { label: 'Non commencé', color: 'muted', icon: PlayCircle },
-  in_progress: { label: 'En cours', color: 'blue', icon: Clock },
-  submitted: { label: 'En attente de validation', color: 'amber', icon: Clock },
-  validated: { label: 'Validé', color: 'green', icon: CheckCircle },
-  rejected: { label: 'Refusé', color: 'red', icon: AlertCircle },
-  correction: { label: 'À corriger', color: 'orange', icon: AlertCircle },
+  not_started: { label: 'Non commencé', badgeCls: 'bg-slate-500/10 text-slate-600 border-slate-400/20', icon: PlayCircle },
+  in_progress: { label: 'En cours', badgeCls: 'bg-blue-500/10 text-blue-600 border-blue-400/20', icon: Clock },
+  submitted: { label: 'En attente de validation', badgeCls: 'bg-amber-500/10 text-amber-600 border-amber-400/20', icon: Clock },
+  validated: { label: 'Validé', badgeCls: 'bg-green-500/10 text-green-600 border-green-400/20', icon: CheckCircle },
+  rejected: { label: 'Refusé', badgeCls: 'bg-red-500/10 text-red-600 border-red-400/20', icon: AlertCircle },
+  correction: { label: 'À corriger', badgeCls: 'bg-orange-500/10 text-orange-600 border-orange-400/20', icon: AlertCircle },
 };
 
 export default function FormationDetail() {
@@ -155,7 +155,7 @@ export default function FormationDetail() {
             <motion.div key={activeModule.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
               <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className={`flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-${statusConfig.color}-500/10 text-${statusConfig.color}-600`}>
+                  <span className={`flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border ${statusConfig.badgeCls}`}>
                     <statusConfig.icon className="w-3 h-3" /> {statusConfig.label}
                   </span>
                   {activeModule.duration_minutes && (

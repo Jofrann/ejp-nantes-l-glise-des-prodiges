@@ -68,7 +68,7 @@ const BureauActions = forwardRef(({ actions = [] }, ref) => {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2 mt-3 ml-12">
+                <div className="flex items-center gap-2 mt-3 sm:ml-12 flex-wrap">
                   <Link
                     to={action.primaryTo}
                     className="flex items-center gap-1 text-xs font-semibold text-white bg-secondary rounded-lg px-3 py-1.5 hover:bg-secondary/90 transition-colors"

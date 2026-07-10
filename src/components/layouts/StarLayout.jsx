@@ -60,7 +60,7 @@ export default function StarLayout({ children, user }) {
           {/* Right actions */}
           <div className="flex items-center gap-1.5">
             {/* Quick actions + */}
-            <div className="relative">
+            <div className="relative hidden sm:block">
               <button
                 onClick={() => setQuickOpen(!quickOpen)}
                 className="w-8 h-8 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary hover:bg-secondary/20 transition-all"
@@ -179,7 +179,7 @@ export default function StarLayout({ children, user }) {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 pt-[72px] pb-20 md:pb-8">
+      <main className="flex-1 pt-[72px] pb-20 md:pb-8 overflow-x-hidden">
         {children}
       </main>
 

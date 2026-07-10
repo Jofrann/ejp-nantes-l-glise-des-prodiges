@@ -504,8 +504,9 @@ function WeekGridView({ grouped, refDate, onSlotClick, onBlockClick, onEventClic
 
   return (
     <div className="bg-card border border-border rounded-2xl overflow-hidden">
+      <div className="overflow-x-auto scrollbar-none">
       {/* En-tête jours */}
-      <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-border">
+      <div className="grid grid-cols-[60px_repeat(7,1fr)] min-w-[640px] border-b border-border">
         <div className="border-r border-border" />
         {days.map(day => {
           const isToday = isSameDay(day, today);
@@ -521,7 +522,7 @@ function WeekGridView({ grouped, refDate, onSlotClick, onBlockClick, onEventClic
       {/* Grille horaire */}
       <div className="overflow-y-auto max-h-[70vh] scrollbar-none">
         {HOURS.map(hour => (
-          <div key={hour} className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-border last:border-b-0">
+          <div key={hour} className="grid grid-cols-[60px_repeat(7,1fr)] min-w-[640px] border-b border-border last:border-b-0">
             <div className="border-r border-border py-1 pr-2 text-right">
               <span className="text-[9px] text-muted-foreground">{String(hour).padStart(2, '0')}:00</span>
             </div>
@@ -567,6 +568,7 @@ function WeekGridView({ grouped, refDate, onSlotClick, onBlockClick, onEventClic
             })}
           </div>
         ))}
+      </div>
       </div>
     </div>
   );
