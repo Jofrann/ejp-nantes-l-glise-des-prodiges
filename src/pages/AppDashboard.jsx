@@ -4,36 +4,57 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Calendar, CheckCircle, GraduationCap, Sprout, CalendarClock,
-  BookOpen, ChevronRight, MapPin, Clock, Target,
-  Briefcase, Sparkles, AlertCircle, Map, Settings as SettingsIcon
+  BookOpen, ChevronRight, Target, Briefcase, Sparkles, AlertCircle,
+  Clock, ArrowRight
 } from 'lucide-react';
 import { isBureauLike, isAdmin, isFijPilot } from '@/lib/permissions';
 import PageHeader from '@/components/star/PageHeader';
-import CalendarWidget from '@/components/star/CalendarWidget';
+
+const ACCENT_CSS_MAP = {
+  gold: { star: '38 45% 47%', starSoft: '40 45% 70%' },
+  blue: { star: '215 35% 19%', starSoft: '215 35% 35%' },
+  green: { star: '142 45% 34%', starSoft: '142 45% 50%' },
+  rose: { star: '340 60% 50%', starSoft: '340 60% 65%' },
+  purple: { star: '265 60% 55%', starSoft: '265 60% 68%' },
+};
+
+const DEFAULT_WIDGETS = ['journee', 'actions', 'rythme', 'actualites', 'responsabilites'];
 
 export default function AppDashboard() {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
   const [fijs, setFijs] = useState([]);
   const [appointments, setAppointments] = useState([]);
+  const [pref, setPref] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
-      base44.entities.Event.list('-event_date', 5),
+      base44.entities.Event.list('-event_date', 10),
       base44.entities.FIJ.filter({ is_active: true }, '-created_date', 50),
       base44.entities.AppointmentRequest.filter({ status: 'pending' }, '-created_date', 5),
-    ]).then(([u, evs, f, appts]) => {
+      base44.entities.UserWorkspacePreference.list('-updated_date', 1),
+    ]).then(([u, evs, f, appts, prefs]) => {
       setUser(u);
       const today = new Date().toISOString().split('T')[0];
       const upcoming = (evs || []).filter(e => e.is_active && e.event_date >= today);
-      setEvents(upcoming.slice(0, 4));
+      setEvents(upcoming.slice(0, 6));
       setFijs(f || []);
       setAppointments(appts || []);
+      const existing = prefs && prefs.length > 0 ? prefs[0] : null;
+      setPref(existing || { accent_color: 'gold', visible_widgets: DEFAULT_WIDGETS });
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
+
+  // Apply accent color via CSS variable
+  useEffect(() => {
+    if (!pref?.accent_color) return;
+    const colors = ACCENT_CSS_MAP[pref.accent_color] || ACCENT_CSS_MAP.gold;
+    document.documentElement.style.setProperty('--star-accent', `hsl(${colors.star})`);
+    document.documentElement.style.setProperty('--star-accent-soft', `hsl(${colors.starSoft})`);
+  }, [pref?.accent_color]);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
@@ -42,6 +63,8 @@ export default function AppDashboard() {
   const today = new Date();
   const isThursday = today.getDay() === 4;
   const todayStr = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const visibleWidgets = pref?.visible_widgets || DEFAULT_WIDGETS;
+  const showWidget = (key) => visibleWidgets.includes(key);
 
   // Actions du jour
   const todoItems = [];
@@ -51,7 +74,19 @@ export default function AppDashboard() {
   if (isPilot && isThursday) {
     todoItems.push({ icon: Briefcase, title: 'Remplir le CR du jeudi', sub: 'C\'est jeudi — remplis ton CR FIJ', to: '/app/responsabilites', urgency: 'high', action: 'Remplir' });
   }
+  if (appointments.length > 0) {
+    todoItems.push({ icon: CalendarClock, title: 'Demande de rendez-vous en attente', sub: `${appointments.length} demande(s) en cours`, to: '/app/rendez-vous', urgency: 'normal', action: 'Voir' });
+  }
   todoItems.push({ icon: Sprout, title: 'Lire ma Parole du jour', sub: 'Ta croissance spirituelle', to: '/app/croissance', urgency: 'normal', action: 'Continuer' });
+
+  // Timeline du jour
+  const todayEvents = events.filter(e => e.event_date === today.toISOString().split('T')[0]);
+  const dayTimeline = [
+    ...todayEvents.map(e => ({ time: e.event_time || '--:--', title: e.title, type: 'ejp' })),
+  ];
+  if (dayTimeline.length === 0) {
+    dayTimeline.push({ time: null, title: 'Aucune action urgente aujourd\'hui. Prépare ta semaine dans ton agenda.', type: 'empty' });
+  }
 
   if (loading) {
     return (
@@ -63,233 +98,260 @@ export default function AppDashboard() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="flex gap-6">
+          {/* Zone principale */}
+          <div className="flex-1 min-w-0 space-y-6">
 
-        {/* En-tête personnel */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-          <PageHeader
-            title={`${greeting}, ${firstName}`}
-            intention={`Accueil STAR — ton bureau personnel. ${todayStr}.`}
-            breadcrumbs={[{ label: 'STAR OS' }]}
-          />
+            {/* Section 1 — Hero personnel */}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+              <PageHeader
+                title={`${greeting}, ${firstName}`}
+                intention={`Voici ton espace STAR pour aujourd'hui. ${todayStr}.`}
+                breadcrumbs={[{ label: 'STAR OS' }]}
+                actions={
+                  <Link to="/app/agenda" className="flex items-center gap-1.5 text-xs font-medium text-foreground bg-card border border-border rounded-xl px-3 py-2 hover:border-secondary/30 transition-colors">
+                    <Calendar className="w-3.5 h-3.5" /> Voir mon agenda
+                  </Link>
+                }
+              />
 
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-secondary/25 flex-shrink-0">
-              {user?.photo_url ? (
-                <img src={user.photo_url} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-secondary/10 flex items-center justify-center">
-                  <span className="text-xl font-bold text-secondary">{firstName[0]}</span>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-secondary/25 flex-shrink-0">
+                  {user?.photo_url ? (
+                    <img src={user.photo_url} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-secondary/10 flex items-center justify-center">
+                      <span className="text-xl font-bold text-secondary">{firstName[0]}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-secondary uppercase tracking-widest mb-0.5">Serviteur Travaillant Activement pour le Royaume</p>
+                  {pref?.verset && (
+                    <p className="text-sm text-muted-foreground italic mt-1">"{pref.verset}"</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl px-5 py-4 shadow-sm">
+                <p className="font-display text-foreground/70 text-base font-light italic leading-relaxed">
+                  "Chacun selon le don qu'il a reçu, employez-le à vous servir les uns les autres."
+                </p>
+                <p className="text-xs text-secondary mt-2 text-right">— 1 Pierre 4:10</p>
+              </div>
+
+              {todoItems.length > 0 && (
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="flex items-center gap-1.5 text-xs text-warning bg-warning/10 border border-warning/20 rounded-full px-3 py-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {todoItems.length} action{todoItems.length > 1 ? 's' : ''} à traiter
+                  </span>
                 </div>
               )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-secondary uppercase tracking-widest mb-0.5">Serviteur Travaillant Activement pour le Royaume</p>
-              <p className="text-xs text-muted-foreground capitalize mt-0.5">{todayStr}</p>
-            </div>
-          </div>
+            </motion.div>
 
-          <div className="bg-card border border-border rounded-2xl px-5 py-4 shadow-sm">
-            <p className="font-display text-foreground/70 text-base font-light italic leading-relaxed">
-              "Chacun selon le don qu'il a reçu, employez-le à vous servir les uns les autres."
-            </p>
-            <p className="text-xs text-secondary mt-2 text-right">— 1 Pierre 4:10</p>
-          </div>
-
-          {/* Statut rapide */}
-          {todoItems.length > 0 && (
-            <div className="flex items-center gap-2 mt-3">
-              <span className="flex items-center gap-1.5 text-xs text-warning bg-warning/10 border border-warning/20 rounded-full px-3 py-1">
-                <AlertCircle className="w-3 h-3" />
-                {todoItems.length} action{todoItems.length > 1 ? 's' : ''} à traiter
-              </span>
-            </div>
-          )}
-
-          {/* Boutons rapides */}
-          <div className="flex gap-2 mt-4">
-            <Link to="/app/espace-personnel" className="flex items-center gap-1.5 text-xs font-medium text-foreground bg-card border border-border rounded-xl px-3 py-2 hover:border-secondary/30 transition-colors">
-              <SettingsIcon className="w-3.5 h-3.5" /> Personnaliser mon espace
-            </Link>
-            <Link to="/app/agenda" className="flex items-center gap-1.5 text-xs font-medium text-foreground bg-card border border-border rounded-xl px-3 py-2 hover:border-secondary/30 transition-colors">
-              <Calendar className="w-3.5 h-3.5" /> Voir mon agenda
-            </Link>
-            <Link to="/app/presences" className="flex items-center gap-1.5 text-xs font-medium text-foreground bg-card border border-border rounded-xl px-3 py-2 hover:border-secondary/30 transition-colors">
-              <AlertCircle className="w-3.5 h-3.5" /> Déclarer une absence
-            </Link>
-          </div>
-        </motion.div>
-
-        {/* À faire aujourd'hui */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-          <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">À faire aujourd'hui</h2>
-          <div className="space-y-2">
-            {todoItems.map((item, i) => (
-              <Link
-                key={i}
-                to={item.to}
-                className={`flex items-center gap-3 bg-card border rounded-xl p-3.5 hover:shadow-sm transition-all group ${
-                  item.urgency === 'high' ? 'border-warning/30' : 'border-border'
-                }`}
-              >
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                  item.urgency === 'high' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary'
-                }`}>
-                  <item.icon className="w-4 h-4" />
+            {/* Section 2 — Le fil de ma journée */}
+            {showWidget('journee') && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Le fil de ma journée</h2>
+                  <Link to="/app/agenda" className="text-xs text-secondary flex items-center gap-1">
+                    Ouvrir l'agenda complet <ChevronRight className="w-3 h-3" />
+                  </Link>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">{item.title}</p>
-                  <p className="text-xs text-muted-foreground truncate">{item.sub}</p>
+                <div className="bg-card border border-border rounded-2xl p-4 shadow-sm">
+                  <div className="space-y-2">
+                    {dayTimeline.map((item, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        {item.time ? (
+                          <span className="text-xs font-bold text-secondary w-12 flex-shrink-0">{item.time}</span>
+                        ) : (
+                          <div className="w-12 flex-shrink-0 flex justify-center">
+                            <Clock className="w-3.5 h-3.5 text-muted-foreground/50" />
+                          </div>
+                        )}
+                        <span className="text-sm text-foreground">{item.title}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <span className="text-xs font-medium text-secondary flex items-center gap-1">
-                  {item.action} <ChevronRight className="w-3 h-3" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </motion.div>
+              </motion.div>
+            )}
 
-        {/* Calendrier des missions */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes dates importantes</h2>
-            <Link to="/app/agenda" className="text-xs text-secondary flex items-center gap-1">
-              Agenda complet <ChevronRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <CalendarWidget events={events} />
-        </motion.div>
-
-        {/* Formations */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes formations</h2>
-            <Link to="/app/formations" className="text-xs text-secondary flex items-center gap-1">
-              Voir tout <ChevronRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div className="space-y-2">
-            {[
-              { title: 'PCNC 001', desc: 'Fondations du parcours' },
-              { title: 'PCNC 101', desc: 'Approfondissement' },
-              { title: 'PCNC 201', desc: 'Maturation' },
-            ].map((prog, i) => (
-              <Link key={i} to="/app/formations" className="flex items-center gap-3 bg-card border border-border rounded-xl p-3.5 hover:shadow-sm transition-all">
-                <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-400/20 flex items-center justify-center flex-shrink-0">
-                  <GraduationCap className="w-4 h-4 text-indigo-600" />
+            {/* Section 3 — À traiter maintenant */}
+            {showWidget('actions') && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
+                <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">À traiter maintenant</h2>
+                <div className="space-y-2">
+                  {todoItems.map((item, i) => (
+                    <Link
+                      key={i}
+                      to={item.to}
+                      className={`flex items-center gap-3 bg-card border rounded-xl p-3.5 hover:shadow-sm transition-all group ${
+                        item.urgency === 'high' ? 'border-warning/30' : 'border-border'
+                      }`}
+                    >
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                        item.urgency === 'high' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary'
+                      }`}>
+                        <item.icon className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground truncate">{item.title}</p>
+                        <p className="text-xs text-muted-foreground truncate">{item.sub}</p>
+                      </div>
+                      <span className="text-xs font-medium text-secondary flex items-center gap-1">
+                        {item.action} <ChevronRight className="w-3 h-3" />
+                      </span>
+                    </Link>
+                  ))}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">{prog.title}</p>
-                  <p className="text-xs text-muted-foreground truncate">{prog.desc}</p>
-                </div>
-                <span className="text-xs font-medium text-indigo-600 flex items-center gap-1">
-                  Commencer <ChevronRight className="w-3 h-3" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </motion.div>
+              </motion.div>
+            )}
 
-        {/* Rendez-vous */}
-        {appointments.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }}>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes rendez-vous</h2>
-              <Link to="/app/rendez-vous" className="text-xs text-secondary flex items-center gap-1">
-                Voir tout <ChevronRight className="w-3 h-3" />
-              </Link>
-            </div>
-            <div className="space-y-2">
-              {appointments.map((appt) => (
-                <Link key={appt.id} to="/app/rendez-vous" className="flex items-center gap-3 bg-card border border-border rounded-xl p-3.5 hover:shadow-sm transition-all">
-                  <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-400/20 flex items-center justify-center flex-shrink-0">
-                    <CalendarClock className="w-4 h-4 text-rose-600" />
+            {/* Section 4 — Mon rythme STAR */}
+            {showWidget('rythme') && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Mon rythme STAR</h2>
+                <div className="grid grid-cols-3 gap-3">
+                  <Link to="/app/presences" className="bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
+                    <CheckCircle className="w-4 h-4 text-green-600 mb-2" />
+                    <p className="text-xs font-semibold text-foreground">Présence</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">
+                      {events.length > 0 ? 'À confirmer' : 'À jour'}
+                    </p>
+                  </Link>
+                  <Link to="/app/formations" className="bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
+                    <GraduationCap className="w-4 h-4 text-indigo-600 mb-2" />
+                    <p className="text-xs font-semibold text-foreground">Formation</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">PCNC en cours</p>
+                  </Link>
+                  <Link to="/app/croissance" className="bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
+                    <Sprout className="w-4 h-4 text-emerald-600 mb-2" />
+                    <p className="text-xs font-semibold text-foreground">Croissance</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">Continue ta lecture</p>
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Section 5 — Actualités et ressources utiles */}
+            {showWidget('actualites') && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
+                <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Actualités & ressources</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Link to="/app/ressources" className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
+                    <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-400/20 flex items-center justify-center flex-shrink-0">
+                      <BookOpen className="w-4 h-4 text-purple-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground">Nouvelles ressources</p>
+                      <p className="text-xs text-muted-foreground truncate">Documents et liens utiles</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  </Link>
+                  <Link to="/app/ressources" className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
+                    <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-400/20 flex items-center justify-center flex-shrink-0">
+                      <Sparkles className="w-4 h-4 text-rose-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground">Boutique EJP</p>
+                      <p className="text-xs text-muted-foreground truncate">T-shirts et produits</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Section 6 — Mes responsabilités actives */}
+            {showWidget('responsabilites') && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+                <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Mes responsabilités</h2>
+                <Link to="/app/responsabilites" className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
+                  <div className="w-9 h-9 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
+                    <Briefcase className="w-4 h-4 text-secondary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground truncate">{appt.subject}</p>
-                    <p className="text-xs text-muted-foreground truncate">En attente · {appt.request_type}</p>
+                    <p className="text-sm font-semibold text-foreground">Mes outils actifs</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {isPilot ? 'Pilote FIJ' : 'Voir mes responsabilités'}
+                    </p>
                   </div>
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
+              </motion.div>
+            )}
 
-        {/* Accès rapides */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Mes modules</h2>
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { icon: Calendar, label: 'Agenda', to: '/app/agenda', color: 'from-blue-500/10 to-blue-500/5 border-blue-400/20 text-blue-600' },
-              { icon: CheckCircle, label: 'Présences', to: '/app/presences', color: 'from-green-500/10 to-green-500/5 border-green-400/20 text-green-600' },
-              { icon: GraduationCap, label: 'Formations', to: '/app/formations', color: 'from-indigo-500/10 to-indigo-500/5 border-indigo-400/20 text-indigo-600' },
-              { icon: Sprout, label: 'Croissance', to: '/app/croissance', color: 'from-emerald-500/10 to-emerald-500/5 border-emerald-400/20 text-emerald-600' },
-              { icon: Target, label: 'Objectifs', to: '/app/objectifs', color: 'from-amber-500/10 to-amber-500/5 border-amber-400/20 text-amber-600' },
-              { icon: CalendarClock, label: 'RDV', to: '/app/rendez-vous', color: 'from-rose-500/10 to-rose-500/5 border-rose-400/20 text-rose-600' },
-              { icon: BookOpen, label: 'Ressources', to: '/app/ressources', color: 'from-purple-500/10 to-purple-500/5 border-purple-400/20 text-purple-600' },
-              { icon: Map, label: 'Parcours', to: '/app/parcours', color: 'from-cyan-500/10 to-cyan-500/5 border-cyan-400/20 text-cyan-600' },
-              { icon: Briefcase, label: 'Responsabilités', to: '/app/responsabilites', color: 'from-secondary/10 to-secondary/5 border-secondary/20 text-secondary' },
-            ].map(({ icon: Icon, label, to, color }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`flex flex-col items-center gap-2 bg-gradient-to-br ${color} border rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.97]`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="text-[10px] font-semibold text-center leading-tight">{label}</span>
-              </Link>
-            ))}
           </div>
-        </motion.div>
 
-        {/* Espace direction / admin */}
-        {(isBureauLike(user) || isAdmin(user)) && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Espace direction</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {isBureauLike(user) && (
-                <Link to="/app/supervision" className="group bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-4 transition-all hover:shadow-md">
-                  <Briefcase className="w-5 h-5 text-primary mb-3" />
-                  <p className="text-sm font-semibold text-foreground">Supervision</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Vue consolidée</p>
+          {/* Colonne contextuelle desktop */}
+          <aside className="hidden xl:block w-72 flex-shrink-0 space-y-4">
+            {/* Prochain programme */}
+            {events.length > 0 && (
+              <div className="glass-card rounded-2xl p-4">
+                <p className="text-xs font-heading font-semibold text-foreground mb-3">Prochain programme</p>
+                <Link to="/app/presences" className="block">
+                  <p className="text-sm font-semibold text-foreground">{events[0].title}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {new Date(events[0].event_date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
+                    {events[0].event_time && ` · ${events[0].event_time}`}
+                  </p>
+                  {events[0].location && (
+                    <p className="text-xs text-muted-foreground mt-0.5">{events[0].location}</p>
+                  )}
                 </Link>
-              )}
-              {isAdmin(user) && (
-                <Link to="/app/admin" className="group bg-gradient-to-br from-danger/10 to-danger/5 border border-danger/20 rounded-2xl p-4 transition-all hover:shadow-md">
-                  <SettingsIcon className="w-5 h-5 text-danger mb-3" />
-                  <p className="text-sm font-semibold text-foreground">Administration</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Gérer l'app</p>
+                <Link to="/app/presences" className="mt-3 flex items-center justify-center gap-1.5 w-full bg-secondary/10 border border-secondary/20 text-secondary text-xs font-medium py-2 rounded-xl hover:bg-secondary/20 transition-all">
+                  Confirmer ma présence <ArrowRight className="w-3 h-3" />
                 </Link>
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Communauté */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-          <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-primary" />
               </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground">La communauté EJP</p>
-                <p className="text-xs text-muted-foreground">Nantes & au-delà</p>
+            )}
+
+            {/* Raccourcis */}
+            <div className="glass-card rounded-2xl p-4">
+              <p className="text-xs font-heading font-semibold text-foreground mb-3">Raccourcis</p>
+              <div className="space-y-1.5">
+                {[
+                  { icon: Calendar, label: 'Agenda', to: '/app/agenda' },
+                  { icon: CheckCircle, label: 'Présences', to: '/app/presences' },
+                  { icon: Target, label: 'Objectifs', to: '/app/objectifs' },
+                  { icon: CalendarClock, label: 'Rendez-vous', to: '/app/rendez-vous' },
+                  { icon: BookOpen, label: 'Ressources', to: '/app/ressources' },
+                ].map(({ icon: Icon, label, to }) => (
+                  <Link key={to} to={to} className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-surface transition-colors">
+                    <Icon className="w-3.5 h-3.5 text-muted-foreground" />
+                    <span className="text-xs text-foreground">{label}</span>
+                    <ChevronRight className="w-3 h-3 text-muted-foreground/40 ml-auto" />
+                  </Link>
+                ))}
               </div>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              Retrouve tous les serviteurs et reste connecté à la vie de l'Église.
-            </p>
-            <Link
-              to="/"
-              className="flex items-center justify-center gap-2 w-full bg-surface hover:bg-muted border border-border text-foreground text-sm font-medium py-2.5 rounded-xl transition-all"
-            >
-              Voir la page d'accueil <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </motion.div>
 
+            {/* Espace direction (si autorisé) */}
+            {(isBureauLike(user) || isAdmin(user)) && (
+              <div className="glass-card rounded-2xl p-4">
+                <p className="text-xs font-heading font-semibold text-foreground mb-3">Espace direction</p>
+                <div className="space-y-1.5">
+                  {isBureauLike(user) && (
+                    <Link to="/app/supervision" className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-surface transition-colors">
+                      <Briefcase className="w-3.5 h-3.5 text-primary" />
+                      <span className="text-xs text-foreground">Supervision</span>
+                      <ChevronRight className="w-3 h-3 text-muted-foreground/40 ml-auto" />
+                    </Link>
+                  )}
+                  {isAdmin(user) && (
+                    <Link to="/app/admin" className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-surface transition-colors">
+                      <Sparkles className="w-3.5 h-3.5 text-danger" />
+                      <span className="text-xs text-foreground">Administration</span>
+                      <ChevronRight className="w-3 h-3 text-muted-foreground/40 ml-auto" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
+          </aside>
+        </div>
       </div>
     </div>
   );

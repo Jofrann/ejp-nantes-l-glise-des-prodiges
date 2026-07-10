@@ -6,16 +6,11 @@ import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/star/PageHeader';
 
 const WIDGETS = [
-  { key: 'agenda', label: 'Agenda du jour', icon: '📅', default: true },
-  { key: 'presence', label: 'Présence à confirmer', icon: '✅', default: true },
-  { key: 'formation', label: 'Formation en cours', icon: '🎓', default: true },
-  { key: 'objectif', label: 'Objectif du mois', icon: '🎯', default: false },
-  { key: 'lecture', label: 'Lecture de la Parole', icon: '📖', default: true },
-  { key: 'rdv', label: 'Prochain rendez-vous', icon: '🕐', default: false },
-  { key: 'ressources', label: 'Ressources favorites', icon: '📚', default: false },
-  { key: 'responsabilite', label: 'Responsabilité prioritaire', icon: '💼', default: false },
-  { key: 'notes', label: 'Notes épinglées', icon: '📌', default: false },
-  { key: 'livre', label: 'Livre en cours', icon: '📕', default: false },
+  { key: 'journee', label: 'Le fil de ma journée', icon: '🌅', default: true },
+  { key: 'actions', label: 'À traiter maintenant', icon: '⚡', default: true },
+  { key: 'rythme', label: 'Mon rythme STAR', icon: '📊', default: true },
+  { key: 'actualites', label: 'Actualités & ressources', icon: '📰', default: true },
+  { key: 'responsabilites', label: 'Mes responsabilités', icon: '💼', default: true },
 ];
 
 const ACCENTS = [
@@ -49,7 +44,7 @@ export default function EspacePersonnel() {
           accent_color: 'gold',
           default_agenda_view: 'list',
           display_density: 'comfortable',
-          visible_widgets: WIDGETS.filter(w => w.default).map(w => w.key),
+          visible_widgets: WIDGETS.filter(w => w.default).map(w => w.key), // ['journee', 'actions', 'rythme', 'actualites', 'responsabilites']
           notif_email: true,
           notif_presence_reminder: true,
           notif_training_reminder: true,

@@ -22,7 +22,7 @@ const VIEWS = [
 ];
 
 const HOURS = Array.from({ length: 17 }, (_, i) => i + 6); // 6h - 22h
-const HOUR_HEIGHT = 52;
+const HOUR_HEIGHT = 72;
 
 const FILTERS = [
   { key: 'all', label: 'Tout' },
@@ -79,7 +79,10 @@ export default function Agenda() {
   const [timeBlocks, setTimeBlocks] = useState([]);
   const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState('week');
+  const [view, setView] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) return 'day';
+    return 'week';
+  });
   const [refDate, setRefDate] = useState(new Date());
   const [filter, setFilter] = useState('all');
   const [miniCalMonth, setMiniCalMonth] = useState(new Date());
@@ -532,7 +535,7 @@ function WeekGridView({ grouped, refDate, onSlotClick, onBlockClick, onEventClic
               return (
                 <div
                   key={day.toISOString()}
-                  className="border-r border-border last:border-r-0 relative hover:bg-surface/30 cursor-pointer min-h-[52px] p-0.5"
+                  className="border-r border-border last:border-r-0 relative hover:bg-surface/30 cursor-pointer min-h-[72px] p-0.5"
                   onClick={() => onSlotClick(day, hour)}
                 >
                   {dayItems.map(item => {
@@ -597,7 +600,7 @@ function DayGridView({ grouped, refDate, onSlotClick, onBlockClick, onEventClick
       )}
       <div className="overflow-y-auto max-h-[60vh] scrollbar-none">
         {HOURS.map(hour => (
-          <div key={hour} className="flex border-b border-border last:border-b-0 min-h-[52px]">
+          <div key={hour} className="flex border-b border-border last:border-b-0 min-h-[72px]">
             <div className="w-14 flex-shrink-0 py-1 pr-2 text-right border-r border-border">
               <span className="text-[9px] text-muted-foreground">{String(hour).padStart(2, '0')}:00</span>
             </div>

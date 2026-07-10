@@ -6,7 +6,7 @@ import {
   BellRing, LayoutDashboard, MapPin, Phone
 } from 'lucide-react';
 
-// Mega-menu structure for STAR OS — shared between desktop header and mobile "Plan STAR"
+// Mega-menu structure for STAR OS — 5 main entries, anchored per-trigger
 export const MEGA_MENU = [
   {
     id: 'accueil',
@@ -21,51 +21,27 @@ export const MEGA_MENU = [
     ],
   },
   {
-    id: 'temps',
-    label: 'Mon temps',
+    id: 'quotidien',
+    label: 'Quotidien',
     icon: Clock,
     route: '/app/agenda',
     items: [
-      { label: 'Agenda visuel', desc: 'Mon calendrier personnel', icon: Calendar, to: '/app/agenda' },
+      { label: 'Agenda', desc: 'Mon calendrier personnel', icon: Calendar, to: '/app/agenda' },
       { label: 'Présences', desc: 'Confirmer ma présence', icon: CheckCircle, to: '/app/presences' },
-      { label: 'Absences & retards', desc: 'Justifier une absence', icon: AlertCircle, to: '/app/presences' },
-      { label: 'Occupations personnelles', desc: 'Ajouter au calendrier', icon: Clock, to: '/app/agenda' },
+      { label: 'Rendez-vous', desc: 'Demander un rendez-vous', icon: CalendarClock, to: '/app/rendez-vous' },
+      { label: 'Mon parcours', desc: 'Situation et compétences', icon: MapPin, to: '/app/parcours' },
     ],
   },
   {
-    id: 'croissance',
-    label: 'Ma croissance',
+    id: 'grandir',
+    label: 'Grandir',
     icon: Sprout,
     route: '/app/croissance',
     items: [
-      { label: 'Lecture de la Parole', desc: 'Marquer ma lecture du jour', icon: BookOpen, to: '/app/croissance' },
-      { label: 'Notes personnelles', desc: 'Méditations et réflexions', icon: NotebookPen, to: '/app/croissance' },
+      { label: 'Formations', desc: 'Parcours PCNC et modules', icon: GraduationCap, to: '/app/formations' },
+      { label: 'Croissance', desc: 'Lecture, notes, habitudes', icon: Sprout, to: '/app/croissance' },
       { label: 'Objectifs', desc: 'Mes buts et étapes', icon: Target, to: '/app/objectifs' },
-      { label: 'Livres & habitudes', desc: 'Suivre ma progression', icon: BookOpen, to: '/app/croissance' },
-    ],
-  },
-  {
-    id: 'formation',
-    label: 'Formation',
-    icon: GraduationCap,
-    route: '/app/formations',
-    items: [
-      { label: 'Mes formations', desc: 'Parcours PCNC et modules', icon: GraduationCap, to: '/app/formations' },
-      { label: 'PCNC 001', desc: 'Fondations du parcours', icon: BookOpen, to: '/app/formations' },
-      { label: 'PCNC 101', desc: 'Approfondissement', icon: BookOpen, to: '/app/formations' },
-      { label: 'PCNC 201', desc: 'Maturation', icon: Award, to: '/app/formations' },
-    ],
-  },
-  {
-    id: 'accompagnement',
-    label: 'Accompagnement',
-    icon: Heart,
-    route: '/app/rendez-vous',
-    items: [
-      { label: 'Demander un rendez-vous', desc: 'Bergère, leader, référent', icon: CalendarClock, to: '/app/rendez-vous' },
-      { label: 'Mes demandes', desc: 'Suivre mes demandes', icon: FileText, to: '/app/rendez-vous' },
-      { label: 'Vie académique', desc: 'Études, stages, orientation', icon: TrendingUp, to: '/app/parcours' },
-      { label: 'Mon parcours', desc: 'Situation et compétences', icon: MapPin, to: '/app/parcours' },
+      { label: 'Livres', desc: 'Suivre ma progression', icon: BookOpen, to: '/app/croissance' },
     ],
   },
   {
@@ -74,8 +50,8 @@ export const MEGA_MENU = [
     icon: BookOpen,
     route: '/app/ressources',
     items: [
+      { label: 'Documents', desc: 'Télécharger des ressources', icon: FileText, to: '/app/ressources' },
       { label: 'Liens utiles', desc: 'Accès rapides', icon: BookOpen, to: '/app/ressources' },
-      { label: 'Documents', desc: 'Télécharger', icon: FileText, to: '/app/ressources' },
       { label: 'Boutique', desc: 'T-shirts et produits', icon: ShoppingBag, to: '/app/ressources' },
       { label: 'Contacts utiles', desc: 'Joindre l\'équipe', icon: Phone, to: '/app/ressources' },
     ],
@@ -121,9 +97,9 @@ export const MEGA_MENU_RESTRICTED = [
   },
 ];
 
+// Mobile bottom nav: 4 entries as spec requires
 export const MOBILE_BOTTOM_NAV = [
   { path: '/app', label: 'Accueil', icon: Home, end: true },
   { path: '/app/agenda', label: 'Agenda', icon: Calendar },
   { path: '/app/presences', label: 'Présences', icon: CheckCircle },
-  { path: '/app/formations', label: 'Formation', icon: GraduationCap },
 ];

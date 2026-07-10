@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -6,7 +6,6 @@ import { MEGA_MENU, MEGA_MENU_RESTRICTED } from '@/lib/starMegaMenu';
 
 export default function MegaMenu({ showSupervision, showAdmin, onNavigate }) {
   const [activeMenu, setActiveMenu] = useState(null);
-  const [mobilePlanOpen, setMobilePlanOpen] = useState(false);
   const navigate = useNavigate();
   const timeoutRef = useRef(null);
 
@@ -29,16 +28,14 @@ export default function MegaMenu({ showSupervision, showAdmin, onNavigate }) {
     onNavigate?.();
   };
 
-  const activeMenuData = allMenus.find(m => m.id === activeMenu);
-
   return (
-    <>
-      {/* Desktop mega-menu bar */}
-      <nav
-        className="hidden lg:flex items-center gap-0.5 relative"
-        onMouseLeave={handleLeave}
-      >
-        {allMenus.map((menu) => (
+    <nav
+      className="hidden lg:flex items-center gap-0.5"
+      onMouseLeave={handleLeave}
+    >
+      {allMenus.map((menu) => {
+        const isActive = activeMenu === menu.id;
+        return (
           <div
             key={menu.id}
             className="relative"
@@ -48,7 +45,7 @@ export default function MegaMenu({ showSupervision, showAdmin, onNavigate }) {
               onClick={() => handleClick(menu.route)}
               onFocus={() => handleEnter(menu.id)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                activeMenu === menu.id
+                isActive
                   ? 'bg-secondary/10 text-secondary'
                   : 'text-muted-foreground hover:text-foreground hover:bg-surface'
               }`}
@@ -56,49 +53,47 @@ export default function MegaMenu({ showSupervision, showAdmin, onNavigate }) {
               <menu.icon className="w-3.5 h-3.5" />
               {menu.label}
             </button>
+
+            {/* Per-item anchored dropdown — appears directly under the trigger */}
+            <AnimatePresence>
+              {isActive && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 top-full mt-2 z-[55] glass-panel rounded-2xl p-4 w-[380px] shadow-xl"
+                  onMouseEnter={() => clearTimeout(timeoutRef.current)}
+                  onMouseLeave={handleLeave}
+                >
+                  <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-border/50">
+                    <menu.icon className="w-4 h-4 text-secondary" />
+                    <span className="text-sm font-heading font-semibold text-foreground">{menu.label}</span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-1">
+                    {menu.items.map((item) => (
+                      <button
+                        key={item.label}
+                        onClick={() => handleClick(item.to)}
+                        className="flex items-start gap-3 p-2.5 rounded-xl text-left hover:bg-surface transition-all group"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-secondary/8 border border-secondary/15 flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/15 transition-colors">
+                          <item.icon className="w-3.5 h-3.5 text-secondary" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-semibold text-foreground leading-tight">{item.label}</p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5 leading-tight">{item.desc}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        ))}
-
-        {/* Mega-menu panel */}
-        <AnimatePresence>
-          {activeMenuData && (
-            <motion.div
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.15 }}
-              className="fixed left-1/2 -translate-x-1/2 top-[64px] z-[55] glass-panel rounded-2xl p-5 w-[640px] shadow-xl"
-              onMouseEnter={() => clearTimeout(timeoutRef.current)}
-              onMouseLeave={handleLeave}
-            >
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/50">
-                <activeMenuData.icon className="w-4 h-4 text-secondary" />
-                <span className="text-sm font-heading font-semibold text-foreground">{activeMenuData.label}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {activeMenuData.items.map((item) => (
-                  <button
-                    key={item.label}
-                    onClick={() => handleClick(item.to)}
-                    className="flex items-start gap-3 p-3 rounded-xl text-left hover:bg-surface transition-all group"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-secondary/8 border border-secondary/15 flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/15 transition-colors">
-                      <item.icon className="w-3.5 h-3.5 text-secondary" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-foreground leading-tight">{item.label}</p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5 leading-tight">{item.desc}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-
-      {/* Mobile "Plan STAR" trigger — hidden, controlled by parent */}
-    </>
+        );
+      })}
+    </nav>
   );
 }
 

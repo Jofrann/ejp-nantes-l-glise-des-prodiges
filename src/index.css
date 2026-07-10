@@ -156,4 +156,15 @@
     border: 1px solid #E7E2D8;
     box-shadow: 0 8px 24px rgba(20, 20, 20, 0.04);
   }
+
+  /* === Star accent — dynamic personal color === */
+  :root {
+    --star-accent: hsl(38 45% 47%);
+    --star-accent-soft: hsl(40 45% 70%);
+  }
+
+  .star-accent-text { color: var(--star-accent); }
+  .star-accent-bg { background-color: var(--star-accent); }
+  .star-accent-border { border-color: var(--star-accent); }
+  .star-accent-ring { --tw-ring-color: var(--star-accent); }
 }
