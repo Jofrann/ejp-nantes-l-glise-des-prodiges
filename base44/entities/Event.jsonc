@@ -42,6 +42,10 @@
       "type": "string",
       "description": "Lieu"
     },
+    "meet_url": {
+      "type": "string",
+      "description": "Lien Google Meet de la r\u00e9union"
+    },
     "image_url": {
       "type": "string",
       "description": "Image de l'\u00e9v\u00e9nement"

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Clock, MapPin, CheckCircle, AlertCircle, CalendarClock } from 'lucide-react';
+import { X, Clock, MapPin, CheckCircle, AlertCircle, CalendarClock, Video, ExternalLink, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const ABSENCE_REASONS = [
@@ -19,6 +19,26 @@ export default function EventDetailPanel({ event, open, onClose, existingRespons
   const [lateTime, setLateTime] = useState(existingResponse?.estimated_arrival_time || '');
   const [comment, setComment] = useState(existingResponse?.comment || '');
   const [saving, setSaving] = useState(false);
+  const [meetUrl, setMeetUrl] = useState(event?.meet_url || null);
+  const [generatingMeet, setGeneratingMeet] = useState(false);
+
+  const handleGenerateMeet = async () => {
+    setGeneratingMeet(true);
+    try {
+      const res = await base44.functions.invoke('createMeetLink', {
+        event_id: event.id,
+        title: event.title,
+        event_date: event.event_date,
+        event_time: event.event_time,
+        end_time: event.end_time,
+        description: event.description,
+      });
+      setMeetUrl(res.data.meet_url);
+    } catch (e) {
+    } finally {
+      setGeneratingMeet(false);
+    }
+  };
 
   const handleRespond = async (newStatus) => {
     setSaving(true);
@@ -93,6 +113,39 @@ export default function EventDetailPanel({ event, open, onClose, existingRespons
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Google Meet */}
+            <div className="border-t border-border pt-4 mb-4">
+              {meetUrl ? (
+                <a
+                  href={meetUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl p-3 hover:bg-green-100 transition-all"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-green-500/15 border border-green-400/20 flex items-center justify-center flex-shrink-0">
+                    <Video className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-green-700">Réunion Google Meet</p>
+                    <p className="text-[10px] text-green-600 truncate">{meetUrl}</p>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
+                </a>
+              ) : (
+                <button
+                  onClick={handleGenerateMeet}
+                  disabled={generatingMeet}
+                  className="flex items-center justify-center gap-2 w-full bg-card border border-border rounded-xl py-2.5 text-xs font-semibold text-foreground hover:border-green-400/30 hover:bg-green-50/50 transition-all disabled:opacity-50"
+                >
+                  {generatingMeet ? (
+                    <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Création du lien…</>
+                  ) : (
+                    <><Video className="w-3.5 h-3.5 text-green-600" /> Créer un lien Google Meet</>
+                  )}
+                </button>
+              )}
             </div>
 
             {/* Présence */}
