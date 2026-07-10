@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, Plus, ChevronRight, Clock } from 'lucide-react';
+import { Plus, ChevronRight, Clock } from 'lucide-react';
 
 function formatDateGroup(dateStr) {
   const today = new Date();

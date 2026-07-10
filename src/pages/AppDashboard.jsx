@@ -3,8 +3,8 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  Calendar, CheckCircle, GraduationCap, Sprout, CalendarClock,
-  BookOpen, ChevronRight, Target, Briefcase, Sparkles, ShoppingBag,
+  CheckCircle, GraduationCap, Sprout, CalendarClock,
+  BookOpen, ChevronRight, Target, Briefcase, ShoppingBag,
 } from 'lucide-react';
 import { isBureauLike, isAdmin, isFijPilot } from '@/lib/permissions';
 import BureauHero from '@/components/star/bureau/BureauHero';
