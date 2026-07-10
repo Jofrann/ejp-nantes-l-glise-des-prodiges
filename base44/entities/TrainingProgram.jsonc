@@ -1,0 +1,63 @@
+{
+  "name": "TrainingProgram",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre de la formation"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description courte"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "pcnc",
+        "serviteur",
+        "pilote_fij",
+        "accueil",
+        "communication",
+        "musique",
+        "coordination",
+        "autre"
+      ],
+      "default": "pcnc",
+      "description": "Cat\u00e9gorie"
+    },
+    "assigned_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "R\u00f4les assign\u00e9s (all, star_serviteur, star_pilote_fij, etc.)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "published",
+      "description": "Statut"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Ordre d'affichage"
+    },
+    "cover_url": {
+      "type": "string",
+      "description": "Image de couverture"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false,
+      "description": "Visible par tous les serviteurs"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

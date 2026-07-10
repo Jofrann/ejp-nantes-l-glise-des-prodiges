@@ -1,0 +1,52 @@
+{
+  "name": "TrainingModule",
+  "type": "object",
+  "properties": {
+    "program_id": {
+      "type": "string",
+      "description": "ID de la formation"
+    },
+    "program_title": {
+      "type": "string",
+      "description": "Titre de la formation (d\u00e9normalis\u00e9)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du module"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description du module"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "URL de la vid\u00e9o"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "URL du document PDF"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Miniature"
+    },
+    "module_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Ordre du module"
+    },
+    "requires_summary": {
+      "type": "boolean",
+      "default": true,
+      "description": "R\u00e9sum\u00e9 obligatoire"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "Dur\u00e9e estim\u00e9e (minutes)"
+    }
+  },
+  "required": [
+    "program_id",
+    "title"
+  ]
+}

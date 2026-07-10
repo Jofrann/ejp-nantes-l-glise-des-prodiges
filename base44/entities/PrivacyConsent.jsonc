@@ -1,0 +1,40 @@
+{
+  "name": "PrivacyConsent",
+  "type": "object",
+  "properties": {
+    "consent_type": {
+      "type": "string",
+      "enum": [
+        "data_processing",
+        "sharing_leader",
+        "sharing_referent",
+        "pastoral_care",
+        "publication_photo",
+        "analytics"
+      ],
+      "description": "Type de consentement"
+    },
+    "consent_given": {
+      "type": "boolean",
+      "default": false,
+      "description": "Consentement accord\u00e9"
+    },
+    "consent_text": {
+      "type": "string",
+      "description": "Texte du consentement"
+    },
+    "consent_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date du consentement"
+    },
+    "withdrawn_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date de retrait du consentement"
+    }
+  },
+  "required": [
+    "consent_type"
+  ]
+}

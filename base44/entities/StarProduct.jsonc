@@ -1,0 +1,50 @@
+{
+  "name": "StarProduct",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Nom du produit"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description"
+    },
+    "price": {
+      "type": "number",
+      "description": "Prix en euros"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image du produit"
+    },
+    "stripe_checkout_url": {
+      "type": "string",
+      "description": "Lien Stripe Checkout"
+    },
+    "stock_status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "limited",
+        "out_of_stock"
+      ],
+      "default": "available",
+      "description": "Disponibilit\u00e9"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Visible en boutique"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Ordre"
+    }
+  },
+  "required": [
+    "title",
+    "price"
+  ]
+}

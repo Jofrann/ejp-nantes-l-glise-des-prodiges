@@ -1,0 +1,61 @@
+{
+  "name": "StarResource",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "document",
+        "lien",
+        "video",
+        "formulaire",
+        "livre",
+        "autre"
+      ],
+      "default": "document",
+      "description": "Type de ressource"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL du fichier (PDF, etc.)"
+    },
+    "external_url": {
+      "type": "string",
+      "description": "Lien externe"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image / miniature"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Nouveaut\u00e9 / mis en avant"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Visible"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Ordre"
+    },
+    "author": {
+      "type": "string",
+      "description": "Auteur (pour livres)"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

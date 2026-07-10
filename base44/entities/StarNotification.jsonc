@@ -1,0 +1,45 @@
+{
+  "name": "StarNotification",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre court"
+    },
+    "message": {
+      "type": "string",
+      "description": "Message"
+    },
+    "notification_type": {
+      "type": "string",
+      "enum": [
+        "presence",
+        "program",
+        "formation",
+        "appointment",
+        "fij",
+        "resource",
+        "system",
+        "conflict"
+      ],
+      "default": "system",
+      "description": "Type de notification"
+    },
+    "link": {
+      "type": "string",
+      "description": "Lien vers l'action (/app/presences, etc.)"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Lue"
+    },
+    "icon_hint": {
+      "type": "string",
+      "description": "Nom d'ic\u00f4ne Lucide (CheckCircle, Calendar, etc.)"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

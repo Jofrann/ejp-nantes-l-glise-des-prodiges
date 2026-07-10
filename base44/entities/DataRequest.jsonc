@@ -1,0 +1,46 @@
+{
+  "name": "DataRequest",
+  "type": "object",
+  "properties": {
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "export",
+        "delete",
+        "archive"
+      ],
+      "description": "Type de demande RGPD"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Statut"
+    },
+    "details": {
+      "type": "string",
+      "description": "D\u00e9tails de la demande"
+    },
+    "processed_by_id": {
+      "type": "string",
+      "description": "ID de l'admin"
+    },
+    "processed_by_name": {
+      "type": "string",
+      "description": "Nom de l'admin"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date de traitement"
+    }
+  },
+  "required": [
+    "request_type"
+  ]
+}

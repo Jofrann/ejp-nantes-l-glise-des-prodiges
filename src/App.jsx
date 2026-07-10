@@ -49,6 +49,9 @@ import EditerDepartement from '@/pages/departements/EditerDepartement';
 import StarAgenda from '@/pages/star/Agenda';
 import StarPresences from '@/pages/star/Presences';
 import StarFormations from '@/pages/star/Formations';
+import StarFormationDetail from '@/pages/star/FormationDetail';
+import StarNotifications from '@/pages/star/Notifications';
+import StarConfidentialite from '@/pages/star/Confidentialite';
 import StarCroissance from '@/pages/star/Croissance';
 import StarObjectifs from '@/pages/star/Objectifs';
 import StarRendezVous from '@/pages/star/RendezVous';
@@ -190,12 +193,15 @@ const AuthenticatedApp = () => {
           <Route path="/app/agenda" element={<StarAgenda />} />
           <Route path="/app/presences" element={<StarPresences />} />
           <Route path="/app/formations" element={<StarFormations />} />
+          <Route path="/app/formations/:formationId" element={<StarFormationDetail />} />
           <Route path="/app/croissance" element={<StarCroissance />} />
           <Route path="/app/objectifs" element={<StarObjectifs />} />
           <Route path="/app/rendez-vous" element={<StarRendezVous />} />
           <Route path="/app/ressources" element={<StarRessources />} />
           <Route path="/app/parcours" element={<StarParcours />} />
           <Route path="/app/espace-personnel" element={<StarEspacePersonnel />} />
+          <Route path="/app/espace-personnel/confidentialite" element={<StarConfidentialite />} />
+          <Route path="/app/notifications" element={<StarNotifications />} />
           <Route path="/app/responsabilites" element={<StarResponsabilites />} />
           <Route path="/app/organisation" element={<StarOrganisation />} />
           <Route path="/app/supervision" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><StarSupervision /></RoleGuard>} />

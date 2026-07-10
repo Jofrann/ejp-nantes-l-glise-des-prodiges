@@ -1,0 +1,65 @@
+{
+  "name": "TrainingSubmission",
+  "type": "object",
+  "properties": {
+    "program_id": {
+      "type": "string",
+      "description": "ID de la formation"
+    },
+    "program_title": {
+      "type": "string",
+      "description": "Titre de la formation (d\u00e9normalis\u00e9)"
+    },
+    "module_id": {
+      "type": "string",
+      "description": "ID du module"
+    },
+    "module_title": {
+      "type": "string",
+      "description": "Titre du module (d\u00e9normalis\u00e9)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "submitted",
+        "validated",
+        "rejected",
+        "correction"
+      ],
+      "default": "not_started",
+      "description": "Statut de progression"
+    },
+    "summary_text": {
+      "type": "string",
+      "description": "R\u00e9sum\u00e9 r\u00e9dig\u00e9 par le serviteur"
+    },
+    "review_comment": {
+      "type": "string",
+      "description": "Commentaire du formateur"
+    },
+    "reviewed_by_id": {
+      "type": "string",
+      "description": "ID du formateur"
+    },
+    "reviewed_by_name": {
+      "type": "string",
+      "description": "Nom du formateur"
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date de soumission"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date de validation/refus"
+    }
+  },
+  "required": [
+    "program_id",
+    "module_id"
+  ]
+}

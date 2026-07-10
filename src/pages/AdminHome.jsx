@@ -4,6 +4,8 @@ import { Settings, Users, Calendar, Image, Church, Save, Plus, Trash2, Upload, C
 import GalleryAdmin from '@/components/admin/GalleryAdmin';
 import AdminProgramsTab from '@/components/admin/AdminProgramsTab';
 import AdminAppointmentsTab from '@/components/admin/AdminAppointmentsTab';
+import AdminFormationsTab from '@/components/admin/AdminFormationsTab';
+import AdminRessourcesTab from '@/components/admin/AdminRessourcesTab';
 import { motion } from 'framer-motion';
 
 const TABS = [
@@ -12,6 +14,8 @@ const TABS = [
   { id: 'events', label: 'Événements', icon: Calendar },
   { id: 'programs', label: 'Programmes EJP', icon: CalendarClock },
   { id: 'appointments', label: 'Rendez-vous', icon: GraduationCap },
+  { id: 'formations', label: 'Formations', icon: GraduationCap },
+  { id: 'ressources', label: 'Ressources & Boutique', icon: Image },
   { id: 'testimonials', label: 'Témoignages', icon: Settings },
   { id: 'ministries', label: 'Ministères', icon: Settings },
   { id: 'gallery', label: 'Galerie', icon: Image },
@@ -135,6 +139,8 @@ export default function AdminHome() {
         <div className="flex-1 p-6 max-w-3xl">
           {tab === 'programs' && <AdminProgramsTab />}
           {tab === 'appointments' && <AdminAppointmentsTab />}
+          {tab === 'formations' && <AdminFormationsTab />}
+          {tab === 'ressources' && <AdminRessourcesTab />}
           {tab === 'hero' && config && (
             <>
               <Section title="Contenu Hero">

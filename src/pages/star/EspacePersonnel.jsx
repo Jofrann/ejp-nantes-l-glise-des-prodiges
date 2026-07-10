@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Save, Check, Palette, Layout, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Settings, Save, Check, Palette, Layout, Star, Shield, ChevronRight } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/star/PageHeader';
 
@@ -210,6 +211,18 @@ export default function EspacePersonnel() {
           </div>
         </div>
       </div>
+
+      {/* Confidentialité */}
+      <Link to="/app/espace-personnel/confidentialite" className="flex items-center gap-3 mt-4 bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
+        <div className="w-9 h-9 rounded-xl bg-slate-500/10 border border-slate-400/20 flex items-center justify-center flex-shrink-0">
+          <Shield className="w-4 h-4 text-slate-600" />
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-foreground">Confidentialité & RGPD</p>
+          <p className="text-xs text-muted-foreground">Gérez vos consentements et vos droits sur vos données</p>
+        </div>
+        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+      </Link>
 
       <button onClick={save} disabled={saving}
         className={`w-full mt-6 py-3 rounded-xl text-sm font-semibold transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-white hover:bg-secondary/90'} disabled:opacity-50`}>

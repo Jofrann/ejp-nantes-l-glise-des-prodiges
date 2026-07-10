@@ -2,6 +2,14 @@
 module.exports = {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+  safelist: [
+    { pattern: /bg-(indigo|emerald|amber|cyan|purple|rose|blue|slate|green|red|orange)-500\/10/ },
+    { pattern: /border-(indigo|emerald|amber|cyan|purple|rose|blue|slate|green|red|orange)-400\/20/ },
+    { pattern: /text-(indigo|emerald|amber|cyan|purple|rose|blue|slate|green|red|orange)-600/ },
+    { pattern: /from-(indigo|emerald|amber|cyan|purple|rose|blue|slate|green|red|orange)-500\/10/ },
+    { pattern: /to-(indigo|emerald|amber|cyan|purple|rose|blue|slate|green|red|orange)-500\/5/ },
+    { pattern: /bg-(indigo|emerald|amber|cyan|purple|rose|blue|slate|green|red|orange)-500/ },
+  ],
   theme: {
   	extend: {
   		borderRadius: {

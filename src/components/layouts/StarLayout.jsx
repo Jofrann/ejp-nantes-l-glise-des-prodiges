@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Heart, LogOut, User, Plus, X, Bell, Menu as MenuIcon,
+  Heart, LogOut, User, Plus, X, Menu as MenuIcon,
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { isBureauLike, isAdmin } from '@/lib/permissions';
 import { MOBILE_BOTTOM_NAV } from '@/lib/starMegaMenu';
 import MegaMenu, { MobilePlanStar } from '@/components/star/MegaMenu';
+import NotificationBell from '@/components/star/NotificationBell';
 
 const QUICK_ACTIONS = [
   { label: 'Déclarer une présence', icon: 'CheckCircle', to: '/app/presences' },
@@ -92,9 +93,7 @@ export default function StarLayout({ children, user }) {
             </div>
 
             {/* Notifications */}
-            <button className="hidden md:flex w-8 h-8 rounded-xl items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface transition-all">
-              <Bell className="w-4 h-4" />
-            </button>
+            <NotificationBell />
 
             {/* Profil */}
             <Link to="/app/profil" className="flex items-center gap-2">
