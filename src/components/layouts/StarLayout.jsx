@@ -126,7 +126,7 @@ export default function StarLayout({ children, user }) {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 pt-16 pb-20 md:pb-8">
+      <main className="flex-1 pt-[72px] pb-20 md:pb-8">
         {children}
       </main>
 

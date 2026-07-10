@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Settings, Users, Calendar, Image, Church, Save, Plus, Trash2, Upload } from 'lucide-react';
+import { Settings, Users, Calendar, Image, Church, Save, Plus, Trash2, Upload, CalendarClock, GraduationCap } from 'lucide-react';
 import GalleryAdmin from '@/components/admin/GalleryAdmin';
+import AdminProgramsTab from '@/components/admin/AdminProgramsTab';
+import AdminAppointmentsTab from '@/components/admin/AdminAppointmentsTab';
 import { motion } from 'framer-motion';
 
 const TABS = [
   { id: 'hero', label: 'Hero & Général', icon: Church },
   { id: 'leaders', label: 'Leaders', icon: Users },
   { id: 'events', label: 'Événements', icon: Calendar },
+  { id: 'programs', label: 'Programmes EJP', icon: CalendarClock },
+  { id: 'appointments', label: 'Rendez-vous', icon: GraduationCap },
   { id: 'testimonials', label: 'Témoignages', icon: Settings },
   { id: 'ministries', label: 'Ministères', icon: Settings },
   { id: 'gallery', label: 'Galerie', icon: Image },
@@ -129,6 +133,8 @@ export default function AdminHome() {
 
         {/* Contenu */}
         <div className="flex-1 p-6 max-w-3xl">
+          {tab === 'programs' && <AdminProgramsTab />}
+          {tab === 'appointments' && <AdminAppointmentsTab />}
           {tab === 'hero' && config && (
             <>
               <Section title="Contenu Hero">

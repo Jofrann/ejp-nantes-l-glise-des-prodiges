@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Map, GraduationCap, Briefcase, Search, Wrench, Clock, Save, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import PageHeader from '@/components/star/PageHeader';
 
 const SITUATIONS = [
   { key: 'etudiant', label: 'Étudiant' },
@@ -67,17 +67,18 @@ export default function Parcours() {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-xl font-heading font-bold text-foreground mb-1">Mon parcours</h1>
-          <p className="text-sm text-muted-foreground">Renseigne ta saison de vie pour mieux être accompagné.</p>
-        </div>
-        <button onClick={save} disabled={saving}
-          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-white hover:bg-secondary/90'} disabled:opacity-50`}>
-          {saved ? <><Check className="w-4 h-4" /> Enregistré</> : <><Save className="w-4 h-4" /> {saving ? '...' : 'Enregistrer'}</>}
-        </button>
-      </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <PageHeader
+        title="Mon parcours"
+        intention="Renseigne ta saison de vie pour mieux être accompagné."
+        breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Accompagnement' }, { label: 'Parcours' }]}
+        actions={
+          <button onClick={save} disabled={saving}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-white hover:bg-secondary/90'} disabled:opacity-50`}>
+            {saved ? <><Check className="w-4 h-4" /> Enregistré</> : <><Save className="w-4 h-4" /> {saving ? '...' : 'Enregistrer'}</>}
+          </button>
+        }
+      />
 
       <div className="space-y-2">
         {/* Situation */}

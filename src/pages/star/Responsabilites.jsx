@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Briefcase, ChevronRight, Users, Heart, Music, GraduationCap, Settings } from 'lucide-react';
 import { isFijPilot, isFijCoordination, isBureauLike, isAdmin, hasRole } from '@/lib/permissions';
+import PageHeader from '@/components/star/PageHeader';
 
 const TOOL_META = {
   fij_pilot: { icon: Heart, label: 'Pilote FIJ', desc: 'Ma FIJ, CR du jeudi, membres, assiduité', to: '/app/responsabilites/fij-pilote', color: 'from-rose-500/10 to-rose-500/5 border-rose-400/20 text-rose-600' },
@@ -47,11 +48,12 @@ export default function Responsabilites() {
   if (hasRole(user, 'academic') || hasRole(user, 'academic_support')) tools.push('academic');
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-xl font-heading font-bold text-foreground mb-1">Mes responsabilités</h1>
-        <p className="text-sm text-muted-foreground mb-6">Tes outils de mission, attribués selon ton rôle.</p>
-      </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <PageHeader
+        title="Mes responsabilités"
+        intention="Tes outils de mission, attribués selon ton rôle."
+        breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Responsabilités' }]}
+      />
 
       {tools.length === 0 ? (
         <div className="text-center py-16">

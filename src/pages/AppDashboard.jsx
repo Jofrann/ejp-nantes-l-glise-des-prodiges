@@ -8,6 +8,7 @@ import {
   Briefcase, Sparkles, AlertCircle, Map, Settings as SettingsIcon
 } from 'lucide-react';
 import { isBureauLike, isAdmin, isFijPilot } from '@/lib/permissions';
+import PageHeader from '@/components/star/PageHeader';
 
 export default function AppDashboard() {
   const [user, setUser] = useState(null);
@@ -61,10 +62,16 @@ export default function AppDashboard() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+      <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
 
         {/* En-tête personnel */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          <PageHeader
+            title={`${greeting}, ${firstName}`}
+            intention={`Accueil STAR — ton bureau personnel. ${todayStr}.`}
+            breadcrumbs={[{ label: 'STAR OS' }]}
+          />
+
           <div className="flex items-center gap-4 mb-4">
             <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-secondary/25 flex-shrink-0">
               {user?.photo_url ? (
@@ -76,10 +83,7 @@ export default function AppDashboard() {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-secondary uppercase tracking-widest mb-0.5">Accueil STAR</p>
-              <h1 className="text-xl font-heading font-bold text-foreground leading-tight">
-                {greeting}, {firstName}
-              </h1>
+              <p className="text-xs text-secondary uppercase tracking-widest mb-0.5">Serviteur Travaillant Activement pour le Royaume</p>
               <p className="text-xs text-muted-foreground capitalize mt-0.5">{todayStr}</p>
             </div>
           </div>

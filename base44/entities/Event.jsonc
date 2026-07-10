@@ -10,6 +10,21 @@
       "type": "string",
       "description": "Description courte"
     },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "culte",
+        "ejp",
+        "formation",
+        "rendez_vous",
+        "reunion",
+        "service",
+        "special",
+        "autre"
+      ],
+      "default": "ejp",
+      "description": "Type d'\u00e9v\u00e9nement"
+    },
     "event_date": {
       "type": "string",
       "format": "date",
@@ -19,6 +34,10 @@
       "type": "string",
       "description": "Heure (ex: 15:00)"
     },
+    "end_time": {
+      "type": "string",
+      "description": "Heure de fin (ex: 17:00)"
+    },
     "location": {
       "type": "string",
       "description": "Lieu"
@@ -26,6 +45,28 @@
     "image_url": {
       "type": "string",
       "description": "Image de l'\u00e9v\u00e9nement"
+    },
+    "audience": {
+      "type": "string",
+      "enum": [
+        "all_servants",
+        "all_members",
+        "fij_pilots",
+        "leaders",
+        "specific"
+      ],
+      "default": "all_servants",
+      "description": "Audience concern\u00e9e"
+    },
+    "presence_mode": {
+      "type": "string",
+      "enum": [
+        "optional",
+        "mandatory",
+        "informative"
+      ],
+      "default": "optional",
+      "description": "Mode de pr\u00e9sence"
     },
     "is_featured": {
       "type": "boolean",
