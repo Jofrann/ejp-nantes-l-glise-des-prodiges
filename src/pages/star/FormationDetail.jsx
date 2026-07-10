@@ -101,7 +101,7 @@ export default function FormationDetail() {
   const statusConfig = STATUS_CONFIG[currentStatus] || STATUS_CONFIG.not_started;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <Link to="/app/formations" className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-3">
         <ArrowLeft className="w-3.5 h-3.5" /> Retour aux formations
       </Link>

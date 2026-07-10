@@ -33,7 +33,7 @@ export default function Organisation() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
         <h1 className="text-xl font-heading font-bold text-foreground mb-1">Mon organisation</h1>
         <p className="text-sm text-muted-foreground">Tes rattachements, équipes et référents.</p>

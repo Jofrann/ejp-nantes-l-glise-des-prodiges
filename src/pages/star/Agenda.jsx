@@ -246,7 +246,7 @@ export default function Agenda() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
         title="Mon agenda"
         intention="Mon calendrier personnel : programmes EJP, occupations, rendez-vous et responsabilités."

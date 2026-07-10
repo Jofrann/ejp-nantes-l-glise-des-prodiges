@@ -62,7 +62,7 @@ export default function RendezVous() {
   const history = requests.filter(r => r.status === 'completed' || r.status === 'cancelled' || r.status === 'transferred');
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
         title="Rendez-vous"
         intention="Demande un RDV sans devoir écrire à cinq personnes."

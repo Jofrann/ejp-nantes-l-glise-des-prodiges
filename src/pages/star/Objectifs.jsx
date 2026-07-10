@@ -62,7 +62,7 @@ export default function Objectifs() {
   const done = goals.filter(g => g.status === 'done' || g.status === 'abandoned' || g.status === 'paused');
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
         title="Mes objectifs"
         intention="Transforme tes intentions en trajectoires."

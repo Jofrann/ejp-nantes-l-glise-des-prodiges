@@ -48,7 +48,7 @@ export default function Responsabilites() {
   if (hasRole(user, 'academic') || hasRole(user, 'academic_support')) tools.push('academic');
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
         title="Mes responsabilités"
         intention="Tes outils de mission, attribués selon ton rôle."

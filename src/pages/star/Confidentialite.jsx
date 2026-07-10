@@ -125,7 +125,7 @@ export default function Confidentialite() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
         title="Confidentialité & RGPD"
         intention="Gérez vos consentements, la visibilité de vos données et vos droits."
