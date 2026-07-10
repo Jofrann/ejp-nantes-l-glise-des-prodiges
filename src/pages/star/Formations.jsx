@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { GraduationCap, ChevronRight, PlayCircle, FileText, Clock } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import PageHeader from '@/components/star/PageHeader';
 
 const PCNC_PROGRAMS = [
   { id: 'pcnc001', title: 'PCNC 001', desc: 'Fondations du parcours', progress: 0, status: 'recommended' },
@@ -36,11 +37,12 @@ export default function Formations() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-xl font-heading font-bold text-foreground mb-1">Mes formations</h1>
-        <p className="text-sm text-muted-foreground">Parcours PCNC, modules, résumés et validations.</p>
-      </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <PageHeader
+        title="Mes formations"
+        intention="Parcours PCNC, modules, résumés et validations."
+        breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Formation' }]}
+      />
 
       <div className="space-y-3">
         {PCNC_PROGRAMS.map((prog, i) => (

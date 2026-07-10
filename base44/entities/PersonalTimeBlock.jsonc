@@ -1,0 +1,80 @@
+{
+  "name": "PersonalTimeBlock",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre de l'occupation"
+    },
+    "block_type": {
+      "type": "string",
+      "enum": [
+        "etudes",
+        "travail",
+        "priere",
+        "repos",
+        "deplacement",
+        "service",
+        "formation",
+        "personnel",
+        "autre"
+      ],
+      "default": "personnel",
+      "description": "Type d'occupation"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de d\u00e9but"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Heure de d\u00e9but (HH:MM)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Heure de fin (HH:MM)"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de fin (si multi-jours)"
+    },
+    "recurrence": {
+      "type": "string",
+      "enum": [
+        "none",
+        "daily",
+        "weekly",
+        "biweekly",
+        "monthly"
+      ],
+      "default": "none",
+      "description": "R\u00e9currence"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Commentaire"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "private",
+        "unavailable_only",
+        "shared_responsibles"
+      ],
+      "default": "private",
+      "description": "Visibilit\u00e9"
+    },
+    "color_hint": {
+      "type": "string",
+      "description": "Couleur d'affichage (blue, green, purple, amber, rose, cyan)"
+    }
+  },
+  "required": [
+    "title",
+    "start_date",
+    "start_time",
+    "end_time"
+  ]
+}

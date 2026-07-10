@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, FileText, Link2, Shirt, Phone, ChevronRight, Star, Download } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import PageHeader from '@/components/star/PageHeader';
 
 const SECTIONS = [
   { key: 'liens', label: 'Liens utiles', icon: Link2, desc: 'PCNC, formulaires, chaînes vidéo' },
@@ -22,11 +23,12 @@ export default function Ressources() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-xl font-heading font-bold text-foreground mb-1">Ressources</h1>
-        <p className="text-sm text-muted-foreground">Tout ce dont tu as besoin pour vivre la vie EJP.</p>
-      </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <PageHeader
+        title="Ressources"
+        intention="Tout ce dont tu as besoin pour vivre la vie EJP."
+        breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Ressources' }]}
+      />
 
       <div className="grid grid-cols-2 gap-3 mb-6">
         {SECTIONS.map(({ icon: Icon, label, desc, key }, i) => (

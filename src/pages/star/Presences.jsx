@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { CheckCircle, Clock, AlertCircle, ChevronRight, Calendar, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import PageHeader from '@/components/star/PageHeader';
 
 const ABSENCE_REASONS = [
   { key: 'travail', label: 'Travail' },
@@ -95,11 +96,12 @@ export default function Presences() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-xl font-heading font-bold text-foreground mb-1">Mes présences</h1>
-        <p className="text-sm text-muted-foreground">Confirme ta présence, signale une absence ou un retard.</p>
-      </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <PageHeader
+        title="Mes présences"
+        intention="Confirme ta présence, signale une absence ou un retard."
+        breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Mon temps' }, { label: 'Présences' }]}
+      />
 
       {events.length === 0 ? (
         <div className="text-center py-16">

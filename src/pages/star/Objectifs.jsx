@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Target, Plus, X, Check, Pause, RotateCcw, Flag } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import PageHeader from '@/components/star/PageHeader';
 
 const CATEGORIES = [
   { key: 'spirituel', label: 'Spirituel' },
@@ -61,16 +62,17 @@ export default function Objectifs() {
   const done = goals.filter(g => g.status === 'done' || g.status === 'abandoned' || g.status === 'paused');
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-xl font-heading font-bold text-foreground mb-1">Mes objectifs</h1>
-          <p className="text-sm text-muted-foreground">Transforme tes intentions en trajectoires.</p>
-        </div>
-        <button onClick={() => setShowForm(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-secondary text-white text-xs font-medium hover:bg-secondary/90 transition-colors">
-          <Plus className="w-4 h-4" /> Nouveau
-        </button>
-      </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <PageHeader
+        title="Mes objectifs"
+        intention="Transforme tes intentions en trajectoires."
+        breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Ma croissance' }, { label: 'Objectifs' }]}
+        actions={
+          <button onClick={() => setShowForm(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-secondary text-white text-xs font-semibold hover:bg-secondary/90 transition-colors">
+            <Plus className="w-4 h-4" /> Nouveau
+          </button>
+        }
+      />
 
       {loading ? (
         <div className="flex justify-center py-16"><div className="w-6 h-6 border-2 border-border border-t-secondary rounded-full animate-spin" /></div>

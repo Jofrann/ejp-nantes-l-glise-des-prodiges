@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sprout, BookOpen, Plus, X, BookMarked, Check, Calendar, Repeat } from 'lucide-react';
 import HabitudesTab from '@/components/star/HabitudesTab';
 import { base44 } from '@/api/base44Client';
+import PageHeader from '@/components/star/PageHeader';
 
 const TABS = [
   { key: 'parole', label: 'Parole', icon: Sprout },
@@ -15,11 +16,12 @@ export default function Croissance() {
   const [tab, setTab] = useState('parole');
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-xl font-heading font-bold text-foreground mb-1">Ma croissance</h1>
-        <p className="text-sm text-muted-foreground">Ton espace personnel. Privé par défaut — personne ne voit tes notes.</p>
-      </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <PageHeader
+        title="Ma croissance"
+        intention="Ton espace personnel. Privé par défaut — personne ne voit tes notes."
+        breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Ma croissance' }]}
+      />
 
       <div className="flex gap-1 mb-6 p-1 bg-surface rounded-xl">
         {TABS.map(t => (
