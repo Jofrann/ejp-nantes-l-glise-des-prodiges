@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { isBureauLike, isAdmin, isFijPilot } from '@/lib/permissions';
 import PageHeader from '@/components/star/PageHeader';
+import CalendarWidget from '@/components/star/CalendarWidget';
 
 export default function AppDashboard() {
   const [user, setUser] = useState(null);
@@ -148,46 +149,16 @@ export default function AppDashboard() {
           </div>
         </motion.div>
 
-        {/* Mini agenda */}
-        {events.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mon agenda</h2>
-              <Link to="/app/agenda" className="text-xs text-secondary flex items-center gap-1">
-                Voir tout <ChevronRight className="w-3 h-3" />
-              </Link>
-            </div>
-            <div className="space-y-2">
-              {events.slice(0, 3).map((ev) => (
-                <div key={ev.id} className="bg-card border border-border rounded-xl p-3.5 flex items-center gap-3 shadow-sm">
-                  <div className="flex-shrink-0 w-12 text-center bg-secondary/10 border border-secondary/20 rounded-xl py-1.5">
-                    <p className="text-[10px] text-secondary font-medium uppercase">
-                      {new Date(ev.event_date).toLocaleDateString('fr-FR', { month: 'short' })}
-                    </p>
-                    <p className="text-base font-bold text-secondary leading-none">
-                      {new Date(ev.event_date).getDate()}
-                    </p>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-foreground truncate">{ev.title}</p>
-                    <div className="flex items-center gap-3 mt-0.5">
-                      {ev.event_time && (
-                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Clock className="w-3 h-3" /> {ev.event_time}
-                        </span>
-                      )}
-                      {ev.location && (
-                        <span className="flex items-center gap-1 text-xs text-muted-foreground truncate">
-                          <MapPin className="w-3 h-3" /> {ev.location}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        {/* Calendrier des missions */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes dates importantes</h2>
+            <Link to="/app/agenda" className="text-xs text-secondary flex items-center gap-1">
+              Agenda complet <ChevronRight className="w-3 h-3" />
+            </Link>
+          </div>
+          <CalendarWidget events={events} />
+        </motion.div>
 
         {/* Formations */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
