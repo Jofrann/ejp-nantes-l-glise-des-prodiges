@@ -2,13 +2,17 @@
   "name": "UserWorkspacePreference",
   "type": "object",
   "properties": {
-    "verset": {
+    "personal_verse_text": {
       "type": "string",
-      "description": "Verset personnel"
+      "description": "Texte du verset personnel"
     },
-    "phrase_saison": {
+    "personal_verse_reference": {
       "type": "string",
-      "description": "Phrase de saison"
+      "description": "R\u00e9f\u00e9rence du verset (ex: 1 Pierre 4:10)"
+    },
+    "season_phrase": {
+      "type": "string",
+      "description": "Phrase de saison personnelle"
     },
     "accent_color": {
       "type": "string",
@@ -47,7 +51,26 @@
       "items": {
         "type": "string"
       },
-      "description": "Widgets visibles (agenda, presence, formation, objectif, lecture, rdv, ressources, responsabilite, notes, livre)"
+      "description": "Widgets visibles sur le bureau"
+    },
+    "widget_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ordre d'affichage des widgets"
+    },
+    "favorite_shortcuts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Raccourcis favoris affich\u00e9s dans la colonne contextuelle"
+    },
+    "show_right_panel": {
+      "type": "boolean",
+      "default": true,
+      "description": "Afficher la colonne contextuelle desktop"
     },
     "notif_email": {
       "type": "boolean",

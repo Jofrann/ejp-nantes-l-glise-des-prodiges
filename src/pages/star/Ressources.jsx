@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   FileText, ExternalLink, Video, BookOpen, Loader2, Download,
-  Sparkles, ChevronRight, ShoppingBag
+  Sparkles, ChevronRight, ShoppingBag, Package
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/star/PageHeader';
@@ -63,16 +63,19 @@ export default function Ressources() {
               const cat = CATEGORY_CONFIG[r.category] || CATEGORY_CONFIG.autre;
               const Icon = cat.icon;
               const href = r.file_url || r.external_url;
+              const hasUrl = !!href;
+              const Wrapper = hasUrl ? motion.a : motion.div;
+              const wrapperProps = hasUrl
+                ? { href, target: '_blank', rel: 'noopener noreferrer' }
+                : {};
               return (
-                <motion.a
+                <Wrapper
                   key={r.id}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...wrapperProps}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className={`flex items-start gap-3 bg-gradient-to-br from-${cat.color}-500/10 to-${cat.color}-500/5 border border-${cat.color}-400/20 rounded-2xl p-4 hover:shadow-md transition-all`}
+                  className={`flex items-start gap-3 bg-gradient-to-br from-${cat.color}-500/10 to-${cat.color}-500/5 border border-${cat.color}-400/20 rounded-2xl p-4 ${hasUrl ? 'hover:shadow-md cursor-pointer' : ''} transition-all`}
                 >
                   <div className={`w-10 h-10 rounded-xl bg-${cat.color}-500/10 border border-${cat.color}-400/20 flex items-center justify-center flex-shrink-0`}>
                     <Icon className={`w-5 h-5 text-${cat.color}-600`} />
@@ -80,10 +83,14 @@ export default function Ressources() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-foreground">{r.title}</p>
                     {r.description && <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{r.description}</p>}
-                    <span className={`text-[10px] text-${cat.color}-600 mt-1 inline-block`}>{cat.label}</span>
+                    {hasUrl ? (
+                      <span className={`text-[10px] text-${cat.color}-600 mt-1 inline-block`}>{cat.label}</span>
+                    ) : (
+                      <span className="text-[10px] text-muted-foreground/60 mt-1 inline-block">Ressource en préparation</span>
+                    )}
                   </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                </motion.a>
+                  {hasUrl ? <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : <Package className="w-4 h-4 text-muted-foreground/40 flex-shrink-0" />}
+                </Wrapper>
               );
             })}
           </div>
@@ -148,16 +155,19 @@ export default function Ressources() {
             const cat = CATEGORY_CONFIG[r.category] || CATEGORY_CONFIG.autre;
             const Icon = cat.icon;
             const href = r.file_url || r.external_url;
+            const hasUrl = !!href;
+            const Wrapper = hasUrl ? motion.a : motion.div;
+            const wrapperProps = hasUrl
+              ? { href, target: '_blank', rel: 'noopener noreferrer' }
+              : {};
             return (
-              <motion.a
+              <Wrapper
                 key={r.id}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...wrapperProps}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.03 }}
-                className="flex items-center gap-3 bg-card border border-border rounded-xl p-3.5 hover:shadow-sm transition-all"
+                className={`flex items-center gap-3 bg-card border border-border rounded-xl p-3.5 ${hasUrl ? 'hover:shadow-sm cursor-pointer' : ''} transition-all`}
               >
                 <div className={`w-9 h-9 rounded-xl bg-${cat.color}-500/10 border border-${cat.color}-400/20 flex items-center justify-center flex-shrink-0`}>
                   <Icon className={`w-4 h-4 text-${cat.color}-600`} />
@@ -165,10 +175,11 @@ export default function Ressources() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-foreground truncate">{r.title}</p>
                   {r.description && <p className="text-xs text-muted-foreground truncate">{r.description}</p>}
+                  {!hasUrl && <span className="text-[10px] text-muted-foreground/60">Ressource en préparation</span>}
                 </div>
-                {r.category === 'document' && <Download className="w-3.5 h-3.5 text-muted-foreground" />}
-                <ChevronRight className="w-4 h-4 text-muted-foreground" />
-              </motion.a>
+                {hasUrl && r.category === 'document' && <Download className="w-3.5 h-3.5 text-muted-foreground" />}
+                {hasUrl ? <ChevronRight className="w-4 h-4 text-muted-foreground" /> : <Package className="w-4 h-4 text-muted-foreground/40" />}
+              </Wrapper>
             );
           })}
         </div>

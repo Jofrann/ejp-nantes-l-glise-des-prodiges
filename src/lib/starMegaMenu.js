@@ -52,7 +52,7 @@ export const MEGA_MENU = [
     items: [
       { label: 'Documents', desc: 'Télécharger des ressources', icon: FileText, to: '/app/ressources' },
       { label: 'Liens utiles', desc: 'Accès rapides', icon: BookOpen, to: '/app/ressources' },
-      { label: 'Boutique', desc: 'T-shirts et produits', icon: ShoppingBag, to: '/app/ressources' },
+      { label: 'Boutique', desc: 'T-shirts et produits', icon: ShoppingBag, to: '/app/ressources/boutique' },
       { label: 'Contacts utiles', desc: 'Joindre l\'équipe', icon: Phone, to: '/app/ressources' },
     ],
   },

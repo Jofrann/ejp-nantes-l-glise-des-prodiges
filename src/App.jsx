@@ -56,6 +56,7 @@ import StarCroissance from '@/pages/star/Croissance';
 import StarObjectifs from '@/pages/star/Objectifs';
 import StarRendezVous from '@/pages/star/RendezVous';
 import StarRessources from '@/pages/star/Ressources';
+import StarBoutique from '@/pages/star/Boutique';
 import StarParcours from '@/pages/star/Parcours';
 import StarEspacePersonnel from '@/pages/star/EspacePersonnel';
 import StarResponsabilites from '@/pages/star/Responsabilites';
@@ -198,6 +199,7 @@ const AuthenticatedApp = () => {
           <Route path="/app/objectifs" element={<StarObjectifs />} />
           <Route path="/app/rendez-vous" element={<StarRendezVous />} />
           <Route path="/app/ressources" element={<StarRessources />} />
+          <Route path="/app/ressources/boutique" element={<StarBoutique />} />
           <Route path="/app/parcours" element={<StarParcours />} />
           <Route path="/app/espace-personnel" element={<StarEspacePersonnel />} />
           <Route path="/app/espace-personnel/confidentialite" element={<StarConfidentialite />} />
