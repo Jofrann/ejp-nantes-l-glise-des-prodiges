@@ -3,12 +3,14 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Briefcase, ChevronRight, Users, Heart, Music, GraduationCap, Settings } from 'lucide-react';
-import { isFijPilot, isFijCoordination, isBureauLike, isAdmin, hasRole } from '@/lib/permissions';
+import { isFijPilot, isFijCoordination, isBureauLike, isAdmin, hasRole, getRoles } from '@/lib/permissions';
 import PageHeader from '@/components/star/PageHeader';
 
 const TOOL_META = {
   fij_pilot: { icon: Heart, label: 'Pilote FIJ', desc: 'Ma FIJ, CR du jeudi, membres, assiduité', to: '/app/responsabilites/fij-pilote', color: 'from-rose-500/10 to-rose-500/5 border-rose-400/20 text-rose-600' },
   fij_coordination: { icon: Briefcase, label: 'Coordination FIJ', desc: 'Toutes les FIJ, relances, reporting', to: '/app/responsabilites/fij-coordination', color: 'from-secondary/10 to-secondary/5 border-secondary/20 text-secondary' },
+  equipe: { icon: Users, label: 'Mon Équipe', desc: 'Membres, présences, entretiens, objectifs', to: '/app/equipe', color: 'from-blue-500/10 to-blue-500/5 border-blue-400/20 text-blue-600' },
+  etudiant: { icon: GraduationCap, label: 'Mon Espace Étudiant', desc: 'Parcours, suivi, accompagnement', to: '/app/etudiant', color: 'from-green-500/10 to-green-500/5 border-green-400/20 text-green-600' },
   accueil: { icon: Users, label: 'Accueil', desc: 'Planning, visiteurs, reporting dimanche', to: '/app/responsabilites/accueil', color: 'from-blue-500/10 to-blue-500/5 border-blue-400/20 text-blue-600' },
   communication: { icon: Settings, label: 'Communication', desc: 'Demandes visuelles, calendrier éditorial', to: '/app/responsabilites/communication', color: 'from-purple-500/10 to-purple-500/5 border-purple-400/20 text-purple-600' },
   music: { icon: Music, label: 'Prodiges Musique', desc: 'Planning, setlists, répétitions', to: '/app/responsabilites/musique', color: 'from-indigo-500/10 to-indigo-500/5 border-indigo-400/20 text-indigo-600' },
@@ -42,6 +44,11 @@ export default function Responsabilites() {
   const tools = [];
   if (isFijPilot(user, fijs)) tools.push('fij_pilot');
   if (isFijCoordination(user)) tools.push('fij_coordination');
+  // Mon Équipe: visible pour les référents et bureau
+  if (hasRole(user, 'referent') || isBureauLike(user)) tools.push('equipe');
+  // Mon Espace Étudiant: visible pour les étudiants, alternants, en recherche
+  const roles = getRoles(user);
+  if (roles.includes('etudiant') || roles.includes('alternant') || roles.includes('recherche_emploi') || roles.includes('recherche_stage')) tools.push('etudiant');
   if (hasRole(user, 'accueil') || hasRole(user, 'accueil_servant')) tools.push('accueil');
   if (hasRole(user, 'communication') || hasRole(user, 'communication_servant')) tools.push('communication');
   if (hasRole(user, 'music')) tools.push('music');

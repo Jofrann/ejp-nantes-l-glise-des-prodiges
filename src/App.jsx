@@ -65,6 +65,9 @@ import StarEspacePersonnel from '@/pages/star/EspacePersonnel';
 import StarResponsabilites from '@/pages/star/Responsabilites';
 import StarOrganisation from '@/pages/star/Organisation';
 import StarSupervision from '@/pages/star/Supervision';
+import MonService from '@/pages/star/MonService';
+import EspaceEtudiant from '@/pages/star/EspaceEtudiant';
+import MonEquipe from '@/pages/star/MonEquipe';
 import ResponsabilitePlaceholder from '@/pages/star/ResponsabilitePlaceholder';
 import { Users, Settings as SettingsIcon, Music, GraduationCap } from 'lucide-react';
 
@@ -110,8 +113,7 @@ const AuthenticatedApp = () => {
           ))}
 
           <Route path="/app" element={<AppDashboard />} />
-          {/* Alias Mon Service → page présences (existant + agenda) */}
-          <Route path="/app/service" element={<StarPresences />} />
+          <Route path="/app/service" element={<MonService />} />
           <Route path="/app/profil" element={<MonProfil />} />
           <Route path="/app/departements" element={<Navigate to="/app/responsabilites" replace />} />
           <Route path="/app/departements/fij" element={<Navigate to="/app/responsabilites" replace />} />
@@ -127,6 +129,10 @@ const AuthenticatedApp = () => {
           <Route path="/app/responsabilites/fij-pilote/mes-fij/:fijId/cr-jeudi/nouveau" element={<CrJeudiForm />} />
           <Route path="/app/responsabilites/fij-pilote/mes-fij/:fijId/cr-jeudi/:reportId" element={<CrJeudiDetail />} />
           <Route path="/app/responsabilites/fij-pilote/mes-fij/:fijId/membres/:memberId" element={<MemberDetail />} />
+
+          {/* === Alias FIJ Blueprint === */}
+          <Route path="/app/fij" element={<Navigate to="/app/responsabilites/fij-pilote" replace />} />
+          <Route path="/app/fij/coordination" element={<Navigate to="/app/responsabilites/fij-coordination" replace />} />
 
           {/* === Espace Coordination FIJ (sous /app/responsabilites/fij-coordination) === */}
           <Route path="/app/responsabilites/fij-coordination" element={<FijTableauBord />} />
@@ -213,8 +219,17 @@ const AuthenticatedApp = () => {
           <Route path="/app/espace-personnel/confidentialite" element={<StarConfidentialite />} />
           <Route path="/app/notifications" element={<StarNotifications />} />
           <Route path="/app/responsabilites" element={<StarResponsabilites />} />
+          <Route path="/app/etudiant" element={<EspaceEtudiant />} />
+          <Route path="/app/equipe" element={<MonEquipe />} />
+          <Route path="/app/equipe/membres/:userId" element={<MonEquipe />} />
           <Route path="/app/organisation" element={<StarOrganisation />} />
           <Route path="/app/supervision" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><StarSupervision /></RoleGuard>} />
+          <Route path="/app/pilotage" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/pilotage/personnes" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/pilotage/departements" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/pilotage/croissance" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/pilotage/alertes" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/pilotage/rapports" element={<Navigate to="/app/supervision" replace />} />
 
           {/* === Redirections anciennes routes vers responsabilités === */}
           <Route path="/app/responsabilites/accueil" element={<ResponsabilitePlaceholder title="Accueil" description="Planning, visiteurs, reporting dimanche" icon={Users} items={['Planning accueil', 'Présences serviteurs', 'Visiteurs', 'Fiches pratiques', 'Reporting dimanche']} />} />

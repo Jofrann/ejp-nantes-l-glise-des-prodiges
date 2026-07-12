@@ -2,14 +2,18 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import { MEGA_MENU, MEGA_MENU_RESTRICTED } from '@/lib/starMegaMenu';
+import { MEGA_MENU, MEGA_MENU_RESTRICTED, CONDITIONAL_MODULES } from '@/lib/starMegaMenu';
 
-export default function MegaMenu({ showSupervision, showAdmin, onNavigate }) {
+export default function MegaMenu({ showSupervision, showAdmin, extraModules = [], onNavigate }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const navigate = useNavigate();
   const timeoutRef = useRef(null);
 
   const allMenus = [...MEGA_MENU];
+  // Modules conditionnels (badges: étudiant, équipe)
+  extraModules.forEach(modKey => {
+    if (CONDITIONAL_MODULES[modKey]) allMenus.push(CONDITIONAL_MODULES[modKey]);
+  });
   if (showSupervision) allMenus.push(MEGA_MENU_RESTRICTED[0]);
   if (showAdmin) allMenus.push(MEGA_MENU_RESTRICTED[1]);
 
@@ -97,9 +101,12 @@ export default function MegaMenu({ showSupervision, showAdmin, onNavigate }) {
   );
 }
 
-export function MobilePlanStar({ open, onClose, showSupervision, showAdmin }) {
+export function MobilePlanStar({ open, onClose, showSupervision, showAdmin, extraModules = [] }) {
   const navigate = useNavigate();
   const allMenus = [...MEGA_MENU];
+  extraModules.forEach(modKey => {
+    if (CONDITIONAL_MODULES[modKey]) allMenus.push(CONDITIONAL_MODULES[modKey]);
+  });
   if (showSupervision) allMenus.push(MEGA_MENU_RESTRICTED[0]);
   if (showAdmin) allMenus.push(MEGA_MENU_RESTRICTED[1]);
 

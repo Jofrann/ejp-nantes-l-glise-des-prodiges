@@ -5,7 +5,7 @@ import {
   Heart, LogOut, Plus, X, Menu as MenuIcon, Shield, Settings, User, ChevronDown,
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { isBureauLike, isAdmin } from '@/lib/permissions';
+import { isBureauLike, isAdmin, hasRole, getRoles } from '@/lib/permissions';
 import { MOBILE_BOTTOM_NAV } from '@/lib/starMegaMenu';
 import MegaMenu, { MobilePlanStar } from '@/components/star/MegaMenu';
 import NotificationBell from '@/components/star/NotificationBell';
@@ -26,6 +26,18 @@ export default function StarLayout({ children, user }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const showSupervision = isBureauLike(user);
   const showAdmin = isAdmin(user);
+
+  // Modules conditionnels basés sur les badges
+  const extraModules = [];
+  const roles = getRoles(user);
+  // Badge Étudiant: si l'utilisateur est étudiant, alternant ou en recherche
+  if (roles.includes('etudiant') || roles.includes('alternant') || roles.includes('recherche_emploi') || roles.includes('recherche_stage')) {
+    extraModules.push('etudiant');
+  }
+  // Badge Responsable: référent ou bureau → Mon Équipe
+  if (roles.includes('referent') || isBureauLike(user)) {
+    extraModules.push('equipe');
+  }
 
   const isActive = (item) => {
     if (item.end) return location.pathname === item.path;
@@ -54,6 +66,7 @@ export default function StarLayout({ children, user }) {
           <MegaMenu
             showSupervision={false}
             showAdmin={false}
+            extraModules={extraModules}
             onNavigate={() => {}}
           />
 
@@ -216,6 +229,7 @@ export default function StarLayout({ children, user }) {
         onClose={() => setPlanOpen(false)}
         showSupervision={showSupervision}
         showAdmin={showAdmin}
+        extraModules={extraModules}
       />
     </div>
   );

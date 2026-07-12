@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 
 // Mega-menu STAR OS — Blueprint Phase 16
-// Navigation: Bureau | Mon Service | Mes Formations | Mes Ressources | Responsabilités
+// Navigation de base: Bureau | Mon Service | Mes Formations | Mes Ressources | Responsabilités
+// Modules conditionnels (badges): Étudiant, Équipe, Pilotage
 export const MEGA_MENU = [
   {
     id: 'bureau',
@@ -28,9 +29,9 @@ export const MEGA_MENU = [
     route: '/app/service',
     items: [
       { label: 'Vue d\'ensemble', desc: 'Mon département, ma fonction', icon: LayoutDashboard, to: '/app/service' },
+      { label: 'Mon Département', desc: 'Mission, équipe, actualités', icon: Briefcase, to: '/app/service' },
+      { label: 'Mon Feedback', desc: 'Feedbacks reçus', icon: FileText, to: '/app/service' },
       { label: 'Mes Présences', desc: 'Confirmer et historique', icon: CheckCircle, to: '/app/presences' },
-      { label: 'Mon Agenda', desc: 'Réunions et événements', icon: Calendar, to: '/app/agenda' },
-      { label: 'Mon Parcours', desc: 'Situation et compétences', icon: MapPin, to: '/app/parcours' },
     ],
   },
   {
@@ -70,6 +71,34 @@ export const MEGA_MENU = [
     ],
   },
 ];
+
+// Modules conditionnels — ajoutés au mega menu selon les badges de l'utilisateur
+export const CONDITIONAL_MODULES = {
+  etudiant: {
+    id: 'etudiant',
+    label: 'Mon Espace Étudiant',
+    icon: GraduationCap,
+    route: '/app/etudiant',
+    items: [
+      { label: 'Mon parcours', desc: 'Études, établissement', icon: MapPin, to: '/app/etudiant' },
+      { label: 'Mon suivi', desc: 'Examens, échéances', icon: TrendingUp, to: '/app/etudiant' },
+      { label: 'Mes objectifs', desc: 'Buts académiques', icon: Target, to: '/app/etudiant' },
+      { label: 'Accompagnement', desc: 'Mentor et aide', icon: Heart, to: '/app/etudiant' },
+    ],
+  },
+  equipe: {
+    id: 'equipe',
+    label: 'Mon Équipe',
+    icon: Users,
+    route: '/app/equipe',
+    items: [
+      { label: 'Vue d\'ensemble', desc: 'Effectifs et indicateurs', icon: LayoutDashboard, to: '/app/equipe' },
+      { label: 'Membres', desc: 'Liste de mon équipe', icon: Users, to: '/app/equipe' },
+      { label: 'Entretiens', desc: 'Suivi et rendez-vous', icon: CalendarClock, to: '/app/equipe' },
+      { label: 'Objectifs', desc: 'Buts de l\'équipe', icon: Target, to: '/app/equipe' },
+    ],
+  },
+};
 
 export const MEGA_MENU_RESTRICTED = [
   {
