@@ -17,6 +17,8 @@ import ResetPassword from '@/pages/ResetPassword';
 import RoleLayout from '@/components/layouts/RoleLayout';
 import RoleGuard from '@/components/RoleGuard';
 import Home from '@/pages/Home';
+import APropos from '@/pages/APropos';
+import Programmes from '@/pages/Programmes';
 import Venir from '@/pages/Venir';
 import AdminHome from '@/pages/AdminHome';
 import MonProfil from '@/pages/MonProfil';
@@ -94,6 +96,8 @@ const AuthenticatedApp = () => {
 
       {/* Vitrine publique */}
       <Route path="/" element={<Home />} />
+      <Route path="/a-propos" element={<APropos />} />
+      <Route path="/programmes" element={<Programmes />} />
       <Route path="/venir" element={<Venir />} />
       <Route path="/espace-serviteur" element={<EspaceServiteurSas />} />
 
@@ -106,6 +110,8 @@ const AuthenticatedApp = () => {
           ))}
 
           <Route path="/app" element={<AppDashboard />} />
+          {/* Alias Mon Service → page présences (existant + agenda) */}
+          <Route path="/app/service" element={<StarPresences />} />
           <Route path="/app/profil" element={<MonProfil />} />
           <Route path="/app/departements" element={<Navigate to="/app/responsabilites" replace />} />
           <Route path="/app/departements/fij" element={<Navigate to="/app/responsabilites" replace />} />

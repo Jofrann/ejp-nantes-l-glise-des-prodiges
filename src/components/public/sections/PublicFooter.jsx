@@ -36,11 +36,11 @@ export default function PublicFooter({ config }) {
           <div>
             <p className="text-xs uppercase tracking-widest text-[#D8B76A] font-semibold mb-4">Navigation</p>
             <div className="flex flex-col gap-2.5">
-              <a href="#vision" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Notre vision</a>
-              <a href="#ce-dimanche" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Ce dimanche</a>
-              <a href="#bergere" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Bergère & leaders</a>
-              <a href="#ministeres" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Ministères</a>
-              <a href="#faq" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">FAQ</a>
+              <Link to="/" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Accueil</Link>
+              <Link to="/a-propos" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Qui sommes-nous ?</Link>
+              <Link to="/programmes" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Nos Programmes</Link>
+              <Link to="/venir" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Rejoins-nous</Link>
+              <Link to="/espace-serviteur" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Espace Serviteur</Link>
             </div>
           </div>
 
