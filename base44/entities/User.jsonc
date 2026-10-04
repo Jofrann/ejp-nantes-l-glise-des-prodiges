@@ -12,7 +12,7 @@
         "admin"
       ],
       "default": "serviteur",
-      "description": "R\u00f4le principal (compatibilit\u00e9 \u2014 utiliser 'roles' pour les r\u00f4les cumulables)"
+      "description": "R\u00f4le principal (compatibilit\u00e9 legacy \u2014 utiliser 'roles' pour les r\u00f4les cumulables)"
     },
     "roles": {
       "type": "array",
@@ -29,7 +29,19 @@
       "default": [
         "serviteur"
       ],
-      "description": "R\u00f4les cumulables de l'utilisateur"
+      "description": "R\u00f4les syst\u00e8me cumulables (compatibilit\u00e9 legacy \u2014 pour les permissions syst\u00e8me Base44)"
+    },
+    "badges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Badges globaux EJP (extensible) : STAR, ETUDIANT, LEADER, BERGERE, ADMIN, RESPONSABLE, PILOTE_FIJ, etc. Ne pas confondre avec les r\u00f4les syst\u00e8me ni avec les appartenances d\u00e9partementales."
+    },
+    "internal_identifier": {
+      "type": "string",
+      "description": "Identifiant interne EJP au format prenom.nom@prodiges.com (identifiant applicatif, PAS une bo\u00eete mail r\u00e9elle)"
     },
     "account_status": {
       "type": "string",
@@ -37,10 +49,16 @@
         "pending",
         "active",
         "suspended",
+        "archived",
         "rejected"
       ],
       "default": "pending",
-      "description": "Statut du compte \u2014 un nouveau compte est en attente de validation"
+      "description": "Statut du compte \u2014 un nouveau compte est en attente de validation. 'archived' conserve l'historique sans acc\u00e8s."
+    },
+    "first_login": {
+      "type": "boolean",
+      "default": true,
+      "description": "True si l'utilisateur n'a pas encore finalis\u00e9 sa premi\u00e8re connexion"
     },
     "first_name": {
       "type": "string",
