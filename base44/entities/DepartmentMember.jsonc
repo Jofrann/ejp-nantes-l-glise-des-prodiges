@@ -21,16 +21,37 @@
     "role_in_dept": {
       "type": "string",
       "enum": [
+        "serviteur",
+        "responsable",
+        "adjoint",
+        "coordinateur",
         "referent",
+        "pilote",
         "membre"
       ],
-      "default": "membre",
-      "description": "R\u00f4le dans le d\u00e9partement"
+      "default": "serviteur",
+      "description": "R\u00f4le dans le d\u00e9partement (extensible). 'membre' et 'referent' sont conserv\u00e9s pour compatibilit\u00e9 legacy."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "suspended",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Statut de l'appartenance. 'archived' conserve l'historique sans acc\u00e8s actif."
     },
     "joined_at": {
       "type": "string",
       "format": "date",
       "description": "Date d'int\u00e9gration dans le d\u00e9partement"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de fin d'appartenance (renseign\u00e9e lors du d\u00e9part ou archivage)"
     },
     "note": {
       "type": "string",
@@ -39,11 +60,40 @@
     "is_active": {
       "type": "boolean",
       "default": true,
-      "description": "Membre actif dans ce d\u00e9partement ?"
+      "description": "Membre actif dans ce d\u00e9partement ? (compatibilit\u00e9 legacy \u2014 pr\u00e9f\u00e9rer 'status')"
     }
   },
   "required": [
     "department_id",
     "full_name"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

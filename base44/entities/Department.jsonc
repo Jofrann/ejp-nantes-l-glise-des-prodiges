@@ -6,6 +6,10 @@
       "type": "string",
       "description": "Nom du d\u00e9partement (ex: Louange, Accueil, FIJ)"
     },
+    "short_name": {
+      "type": "string",
+      "description": "Nom court / abr\u00e9viation (ex: COM, MPI, Sono)"
+    },
     "slug": {
       "type": "string",
       "description": "Identifiant URL (ex: louange, accueil, fij)"
@@ -30,6 +34,16 @@
     "cover_url": {
       "type": "string",
       "description": "Image de couverture (banni\u00e8re du d\u00e9partement)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Statut du d\u00e9partement (active = visible et fonctionnel, inactive = masqu\u00e9, archived = historique)"
     },
     "attente_superieure": {
       "type": "string",
