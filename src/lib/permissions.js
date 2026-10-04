@@ -18,18 +18,36 @@ export function hasAnyRole(user, roles) {
 }
 
 export function isAdmin(user) {
-  return hasRole(user, 'admin');
+  return hasRole(user, 'admin') || hasBadge(user, 'ADMIN');
 }
 
 // bureau, bergere ou admin — tous ont un accès de niveau bureau
 export function isBureauLike(user) {
-  return hasAnyRole(user, ['bureau', 'bergere', 'admin']);
+  return hasAnyRole(user, ['bureau', 'bergere', 'admin']) || hasBadge(user, 'BUREAU') || hasBadge(user, 'BERGERE');
 }
 
 // Direction = Bergère, Bureau ou Admin (décideurs / vision globale)
 export function isDirection(user) {
-  return hasAnyRole(user, ['bergere', 'bureau', 'admin']);
+  return hasAnyRole(user, ['bergere', 'bureau', 'admin']) || hasBadge(user, 'BERGERE') || hasBadge(user, 'BUREAU');
 }
+
+// === BADGES GLOBAUX ===
+
+export function getBadges(user) {
+  if (!user) return [];
+  return Array.isArray(user.badges) ? user.badges : [];
+}
+
+export function hasBadge(user, badge) {
+  return getBadges(user).includes(badge);
+}
+
+export function hasAnyBadge(user, badges) {
+  const userBadges = getBadges(user);
+  return badges.some(b => userBadges.includes(b));
+}
+
+// === STATUT COMPTE ===
 
 export function getRedirectPath(user) {
   return '/app';
@@ -47,33 +65,53 @@ export function isAccountSuspended(user) {
   return user?.account_status === 'suspended';
 }
 
-// === Helpers Département ===
+export function isAccountArchived(user) {
+  return user?.account_status === 'archived';
+}
+
+// Un compte est bloqué si suspended ou archived
+export function isAccountBlocked(user) {
+  return isAccountSuspended(user) || isAccountArchived(user);
+}
+
+// === HELPERS IDENTIFIANT INTERNE ===
+
+export function getInternalIdentifier(user) {
+  return user?.internal_identifier || user?.email || '';
+}
+
+export function getDisplayName(user) {
+  if (user?.first_name && user?.last_name) return `${user.first_name} ${user.last_name}`;
+  return user?.full_name || user?.email || '';
+}
+
+// === HELPERS DÉPARTEMENT ===
 
 // Retourne les IDs de départements visibles par l'utilisateur
 export function getVisibleDepartmentIds(user, memberships = []) {
   if (!user) return [];
   if (isBureauLike(user)) return null; // null = tous visibles
   return memberships
-    .filter(m => m.user_id === user.id && m.is_active !== false)
+    .filter(m => m.user_id === user.id && (m.status === 'active' || m.is_active !== false))
     .map(m => m.department_id);
 }
 
 export function canReadDepartment(user, departmentId, memberships = []) {
   if (!user) return false;
   if (isBureauLike(user)) return true;
-  return memberships.some(m => m.user_id === user.id && m.department_id === departmentId && m.is_active !== false);
+  return memberships.some(m => m.user_id === user.id && m.department_id === departmentId && (m.status === 'active' || m.is_active !== false));
 }
 
 export function canManageDepartment(user, departmentId, memberships = []) {
   if (!user) return false;
   if (isAdmin(user)) return true;
-  if (hasRole(user, 'bergere')) return true;
-  // Référent du département
+  if (hasRole(user, 'bergere') || hasBadge(user, 'BERGERE')) return true;
+  // Responsable, référent ou coordinateur du département
   return memberships.some(m =>
     m.user_id === user.id &&
     m.department_id === departmentId &&
-    m.role_in_dept === 'referent' &&
-    m.is_active !== false
+    ['responsable', 'referent', 'coordinateur'].includes(m.role_in_dept) &&
+    (m.status === 'active' || m.is_active !== false)
   );
 }
 
@@ -91,14 +129,14 @@ export function canCreateDepartmentData(user, departmentId, memberships = []) {
   return memberships.some(m =>
     m.user_id === user.id &&
     m.department_id === departmentId &&
-    m.is_active !== false
+    (m.status === 'active' || m.is_active !== false)
   );
 }
 
 export function canUpdateDepartmentData(user, departmentId, record, memberships = []) {
   if (!user) return false;
   if (isBureauLike(user)) return true;
-  // Référent ou auteur de la donnée
+  // Auteur de la donnée
   if (record?.submitted_by === user.id) return true;
   return canManageDepartment(user, departmentId, memberships);
 }
@@ -106,11 +144,23 @@ export function canUpdateDepartmentData(user, departmentId, record, memberships 
 export function canDeleteDepartmentData(user, departmentId, record, memberships = []) {
   if (!user) return false;
   if (isAdmin(user)) return true;
-  if (hasRole(user, 'bergere')) return true;
+  if (hasRole(user, 'bergere') || hasBadge(user, 'BERGERE')) return true;
   return canManageDepartment(user, departmentId, memberships);
 }
 
-// === Helpers FIJ ===
+// Retourne le rôle de l'utilisateur dans un département spécifique
+export function getRoleInDepartment(user, departmentId, memberships = []) {
+  if (!user || !departmentId) return null;
+  if (isAdmin(user)) return 'admin';
+  const membership = memberships.find(m =>
+    m.user_id === user.id &&
+    m.department_id === departmentId &&
+    (m.status === 'active' || m.is_active !== false)
+  );
+  return membership?.role_in_dept || null;
+}
+
+// === HELPERS FIJ ===
 
 // Direction globale = Bureau, Bergère ou Admin (voient les indicateurs dans /app/direction)
 export function isFijDirection(user) {
@@ -118,11 +168,10 @@ export function isFijDirection(user) {
 }
 
 // Coordination FIJ = rôle spécifique fij_coordination ou admin (gestion opérationnelle)
-// Le bureau NE doit PAS être automatiquement coordination FIJ.
 export function isFijCoordination(user) {
   if (!user) return false;
   if (isAdmin(user)) return true;
-  return hasRole(user, 'fij_coordination');
+  return hasRole(user, 'fij_coordination') || hasBadge(user, 'COORDINATION_FIJ');
 }
 
 // Pilote = utilisateur rattaché comme pilot, copilot ou co-pilot sur au moins une FIJ
@@ -166,12 +215,12 @@ export function canCreateFij(user) {
 export function canUpdateFij(user, fij) {
   if (!user || !fij) return false;
   if (isFijCoordination(user)) return true;
-  return false; // Pilote ne modifie pas les infos FIJ
+  return false;
 }
 
 export function canDeleteFij(user, fij) {
   if (!user) return false;
-  return isAdmin(user) || hasRole(user, 'bergere');
+  return isAdmin(user) || hasRole(user, 'bergere') || hasBadge(user, 'BERGERE');
 }
 
 export function canCreateFijReport(user, fij) {
@@ -192,7 +241,7 @@ export function canReadFijReport(user, report, fij) {
   return isFijPilotOf(user, fij);
 }
 
-// Filtrage des FIJ selon le rôle — ne charge que ce qui est autorisé
+// Filtrage des FIJ selon le rôle
 export function getVisibleFijsForUser(user, allFijs) {
   if (!user || !allFijs) return [];
   if (isFijCoordination(user)) return allFijs.filter(f => f.is_active !== false);
@@ -202,7 +251,6 @@ export function getVisibleFijsForUser(user, allFijs) {
   );
 }
 
-// Retourne les IDs de FIJ visibles par l'utilisateur (pour filtrer les données liées)
 export function getVisibleFijIds(user, allFijs) {
   return getVisibleFijsForUser(user, allFijs).map(f => f.id);
 }
@@ -210,9 +258,10 @@ export function getVisibleFijIds(user, allFijs) {
 // Retourne le rôle le plus élevé pour l'affichage
 export function getPrimaryRoleLabel(user) {
   const roles = getRoles(user);
-  if (roles.includes('admin')) return 'Admin';
-  if (roles.includes('bergere')) return 'Bergère';
-  if (roles.includes('bureau')) return 'Bureau';
-  if (roles.includes('referent')) return 'Référent';
+  const badges = getBadges(user);
+  if (roles.includes('admin') || badges.includes('ADMIN')) return 'Admin';
+  if (roles.includes('bergere') || badges.includes('BERGERE')) return 'Bergère';
+  if (roles.includes('bureau') || badges.includes('BUREAU')) return 'Bureau';
+  if (roles.includes('referent') || badges.includes('RESPONSABLE')) return 'Référent';
   return 'Serviteur';
 }
