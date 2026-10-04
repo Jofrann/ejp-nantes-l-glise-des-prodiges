@@ -7,6 +7,7 @@ import AdminAppointmentsTab from '@/components/admin/AdminAppointmentsTab';
 import AdminFormationsTab from '@/components/admin/AdminFormationsTab';
 import AdminRessourcesTab from '@/components/admin/AdminRessourcesTab';
 import FirstVisitIntentsTab from '@/components/admin/FirstVisitIntentsTab';
+import AdminUsersTab from '@/components/admin/AdminUsersTab';
 import { motion } from 'framer-motion';
 
 const TABS = [
@@ -21,6 +22,7 @@ const TABS = [
   { id: 'ministries', label: 'Ministères', icon: Settings },
   { id: 'gallery', label: 'Galerie', icon: Image },
   { id: 'visit-intents', label: 'Intentions de visite', icon: UserPlus },
+  { id: 'users', label: 'Utilisateurs', icon: Users },
 ];
 
 function Section({ title, children }) {
@@ -284,6 +286,9 @@ export default function AdminHome() {
           )}
           {tab === 'visit-intents' && (
             <FirstVisitIntentsTab />
+          )}
+          {tab === 'users' && (
+            <AdminUsersTab />
           )}
         </div>
       </div>

@@ -43,36 +43,42 @@ export default function PageDepartement() {
   const [lastSeenDate, setLastSeenDate] = useState(null);
 
   const load = async () => {
-    const [u, found] = await Promise.all([
-      base44.auth.me(),
-      findDepartmentBySlugOrId(slugOrId),
-    ]);
+    const u = await base44.auth.me();
     setUser(u);
-    setDept(found);
-    if (!found) { setLoading(false); return; }
-    const deptId = found.id;
-    setResolvedId(deptId);
+    try {
+      const res = (await base44.functions.invoke('getDepartmentData', { department_slug: slugOrId })).data;
+      if (res.access_denied) {
+        setDept({ __denied: true });
+        setLoading(false);
+        return;
+      }
+      setDept(res.department);
+      setResolvedId(res.department.id);
+      setMembers(res.members || []);
+      setLoading(false);
 
-    const mems = await base44.entities.DepartmentMember.filter({ department_id: deptId, is_active: true });
-    setMembers(mems || []);
-    setLoading(false);
-
-    // Charger les messages non lus
-    const key = `dept_chat_seen_${deptId}`;
-    const seen = localStorage.getItem(key);
-    setLastSeenDate(seen);
-    base44.entities.DeptMessage.filter({ department_id: deptId }, '-created_date', 50).then(msgs => {
-      if (!seen) { setUnreadCount(msgs?.length || 0); return; }
-      const count = (msgs || []).filter(m => new Date(m.created_date) > new Date(seen)).length;
+      // Messages non lus (renvoyés par le backend)
+      const deptId = res.department.id;
+      const key = `dept_chat_seen_${deptId}`;
+      const seen = localStorage.getItem(key);
+      setLastSeenDate(seen);
+      const msgs = res.messages || [];
+      if (!seen) { setUnreadCount(msgs.length); return; }
+      const count = msgs.filter(m => new Date(m.created_date) > new Date(seen)).length;
       setUnreadCount(count);
-    });
+    } catch (e) {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { load(); }, [slugOrId]);
 
-  const reloadMembers = () => {
+  const reloadMembers = async () => {
     if (!resolvedId) return;
-    base44.entities.DepartmentMember.filter({ department_id: resolvedId, is_active: true }).then(setMembers);
+    try {
+      const res = (await base44.functions.invoke('getDepartmentData', { department_slug: slugOrId })).data;
+      if (!res.access_denied) setMembers(res.members || []);
+    } catch (e) {}
   };
 
   const openChat = () => {

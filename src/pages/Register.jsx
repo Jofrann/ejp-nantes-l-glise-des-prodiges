@@ -1,171 +1,73 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
-import { Loader2 } from "lucide-react";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Loader2, UserPlus, Mail } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
-import GoogleIcon from "@/components/GoogleIcon";
-import PendingAccount from "@/components/PendingAccount";
-import { toast } from "@/components/ui/use-toast";
+import { base44 } from "@/api/base44Client";
 
+/**
+ * Register — L'inscription autonome à l'espace interne EJP est DÉSACTIVÉE.
+ *
+ * Un compte interne EJP est désormais créé uniquement par l'administration.
+ * Cette page permet de soumettre une demande de rejoindre l'équipe, qui sera
+ * examinée par un responsable. Les formulaires publics destinés aux visiteurs
+ * (FirstVisitIntent, etc.) ne sont pas affectés et restent sur les pages publiques.
+ */
 export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [departments, setDepartments] = useState([]);
-  const [selectedDepts, setSelectedDepts] = useState([]);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showOtp, setShowOtp] = useState(false);
-  const [otpCode, setOtpCode] = useState("");
-  const [pendingUser, setPendingUser] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const inputCls = "w-full h-12 px-4 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary/40 transition";
-
-  useEffect(() => {
-    base44.entities.Department.filter({ is_active: true }, 'display_order', 50)
-      .then(setDepartments)
-      .catch(() => {});
-  }, []);
-
-  const toggleDept = (deptId) => {
-    setSelectedDepts(prev =>
-      prev.includes(deptId) ? prev.filter(d => d !== deptId) : [...prev, deptId]
-    );
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
-      return;
-    }
-    if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères");
+    if (!firstName || !lastName || !email) {
+      setError("Prénom, nom et email sont requis");
       return;
     }
     setLoading(true);
     try {
-      await base44.auth.register({ email, password });
-      setShowOtp(true);
+      await base44.entities.ServantApplication.create({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+        message,
+        status: "pending",
+      });
+      setSubmitted(true);
     } catch (err) {
-      setError(err.message || "Échec de l'inscription");
+      setError(err.message || "Échec de l'envoi de la demande");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerify = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      const result = await base44.auth.verifyOtp({ email, otpCode });
-      if (result?.access_token) base44.auth.setToken(result.access_token);
-
-      try {
-        await base44.auth.updateMe({
-          first_name: firstName,
-          last_name: lastName,
-          phone,
-          roles: ["serviteur"],
-          account_status: "pending"
-        });
-      } catch (e) {
-        // Non bloquant — le compte existe déjà
-      }
-
-      const deptNames = departments
-        .filter(d => selectedDepts.includes(d.id))
-        .map(d => d.name);
-
-      try {
-        await base44.entities.ServantApplication.create({
-          first_name: firstName,
-          last_name: lastName,
-          email,
-          phone,
-          desired_departments: selectedDepts,
-          desired_department_names: deptNames,
-          message,
-          status: "pending"
-        });
-      } catch (e) {
-        // Non bloquant
-      }
-
-      setPendingUser({ first_name: firstName });
-      setLoading(false);
-    } catch (err) {
-      setError(err.message || "Code de vérification invalide");
-      setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    setError("");
-    try {
-      await base44.auth.resendOtp(email);
-      toast({ title: "Code envoyé", description: "Vérifie ton email." });
-    } catch (err) {
-      setError(err.message || "Échec de l'envoi du code");
-    }
-  };
-
-  const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/app");
-  };
-
-  if (pendingUser) {
-    return <PendingAccount userName={pendingUser.first_name} />;
-  }
-
-  if (showOtp) {
+  if (submitted) {
     return (
       <AuthLayout
         footer={
-          <button onClick={() => setShowOtp(false)} className="text-muted-foreground hover:text-foreground text-sm">
-            ← Retour
-          </button>
-        }>
-
-        <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">Vérification</p>
-        <h1 className="font-display text-3xl text-foreground font-light mb-2">Confirme ton email</h1>
-        <p className="text-sm text-muted-foreground mb-8">Un code a été envoyé à <span className="text-foreground font-medium">{email}</span></p>
-
-        {error &&
-          <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">{error}</div>
+          <Link to="/login" className="text-secondary font-medium hover:underline">
+            ← Retour à la connexion
+          </Link>
         }
-
-        <div className="flex justify-center mb-6">
-          <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode} autoFocus autoComplete="one-time-code">
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
+      >
+        <div className="text-center py-6">
+          <div className="w-14 h-14 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mx-auto mb-5">
+            <Mail className="w-6 h-6 text-secondary" />
+          </div>
+          <h1 className="font-display text-2xl text-foreground font-light mb-3">Demande envoyée</h1>
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
+            Merci {firstName} ! Ta demande pour rejoindre l'équipe EJP Nantes a bien été transmise.
+            Un responsable te contactera prochainement pour créer ton compte.
+          </p>
         </div>
-
-        <button
-          onClick={handleVerify}
-          disabled={loading || otpCode.length < 6}
-          className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
-
-          {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Vérification...</> : "Valider mon inscription"}
-        </button>
-
-        <p className="text-center text-sm text-muted-foreground mt-4">
-          Code non reçu ?{" "}
-          <button onClick={handleResend} className="text-secondary font-medium hover:underline">Renvoyer</button>
-        </p>
       </AuthLayout>
     );
   }
@@ -177,15 +79,18 @@ export default function Register() {
           Déjà un compte ?{" "}
           <Link to="/login" className="text-secondary font-medium hover:underline">Se connecter</Link>
         </>
-      }>
-
-      <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
-      <h1 className="font-display text-3xl text-foreground font-light mb-2">Créer mon compte serviteur</h1>
-      <p className="text-sm text-muted-foreground mb-6">Le compte sera validé par un responsable avant accès complet.</p>
-
-      {error &&
-        <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">{error}</div>
       }
+    >
+      <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
+      <h1 className="font-display text-3xl text-foreground font-light mb-2">Demander à rejoindre l'équipe</h1>
+      <p className="text-sm text-muted-foreground mb-6">
+        Les comptes internes sont créés par l'administration. Dépose ta demande ci-dessous,
+        un responsable te contactera pour la suite.
+      </p>
+
+      {error && (
+        <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">{error}</div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
@@ -198,84 +103,22 @@ export default function Register() {
             <input type="text" autoComplete="family-name" placeholder="Dupont" value={lastName} onChange={(e) => setLastName(e.target.value)} required className={inputCls} />
           </div>
         </div>
-
         <div className="space-y-1.5">
           <label className="text-xs text-muted-foreground font-medium">Email</label>
           <input type="email" autoComplete="email" placeholder="ton@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputCls} />
         </div>
-
         <div className="space-y-1.5">
-          <label className="text-xs text-muted-foreground font-medium">Téléphone</label>
+          <label className="text-xs text-muted-foreground font-medium">Téléphone <span className="text-muted-foreground/60">(optionnel)</span></label>
           <input type="tel" autoComplete="tel" placeholder="06 12 34 56 78" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} />
         </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1.5">
-            <label className="text-xs text-muted-foreground font-medium">Mot de passe</label>
-            <input type="password" autoComplete="new-password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required className={inputCls} />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs text-muted-foreground font-medium">Confirmer</label>
-            <input type="password" autoComplete="new-password" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className={inputCls} />
-          </div>
-        </div>
-
-        {departments.length > 0 && (
-          <div className="space-y-2">
-            <label className="text-xs text-muted-foreground font-medium">Départements souhaités <span className="text-muted-foreground/60">(optionnel)</span></label>
-            <div className="flex flex-wrap gap-2">
-              {departments.map(dept => (
-                <button
-                  key={dept.id}
-                  type="button"
-                  onClick={() => toggleDept(dept.id)}
-                  className={`text-xs px-3 py-1.5 rounded-lg border transition ${
-                    selectedDepts.includes(dept.id)
-                      ? 'bg-secondary/15 border-secondary/40 text-secondary'
-                      : 'bg-card border-border text-muted-foreground hover:border-secondary/30 hover:text-foreground'
-                  }`}
-                >
-                  {dept.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         <div className="space-y-1.5">
           <label className="text-xs text-muted-foreground font-medium">Pourquoi souhaites-tu servir ? <span className="text-muted-foreground/60">(optionnel)</span></label>
-          <textarea
-            rows={2}
-            placeholder="Quelques mots sur ta motivation..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className={inputCls + " h-auto py-3 resize-none"}
-          />
+          <textarea rows={2} placeholder="Quelques mots sur ta motivation..." value={message} onChange={(e) => setMessage(e.target.value)} className={inputCls + " h-auto py-3 resize-none"} />
         </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
-
-          {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Création...</> : "Créer mon compte"}
+        <button type="submit" disabled={loading} className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
+          {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi...</> : <><UserPlus className="w-4 h-4" /> Envoyer ma demande</>}
         </button>
       </form>
-
-      <div className="my-5 flex items-center gap-3">
-        <div className="flex-1 h-px bg-border" />
-        <span className="text-xs text-muted-foreground/60 uppercase">ou</span>
-        <div className="flex-1 h-px bg-border" />
-      </div>
-
-      <button
-        type="button"
-        onClick={handleGoogle}
-        className="w-full h-12 rounded-xl bg-card border border-border hover:bg-surface text-foreground font-medium text-sm transition flex items-center justify-center gap-2">
-
-        <GoogleIcon className="w-5 h-5" />
-        Continuer avec Google
-      </button>
     </AuthLayout>
   );
 }

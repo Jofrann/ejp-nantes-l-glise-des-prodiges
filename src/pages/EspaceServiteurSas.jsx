@@ -51,7 +51,7 @@ export default function EspaceServiteurSas() {
               className="flex items-center justify-center gap-2 w-full bg-card hover:bg-surface border border-border text-foreground text-sm font-medium py-3.5 rounded-xl transition-all"
             >
               <UserPlus className="w-4 h-4" />
-              Créer mon compte serviteur
+              Demander à rejoindre l'équipe
             </Link>
           </motion.div>
 
