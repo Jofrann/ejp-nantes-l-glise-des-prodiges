@@ -168,12 +168,33 @@ async function handleGetPerson(base44: any, body: any): Promise<Response> {
   // Audit logs pour cette personne
   const auditLogsRaw = await base44.asServiceRole.entities.AuditLog.filter({ entity_type: 'User', entity_id: user_id }, { limit: 50, sort: '-created_date' });
   const auditLogs = auditLogsRaw?.items || auditLogsRaw || [];
-  // Aussi les logs de membership (liés via performed_by ou details)
-  const membershipLogsRaw = await base44.asServiceRole.entities.AuditLog.filter({ performed_by_id: user_id }, { limit: 20, sort: '-created_date' });
-  const membershipLogs = membershipLogsRaw?.items || membershipLogsRaw || [];
+
+  // Logs de membership (entity_type = DepartmentMember) — récupérer via les membership IDs
+  const membershipIds = (allMemberships || []).map(m => m.id);
+  let membershipLogs: any[] = [];
+  if (membershipIds.length > 0) {
+    for (const mId of membershipIds.slice(0, 20)) {
+      try {
+        const mLogsRaw = await base44.asServiceRole.entities.AuditLog.filter({ entity_type: 'DepartmentMember', entity_id: mId }, { limit: 5, sort: '-created_date' });
+        const mLogs = mLogsRaw?.items || mLogsRaw || [];
+        membershipLogs = membershipLogs.concat(mLogs);
+      } catch {}
+    }
+  }
+
+  // Logs FIJ (entity_type = FIJ) — récupérer via les fij IDs
+  const fijIds = fijAssignments.map(f => f.fij_id);
+  let fijLogs: any[] = [];
+  for (const fId of fijIds) {
+    try {
+      const fLogsRaw = await base44.asServiceRole.entities.AuditLog.filter({ entity_type: 'FIJ', entity_id: fId }, { limit: 5, sort: '-created_date' });
+      const fLogs = fLogsRaw?.items || fLogsRaw || [];
+      fijLogs = fijLogs.concat(fLogs);
+    } catch {}
+  }
 
   // Combiner et dédupliquer
-  const allLogs = [...(auditLogs || []), ...(membershipLogs || [])];
+  const allLogs = [...(auditLogs || []), ...membershipLogs, ...fijLogs];
   const seenIds = new Set();
   const uniqueLogs = allLogs.filter(l => {
     if (seenIds.has(l.id)) return false;

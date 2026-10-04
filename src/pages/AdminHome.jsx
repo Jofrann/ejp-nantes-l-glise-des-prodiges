@@ -7,7 +7,6 @@ import AdminAppointmentsTab from '@/components/admin/AdminAppointmentsTab';
 import AdminFormationsTab from '@/components/admin/AdminFormationsTab';
 import AdminRessourcesTab from '@/components/admin/AdminRessourcesTab';
 import FirstVisitIntentsTab from '@/components/admin/FirstVisitIntentsTab';
-import AdminUsersTab from '@/components/admin/AdminUsersTab';
 import { motion } from 'framer-motion';
 
 const TABS = [
@@ -22,7 +21,7 @@ const TABS = [
   { id: 'ministries', label: 'Ministères', icon: Settings },
   { id: 'gallery', label: 'Galerie', icon: Image },
   { id: 'visit-intents', label: 'Intentions de visite', icon: UserPlus },
-  { id: 'users', label: 'Utilisateurs', icon: Users },
+  { id: 'annuaire', label: 'Annuaire EJP', icon: Users },
 ];
 
 function Section({ title, children }) {
@@ -287,8 +286,16 @@ export default function AdminHome() {
           {tab === 'visit-intents' && (
             <FirstVisitIntentsTab />
           )}
-          {tab === 'users' && (
-            <AdminUsersTab />
+          {tab === 'annuaire' && (
+            <div className="text-center py-16">
+              <Users className="w-10 h-10 text-secondary/30 mx-auto mb-4" />
+              <p className="text-sm text-foreground font-medium mb-2">L'Annuaire EJP a sa propre page</p>
+              <p className="text-xs text-muted-foreground mb-5">Gestion complète des personnes, badges, services et responsabilités.</p>
+              <a href="/app/annuaire" className="inline-flex items-center gap-2 bg-primary text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-primary/90 transition">
+                <Users className="w-4 h-4" />
+                Ouvrir l'Annuaire EJP
+              </a>
+            </div>
           )}
         </div>
       </div>

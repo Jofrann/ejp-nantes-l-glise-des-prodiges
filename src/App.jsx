@@ -21,6 +21,8 @@ import APropos from '@/pages/APropos';
 import Programmes from '@/pages/Programmes';
 import Venir from '@/pages/Venir';
 import AdminHome from '@/pages/AdminHome';
+import AnnuaireEJP from '@/pages/annuaire/AnnuaireEJP';
+import PersonFiche from '@/pages/annuaire/PersonFiche';
 import MonProfil from '@/pages/MonProfil';
 import EspaceServiteurSas from '@/pages/EspaceServiteurSas';
 import AppDashboard from '@/pages/AppDashboard';
@@ -241,6 +243,8 @@ const AuthenticatedApp = () => {
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
           <Route path="/app/direction" element={<Navigate to="/app/supervision" replace />} />
           <Route path="/app/admin" element={<RoleGuard allowedRoles={['admin']}><AdminHome /></RoleGuard>} />
+          <Route path="/app/annuaire" element={<RoleGuard allowedRoles={['admin']}><AnnuaireEJP /></RoleGuard>} />
+          <Route path="/app/annuaire/:userId" element={<RoleGuard allowedRoles={['admin']}><PersonFiche /></RoleGuard>} />
           <Route path="/hub" element={<Navigate to="/app" replace />} />
           {/* Redirections anciennes routes */}
           <Route path="/admin" element={<Navigate to="/app/admin" replace />} />
