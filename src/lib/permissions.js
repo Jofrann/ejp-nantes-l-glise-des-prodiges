@@ -167,10 +167,24 @@ export function isFijDirection(user) {
   return isBureauLike(user);
 }
 
-// Coordination FIJ = rôle spécifique fij_coordination ou admin (gestion opérationnelle)
-export function isFijCoordination(user) {
+// Coordination FIJ — Source principale : DepartmentMember actif dans coordination-fij
+// Fallback temporaire : badge COORDINATION_FIJ ou role fij_coordination (legacy)
+// Params optionnels : memberships (array de DepartmentMember), coordFijDeptId (string)
+export function isFijCoordination(user, memberships = null, coordFijDeptId = null) {
   if (!user) return false;
   if (isAdmin(user)) return true;
+
+  // 1. Vérifier d'abord DepartmentMember actif dans coordination-fij
+  if (memberships && coordFijDeptId) {
+    const hasActiveMembership = memberships.some(
+      m => m.user_id === user.id &&
+            m.department_id === coordFijDeptId &&
+            (m.status === 'active' || m.is_active !== false)
+    );
+    if (hasActiveMembership) return true;
+  }
+
+  // 2. Fallback temporaire — sources legacy
   return hasRole(user, 'fij_coordination') || hasBadge(user, 'COORDINATION_FIJ');
 }
 

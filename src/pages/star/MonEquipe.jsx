@@ -252,7 +252,7 @@ function MembersTab({ members, memberships, managedDeptIds }) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground truncate">{m.full_name || 'Sans nom'}</p>
-              <p className="text-xs text-muted-foreground truncate">{m.email}</p>
+              <p className="text-xs text-muted-foreground truncate">{m.internal_identifier || '—'}</p>
             </div>
             {isReferent && (
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg bg-secondary/10 text-secondary">
@@ -414,7 +414,7 @@ function MemberDetail({ userId, onBack }) {
         </div>
         <div>
           <h1 className="text-xl font-heading font-bold text-foreground">{member.full_name}</h1>
-          <p className="text-xs text-muted-foreground">{member.email}</p>
+          <p className="text-xs text-muted-foreground">{member.internal_identifier || '—'}</p>
         </div>
       </div>
 

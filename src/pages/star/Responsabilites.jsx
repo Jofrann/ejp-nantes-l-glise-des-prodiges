@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Briefcase, ChevronRight, Users, Heart, Music, GraduationCap, Settings } from 'lucide-react';
 import { isFijPilot, isFijCoordination, isBureauLike, isAdmin, hasRole, getRoles } from '@/lib/permissions';
+import { loadCoordFijContext } from '@/lib/coordFijUtils';
 import PageHeader from '@/components/star/PageHeader';
 
 const TOOL_META = {
@@ -21,14 +22,17 @@ export default function Responsabilites() {
   const [user, setUser] = useState(null);
   const [fijs, setFijs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [coordFijData, setCoordFijData] = useState({ memberships: null, coordFijDeptId: null });
 
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
       base44.entities.FIJ.filter({ is_active: true }, '-created_date', 50),
-    ]).then(([u, f]) => {
+      loadCoordFijContext(),
+    ]).then(([u, f, ctx]) => {
       setUser(u);
       setFijs(f || []);
+      setCoordFijData(ctx);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -43,7 +47,7 @@ export default function Responsabilites() {
 
   const tools = [];
   if (isFijPilot(user, fijs)) tools.push('fij_pilot');
-  if (isFijCoordination(user)) tools.push('fij_coordination');
+  if (isFijCoordination(user, coordFijData.memberships, coordFijData.coordFijDeptId)) tools.push('fij_coordination');
   // Mon Équipe: visible pour les référents et bureau
   if (hasRole(user, 'referent') || isBureauLike(user)) tools.push('equipe');
   // Mon Espace Étudiant: visible pour les étudiants, alternants, en recherche

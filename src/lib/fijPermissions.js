@@ -18,9 +18,24 @@ export function isFijPilotRole(user) {
   return roles.includes('pilote_fij') || roles.includes('copilote_fij');
 }
 
-export function isFijCoordinationRole(user) {
+// Coordination FIJ — Source principale : DepartmentMember actif dans coordination-fij
+// Fallback temporaire : roles coordination_fij / referent_fij (legacy)
+// Params optionnels : memberships (array de DepartmentMember), coordFijDeptId (string)
+export function isFijCoordinationRole(user, memberships = null, coordFijDeptId = null) {
   if (!user) return false;
   if (isAdmin(user)) return true;
+
+  // 1. Vérifier d'abord DepartmentMember actif dans coordination-fij
+  if (memberships && coordFijDeptId) {
+    const hasActiveMembership = memberships.some(
+      m => m.user_id === user.id &&
+            m.department_id === coordFijDeptId &&
+            (m.status === 'active' || m.is_active !== false)
+    );
+    if (hasActiveMembership) return true;
+  }
+
+  // 2. Fallback temporaire — sources legacy
   const roles = getRoles(user);
   return roles.includes('coordination_fij') || roles.includes('referent_fij');
 }

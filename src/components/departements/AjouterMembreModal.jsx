@@ -102,7 +102,7 @@ export default function AjouterMembreModal({ departmentId, existingUserIds = [],
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-foreground font-medium truncate">{u.full_name}</p>
-                      <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                      <p className="text-xs text-muted-foreground truncate">{u.internal_identifier || '—'}</p>
                     </div>
                     <span className={`text-[10px] ${ROLE_COLORS[u.role] || 'text-muted-foreground'}`}>
                       {ROLE_LABELS[u.role] || u.role}

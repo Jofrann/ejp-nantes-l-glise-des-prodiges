@@ -50,6 +50,10 @@ export default async function(req: Request): Promise<Response> {
         return await handleChangeRole(base44, admin, body);
       case 'assign_fij_pilot':
         return await handleAssignFijPilot(base44, admin, body);
+      case 'migrate_account_status':
+        return await handleMigrateAccountStatus(base44, admin);
+      case 'migrate_coord_fij':
+        return await handleMigrateCoordFij(base44, admin);
       default:
         return Response.json({ error: 'Action non supportée' }, { status: 400 });
     }
@@ -455,4 +459,142 @@ async function handleAssignFijPilot(base44: any, admin: any, body: any): Promise
   });
 
   return Response.json({ success: true, fij_id, role });
+}
+
+// === Lot 2 Correctif — Migrations de données ===
+
+async function handleMigrateAccountStatus(base44: any, admin: any): Promise<Response> {
+  const users = await base44.asServiceRole.entities.User.list();
+  let migrated = 0;
+  let skipped = 0;
+  const counts = { active: 0, pending: 0, suspended: 0, archived: 0, undefined: 0 };
+  const migratedUsers: any[] = [];
+
+  for (const user of users) {
+    const currentStatus = user.account_status;
+
+    if (!currentStatus || currentStatus === '' || currentStatus === 'undefined' || currentStatus === undefined) {
+      counts.undefined++;
+      // Migration vers active pour les comptes existants sans statut
+      await base44.asServiceRole.entities.User.update(user.id, { account_status: 'active' });
+      migrated++;
+      migratedUsers.push({ id: user.id, email: user.email, full_name: user.full_name, old_status: currentStatus });
+    } else if (counts[currentStatus] !== undefined) {
+      counts[currentStatus]++;
+      skipped++;
+    } else {
+      // Statut inconnu — ne pas modifier
+      skipped++;
+    }
+  }
+
+  // Recompter après migration
+  const finalCounts = { active: 0, pending: 0, suspended: 0, archived: 0 };
+  const refreshedUsers = await base44.asServiceRole.entities.User.list();
+  for (const u of refreshedUsers) {
+    const s = u.account_status || 'active';
+    if (finalCounts[s] !== undefined) finalCounts[s]++;
+  }
+
+  await base44.asServiceRole.entities.AuditLog.create({
+    action: 'account_status_migration',
+    entity_type: 'User',
+    entity_id: null,
+    details: `Migration account_status: ${migrated} vers active, ${skipped} ignorés. Répartition finale: active=${finalCounts.active}, pending=${finalCounts.pending}, suspended=${finalCounts.suspended}, archived=${finalCounts.archived}`,
+    performed_by_id: admin.id,
+    performed_by_name: admin.full_name || admin.email,
+    performed_by_role: admin.role || (admin.roles || []).join(','),
+  });
+
+  return Response.json({
+    success: true,
+    migrated,
+    skipped,
+    total: users.length,
+    final_counts: finalCounts,
+    migrated_users: migratedUsers.map(u => ({ id: u.id, email: u.email, full_name: u.full_name })),
+  });
+}
+
+async function handleMigrateCoordFij(base44: any, admin: any): Promise<Response> {
+  // 1. Trouver le département Coordination FIJ par slug
+  const depts = await base44.asServiceRole.entities.Department.filter({ slug: 'coordination-fij' });
+  const coordFijDept = (depts || [])[0];
+  if (!coordFijDept) {
+    return Response.json({ error: 'Département "Coordination FIJ" (slug: coordination-fij) introuvable' }, { status: 404 });
+  }
+
+  // 2. Lister tous les utilisateurs
+  const users = await base44.asServiceRole.entities.User.list();
+
+  // 3. Identifier les utilisateurs avec sources legacy
+  const legacyUsers: any[] = [];
+  for (const user of users) {
+    const hasBadge = (user.badges || []).includes('COORDINATION_FIJ');
+    const hasRole = user.role === 'fij_coordination' || (user.roles || []).includes('fij_coordination')
+      || (user.roles || []).includes('coordination_fij') || (user.roles || []).includes('referent_fij');
+    if (hasBadge || hasRole) {
+      legacyUsers.push(user);
+    }
+  }
+
+  // 4. Pour chaque utilisateur legacy, vérifier s'il a déjà une membership active
+  const migrated: any[] = [];
+  const skipped: any[] = [];
+
+  for (const user of legacyUsers) {
+    const existingMemberships = await base44.asServiceRole.entities.DepartmentMember.filter({
+      user_id: user.id,
+      department_id: coordFijDept.id,
+    });
+    const activeExisting = (existingMemberships || []).find(
+      (m: any) => m.status === 'active' || m.is_active !== false
+    );
+
+    if (activeExisting) {
+      skipped.push({ id: user.id, email: user.email, reason: 'Déjà membre actif' });
+      continue;
+    }
+
+    // Déterminer le rôle — par défaut serviteur, responsable seulement si preuve évidente
+    let role_in_dept = 'serviteur';
+    // Si l'utilisateur a le rôle referent_fij, c'est un référent → responsable
+    if ((user.roles || []).includes('referent_fij')) {
+      role_in_dept = 'referent';
+    }
+
+    const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.full_name || user.email;
+
+    const membership = await base44.asServiceRole.entities.DepartmentMember.create({
+      user_id: user.id,
+      department_id: coordFijDept.id,
+      full_name: fullName,
+      role_in_dept,
+      status: 'active',
+      joined_at: new Date().toISOString().split('T')[0],
+      is_active: true,
+    });
+
+    await base44.asServiceRole.entities.AuditLog.create({
+      action: 'membership_add',
+      entity_type: 'DepartmentMember',
+      entity_id: membership.id,
+      details: `Migration automatique: ajout à Coordination FIJ comme ${role_in_dept} (source legacy)`,
+      performed_by_id: admin.id,
+      performed_by_name: admin.full_name || admin.email,
+      performed_by_role: admin.role || (admin.roles || []).join(','),
+    });
+
+    migrated.push({ id: user.id, email: user.email, full_name: fullName, role_in_dept, source: 'legacy' });
+  }
+
+  return Response.json({
+    success: true,
+    coord_fij_dept_id: coordFijDept.id,
+    legacy_users_found: legacyUsers.length,
+    migrated: migrated.length,
+    skipped: skipped.length,
+    migrated_users: migrated,
+    skipped_users: skipped,
+  });
 }

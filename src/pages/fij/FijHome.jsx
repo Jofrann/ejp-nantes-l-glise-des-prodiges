@@ -9,6 +9,7 @@ import {
 import { isFijPilot, isFijCoordination, isFijDirection } from '@/lib/permissions';
 import { LoadingSpinner } from '@/components/fij/FijPageShell';
 import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
+import { loadCoordFijContext } from '@/lib/coordFijUtils';
 
 export default function FijHome() {
   const [user, setUser] = useState(null);
@@ -17,6 +18,7 @@ export default function FijHome() {
   const [alerts, setAlerts] = useState([]);
   const [comms, setComms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [coordFijData, setCoordFijData] = useState({ memberships: null, coordFijDeptId: null });
 
   const weekStart = getMonday(new Date());
 
@@ -27,12 +29,14 @@ export default function FijHome() {
       base44.entities.FijWeeklyReport.filter({ week_start: weekStart }, '-created_date', 200).catch(() => []),
       base44.entities.FijAlert.filter({ status: 'open' }, '-created_date', 50).catch(() => []),
       base44.entities.FijCommunication.filter({ status: 'sent' }, '-created_date', 20).catch(() => []),
-    ]).then(([u, f, r, a, c]) => {
+      loadCoordFijContext(),
+    ]).then(([u, f, r, a, c, ctx]) => {
       setUser(u);
       setFijs((f || []).filter(x => x.is_active !== false));
       setReports(r || []);
       setAlerts(a || []);
       setComms(c || []);
+      setCoordFijData(ctx);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -50,7 +54,7 @@ export default function FijHome() {
   const myAlerts = alerts.filter(a => myFijs.some(f => f.id === a.fij_house_id));
 
   const isPilot = isFijPilot(user, fijs);
-  const isCoord = isFijCoordination(user);
+  const isCoord = isFijCoordination(user, coordFijData.memberships, coordFijData.coordFijDeptId);
   const isDir = isFijDirection(user) && !isCoord;
   const hasNoAccess = !isPilot && !isCoord && !isDir;
 
