@@ -46,13 +46,12 @@ const DEPARTMENT_OVERRIDES = {
 // Ces départements ont une application métier dédiée (FIJ).
 const DEPARTMENT_REDIRECTS = {
   'pilote-fij':      '/app/responsabilites/fij-pilote',
-  'coordination-fij': '/app/responsabilites/fij-coordination',
 };
 
 // Départements masqués de la liste "Mes Services" car ils sont gérés
 // via les responsabilités spécialisées (Pilote FIJ via FIJ.pilot_user_id,
 // Coordination FIJ via DepartmentMember → coordination-fij).
-const HIDDEN_FROM_SERVICE = ['pilote-fij', 'coordination-fij'];
+const HIDDEN_FROM_SERVICE = ['pilote-fij'];
 
 // Départements qui ont un lien vers un espace métier spécialisé dans leur page générique.
 // La page départementale s'affiche normalement, mais un lien vers l'espace métier est ajouté.
@@ -61,6 +60,11 @@ const SPECIALIZED_SPACE_LINK = {
     to: '/app/responsabilites',
     label: 'Espace FIJ',
     description: 'Outils opérationnels FIJ (registre, CR, membres, assiduité)',
+  },
+  'coordination-fij': {
+    to: '/app/responsabilites/fij-coordination',
+    label: 'Espace Coordination FIJ',
+    description: 'Outils spécialisés (registre, CR, relances, reporting)',
   },
 };
 

@@ -1,5 +1,5 @@
 // base44/shared/identityUtils.ts
-// Utilitaires partagés pour la génération d'identifiants internes @prodiges.com
+// Utilitaires partagés pour la génération d'identifiants internes @prodiges
 
 /**
  * Normalise un nom pour un identifiant : minuscules, sans accents, sans espaces.
@@ -15,13 +15,13 @@ export function normalizeName(name: string): string {
 }
 
 /**
- * Génère l'identifiant de base au format prenom.nom@prodiges.com
+ * Génère l'identifiant de base au format prenom@prodiges
+ * @prodiges n'est PAS une adresse email — c'est un identifiant interne EJP.
  */
 export function generateBaseIdentifier(first_name: string, last_name: string): string {
   const f = normalizeName(first_name);
-  const l = normalizeName(last_name);
-  if (!f || !l) return null;
-  return `${f}.${l}@prodiges.com`;
+  if (!f) return null;
+  return `${f}@prodiges`;
 }
 
 /**
@@ -49,11 +49,25 @@ export async function generateUniqueIdentifier(
   const baseTaken = (existing || []).some((u: any) => u.id !== excludeUserId);
   if (!baseTaken) return base;
 
-  // Cherche une variante disponible
-  const basePrefix = base.replace('@prodiges.com', '');
+  // Cherche une variante disponible : d'abord prenom.nom@prodiges, puis prenom2@prodiges
+  const f = normalizeName(first_name);
+  const l = normalizeName(last_name);
+
+  // Variante 1 : prenom.nom@prodiges
+  if (l) {
+    const candidate1 = `${f}.${l}@prodiges`;
+    const exists1 = await base44.asServiceRole.entities.User.filter({
+      internal_identifier: candidate1,
+    });
+    const taken1 = (exists1 || []).some((u: any) => u.id !== excludeUserId);
+    if (!taken1) return candidate1;
+  }
+
+  // Variante 2+ : prenom2@prodiges, prenom3@prodiges...
+  const basePrefix = base.replace('@prodiges', '');
   let counter = 2;
   while (counter < 100) {
-    const candidate = `${basePrefix}${counter}@prodiges.com`;
+    const candidate = `${basePrefix}${counter}@prodiges`;
     const exists = await base44.asServiceRole.entities.User.filter({
       internal_identifier: candidate,
     });
@@ -63,7 +77,7 @@ export async function generateUniqueIdentifier(
   }
 
   // Fallback improbable
-  return `${basePrefix}${Date.now()}@prodiges.com`;
+  return `${basePrefix}${Date.now()}@prodiges`;
 }
 
 /**

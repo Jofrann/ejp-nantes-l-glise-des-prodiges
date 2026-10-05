@@ -44,8 +44,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
   useEffect(() => {
     if (firstName && lastName) {
       const f = firstName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
-      const l = lastName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
-      if (f && l) setPreviewIdentifier(`${f}.${l}@prodiges.com`);
+      if (f) setPreviewIdentifier(`${f}@prodiges`);
     }
   }, [firstName, lastName]);
 

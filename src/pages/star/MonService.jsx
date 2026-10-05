@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Building2, ChevronRight, Loader2, Heart, Compass, ArrowRight,
-  Calendar, AlertCircle, Briefcase, Users
+  Calendar, AlertCircle, Users
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { isFijPilot, isFijCoordination, getInternalIdentifier, getDisplayName, isAccountBlocked } from '@/lib/permissions';
-import { loadCoordFijContext } from '@/lib/coordFijUtils';
+import { isFijPilot, getInternalIdentifier, getDisplayName, isAccountBlocked } from '@/lib/permissions';
 import { isHiddenFromService } from '@/lib/departmentModules';
 import PageHeader from '@/components/star/PageHeader';
 
@@ -32,7 +31,6 @@ export default function MonService() {
   const [departments, setDepartments] = useState([]);
   const [fijs, setFijs] = useState([]);
   const [events, setEvents] = useState([]);
-  const [coordFijData, setCoordFijData] = useState({ memberships: null, coordFijDeptId: null });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -43,14 +41,12 @@ export default function MonService() {
       base44.entities.Department.filter({ is_active: true }, { sort: 'display_order', limit: 50 }),
       base44.entities.FIJ.filter({ is_active: true }, { limit: 50 }),
       base44.entities.Event.filter({ is_active: true, event_date: { $gte: today } }, { sort: 'event_date', limit: 10 }),
-      loadCoordFijContext(),
-    ]).then(([u, m, d, f, e, ctx]) => {
+    ]).then(([u, m, d, f, e]) => {
       setUser(u);
       setMemberships(m?.items || m || []);
       setDepartments(d?.items || d || []);
       setFijs(f?.items || f || []);
       setEvents(e?.items || e || []);
-      setCoordFijData(ctx);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -91,19 +87,13 @@ export default function MonService() {
     f.pilot_user_id === user?.id || f.copilot_user_id === user?.id
   );
 
-  // Coordination FIJ — source : DepartmentMember → coordination-fij
-  const isCoordFij = isFijCoordination(user, coordFijData.memberships, coordFijData.coordFijDeptId);
-  const coordFijMembership = myActiveMemberships.find(m =>
-    m.department_id === coordFijData.coordFijDeptId
-  );
-
   // Événements à venir (globaux, audience pertinente)
   const upcomingEvents = events.filter(e =>
     e.audience === 'all_members' || e.audience === 'all_servants'
   ).slice(0, 4);
 
   const hasServices = myServiceMemberships.length > 0;
-  const hasResponsibilities = myPilotFijs.length > 0 || isCoordFij;
+  const hasResponsibilities = myPilotFijs.length > 0;
   const hasUpcoming = upcomingEvents.length > 0;
   const isEmpty = !hasServices && !hasResponsibilities && !hasUpcoming;
 
@@ -154,42 +144,29 @@ export default function MonService() {
 
           {/* === MES RESPONSABILITÉS === */}
           {hasResponsibilities && (
-            <section>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">Mes responsabilités</p>
-              <div className="space-y-3">
-                {/* Pilote FIJ — source : FIJ.pilot_user_id */}
-                {myPilotFijs.map(fij => (
-                  <ResponsibilityCard
-                    key={`pilot-${fij.id}`}
-                    icon={Compass}
-                    title={fij.name || 'FIJ'}
-                    roleLabel={fij.pilot_user_id === user?.id ? 'Pilote' : 'Copilote'}
-                    description="Ton espace de pilotage FIJ"
-                    to="/app/responsabilites/fij-pilote"
-                    color="rose"
-                  />
-                ))}
-
-                {/* Coordination FIJ — source : DepartmentMember → coordination-fij */}
-                {isCoordFij && (
-                  <ResponsibilityCard
-                    key="coord-fij"
-                    icon={Briefcase}
-                    title="Coordination FIJ"
-                    roleLabel={coordFijMembership ? (ROLE_LABELS[coordFijMembership.role_in_dept] || 'Membre') : 'Coordination'}
-                    description="Toutes les FIJ, relances, reporting"
-                    to="/app/responsabilites/fij-coordination"
-                    color="amber"
-                  />
-                )}
-              </div>
-            </section>
+          <section>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">Mes responsabilités</p>
+          <div className="space-y-3">
+            {/* Pilote FIJ — source : FIJ.pilot_user_id */}
+            {myPilotFijs.map(fij => (
+              <ResponsibilityCard
+                key={`pilot-${fij.id}`}
+                icon={Compass}
+                title={fij.name || 'FIJ'}
+                roleLabel={fij.pilot_user_id === user?.id ? 'Pilote' : 'Copilote'}
+                description="Ton espace de pilotage FIJ"
+                to="/app/responsabilites/fij-pilote"
+                color="rose"
+              />
+            ))}
+          </div>
+          </section>
           )}
 
           {/* === À VENIR === */}
           {hasUpcoming && (
             <section>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">À venir</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">À venir à EJP</p>
               <div className="space-y-2">
                 {upcomingEvents.map(e => (
                   <Link

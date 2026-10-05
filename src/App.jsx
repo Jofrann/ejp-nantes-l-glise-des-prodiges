@@ -242,6 +242,7 @@ const AuthenticatedApp = () => {
           {/* Vie Académique : département inactif — redirection vers Mon Service */}
           <Route path="/app/responsabilites/vie-academique" element={<Navigate to="/app/service" replace />} />
 
+          <Route path="/app/departements/louange" element={<Navigate to="/app/departements/prodiges-musique" replace />} />
           <Route path="/app/departements/:slug" element={<DepartmentEntry />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
           <Route path="/app/direction" element={<Navigate to="/app/supervision" replace />} />
