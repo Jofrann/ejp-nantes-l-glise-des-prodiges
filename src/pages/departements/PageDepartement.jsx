@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, AlertCircle,
   Calendar, Music, ListMusic, Library, CalendarCheck,
   SlidersHorizontal, Package, ListChecks, AlertTriangle,
-  Heart, Sparkles, UserCheck, Megaphone
+  Heart, Sparkles, UserCheck, Megaphone, FileText
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { isBureauLike, isAccountBlocked } from '@/lib/permissions';
