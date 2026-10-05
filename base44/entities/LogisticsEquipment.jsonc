@@ -1,0 +1,86 @@
+{
+  "name": "LogisticsEquipment",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Intendance (scoping)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nom de l'\u00e9quipement (ex: Tables pliantes, Signal\u00e9tique)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "tables",
+        "chaises",
+        "barrieres",
+        "rallonges",
+        "signaletique",
+        "nappes",
+        "supports",
+        "caisses",
+        "petit_materiel",
+        "autre"
+      ],
+      "default": "autre",
+      "description": "Cat\u00e9gorie d'\u00e9quipement logistique"
+    },
+    "identifier": {
+      "type": "string",
+      "description": "Tag / identifiant interne (facultatif)"
+    },
+    "location": {
+      "type": "string",
+      "description": "Lieu de stockage (facultatif)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "in_use",
+        "maintenance",
+        "missing",
+        "retired"
+      ],
+      "default": "available",
+      "description": "\u00c9tat de l'\u00e9quipement"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes techniques non sensibles"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u00c9quipement actif (false = masqu\u00e9 des listes normales)"
+    }
+  },
+  "required": [
+    "department_id",
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

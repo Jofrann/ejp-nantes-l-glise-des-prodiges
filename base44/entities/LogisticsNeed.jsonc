@@ -1,0 +1,93 @@
+{
+  "name": "LogisticsNeed",
+  "type": "object",
+  "properties": {
+    "logistics_plan_id": {
+      "type": "string",
+      "description": "ID du LogisticsPlan (facultatif)"
+    },
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement (scoping)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du besoin (ex: 10 bouteilles d'eau)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "materiel",
+        "mobilier",
+        "consommable",
+        "transport",
+        "installation",
+        "autre"
+      ],
+      "default": "materiel",
+      "description": "Cat\u00e9gorie de besoin"
+    },
+    "quantity": {
+      "type": "string",
+      "description": "Quantit\u00e9 (facultatif, texte libre)"
+    },
+    "requested_by": {
+      "type": "string",
+      "description": "ID du demandeur"
+    },
+    "requested_by_name": {
+      "type": "string",
+      "description": "Nom du demandeur (d\u00e9normalis\u00e9)"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "ID de l'utilisateur assign\u00e9 (facultatif)"
+    },
+    "assigned_to_name": {
+      "type": "string",
+      "description": "Nom de l'assign\u00e9 (d\u00e9normalis\u00e9)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "requested",
+        "approved",
+        "in_progress",
+        "fulfilled",
+        "cancelled"
+      ],
+      "default": "requested",
+      "description": "Statut du besoin"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes courtes"
+    }
+  },
+  "required": [
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

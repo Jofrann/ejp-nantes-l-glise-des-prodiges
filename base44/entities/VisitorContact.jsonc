@@ -1,0 +1,90 @@
+{
+  "name": "VisitorContact",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Accueil (scoping)"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "Pr\u00e9nom du visiteur"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Nom de famille (facultatif)"
+    },
+    "phone": {
+      "type": "string",
+      "description": "T\u00e9l\u00e9phone (facultatif)"
+    },
+    "contact_channel": {
+      "type": "string",
+      "description": "Canal de contact pr\u00e9f\u00e9r\u00e9 (facultatif)"
+    },
+    "first_visit_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de la premi\u00e8re visite"
+    },
+    "source_event_id": {
+      "type": "string",
+      "description": "ID de l'Event source (facultatif)"
+    },
+    "consent_to_contact": {
+      "type": "boolean",
+      "default": false,
+      "description": "Consentement pour \u00eatre recontact\u00e9"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "in_progress",
+        "integrated",
+        "closed"
+      ],
+      "default": "new",
+      "description": "Statut d'int\u00e9gration"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "ID de l'utilisateur responsable du suivi (facultatif)"
+    },
+    "assigned_to_name": {
+      "type": "string",
+      "description": "Nom du responsable de suivi (d\u00e9normalis\u00e9)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes courtes et op\u00e9rationnelles (non sensibles)"
+    }
+  },
+  "required": [
+    "department_id",
+    "first_name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

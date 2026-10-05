@@ -1,0 +1,102 @@
+{
+  "name": "ModerationRunItem",
+  "type": "object",
+  "properties": {
+    "service_plan_id": {
+      "type": "string",
+      "description": "ID du ModerationServicePlan"
+    },
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement (scoping)"
+    },
+    "order_index": {
+      "type": "number",
+      "default": 0,
+      "description": "Ordre de la s\u00e9quence dans le conducteur"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "opening",
+        "prayer",
+        "worship",
+        "announcement",
+        "testimony",
+        "offering",
+        "teaching",
+        "transition",
+        "closing",
+        "custom"
+      ],
+      "default": "custom",
+      "description": "Type de s\u00e9quence"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre de la s\u00e9quence (ex: Ouverture, Louange, Enseignement)"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Heure de d\u00e9but pr\u00e9vue (HH:MM, facultatif)"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "Dur\u00e9e estim\u00e9e en minutes (facultatif)"
+    },
+    "speaker_user_id": {
+      "type": "string",
+      "description": "ID de l'intervenant interne (facultatif)"
+    },
+    "speaker_name": {
+      "type": "string",
+      "description": "Nom de l'intervenant (interne ou externe, d\u00e9normalis\u00e9)"
+    },
+    "external_speaker_name": {
+      "type": "string",
+      "description": "Nom d'un intervenant externe (ne cr\u00e9e pas de User)"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "Instructions / consignes pour cette s\u00e9quence"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "in_progress",
+        "done",
+        "skipped"
+      ],
+      "default": "planned",
+      "description": "Statut de la s\u00e9quence"
+    }
+  },
+  "required": [
+    "service_plan_id",
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

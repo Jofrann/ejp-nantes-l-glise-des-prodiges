@@ -1,0 +1,75 @@
+{
+  "name": "ModerationMemberProfile",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Mod\u00e9ration"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID de l'utilisateur (User)"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nom complet (d\u00e9normalis\u00e9)"
+    },
+    "functions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "moderateur",
+          "co_moderateur",
+          "maitre_ceremonie",
+          "coordinateur_deroule",
+          "autre"
+        ]
+      },
+      "description": "Fonctions Mod\u00e9ration (distinctes du role_in_dept organisationnel)"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Profil Mod\u00e9ration actif"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes internes non sensibles"
+    }
+  },
+  "required": [
+    "department_id",
+    "user_id",
+    "full_name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

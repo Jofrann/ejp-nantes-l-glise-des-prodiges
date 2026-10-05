@@ -1,0 +1,82 @@
+{
+  "name": "ModerationAnnouncement",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Mod\u00e9ration (scoping)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre court de l'annonce"
+    },
+    "text": {
+      "type": "string",
+      "description": "Texte de l'annonce"
+    },
+    "event_id": {
+      "type": "string",
+      "description": "ID de l'Event li\u00e9 (facultatif)"
+    },
+    "active_from": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de d\u00e9but de validit\u00e9 (facultatif)"
+    },
+    "active_until": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de fin de validit\u00e9 (facultatif)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium",
+      "description": "Priorit\u00e9 de l'annonce"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "archived"
+      ],
+      "default": "draft",
+      "description": "Statut de l'annonce"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "ID du cr\u00e9ateur"
+    }
+  },
+  "required": [
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
