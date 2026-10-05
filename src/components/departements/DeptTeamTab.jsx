@@ -51,7 +51,12 @@ export default function DeptTeamTab({ members, colors }) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground truncate">{m.full_name}</p>
-              {m.note && <p className="text-xs text-muted-foreground truncate">{m.note}</p>}
+              <div className="flex items-center gap-2 mt-0.5">
+                {m.internal_identifier && (
+                  <span className="text-[11px] text-muted-foreground font-mono truncate">{m.internal_identifier}</span>
+                )}
+                {m.note && <span className="text-xs text-muted-foreground truncate">· {m.note}</span>}
+              </div>
             </div>
             <DeptRoleBadge role={m.role_in_dept} />
           </div>

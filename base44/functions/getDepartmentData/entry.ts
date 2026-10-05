@@ -33,7 +33,7 @@ export default async function(req: Request): Promise<Response> {
     const depts = await base44.asServiceRole.entities.Department.filter({ slug: department_slug });
     const department = depts && depts[0];
     if (!department) {
-      return Response.json({ error: 'Département introuvable' }, { status: 404 });
+      return Response.json({ not_found: true, error: 'Département introuvable' });
     }
 
     // 2. Vérifier l'accès
@@ -61,7 +61,7 @@ export default async function(req: Request): Promise<Response> {
         return Response.json({
           access_denied: true,
           message: 'Tu ne fais pas partie de ce département.',
-        }, { status: 403 });
+        });
       }
     }
 
@@ -86,13 +86,31 @@ export default async function(req: Request): Promise<Response> {
       department_id: department.id,
     }, '-created_date', 50);
 
+    // 5. Enrichir les membres avec internal_identifier (depuis User)
+    // DepartmentMember ne stocke que full_name ; on récupère internal_identifier
+    // depuis User pour l'affichage équipe sans exposer le vrai email.
+    const memberUserIds = (members || []).map((m: any) => m.user_id).filter(Boolean);
+    let userMap: Record<string, any> = {};
+    if (memberUserIds.length > 0) {
+      const users = await base44.asServiceRole.entities.User.filter({
+        id: { $in: memberUserIds },
+      });
+      (users || []).forEach((u: any) => {
+        userMap[u.id] = u;
+      });
+    }
+    const enrichedMembers = (members || []).map((m: any) => ({
+      ...m,
+      internal_identifier: m.user_id ? (userMap[m.user_id]?.internal_identifier || '') : '',
+    }));
+
     return Response.json({
       access_granted: true,
       department,
       role_in_dept: roleInDept,
       can_manage: canManage,
       is_responsable: isResponsable,
-      members: members || [],
+      members: enrichedMembers,
       messages: messages || [],
     });
   } catch (error) {

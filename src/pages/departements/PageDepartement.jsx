@@ -76,14 +76,14 @@ export default function PageDepartement() {
 
       const res = (await base44.functions.invoke('getDepartmentData', { department_slug: slugOrId })).data;
 
-      if (res.access_denied) {
-        setAccessDenied(true);
+      if (res.not_found) {
+        setNotFound(true);
         setLoading(false);
         return;
       }
 
-      if (res.error && res.error.includes('introuvable')) {
-        setNotFound(true);
+      if (res.access_denied) {
+        setAccessDenied(true);
         setLoading(false);
         return;
       }
@@ -113,7 +113,14 @@ export default function PageDepartement() {
         setUnreadCount(msgs.filter(m => new Date(m.created_date) > new Date(seen)).length);
       }
     } catch (e) {
-      setError('Une erreur est survenue lors du chargement.');
+      const errMsg = (e?.message || e?.toString() || '');
+      if (errMsg.includes('introuvable')) {
+        setNotFound(true);
+      } else if (errMsg.includes('access_denied') || errMsg.includes('403')) {
+        setAccessDenied(true);
+      } else {
+        setError('Une erreur est survenue lors du chargement.');
+      }
       setLoading(false);
     }
   };
@@ -217,7 +224,7 @@ export default function PageDepartement() {
           {/* Identité département */}
           <div className="py-2.5 flex items-center gap-3">
             <div className={`w-9 h-9 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0`}>
-              <DeptIcon name={dept.icon} className={`w-4.5 h-4.5 ${colors.text}`} />
+              <DeptIcon name={dept.icon} className={`w-4 h-4 ${colors.text}`} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
@@ -240,7 +247,7 @@ export default function PageDepartement() {
               <MessageCircle className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Groupe</span>
               {unreadCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 bg-danger text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">
+                <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 bg-danger text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
