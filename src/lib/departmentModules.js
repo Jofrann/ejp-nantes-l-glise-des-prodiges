@@ -18,11 +18,12 @@
  * sans toucher au moteur.
  */
 
-// Modules réellement implémentés dans le Lot 3 + Lot 4A (Musique) + Lot 4B (Sono)
+// Modules réellement implémentés dans le Lot 3 + Lot 4A (Musique) + Lot 4B (Sono) + Lot 4C (MPI)
 export const IMPLEMENTED_MODULES = [
   'overview', 'team', 'messages',
   'music_planning', 'music_rehearsals', 'music_setlists', 'music_repertoire', 'music_availability',
   'sound_planning', 'sound_positions', 'sound_equipment', 'sound_checklists', 'sound_incidents',
+  'prayer_planning', 'prayer_times', 'prayer_topics', 'prayer_requests', 'prayer_availability',
 ];
 
 // Métadonnées d'affichage des modules (labels, icônes Lucide)
@@ -40,6 +41,11 @@ export const MODULE_META = {
   sound_equipment:    { label: 'Matériel',     icon: 'Package' },
   sound_checklists:   { label: 'Checklists',   icon: 'ListChecks' },
   sound_incidents:    { label: 'Incidents',     icon: 'AlertTriangle' },
+  prayer_planning:    { label: 'Planning',      icon: 'Calendar' },
+  prayer_times:       { label: 'Temps de prière', icon: 'Heart' },
+  prayer_topics:      { label: 'Sujets',        icon: 'Sparkles' },
+  prayer_requests:    { label: 'Demandes',      icon: 'Lock' },
+  prayer_availability:{ label: 'Disponibilités', icon: 'CalendarCheck' },
   // Modules non implémentés (documentés pour référence future)
   meetings:  { label: 'Réunions',  icon: 'Calendar' },
   resources: { label: 'Ressources', icon: 'FileText' },
@@ -69,6 +75,16 @@ const DEPARTMENT_OVERRIDES = {
     'sound_equipment',
     'sound_checklists',
     'sound_incidents',
+    'team',
+    'messages',
+  ],
+  'mpi': [
+    'overview',
+    'prayer_planning',
+    'prayer_times',
+    'prayer_topics',
+    'prayer_requests',
+    'prayer_availability',
     'team',
     'messages',
   ],

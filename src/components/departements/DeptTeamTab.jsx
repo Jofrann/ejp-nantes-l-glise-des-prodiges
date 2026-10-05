@@ -3,6 +3,7 @@ import { Users } from 'lucide-react';
 import DeptRoleBadge from './DeptRoleBadge';
 import { POSITION_LABELS as MUSIC_POSITION_LABELS } from '@/lib/musicConstants';
 import { POSITION_SHORT as SOUND_POSITION_SHORT } from '@/lib/soundConstants';
+import { PROFILE_FUNCTION_SHORT as PRAYER_FUNCTION_SHORT } from '@/lib/prayerConstants';
 
 /**
  * DeptTeamTab — Onglet Équipe du moteur départemental.
@@ -14,7 +15,7 @@ import { POSITION_SHORT as SOUND_POSITION_SHORT } from '@/lib/soundConstants';
  * Un simple serviteur voit les mêmes informations qu'un responsable
  * (les capacités de gestion sont limitées à l'admin via Annuaire).
  */
-export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null }) {
+export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null, prayerProfiles = null }) {
   const musicProfileMap = {};
   if (musicProfiles) {
     musicProfiles.forEach(p => { if (p.user_id) musicProfileMap[p.user_id] = p; });
@@ -22,6 +23,10 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
   const soundProfileMap = {};
   if (soundProfiles) {
     soundProfiles.forEach(p => { if (p.user_id) soundProfileMap[p.user_id] = p; });
+  }
+  const prayerProfileMap = {};
+  if (prayerProfiles) {
+    prayerProfiles.forEach(p => { if (p.user_id) prayerProfileMap[p.user_id] = p; });
   }
   if (members.length === 0) {
     return (
@@ -81,6 +86,15 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
                   {soundProfileMap[m.user_id].positions.map(pos => (
                     <span key={pos} className="text-[10px] px-1.5 py-0.5 rounded border bg-blue-500/5 text-blue-600 border-blue-400/20">
                       {SOUND_POSITION_SHORT[pos] || pos}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {prayerProfileMap[m.user_id]?.functions?.length > 0 && (
+                <div className="flex items-center gap-1 mt-1 flex-wrap">
+                  {prayerProfileMap[m.user_id].functions.map(fn => (
+                    <span key={fn} className="text-[10px] px-1.5 py-0.5 rounded border bg-purple-500/5 text-purple-600 border-purple-400/20">
+                      {PRAYER_FUNCTION_SHORT[fn] || fn}
                     </span>
                   ))}
                 </div>
