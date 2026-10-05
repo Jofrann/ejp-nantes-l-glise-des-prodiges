@@ -31,7 +31,6 @@ import SoundChecklistsTab from '@/components/departements/sound/SoundChecklistsT
 import SoundIncidentsTab from '@/components/departements/sound/SoundIncidentsTab';
 import PrayerOverviewTab from '@/components/departements/prayer/PrayerOverviewTab';
 import PrayerPlanningTab from '@/components/departements/prayer/PrayerPlanningTab';
-import PrayerTimesTab from '@/components/departements/prayer/PrayerTimesTab';
 import PrayerTopicsTab from '@/components/departements/prayer/PrayerTopicsTab';
 import PrayerRequestsTab from '@/components/departements/prayer/PrayerRequestsTab';
 import PrayerAvailabilityTab from '@/components/departements/prayer/PrayerAvailabilityTab';
@@ -40,7 +39,7 @@ import { POSITION_LABELS } from '@/lib/musicConstants';
 
 const MUSIC_TABS = ['music_planning', 'music_rehearsals', 'music_setlists', 'music_repertoire', 'music_availability'];
 const SOUND_TABS = ['sound_planning', 'sound_positions', 'sound_equipment', 'sound_checklists', 'sound_incidents'];
-const PRAYER_TABS = ['prayer_planning', 'prayer_times', 'prayer_topics', 'prayer_requests', 'prayer_availability'];
+const PRAYER_TABS = ['prayer_planning', 'prayer_topics', 'prayer_requests', 'prayer_availability'];
 
 const COLOR_MAP = {
   amber:  { border: 'border-secondary/20', text: 'text-secondary', bg: 'bg-secondary/10', glow: 'bg-secondary/5' },
@@ -368,7 +367,7 @@ export default function PageDepartement() {
                 music_setlists: ListMusic, music_repertoire: Library, music_availability: CalendarCheck,
                 sound_planning: Calendar, sound_positions: SlidersHorizontal,
                 sound_equipment: Package, sound_checklists: ListChecks, sound_incidents: AlertTriangle,
-                prayer_planning: Calendar, prayer_times: Heart,
+                prayer_planning: Calendar,
                 prayer_topics: Sparkles, prayer_requests: Lock, prayer_availability: CalendarCheck,
               };
               const Icon = iconMap[modId] || MessageCircle;
@@ -461,6 +460,11 @@ export default function PageDepartement() {
                   musicProfiles={musicData ? musicData.profiles : null}
                   soundProfiles={soundData ? soundData.profiles : null}
                   prayerProfiles={prayerData ? prayerData.profiles : null}
+                  departmentType={
+                    MUSIC_TABS.some(t => enabledModules.includes(t)) ? 'music' :
+                    SOUND_TABS.some(t => enabledModules.includes(t)) ? 'sound' :
+                    PRAYER_TABS.some(t => enabledModules.includes(t)) ? 'prayer' : null
+                  }
                 />
               )}
               {currentTab === 'messages' && (
@@ -563,13 +567,6 @@ export default function PageDepartement() {
                   currentUserId={prayerData.current_user_id}
                   colors={colors}
                   onRefresh={() => loadPrayerData()}
-                />
-              )}
-              {currentTab === 'prayer_times' && prayerData && (
-                <PrayerTimesTab
-                  prayerData={prayerData}
-                  currentUserId={prayerData.current_user_id}
-                  colors={colors}
                 />
               )}
               {currentTab === 'prayer_topics' && prayerData && (

@@ -15,17 +15,19 @@ import { PROFILE_FUNCTION_SHORT as PRAYER_FUNCTION_SHORT } from '@/lib/prayerCon
  * Un simple serviteur voit les mêmes informations qu'un responsable
  * (les capacités de gestion sont limitées à l'admin via Annuaire).
  */
-export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null, prayerProfiles = null }) {
+export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null, prayerProfiles = null, departmentType = null }) {
+  // CLOISONNEMENT : ne construire que la map correspondant au département courant.
+  // Les profils spécialisés des autres départements ne sont pas chargés ni affichés.
   const musicProfileMap = {};
-  if (musicProfiles) {
+  if (musicProfiles && departmentType === 'music') {
     musicProfiles.forEach(p => { if (p.user_id) musicProfileMap[p.user_id] = p; });
   }
   const soundProfileMap = {};
-  if (soundProfiles) {
+  if (soundProfiles && departmentType === 'sound') {
     soundProfiles.forEach(p => { if (p.user_id) soundProfileMap[p.user_id] = p; });
   }
   const prayerProfileMap = {};
-  if (prayerProfiles) {
+  if (prayerProfiles && departmentType === 'prayer') {
     prayerProfiles.forEach(p => { if (p.user_id) prayerProfileMap[p.user_id] = p; });
   }
   if (members.length === 0) {
@@ -72,7 +74,7 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
                 )}
                 {m.note && <span className="text-xs text-muted-foreground truncate">· {m.note}</span>}
               </div>
-              {musicProfileMap[m.user_id]?.positions?.length > 0 && (
+              {departmentType === 'music' && musicProfileMap[m.user_id]?.positions?.length > 0 && (
                 <div className="flex items-center gap-1 mt-1 flex-wrap">
                   {musicProfileMap[m.user_id].positions.map(pos => (
                     <span key={pos} className="text-[10px] px-1.5 py-0.5 rounded border bg-surface text-muted-foreground">
@@ -81,7 +83,7 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
                   ))}
                 </div>
               )}
-              {soundProfileMap[m.user_id]?.positions?.length > 0 && (
+              {departmentType === 'sound' && soundProfileMap[m.user_id]?.positions?.length > 0 && (
                 <div className="flex items-center gap-1 mt-1 flex-wrap">
                   {soundProfileMap[m.user_id].positions.map(pos => (
                     <span key={pos} className="text-[10px] px-1.5 py-0.5 rounded border bg-blue-500/5 text-blue-600 border-blue-400/20">
@@ -90,7 +92,7 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
                   ))}
                 </div>
               )}
-              {prayerProfileMap[m.user_id]?.functions?.length > 0 && (
+              {departmentType === 'prayer' && prayerProfileMap[m.user_id]?.functions?.length > 0 && (
                 <div className="flex items-center gap-1 mt-1 flex-wrap">
                   {prayerProfileMap[m.user_id].functions.map(fn => (
                     <span key={fn} className="text-[10px] px-1.5 py-0.5 rounded border bg-purple-500/5 text-purple-600 border-purple-400/20">
