@@ -256,6 +256,30 @@ export default function AdminHome() {
                 </Field>
               </Section>
 
+              <Section title="Authentification interne EJP">
+                <p className="text-xs text-muted-foreground mb-4">
+                  Configure le domaine email technique pour l'authentification interne.
+                  Quand configuré, l'identifiant <code className="text-secondary">prenom@prodiges</code> est mappé
+                  vers <code className="text-secondary">prenom@<span className="italic">{config.auth_email_domain || 'domaine'}</span></code> pour l'auth Base44.
+                  Tant que vide, l'authentification utilise l'email réel (mode fallback).
+                </p>
+                <Field label="Domaine email technique (ex: accounts.ejp-nantes.fr)">
+                  <input
+                    className={inputCls}
+                    placeholder="accounts.ejp-nantes.fr"
+                    value={config.auth_email_domain || ''}
+                    onChange={e => setConfig(c => ({ ...c, auth_email_domain: e.target.value.trim() }))}
+                  />
+                </Field>
+                <div className="mt-3 p-3 rounded-xl bg-blue-50 border border-blue-100">
+                  <p className="text-xs text-blue-700">
+                    <strong>Prérequis :</strong> ce domaine doit être configuré avec un catch-all ou des alias
+                    qui routent les emails vers une boîte contrôlée par l'EJP. Les invitations Base44 et les
+                    liens de réinitialisation arriveront sur cette adresse.
+                  </p>
+                </div>
+              </Section>
+
               <Section title="Annonce">
                 <div className="flex items-center gap-3 mb-4">
                   <input type="checkbox" id="ann_active" checked={config.announcement_active || false} onChange={e => setConfig(c => ({ ...c, announcement_active: e.target.checked }))} className="accent-secondary" />

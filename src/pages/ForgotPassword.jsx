@@ -1,77 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Mail, ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, ShieldAlert } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 
+/**
+ * ForgotPassword — L'auto-réinitialisation est désactivée.
+ *
+ * L'authentification interne EJP utilise des adresses techniques contrôlées
+ * par l'administration. Un serviteur ne peut pas réinitialiser son mot de
+ * passe seul — l'administration EJP déclenche le processus sécurisé via
+ * l'Annuaire (action "Réinitialiser l'accès").
+ */
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await base44.auth.resetPasswordRequest(email);
-    } catch {
-      // Toujours afficher le succès
-    } finally {
-      setLoading(false);
-      setSent(true);
-    }
-  };
-
   return (
     <AuthLayout
       footer={
         <Link to="/login" className="text-secondary font-medium hover:underline">
-          <ArrowLeft className="w-3 h-3 inline mr-1" />Retour à la connexion
+          <ArrowLeft className="w-3 h-3 inline mr-1" />
+          Retour à la connexion
         </Link>
       }
     >
       <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
       <h1 className="font-display text-3xl text-foreground font-light mb-2">Mot de passe oublié</h1>
-      <p className="text-sm text-muted-foreground mb-8">Tu recevras un lien pour réinitialiser ton mot de passe.</p>
 
-      {sent ? (
-        <p className="text-sm text-muted-foreground text-center">
-          Si un compte existe avec cet email, tu recevras un lien de réinitialisation dans quelques instants.
+      <div className="mt-8 p-5 rounded-xl bg-surface border border-border text-center">
+        <div className="w-12 h-12 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mx-auto mb-4">
+          <ShieldAlert className="w-6 h-6 text-secondary" />
+        </div>
+        <p className="text-sm text-foreground font-medium mb-2">
+          Ton accès doit être réinitialisé par l'administration EJP.
         </p>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Adresse email</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                autoFocus
-                placeholder="ton@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 h-12"
-                required
-              />
-            </div>
-          </div>
-          <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Envoi...
-              </>
-            ) : (
-              "Envoyer le lien"
-            )}
-          </Button>
-        </form>
-      )}
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Contacte un responsable ou l'administration pour déclencher la réinitialisation
+          de ton accès. Tu recevras tes nouveaux identifiants par le canal prévu.
+        </p>
+      </div>
     </AuthLayout>
   );
 }

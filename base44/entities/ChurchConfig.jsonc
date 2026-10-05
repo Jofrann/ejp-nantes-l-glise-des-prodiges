@@ -92,6 +92,10 @@
     "auth_page_image_url": {
       "type": "string",
       "description": "Image illustrative affich\u00e9e sur les pages de connexion/inscription (colonne droite)"
+    },
+    "auth_email_domain": {
+      "type": "string",
+      "description": "Domaine email technique pour l'authentification interne EJP (ex: accounts.ejp-nantes.fr). Quand configur\u00e9, prenom@prodiges est mapp\u00e9 vers prenom@<ce domaine> pour l'auth Base44. Vide = authentification par email r\u00e9el (mode fallback)."
     }
   },
   "required": [

@@ -6,9 +6,10 @@ import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import PendingAccount from "@/components/PendingAccount";
 import { getRedirectPath, isAccountPending, isAccountSuspended } from "@/lib/permissions";
+import { resolveAuthEmail, getLoginErrorMessage } from "@/lib/ejpAuth";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,16 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      await base44.auth.loginViaEmailPassword(email, password);
+      // Résout l'adresse technique : prenom@prodiges → prenom@<domaine> (ou email réel en fallback)
+      const { authEmail, error: resolveError } = await resolveAuthEmail(identifier);
+
+      if (resolveError === "not_configured") {
+        setError("Le système d'authentification interne n'est pas encore configuré. Contacte l'administration EJP.");
+        setLoading(false);
+        return;
+      }
+
+      await base44.auth.loginViaEmailPassword(authEmail, password);
       const user = await base44.auth.me();
 
       if (isAccountPending(user)) {
@@ -30,14 +40,21 @@ export default function Login() {
         return;
       }
       if (isAccountSuspended(user)) {
-        setError("Ton compte a été suspendu. Contacte un responsable.");
+        setError("Ton accès est actuellement suspendu.");
         setLoading(false);
+        return;
+      }
+
+      // Première connexion (non-admin) → changement de mot de passe obligatoire
+      const isAdmin = user.role === "admin" || (Array.isArray(user.badges) && user.badges.includes("ADMIN"));
+      if (user.first_login && !isAdmin) {
+        window.location.href = "/first-login";
         return;
       }
 
       window.location.href = getRedirectPath(user);
     } catch (err) {
-      setError(err.message || "Email ou mot de passe invalide");
+      setError(getLoginErrorMessage(err));
       setLoading(false);
     }
   };
@@ -62,7 +79,7 @@ export default function Login() {
       }>
 
       <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
-      <h1 className="font-display text-3xl text-foreground font-light mb-2">Bienvenue dans l'espace serviteur</h1>
+      <h1 className="font-display text-3xl text-foreground font-light mb-2">Connexion à mon espace EJP</h1>
       <p className="text-sm text-muted-foreground mb-8">Retrouve tes départements, ton équipe et les informations liées à ton service.</p>
 
       {error &&
@@ -73,15 +90,15 @@ export default function Login() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-xs text-muted-foreground font-medium" htmlFor="email">Email</label>
+          <label className="text-xs text-muted-foreground font-medium" htmlFor="identifier">Identifiant EJP</label>
           <input
-            id="email"
-            type="email"
-            autoComplete="email"
+            id="identifier"
+            type="text"
+            autoComplete="username"
             autoFocus
-            placeholder="ton@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder="prenom@prodiges"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             required
             className={inputCls}
           />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X, Loader2, Check, ChevronRight, ChevronLeft, User, Mail, Award, Users, Heart, CheckCircle2, Info } from 'lucide-react';
 import { BADGES, DEPT_ROLES, getBadgeLabel, getRoleLabel } from '@/lib/annuaireConstants';
+import { getAuthEmailDomain, extractUsername } from '@/lib/ejpAuth';
 
 const STEPS = [
   { id: 1, label: 'Identité', icon: User },
@@ -28,6 +29,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
   const [badges, setBadges] = useState([]);
   const [services, setServices] = useState([]); // [{ department_id, role_in_dept }]
   const [fijAssignment, setFijAssignment] = useState(null); // { fij_id, role }
+  const [authDomain, setAuthDomain] = useState(null);
 
   useEffect(() => {
     base44.entities.Department.filter({ is_active: true }, { sort: 'display_order', limit: 50 }).then(res => {
@@ -38,6 +40,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
       const list = (res?.items || res || []).filter(f => f.status !== 'closed');
       setFijs(list);
     });
+    getAuthEmailDomain().then(setAuthDomain);
   }, []);
 
   // Generate preview identifier from first/last name
@@ -66,7 +69,11 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
 
   const canNext = () => {
     if (step === 1) return firstName.trim() && lastName.trim();
-    if (step === 2) return email.trim() && /\S+@\S+\.\S+/.test(email);
+    if (step === 2) {
+      // Si le domaine technique est configuré, l'email est auto-généré — pas de saisie requise
+      if (authDomain) return firstName.trim() !== '';
+      return email.trim() && /\S+@\S+\.\S+/.test(email);
+    }
     return true;
   };
 
@@ -74,12 +81,17 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
     setError('');
     setLoading(true);
     try {
+      // Détermine l'email technique : auto-généré si domaine configuré, sinon email saisi
+      const technicalEmail = authDomain
+        ? `${extractUsername(previewIdentifier)}@${authDomain}`
+        : email;
+
       // 1. Create user + memberships via adminManageUser
       const createRes = await base44.functions.invoke('adminManageUser', {
         action: 'create',
         first_name: firstName,
         last_name: lastName,
-        email,
+        email: technicalEmail,
         phone,
         badges,
         department_memberships: services.filter(s => s.department_id).map(s => ({
@@ -189,32 +201,49 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Compte de connexion</p>
-                <p className="text-xs text-muted-foreground">Un email d'invitation sera envoyé à cette adresse. La personne choisira son mot de passe.</p>
+                <p className="text-xs text-muted-foreground">
+                  {authDomain
+                    ? "L'adresse technique est générée automatiquement. L'invitation sera envoyée vers l'infrastructure EJP."
+                    : "Un email d'invitation sera envoyé à cette adresse. La personne choisira son mot de passe."}
+                </p>
               </div>
 
               {/* Identifiant EJP (auto-généré) */}
               <div className="bg-secondary/5 border border-secondary/20 rounded-xl p-3.5">
                 <label className="text-xs text-secondary font-medium block mb-1">Identifiant EJP (généré automatiquement)</label>
                 <p className="text-sm text-secondary font-mono">{previewIdentifier || '—'}</p>
-                <p className="text-[10px] text-muted-foreground/70 mt-1">Cet identifiant est visible dans l'Annuaire. Il n'est pas utilisé pour la connexion.</p>
+                <p className="text-[10px] text-muted-foreground/70 mt-1">Cet identifiant est visible dans l'Annuaire. C'est avec lui que la personne se connectera.</p>
               </div>
 
-              {/* Email réel de connexion */}
-              <div>
-                <label className="text-xs text-muted-foreground font-medium block mb-1.5">Adresse email de connexion *</label>
-                <input
-                  type="email"
-                  className="w-full bg-white border border-border text-foreground rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-secondary/50"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="prenom.nom@gmail.com"
-                  autoFocus
-                />
-                <p className="text-[10px] text-muted-foreground/70 mt-1.5 flex items-start gap-1">
-                  <Info className="w-3 h-3 flex-shrink-0 mt-0.5" />
-                  Cette adresse reçoit l'invitation et sert à la connexion. Elle doit être une vraie boîte email que la personne consulte.
-                </p>
-              </div>
+              {/* Email technique (auto-généré) ou email réel (fallback) */}
+              {authDomain ? (
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-3.5">
+                  <label className="text-xs text-blue-700 font-medium block mb-1">Adresse technique (générée automatiquement)</label>
+                  <p className="text-sm text-blue-700 font-mono">
+                    {previewIdentifier ? `${extractUsername(previewIdentifier)}@${authDomain}` : '—'}
+                  </p>
+                  <p className="text-[10px] text-blue-600/70 mt-1 flex items-start gap-1">
+                    <Info className="w-3 h-3 flex-shrink-0 mt-0.5" />
+                    Cette adresse est contrôlée par l'EJP. L'invitation y sera envoyée automatiquement. Aucune action requise.
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <label className="text-xs text-muted-foreground font-medium block mb-1.5">Adresse email de connexion *</label>
+                  <input
+                    type="email"
+                    className="w-full bg-white border border-border text-foreground rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-secondary/50"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="prenom.nom@gmail.com"
+                    autoFocus
+                  />
+                  <p className="text-[10px] text-muted-foreground/70 mt-1.5 flex items-start gap-1">
+                    <Info className="w-3 h-3 flex-shrink-0 mt-0.5" />
+                    Cette adresse reçoit l'invitation et sert à la connexion. Elle doit être une vraie boîte email que la personne consulte.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 

@@ -14,6 +14,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
+import FirstLogin from '@/pages/FirstLogin';
 import RoleLayout from '@/components/layouts/RoleLayout';
 import RoleGuard from '@/components/RoleGuard';
 import Home from '@/pages/Home';
@@ -108,6 +109,7 @@ const AuthenticatedApp = () => {
 
       {/* Routes protégées (espace interne) */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route path="/first-login" element={<FirstLogin />} />
         <Route element={<RoleLayout />}>
           {/* Routes héritées (pages.config) */}
           {Object.entries(Pages).filter(([p]) => p !== 'Home').map(([path, Page]) => (

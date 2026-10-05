@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Loader2, Ban, CheckCircle2, Archive, RefreshCw, MoreVertical } from 'lucide-react';
+import { ArrowLeft, Loader2, Ban, CheckCircle2, Archive, RefreshCw, MoreVertical, KeyRound } from 'lucide-react';
 import { getInitials, STATUS_LABELS, getBadgeLabel, formatDate } from '@/lib/annuaireConstants';
+import { resetUserAccess } from '@/lib/ejpAuth';
 import FicheApercu from '@/components/annuaire/FicheApercu';
 import FicheBadges from '@/components/annuaire/FicheBadges';
 import FicheServices from '@/components/annuaire/FicheServices';
@@ -41,6 +42,30 @@ export default function PersonFiche() {
   }, [userId]);
 
   useEffect(() => { load(); }, [load]);
+
+  const resetAccess = async () => {
+    const person = data?.person;
+    if (!person) return;
+    if (!confirm(`Réinitialiser l'accès de ${person.first_name} ${person.last_name} ?\n\nUn email de réinitialisation sera envoyé vers l'adresse technique contrôlée par l'EJP. L'utilisateur recevra un lien pour choisir un nouveau mot de passe.`)) return;
+    setShowActions(false);
+    setBusy(true);
+    try {
+      const result = await resetUserAccess(person.internal_identifier || person.email);
+      if (result.success) {
+        alert(`Email de réinitialisation envoyé vers l'adresse technique de ${person.first_name}. Récupère le lien dans la boîte EJP et transmets-le à la personne.`);
+      } else if (result.error === 'not_configured') {
+        alert("Le système d'authentification interne n'est pas encore configuré. Configure d'abord le domaine email technique dans les paramètres du site (Admin → Paramètres).");
+      } else if (result.error === 'no_identifier') {
+        alert("Cette personne n'a pas d'identifiant EJP. Corrige sa fiche dans l'Annuaire avant de réinitialiser son accès.");
+      } else {
+        alert("Échec de l'envoi de l'email de réinitialisation. Réessaie plus tard.");
+      }
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const changeStatus = async (newStatus) => {
     const person = data?.person;
@@ -164,6 +189,10 @@ export default function PersonFiche() {
                         <Archive className="w-3.5 h-3.5 text-slate-500" /> Archiver
                       </button>
                     )}
+                    <div className="border-t border-border my-1" />
+                    <button onClick={resetAccess} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-surface text-left">
+                      <KeyRound className="w-3.5 h-3.5 text-secondary" /> Réinitialiser l'accès
+                    </button>
                   </div>
                 </>
               )}
