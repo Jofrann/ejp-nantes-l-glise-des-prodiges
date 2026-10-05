@@ -18,14 +18,22 @@
  * sans toucher au moteur.
  */
 
-// Modules réellement implémentés dans le Lot 3
-export const IMPLEMENTED_MODULES = ['overview', 'team', 'messages'];
+// Modules réellement implémentés dans le Lot 3 + Lot 4A (Musique)
+export const IMPLEMENTED_MODULES = [
+  'overview', 'team', 'messages',
+  'music_planning', 'music_rehearsals', 'music_setlists', 'music_repertoire', 'music_availability',
+];
 
 // Métadonnées d'affichage des modules (labels, icônes Lucide)
 export const MODULE_META = {
-  overview:  { label: 'Aperçu',    icon: 'LayoutDashboard' },
-  team:      { label: 'Équipe',    icon: 'Users' },
-  messages:  { label: 'Actualités', icon: 'MessageCircle' },
+  overview:           { label: 'Aperçu',      icon: 'LayoutDashboard' },
+  team:               { label: 'Équipe',      icon: 'Users' },
+  messages:           { label: 'Actualités',   icon: 'MessageCircle' },
+  music_planning:     { label: 'Planning',     icon: 'Calendar' },
+  music_rehearsals:   { label: 'Répétitions',  icon: 'Music' },
+  music_setlists:     { label: 'Setlists',     icon: 'ListMusic' },
+  music_repertoire:   { label: 'Répertoire',   icon: 'Library' },
+  music_availability:  { label: 'Disponibilités', icon: 'CalendarCheck' },
   // Modules non implémentés (documentés pour référence future)
   meetings:  { label: 'Réunions',  icon: 'Calendar' },
   resources: { label: 'Ressources', icon: 'FileText' },
@@ -38,8 +46,16 @@ const DEFAULT_MODULES = ['overview', 'team', 'messages'];
 // Overrides par slug de département (extensible pour les lots futurs)
 // Si un slug n'est pas listé, il utilise DEFAULT_MODULES.
 const DEPARTMENT_OVERRIDES = {
-  // Tous les départements utilisent les mêmes modules en Lot 3 V1.
-  // Les overrides existent pour les lots futurs (ex: communication_requests pour communication).
+  'prodiges-musique': [
+    'overview',
+    'music_planning',
+    'music_rehearsals',
+    'music_setlists',
+    'music_repertoire',
+    'music_availability',
+    'team',
+    'messages',
+  ],
 };
 
 // Départements qui redirigent vers un espace spécialisé au lieu d'une page départementale générique.

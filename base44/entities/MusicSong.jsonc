@@ -1,0 +1,77 @@
+{
+  "name": "MusicSong",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Prodiges Musique (scoping)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du chant"
+    },
+    "artist": {
+      "type": "string",
+      "description": "Artiste ou source"
+    },
+    "default_key": {
+      "type": "string",
+      "description": "Tonalit\u00e9 par d\u00e9faut (ex: E, G, Bb)"
+    },
+    "bpm": {
+      "type": "number",
+      "description": "BPM (tempo) \u2014 optionnel"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "louange",
+        "adoration",
+        "celebration",
+        "offrande",
+        "autre"
+      ],
+      "default": "louange",
+      "description": "Cat\u00e9gorie du chant"
+    },
+    "link": {
+      "type": "string",
+      "description": "Lien vers une ressource autoris\u00e9e (pas de paroles prot\u00e9g\u00e9es)"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Chant actif au r\u00e9pertoire"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes internes (tonalit\u00e9, arrangement, etc.)"
+    }
+  },
+  "required": [
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

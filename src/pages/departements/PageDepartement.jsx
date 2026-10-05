@@ -3,7 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Settings, MessageCircle, Lock, Loader2, ArrowLeft,
-  LayoutDashboard, Users, AlertCircle
+  LayoutDashboard, Users, AlertCircle,
+  Calendar, Music, ListMusic, Library, CalendarCheck
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { isBureauLike, isAccountBlocked } from '@/lib/permissions';
@@ -14,7 +15,16 @@ import DeptTeamTab from '@/components/departements/DeptTeamTab';
 import DeptMessagesTab from '@/components/departements/DeptMessagesTab';
 import AjouterMembreModal from '@/components/departements/AjouterMembreModal';
 import DeptChat from '@/components/departements/DeptChat';
+import MusicOverviewTab from '@/components/departements/music/MusicOverviewTab';
+import MusicPlanningTab from '@/components/departements/music/MusicPlanningTab';
+import MusicRehearsalsTab from '@/components/departements/music/MusicRehearsalsTab';
+import MusicSetlistsTab from '@/components/departements/music/MusicSetlistsTab';
+import MusicRepertoireTab from '@/components/departements/music/MusicRepertoireTab';
+import MusicAvailabilityTab from '@/components/departements/music/MusicAvailabilityTab';
 import { getEnabledModules, MODULE_META } from '@/lib/departmentModules';
+import { POSITION_LABELS } from '@/lib/musicConstants';
+
+const MUSIC_TABS = ['music_planning', 'music_rehearsals', 'music_setlists', 'music_repertoire', 'music_availability'];
 
 const COLOR_MAP = {
   amber:  { border: 'border-secondary/20', text: 'text-secondary', bg: 'bg-secondary/10', glow: 'bg-secondary/5' },
@@ -56,6 +66,8 @@ export default function PageDepartement() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [musicData, setMusicData] = useState(null);
+  const [musicLoading, setMusicLoading] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -102,6 +114,13 @@ export default function PageDepartement() {
       setIsResponsable(res.is_responsable || false);
       setLoading(false);
 
+      // Charger les données musicales si le département a des modules musique
+      const modules = getEnabledModules(res.department.slug);
+      const hasMusic = modules.some(m => MUSIC_TABS.includes(m));
+      if (hasMusic) {
+        loadMusicData(res.department.slug);
+      }
+
       // Messages non lus
       const deptId = res.department.id;
       const key = `dept_chat_seen_${deptId}`;
@@ -135,6 +154,20 @@ export default function PageDepartement() {
         setMessages(res.messages || []);
       }
     } catch (e) {}
+  };
+
+  const loadMusicData = async (slug) => {
+    setMusicLoading(true);
+    try {
+      const res = (await base44.functions.invoke('getMusicData', { department_slug: slug || (dept && dept.slug) || slugOrId })).data;
+      if (!res.access_denied && !res.not_found) {
+        setMusicData(res);
+      }
+    } catch (e) {
+      // Silencieux — les données musicales sont optionnelles
+    } finally {
+      setMusicLoading(false);
+    }
   };
 
   const openChat = () => {
@@ -269,7 +302,12 @@ export default function PageDepartement() {
             {enabledModules.map(modId => {
               const meta = MODULE_META[modId];
               if (!meta) return null;
-              const Icon = modId === 'overview' ? LayoutDashboard : modId === 'team' ? Users : MessageCircle;
+              const iconMap = {
+                overview: LayoutDashboard, team: Users, messages: MessageCircle,
+                music_planning: Calendar, music_rehearsals: Music,
+                music_setlists: ListMusic, music_repertoire: Library, music_availability: CalendarCheck,
+              };
+              const Icon = iconMap[modId] || MessageCircle;
               const active = currentTab === modId;
               return (
                 <button
@@ -315,18 +353,30 @@ export default function PageDepartement() {
               transition={{ duration: 0.15 }}
             >
               {currentTab === 'overview' && (
-                <DeptOverviewTab
-                  dept={dept}
-                  members={members}
-                  roleInDept={roleInDept}
-                  canManage={canManage}
-                  colors={colors}
-                />
+                <>
+                  {musicData && MUSIC_TABS.some(t => enabledModules.includes(t)) ? (
+                    <MusicOverviewTab
+                      musicData={musicData}
+                      isResponsable={isResponsable || canManage}
+                      currentUserId={musicData.current_user_id}
+                      colors={colors}
+                      onNavigateTab={(tab) => setActiveTab(tab)}
+                    />
+                  ) : null}
+                  <DeptOverviewTab
+                    dept={dept}
+                    members={members}
+                    roleInDept={roleInDept}
+                    canManage={canManage}
+                    colors={colors}
+                  />
+                </>
               )}
               {currentTab === 'team' && (
                 <DeptTeamTab
                   members={members}
                   colors={colors}
+                  musicProfiles={musicData ? musicData.profiles : null}
                 />
               )}
               {currentTab === 'messages' && (
@@ -335,6 +385,48 @@ export default function PageDepartement() {
                   messages={messages}
                   canPost={canPost}
                   onRefresh={reloadMessages}
+                />
+              )}
+              {currentTab === 'music_planning' && musicData && (
+                <MusicPlanningTab
+                  musicData={musicData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={musicData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadMusicData()}
+                />
+              )}
+              {currentTab === 'music_rehearsals' && musicData && (
+                <MusicRehearsalsTab
+                  musicData={musicData}
+                  isResponsable={isResponsable || canManage}
+                  colors={colors}
+                  onRefresh={() => loadMusicData()}
+                />
+              )}
+              {currentTab === 'music_setlists' && musicData && (
+                <MusicSetlistsTab
+                  musicData={musicData}
+                  isResponsable={isResponsable || canManage}
+                  colors={colors}
+                  onRefresh={() => loadMusicData()}
+                />
+              )}
+              {currentTab === 'music_repertoire' && musicData && (
+                <MusicRepertoireTab
+                  musicData={musicData}
+                  isResponsable={isResponsable || canManage}
+                  colors={colors}
+                  onRefresh={() => loadMusicData()}
+                />
+              )}
+              {currentTab === 'music_availability' && musicData && (
+                <MusicAvailabilityTab
+                  musicData={musicData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={musicData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadMusicData()}
                 />
               )}
             </motion.div>

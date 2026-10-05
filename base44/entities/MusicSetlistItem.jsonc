@@ -1,0 +1,66 @@
+{
+  "name": "MusicSetlistItem",
+  "type": "object",
+  "properties": {
+    "service_plan_id": {
+      "type": "string",
+      "description": "ID du MusicServicePlan"
+    },
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement (scoping)"
+    },
+    "song_id": {
+      "type": "string",
+      "description": "ID du MusicSong (optionnel si chant non catalogu\u00e9)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du chant (d\u00e9normalis\u00e9 ou saisi manuellement)"
+    },
+    "item_key": {
+      "type": "string",
+      "description": "Tonalit\u00e9 pour ce service (peut diff\u00e9rer de default_key)"
+    },
+    "item_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Ordre dans la setlist"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes musicales courtes"
+    },
+    "lead_user_id": {
+      "type": "string",
+      "description": "ID du membre lead (optionnel)"
+    }
+  },
+  "required": [
+    "service_plan_id",
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

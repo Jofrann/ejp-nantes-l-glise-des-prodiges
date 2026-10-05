@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users } from 'lucide-react';
 import DeptRoleBadge from './DeptRoleBadge';
+import { POSITION_LABELS } from '@/lib/musicConstants';
 
 /**
  * DeptTeamTab — Onglet Équipe du moteur départemental.
@@ -12,7 +13,11 @@ import DeptRoleBadge from './DeptRoleBadge';
  * Un simple serviteur voit les mêmes informations qu'un responsable
  * (les capacités de gestion sont limitées à l'admin via Annuaire).
  */
-export default function DeptTeamTab({ members, colors }) {
+export default function DeptTeamTab({ members, colors, musicProfiles = null }) {
+  const profileMap = {};
+  if (musicProfiles) {
+    musicProfiles.forEach(p => { if (p.user_id) profileMap[p.user_id] = p; });
+  }
   if (members.length === 0) {
     return (
       <div className="text-center py-12">
@@ -57,6 +62,15 @@ export default function DeptTeamTab({ members, colors }) {
                 )}
                 {m.note && <span className="text-xs text-muted-foreground truncate">· {m.note}</span>}
               </div>
+              {profileMap[m.user_id]?.positions?.length > 0 && (
+                <div className="flex items-center gap-1 mt-1 flex-wrap">
+                  {profileMap[m.user_id].positions.map(pos => (
+                    <span key={pos} className="text-[10px] px-1.5 py-0.5 rounded border bg-surface text-muted-foreground">
+                      {POSITION_LABELS[pos] || pos}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             <DeptRoleBadge role={m.role_in_dept} />
           </div>

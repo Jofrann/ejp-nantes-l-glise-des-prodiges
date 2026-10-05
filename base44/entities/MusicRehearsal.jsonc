@@ -1,0 +1,76 @@
+{
+  "name": "MusicRehearsal",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Prodiges Musique"
+    },
+    "service_plan_id": {
+      "type": "string",
+      "description": "ID du MusicServicePlan associ\u00e9 (optionnel)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre de la r\u00e9p\u00e9tition"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de la r\u00e9p\u00e9tition"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Heure de d\u00e9but (HH:MM)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Heure de fin (HH:MM)"
+    },
+    "location": {
+      "type": "string",
+      "description": "Lieu de la r\u00e9p\u00e9tition"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes de r\u00e9p\u00e9tition"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "completed",
+        "cancelled"
+      ],
+      "default": "scheduled",
+      "description": "Statut de la r\u00e9p\u00e9tition"
+    }
+  },
+  "required": [
+    "department_id",
+    "title",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
