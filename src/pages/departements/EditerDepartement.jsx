@@ -16,10 +16,14 @@ const COLOR_DOTS = {
 const inputCls = "w-full bg-white border border-border text-foreground placeholder-muted-foreground/60 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary/50";
 
 async function findDepartmentBySlugOrId(slugOrId) {
-  let res = await base44.entities.Department.filter({ id: slugOrId });
+  // Try slug first (safe), then ID (throws if not a valid record ID)
+  let res = await base44.entities.Department.filter({ slug: slugOrId });
   if (res?.[0]) return res[0];
-  res = await base44.entities.Department.filter({ slug: slugOrId });
-  return res?.[0] || null;
+  try {
+    res = await base44.entities.Department.filter({ id: slugOrId });
+    if (res?.[0]) return res[0];
+  } catch { /* slugOrId is not a valid record ID — ignore */ }
+  return null;
 }
 
 export default function EditerDepartement() {
