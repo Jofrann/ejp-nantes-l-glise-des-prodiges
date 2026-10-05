@@ -4,6 +4,9 @@ import DeptRoleBadge from './DeptRoleBadge';
 import { POSITION_LABELS as MUSIC_POSITION_LABELS } from '@/lib/musicConstants';
 import { POSITION_SHORT as SOUND_POSITION_SHORT } from '@/lib/soundConstants';
 import { PROFILE_FUNCTION_SHORT as PRAYER_FUNCTION_SHORT } from '@/lib/prayerConstants';
+import { PROFILE_FUNCTION_SHORT as WELCOME_FUNCTION_SHORT } from '@/lib/welcomeConstants';
+import { PROFILE_FUNCTION_SHORT as MODERATION_FUNCTION_SHORT } from '@/lib/moderationConstants';
+import { PROFILE_FUNCTION_SHORT as LOGISTICS_FUNCTION_SHORT } from '@/lib/logisticsConstants';
 
 /**
  * DeptTeamTab — Onglet Équipe du moteur départemental.
@@ -15,7 +18,7 @@ import { PROFILE_FUNCTION_SHORT as PRAYER_FUNCTION_SHORT } from '@/lib/prayerCon
  * Un simple serviteur voit les mêmes informations qu'un responsable
  * (les capacités de gestion sont limitées à l'admin via Annuaire).
  */
-export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null, prayerProfiles = null, departmentType = null }) {
+export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null, prayerProfiles = null, welcomeProfiles = null, moderationProfiles = null, logisticsProfiles = null, departmentType = null }) {
   // CLOISONNEMENT : ne construire que la map correspondant au département courant.
   // Les profils spécialisés des autres départements ne sont pas chargés ni affichés.
   const musicProfileMap = {};
@@ -29,6 +32,18 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
   const prayerProfileMap = {};
   if (prayerProfiles && departmentType === 'prayer') {
     prayerProfiles.forEach(p => { if (p.user_id) prayerProfileMap[p.user_id] = p; });
+  }
+  const welcomeProfileMap = {};
+  if (welcomeProfiles && departmentType === 'welcome') {
+    welcomeProfiles.forEach(p => { if (p.user_id) welcomeProfileMap[p.user_id] = p; });
+  }
+  const moderationProfileMap = {};
+  if (moderationProfiles && departmentType === 'moderation') {
+    moderationProfiles.forEach(p => { if (p.user_id) moderationProfileMap[p.user_id] = p; });
+  }
+  const logisticsProfileMap = {};
+  if (logisticsProfiles && departmentType === 'logistics') {
+    logisticsProfiles.forEach(p => { if (p.user_id) logisticsProfileMap[p.user_id] = p; });
   }
   if (members.length === 0) {
     return (
@@ -97,6 +112,33 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
                   {prayerProfileMap[m.user_id].functions.map(fn => (
                     <span key={fn} className="text-[10px] px-1.5 py-0.5 rounded border bg-purple-500/5 text-purple-600 border-purple-400/20">
                       {PRAYER_FUNCTION_SHORT[fn] || fn}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {departmentType === 'welcome' && welcomeProfileMap[m.user_id]?.functions?.length > 0 && (
+                <div className="flex items-center gap-1 mt-1 flex-wrap">
+                  {welcomeProfileMap[m.user_id].functions.map(fn => (
+                    <span key={fn} className="text-[10px] px-1.5 py-0.5 rounded border bg-amber-500/5 text-amber-600 border-amber-400/20">
+                      {WELCOME_FUNCTION_SHORT[fn] || fn}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {departmentType === 'moderation' && moderationProfileMap[m.user_id]?.functions?.length > 0 && (
+                <div className="flex items-center gap-1 mt-1 flex-wrap">
+                  {moderationProfileMap[m.user_id].functions.map(fn => (
+                    <span key={fn} className="text-[10px] px-1.5 py-0.5 rounded border bg-blue-500/5 text-blue-600 border-blue-400/20">
+                      {MODERATION_FUNCTION_SHORT[fn] || fn}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {departmentType === 'logistics' && logisticsProfileMap[m.user_id]?.functions?.length > 0 && (
+                <div className="flex items-center gap-1 mt-1 flex-wrap">
+                  {logisticsProfileMap[m.user_id].functions.map(fn => (
+                    <span key={fn} className="text-[10px] px-1.5 py-0.5 rounded border bg-green-500/5 text-green-600 border-green-400/20">
+                      {LOGISTICS_FUNCTION_SHORT[fn] || fn}
                     </span>
                   ))}
                 </div>

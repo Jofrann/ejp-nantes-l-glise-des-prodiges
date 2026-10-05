@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, AlertCircle,
   Calendar, Music, ListMusic, Library, CalendarCheck,
   SlidersHorizontal, Package, ListChecks, AlertTriangle,
-  Heart, Sparkles
+  Heart, Sparkles, UserCheck, Megaphone
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { isBureauLike, isAccountBlocked } from '@/lib/permissions';
@@ -451,6 +451,9 @@ export default function PageDepartement() {
                 sound_equipment: Package, sound_checklists: ListChecks, sound_incidents: AlertTriangle,
                 prayer_planning: Calendar,
                 prayer_topics: Sparkles, prayer_requests: Lock, prayer_availability: CalendarCheck,
+                welcome_planning: Calendar, welcome_visitors: UserCheck, welcome_integration: Heart,
+                moderation_planning: Calendar, moderation_run: ListChecks, moderation_announcements: Megaphone,
+                logistics_planning: Calendar, logistics_tasks: ListChecks, logistics_needs: Package, logistics_equipment: Package,
               };
               const Icon = iconMap[modId] || MessageCircle;
               const active = currentTab === modId;
@@ -526,6 +529,33 @@ export default function PageDepartement() {
                       onNavigateTab={(tab) => setActiveTab(tab)}
                     />
                   ) : null}
+                  {welcomeData && WELCOME_TABS.some(t => enabledModules.includes(t)) ? (
+                    <WelcomeOverviewTab
+                      welcomeData={welcomeData}
+                      isResponsable={isResponsable || canManage}
+                      currentUserId={welcomeData.current_user_id}
+                      colors={colors}
+                      onNavigateTab={(tab) => setActiveTab(tab)}
+                    />
+                  ) : null}
+                  {moderationData && MODERATION_TABS.some(t => enabledModules.includes(t)) ? (
+                    <ModerationOverviewTab
+                      moderationData={moderationData}
+                      isResponsable={isResponsable || canManage}
+                      currentUserId={moderationData.current_user_id}
+                      colors={colors}
+                      onNavigateTab={(tab) => setActiveTab(tab)}
+                    />
+                  ) : null}
+                  {logisticsData && LOGISTICS_TABS.some(t => enabledModules.includes(t)) ? (
+                    <LogisticsOverviewTab
+                      logisticsData={logisticsData}
+                      isResponsable={isResponsable || canManage}
+                      currentUserId={logisticsData.current_user_id}
+                      colors={colors}
+                      onNavigateTab={(tab) => setActiveTab(tab)}
+                    />
+                  ) : null}
                   <DeptOverviewTab
                     dept={dept}
                     members={members}
@@ -542,10 +572,16 @@ export default function PageDepartement() {
                   musicProfiles={musicData ? musicData.profiles : null}
                   soundProfiles={soundData ? soundData.profiles : null}
                   prayerProfiles={prayerData ? prayerData.profiles : null}
+                  welcomeProfiles={welcomeData ? welcomeData.profiles : null}
+                  moderationProfiles={moderationData ? moderationData.profiles : null}
+                  logisticsProfiles={logisticsData ? logisticsData.profiles : null}
                   departmentType={
                     MUSIC_TABS.some(t => enabledModules.includes(t)) ? 'music' :
                     SOUND_TABS.some(t => enabledModules.includes(t)) ? 'sound' :
-                    PRAYER_TABS.some(t => enabledModules.includes(t)) ? 'prayer' : null
+                    PRAYER_TABS.some(t => enabledModules.includes(t)) ? 'prayer' :
+                    WELCOME_TABS.some(t => enabledModules.includes(t)) ? 'welcome' :
+                    MODERATION_TABS.some(t => enabledModules.includes(t)) ? 'moderation' :
+                    LOGISTICS_TABS.some(t => enabledModules.includes(t)) ? 'logistics' : null
                   }
                 />
               )}
@@ -676,6 +712,96 @@ export default function PageDepartement() {
                   currentUserId={prayerData.current_user_id}
                   colors={colors}
                   onRefresh={() => loadPrayerData()}
+                />
+              )}
+              {currentTab === 'welcome_planning' && welcomeData && (
+                <WelcomePlanningTab
+                  welcomeData={welcomeData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={welcomeData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadWelcomeData()}
+                />
+              )}
+              {currentTab === 'welcome_visitors' && welcomeData && (
+                <WelcomeVisitorsTab
+                  welcomeData={welcomeData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={welcomeData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadWelcomeData()}
+                />
+              )}
+              {currentTab === 'welcome_integration' && welcomeData && (
+                <WelcomeIntegrationTab
+                  welcomeData={welcomeData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={welcomeData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadWelcomeData()}
+                />
+              )}
+              {currentTab === 'moderation_planning' && moderationData && (
+                <ModerationPlanningTab
+                  moderationData={moderationData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={moderationData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadModerationData()}
+                />
+              )}
+              {currentTab === 'moderation_run' && moderationData && (
+                <ModerationRunTab
+                  moderationData={moderationData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={moderationData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadModerationData()}
+                />
+              )}
+              {currentTab === 'moderation_announcements' && moderationData && (
+                <ModerationAnnouncementsTab
+                  moderationData={moderationData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={moderationData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadModerationData()}
+                />
+              )}
+              {currentTab === 'logistics_planning' && logisticsData && (
+                <LogisticsPlanningTab
+                  logisticsData={logisticsData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={logisticsData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadLogisticsData()}
+                />
+              )}
+              {currentTab === 'logistics_tasks' && logisticsData && (
+                <LogisticsTasksTab
+                  logisticsData={logisticsData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={logisticsData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadLogisticsData()}
+                />
+              )}
+              {currentTab === 'logistics_needs' && logisticsData && (
+                <LogisticsNeedsTab
+                  logisticsData={logisticsData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={logisticsData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadLogisticsData()}
+                />
+              )}
+              {currentTab === 'logistics_equipment' && logisticsData && (
+                <LogisticsEquipmentTab
+                  logisticsData={logisticsData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={logisticsData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadLogisticsData()}
                 />
               )}
             </motion.div>
