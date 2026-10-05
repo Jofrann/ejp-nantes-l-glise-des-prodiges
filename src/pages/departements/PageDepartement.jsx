@@ -34,12 +34,28 @@ import PrayerPlanningTab from '@/components/departements/prayer/PrayerPlanningTa
 import PrayerTopicsTab from '@/components/departements/prayer/PrayerTopicsTab';
 import PrayerRequestsTab from '@/components/departements/prayer/PrayerRequestsTab';
 import PrayerAvailabilityTab from '@/components/departements/prayer/PrayerAvailabilityTab';
+import WelcomeOverviewTab from '@/components/departements/welcome/WelcomeOverviewTab';
+import WelcomePlanningTab from '@/components/departements/welcome/WelcomePlanningTab';
+import WelcomeVisitorsTab from '@/components/departements/welcome/WelcomeVisitorsTab';
+import WelcomeIntegrationTab from '@/components/departements/welcome/WelcomeIntegrationTab';
+import ModerationOverviewTab from '@/components/departements/moderation/ModerationOverviewTab';
+import ModerationPlanningTab from '@/components/departements/moderation/ModerationPlanningTab';
+import ModerationRunTab from '@/components/departements/moderation/ModerationRunTab';
+import ModerationAnnouncementsTab from '@/components/departements/moderation/ModerationAnnouncementsTab';
+import LogisticsOverviewTab from '@/components/departements/logistics/LogisticsOverviewTab';
+import LogisticsPlanningTab from '@/components/departements/logistics/LogisticsPlanningTab';
+import LogisticsTasksTab from '@/components/departements/logistics/LogisticsTasksTab';
+import LogisticsNeedsTab from '@/components/departements/logistics/LogisticsNeedsTab';
+import LogisticsEquipmentTab from '@/components/departements/logistics/LogisticsEquipmentTab';
 import { getEnabledModules, MODULE_META } from '@/lib/departmentModules';
 import { POSITION_LABELS } from '@/lib/musicConstants';
 
 const MUSIC_TABS = ['music_planning', 'music_rehearsals', 'music_setlists', 'music_repertoire', 'music_availability'];
 const SOUND_TABS = ['sound_planning', 'sound_positions', 'sound_equipment', 'sound_checklists', 'sound_incidents'];
 const PRAYER_TABS = ['prayer_planning', 'prayer_topics', 'prayer_requests', 'prayer_availability'];
+const WELCOME_TABS = ['welcome_planning', 'welcome_visitors', 'welcome_integration'];
+const MODERATION_TABS = ['moderation_planning', 'moderation_run', 'moderation_announcements'];
+const LOGISTICS_TABS = ['logistics_planning', 'logistics_tasks', 'logistics_needs', 'logistics_equipment'];
 
 const COLOR_MAP = {
   amber:  { border: 'border-secondary/20', text: 'text-secondary', bg: 'bg-secondary/10', glow: 'bg-secondary/5' },
@@ -87,6 +103,12 @@ export default function PageDepartement() {
   const [soundLoading, setSoundLoading] = useState(false);
   const [prayerData, setPrayerData] = useState(null);
   const [prayerLoading, setPrayerLoading] = useState(false);
+  const [welcomeData, setWelcomeData] = useState(null);
+  const [welcomeLoading, setWelcomeLoading] = useState(false);
+  const [moderationData, setModerationData] = useState(null);
+  const [moderationLoading, setModerationLoading] = useState(false);
+  const [logisticsData, setLogisticsData] = useState(null);
+  const [logisticsLoading, setLogisticsLoading] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -150,6 +172,24 @@ export default function PageDepartement() {
       const hasPrayer = modules.some(m => PRAYER_TABS.includes(m));
       if (hasPrayer) {
         loadPrayerData(res.department.slug);
+      }
+
+      // Charger les données Accueil si le département a des modules accueil
+      const hasWelcome = modules.some(m => WELCOME_TABS.includes(m));
+      if (hasWelcome) {
+        loadWelcomeData(res.department.slug);
+      }
+
+      // Charger les données Modération si le département a des modules modération
+      const hasModeration = modules.some(m => MODERATION_TABS.includes(m));
+      if (hasModeration) {
+        loadModerationData(res.department.slug);
+      }
+
+      // Charger les données Intendance si le département a des modules logistique
+      const hasLogistics = modules.some(m => LOGISTICS_TABS.includes(m));
+      if (hasLogistics) {
+        loadLogisticsData(res.department.slug);
       }
 
       // Messages non lus
@@ -226,6 +266,48 @@ export default function PageDepartement() {
       // Silencieux — les données MPI sont optionnelles
     } finally {
       setPrayerLoading(false);
+    }
+  };
+
+  const loadWelcomeData = async (slug) => {
+    setWelcomeLoading(true);
+    try {
+      const res = (await base44.functions.invoke('getWelcomeData', { department_slug: slug || (dept && dept.slug) || slugOrId })).data;
+      if (!res.access_denied && !res.not_found) {
+        setWelcomeData(res);
+      }
+    } catch (e) {
+      // Silencieux — les données Accueil sont optionnelles
+    } finally {
+      setWelcomeLoading(false);
+    }
+  };
+
+  const loadModerationData = async (slug) => {
+    setModerationLoading(true);
+    try {
+      const res = (await base44.functions.invoke('getModerationData', { department_slug: slug || (dept && dept.slug) || slugOrId })).data;
+      if (!res.access_denied && !res.not_found) {
+        setModerationData(res);
+      }
+    } catch (e) {
+      // Silencieux — les données Modération sont optionnelles
+    } finally {
+      setModerationLoading(false);
+    }
+  };
+
+  const loadLogisticsData = async (slug) => {
+    setLogisticsLoading(true);
+    try {
+      const res = (await base44.functions.invoke('getLogisticsData', { department_slug: slug || (dept && dept.slug) || slugOrId })).data;
+      if (!res.access_denied && !res.not_found) {
+        setLogisticsData(res);
+      }
+    } catch (e) {
+      // Silencieux — les données Intendance sont optionnelles
+    } finally {
+      setLogisticsLoading(false);
     }
   };
 
