@@ -151,6 +151,12 @@ export const CHECKLIST_RUN_STATUS_LABELS = {
   cancelled: 'Annulée',
 };
 
+export const CHECKLIST_RUN_STATUS_COLORS = {
+  in_progress: 'bg-amber-500/10 text-amber-600 border-amber-400/20',
+  completed: 'bg-green-500/10 text-green-600 border-green-400/20',
+  cancelled: 'bg-surface text-muted-foreground border-border',
+};
+
 export function formatDate(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
