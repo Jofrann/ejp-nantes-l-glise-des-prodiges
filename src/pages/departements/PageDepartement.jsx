@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, MessageCircle, Users, Lock, Target, Clock, Award, ListChecks, Package } from 'lucide-react';
-import { isBureauLike } from '@/lib/permissions';
-import DeptHero from '@/components/departements/DeptHero';
-import ReferentGrid from '@/components/departements/ReferentGrid';
-import MembresGrid from '@/components/departements/MembresGrid';
+import {
+  Settings, MessageCircle, Lock, Loader2, ArrowLeft,
+  LayoutDashboard, Users, AlertCircle
+} from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { isBureauLike, isAccountBlocked } from '@/lib/permissions';
+import DeptIcon from '@/components/departements/DeptIcon';
+import DeptRoleBadge from '@/components/departements/DeptRoleBadge';
+import DeptOverviewTab from '@/components/departements/DeptOverviewTab';
+import DeptTeamTab from '@/components/departements/DeptTeamTab';
+import DeptMessagesTab from '@/components/departements/DeptMessagesTab';
 import AjouterMembreModal from '@/components/departements/AjouterMembreModal';
 import DeptChat from '@/components/departements/DeptChat';
-import DeptIcon from '@/components/departements/DeptIcon';
-import GestionMembres from '@/components/departements/GestionMembres';
-import MissionCard from '@/components/departements/MissionCard';
-import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
-
-async function findDepartmentBySlugOrId(slugOrId) {
-  let res = await base44.entities.Department.filter({ id: slugOrId });
-  if (res?.[0]) return res[0];
-  res = await base44.entities.Department.filter({ slug: slugOrId });
-  return res?.[0] || null;
-}
+import { getEnabledModules, MODULE_META } from '@/lib/departmentModules';
 
 const COLOR_MAP = {
   amber:  { border: 'border-secondary/20', text: 'text-secondary', bg: 'bg-secondary/10', glow: 'bg-secondary/5' },
@@ -30,98 +25,175 @@ const COLOR_MAP = {
   indigo: { border: 'border-indigo-400/20',text: 'text-indigo-600',bg: 'bg-indigo-500/10', glow: 'bg-indigo-500/5'},
 };
 
+/**
+ * PageDepartement — Moteur commun pour afficher un département.
+ *
+ * Architecture :
+ *   1. Utilisateur courant
+ *   2. Department par slug (via getDepartmentData — backend guardian)
+ *   3. Vérification d'accès backend (403 si non membre, sauf admin)
+ *   4. Rôle effectif + permissions
+ *   5. Configuration des modules (departmentModules.js)
+ *   6. Données autorisées (membres, messages)
+ *
+ * UN MOTEUR COMMUN — pas de page par département.
+ * Les modules sont activés selon la configuration centralisée.
+ */
 export default function PageDepartement() {
   const { slug: slugOrId } = useParams();
   const [dept, setDept] = useState(null);
-  const [resolvedId, setResolvedId] = useState(null);
   const [members, setMembers] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [roleInDept, setRoleInDept] = useState(null);
+  const [canManage, setCanManage] = useState(false);
+  const [isResponsable, setIsResponsable] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [accessDenied, setAccessDenied] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [lastSeenDate, setLastSeenDate] = useState(null);
 
   const load = async () => {
-    const u = await base44.auth.me();
-    setUser(u);
+    setLoading(true);
+    setError(null);
+    setAccessDenied(false);
+    setNotFound(false);
+
     try {
-      const res = (await base44.functions.invoke('getDepartmentData', { department_slug: slugOrId })).data;
-      if (res.access_denied) {
-        setDept({ __denied: true });
+      const u = await base44.auth.me();
+      setUser(u);
+
+      // Compte bloqué — aucun accès
+      if (isAccountBlocked(u)) {
+        setAccessDenied(true);
         setLoading(false);
         return;
       }
+
+      const res = (await base44.functions.invoke('getDepartmentData', { department_slug: slugOrId })).data;
+
+      if (res.access_denied) {
+        setAccessDenied(true);
+        setLoading(false);
+        return;
+      }
+
+      if (res.error && res.error.includes('introuvable')) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+
+      if (res.error) {
+        setError(res.error);
+        setLoading(false);
+        return;
+      }
+
       setDept(res.department);
-      setResolvedId(res.department.id);
       setMembers(res.members || []);
+      setMessages(res.messages || []);
+      setRoleInDept(res.role_in_dept || 'membre');
+      setCanManage(res.can_manage || false);
+      setIsResponsable(res.is_responsable || false);
       setLoading(false);
 
-      // Messages non lus (renvoyés par le backend)
+      // Messages non lus
       const deptId = res.department.id;
       const key = `dept_chat_seen_${deptId}`;
       const seen = localStorage.getItem(key);
-      setLastSeenDate(seen);
       const msgs = res.messages || [];
-      if (!seen) { setUnreadCount(msgs.length); return; }
-      const count = msgs.filter(m => new Date(m.created_date) > new Date(seen)).length;
-      setUnreadCount(count);
+      if (!seen) {
+        setUnreadCount(msgs.length);
+      } else {
+        setUnreadCount(msgs.filter(m => new Date(m.created_date) > new Date(seen)).length);
+      }
     } catch (e) {
+      setError('Une erreur est survenue lors du chargement.');
       setLoading(false);
     }
   };
 
   useEffect(() => { load(); }, [slugOrId]);
 
-  const reloadMembers = async () => {
-    if (!resolvedId) return;
+  const reloadMessages = async () => {
     try {
       const res = (await base44.functions.invoke('getDepartmentData', { department_slug: slugOrId })).data;
-      if (!res.access_denied) setMembers(res.members || []);
+      if (!res.access_denied) {
+        setMembers(res.members || []);
+        setMessages(res.messages || []);
+      }
     } catch (e) {}
   };
 
   const openChat = () => {
     setShowChat(true);
     setUnreadCount(0);
-    const key = `dept_chat_seen_${resolvedId}`;
-    localStorage.setItem(key, new Date().toISOString());
+    if (dept) {
+      localStorage.setItem(`dept_chat_seen_${dept.id}`, new Date().toISOString());
+    }
   };
 
-  if (loading) return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="w-7 h-7 border-2 border-border border-t-secondary rounded-full animate-spin" />
-    </div>
-  );
+  // === États ===
 
-  if (!dept) return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center text-muted-foreground">
-      <p className="mb-4">Département introuvable.</p>
-      <Link to="/app/departements" className="text-secondary text-sm">← Retour</Link>
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-secondary animate-spin" />
+      </div>
+    );
+  }
+
+  if (notFound) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-surface border border-border flex items-center justify-center mb-5">
+          <AlertCircle className="w-6 h-6 text-muted-foreground" />
+        </div>
+        <p className="text-sm font-semibold text-foreground mb-1">Département introuvable</p>
+        <p className="text-xs text-muted-foreground mb-5 max-w-xs">Ce département n'existe pas ou n'est plus disponible.</p>
+        <Link to="/app/service" className="text-secondary text-sm">← Retour à Mon Service</Link>
+      </div>
+    );
+  }
+
+  if (accessDenied) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-danger/10 border border-danger/20 flex items-center justify-center mb-5">
+          <Lock className="w-6 h-6 text-danger/60" />
+        </div>
+        <p className="text-sm font-semibold text-foreground mb-1">Accès restreint</p>
+        <p className="text-xs text-muted-foreground mb-5 max-w-xs">Tu n'as pas accès à cet espace. Ce département nécessite une appartenance active.</p>
+        <Link to="/app/service" className="text-secondary text-sm">← Retour à Mon Service</Link>
+      </div>
+    );
+  }
+
+  if (error || !dept) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-surface border border-border flex items-center justify-center mb-5">
+          <AlertCircle className="w-6 h-6 text-muted-foreground" />
+        </div>
+        <p className="text-sm font-semibold text-foreground mb-1">Une erreur est survenue</p>
+        <p className="text-xs text-muted-foreground mb-5">{error || 'Impossible de charger ce département.'}</p>
+        <Link to="/app/service" className="text-secondary text-sm">← Retour à Mon Service</Link>
+      </div>
+    );
+  }
+
+  // === Page principale ===
 
   const colors = COLOR_MAP[dept.color] || COLOR_MAP.amber;
-  const referents = members.filter(m => m.role_in_dept === 'referent');
-  const simpleMembers = members.filter(m => m.role_in_dept === 'membre');
+  const enabledModules = getEnabledModules(dept.slug);
+  const currentTab = enabledModules.includes(activeTab) ? activeTab : enabledModules[0];
   const isAdmin = isBureauLike(user);
-  const isReferentOfDept = members.some(m => m.user_id === user?.id && m.role_in_dept === 'referent');
-  const canManage = isAdmin || isReferentOfDept;
-  const existingUserIds = members.map(m => m.user_id).filter(Boolean);
-  const id = resolvedId;
-
-  // Protection d'accès : un serviteur ne peut entrer que dans un département auquel il est rattaché
-  const isMember = members.some(m => m.user_id === user?.id);
-  if (!isAdmin && !isMember) return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center text-muted-foreground px-5 text-center">
-      <div className="w-14 h-14 rounded-2xl bg-danger/10 border border-danger/20 flex items-center justify-center mb-5">
-        <Lock className="w-6 h-6 text-danger/60" />
-      </div>
-      <p className="text-sm font-semibold text-foreground mb-1">Accès restreint</p>
-      <p className="text-xs text-muted-foreground mb-5 max-w-xs">Tu ne fais pas partie de ce département. Contacte un responsable pour le rejoindre.</p>
-      <Link to="/app/departements" className="text-secondary text-sm">← Retour aux départements</Link>
-    </div>
-  );
+  const canPost = isAdmin || isResponsable;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -130,32 +202,34 @@ export default function PageDepartement() {
         <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full ${colors.glow} blur-[140px] opacity-50`} />
       </div>
 
-      {/* Header fixe (uniquement sur cette page) */}
+      {/* Header fixe */}
       <div className="sticky top-14 z-30 bg-card/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-2xl mx-auto px-4">
-          {/* Fil d'Ariane */}
-          <PageBreadcrumb
-            items={[
-              { label: 'Tableau de bord', to: '/app' },
-              { label: 'Départements', to: '/app/departements' },
-              { label: dept.name, to: `/app/departements/${dept.slug || dept.id}` },
-            ]}
-            backTo="/app/departements"
-            backLabel="← Départements"
-            rightAction={
-              <Link to="/app" className="text-xs text-muted-foreground hover:text-secondary transition-colors">
-                Tableau de bord
-              </Link>
-            }
-          />
-          {/* Ligne identité + actions */}
+        <div className="max-w-3xl mx-auto px-4">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 py-2">
+            <Link to="/app/service" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-3.5 h-3.5" /> Mon Service
+            </Link>
+            <span className="text-muted-foreground/30">·</span>
+            <span className="text-xs text-muted-foreground truncate">{dept.name}</span>
+          </div>
+
+          {/* Identité département */}
           <div className="py-2.5 flex items-center gap-3">
-            <div className={`w-8 h-8 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0`}>
-              <DeptIcon name={dept.icon} className={`w-4 h-4 ${colors.text}`} />
+            <div className={`w-9 h-9 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0`}>
+              <DeptIcon name={dept.icon} className={`w-4.5 h-4.5 ${colors.text}`} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-foreground truncate">{dept.name}</p>
-              <p className="text-xs text-muted-foreground">{members.length} membre{members.length > 1 ? 's' : ''}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-semibold text-foreground truncate">{dept.name}</p>
+                {dept.short_name && (
+                  <span className="text-[10px] text-muted-foreground bg-surface border border-border rounded px-1.5 py-0.5">{dept.short_name}</span>
+                )}
+              </div>
+              <div className="flex items-center gap-2 mt-0.5">
+                <DeptRoleBadge role={roleInDept} />
+                <span className="text-xs text-muted-foreground">{members.length} membre{members.length > 1 ? 's' : ''}</span>
+              </div>
             </div>
 
             {/* Bouton tchat */}
@@ -182,90 +256,113 @@ export default function PageDepartement() {
               </Link>
             )}
           </div>
+
+          {/* Navigation par onglets */}
+          <div className="flex items-center gap-1 overflow-x-auto scrollbar-none -mx-1 px-1 pb-2">
+            {enabledModules.map(modId => {
+              const meta = MODULE_META[modId];
+              if (!meta) return null;
+              const Icon = modId === 'overview' ? LayoutDashboard : modId === 'team' ? Users : MessageCircle;
+              const active = currentTab === modId;
+              return (
+                <button
+                  key={modId}
+                  onClick={() => setActiveTab(modId)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                    active
+                      ? `${colors.bg} ${colors.text} border ${colors.border}`
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {meta.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       {/* Contenu principal */}
-      <div className="relative max-w-2xl mx-auto pb-20">
-        <div className="px-4 pt-4">
-          <DeptHero
-            dept={dept}
-            colors={colors}
-            memberCount={members.length}
-            referentCount={referents.length}
-            isAdmin={canManage}
-            onAddClick={() => setShowAddModal(true)}
-          />
-        </div>
-
-        <div className="px-5">
-          {/* Architecture de mission */}
-          {(dept.attente_superieure || dept.rythme_travail || dept.critere_excellence || dept.responsabilites || dept.livrables) && (
-            <div className="mb-8">
-              <p className="text-xs text-muted-foreground/60 uppercase tracking-widest mb-4">Espace de mission</p>
-              <div className="space-y-3">
-                {dept.attente_superieure && (
-                  <MissionCard icon={Target} label="Attente supérieure" text={dept.attente_superieure} colors={colors} />
-                )}
-                {dept.rythme_travail && (
-                  <MissionCard icon={Clock} label="Rythme de travail" text={dept.rythme_travail} colors={colors} />
-                )}
-                {dept.critere_excellence && (
-                  <MissionCard icon={Award} label="Critère d'excellence" text={dept.critere_excellence} colors={colors} />
-                )}
-                {dept.responsabilites && (
-                  <MissionCard icon={ListChecks} label="Responsabilités" text={dept.responsabilites} colors={colors} />
-                )}
-                {dept.livrables && (
-                  <MissionCard icon={Package} label="Livrables attendus" text={dept.livrables} colors={colors} />
-                )}
-              </div>
+      <div className="relative max-w-3xl mx-auto pb-20">
+        <div className="px-4 pt-6">
+          {/* Bannière */}
+          {dept.cover_url && (
+            <div className="h-32 md:h-40 overflow-hidden rounded-2xl mb-6">
+              <img src={dept.cover_url} alt={dept.name} className="w-full h-full object-cover" />
             </div>
           )}
 
-          <ReferentGrid
-            referents={referents}
-            colors={colors}
-            isAdmin={canManage}
-            onDelete={reloadMembers}
-          />
-
-          {referents.length > 0 && (
-            <div className="border-t border-border my-6" />
+          {/* Description */}
+          {dept.description && (
+            <p className="text-sm text-muted-foreground leading-relaxed mb-6">{dept.description}</p>
           )}
 
-          <MembresGrid
-            membres={simpleMembers}
-            colors={colors}
-            isAdmin={canManage}
-            onDelete={reloadMembers}
-          />
+          {/* Contenu de l'onglet actif */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentTab}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.15 }}
+            >
+              {currentTab === 'overview' && (
+                <DeptOverviewTab
+                  dept={dept}
+                  members={members}
+                  roleInDept={roleInDept}
+                  canManage={canManage}
+                  colors={colors}
+                />
+              )}
+              {currentTab === 'team' && (
+                <DeptTeamTab
+                  members={members}
+                  colors={colors}
+                />
+              )}
+              {currentTab === 'messages' && (
+                <DeptMessagesTab
+                  dept={dept}
+                  messages={messages}
+                  canPost={canPost}
+                  onRefresh={reloadMessages}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
 
-          {/* Section gestion admin */}
+          {/* Section administration (admin uniquement) */}
           {isAdmin && (
-            <div className="mt-10">
-              <div className="border-t border-border mb-6" />
-              <p className="text-xs text-muted-foreground/60 uppercase tracking-widest mb-3">Administration</p>
-              <GestionMembres
-                members={members}
-                colors={colors}
-                departmentId={id}
-                existingUserIds={existingUserIds}
-                onReload={reloadMembers}
-                onOpenAdd={() => setShowAddModal(true)}
-              />
+            <div className="mt-10 pt-6 border-t border-border">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">Administration</p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setShowAddModal(true)}
+                  className={`flex items-center gap-1.5 text-xs ${colors.bg} border ${colors.border} ${colors.text} px-3 py-2 rounded-xl hover:brightness-110 transition-all`}
+                >
+                  <Users className="w-3.5 h-3.5" /> Ajouter un membre
+                </button>
+                <Link
+                  to={`/app/departements/${dept.slug || dept.id}/parametres`}
+                  className="flex items-center gap-1.5 text-xs bg-surface border border-border text-muted-foreground hover:text-foreground px-3 py-2 rounded-xl transition-all"
+                >
+                  <Settings className="w-3.5 h-3.5" /> Paramètres
+                </Link>
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Modal ajout membre (vrais utilisateurs) */}
+      {/* Modal ajout membre (admin uniquement) */}
       {showAddModal && (
         <AjouterMembreModal
-          departmentId={id}
-          existingUserIds={existingUserIds}
+          departmentId={dept.id}
+          existingUserIds={members.map(m => m.user_id).filter(Boolean)}
           onClose={() => setShowAddModal(false)}
-          onAdded={() => { setShowAddModal(false); reloadMembers(); }}
+          onAdded={() => { setShowAddModal(false); reloadMessages(); }}
         />
       )}
 

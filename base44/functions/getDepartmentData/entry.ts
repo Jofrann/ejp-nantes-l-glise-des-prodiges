@@ -67,13 +67,20 @@ export default async function(req: Request): Promise<Response> {
 
     // 3. Déterminer le rôle dans le département
     const roleInDept = admin ? 'admin' : (membership?.role_in_dept || 'membre');
-    const canManage = admin || ['responsable', 'referent', 'coordinateur'].includes(roleInDept);
+    // can_manage = admin uniquement (gestion des membres, paramètres)
+    // Les responsables ne reçoivent PAS les droits admin dans ce lot.
+    const canManage = admin;
+    // is_responsable = admin ou rôle de direction dans le département (peut poster des messages)
+    const isResponsable = admin || ['responsable', 'referent', 'coordinateur'].includes(roleInDept);
 
-    // 4. Charger les données autorisées
-    const members = await base44.asServiceRole.entities.DepartmentMember.filter({
+    // 4. Charger les membres actifs
+    // Filtrer par status='active' OU is_active=true (legacy), exclure archived/suspended/inactive
+    const allMembers = await base44.asServiceRole.entities.DepartmentMember.filter({
       department_id: department.id,
-      is_active: true,
     });
+    const members = (allMembers || []).filter((m: any) =>
+      m.status === 'active' || (!m.status && m.is_active === true)
+    );
 
     const messages = await base44.asServiceRole.entities.DeptMessage.filter({
       department_id: department.id,
@@ -84,6 +91,7 @@ export default async function(req: Request): Promise<Response> {
       department,
       role_in_dept: roleInDept,
       can_manage: canManage,
+      is_responsable: isResponsable,
       members: members || [],
       messages: messages || [],
     });

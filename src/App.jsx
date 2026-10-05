@@ -117,8 +117,10 @@ const AuthenticatedApp = () => {
           <Route path="/app" element={<AppDashboard />} />
           <Route path="/app/service" element={<MonService />} />
           <Route path="/app/profil" element={<MonProfil />} />
-          <Route path="/app/departements" element={<Navigate to="/app/responsabilites" replace />} />
-          <Route path="/app/departements/fij" element={<Navigate to="/app/responsabilites" replace />} />
+          <Route path="/app/departements" element={<Navigate to="/app/service" replace />} />
+          {/* Lot 3 : /app/departements/fij affiche maintenant la page générique via DepartmentEntry
+              (avec lien vers l'espace spécialisé). Les sous-routes FIJ opérationnelles
+              (/app/departements/fij/pilote, /coordination, etc.) conservent leurs redirections. */}
 
           {/* === Espace Pilote FIJ (sous /app/responsabilites/fij-pilote) === */}
           <Route path="/app/responsabilites/fij-pilote" element={<FijPiloteHome />} />
@@ -233,11 +235,12 @@ const AuthenticatedApp = () => {
           <Route path="/app/pilotage/alertes" element={<Navigate to="/app/supervision" replace />} />
           <Route path="/app/pilotage/rapports" element={<Navigate to="/app/supervision" replace />} />
 
-          {/* === Redirections anciennes routes vers responsabilités === */}
-          <Route path="/app/responsabilites/accueil" element={<ResponsabilitePlaceholder title="Accueil" description="Planning, visiteurs, reporting dimanche" icon={Users} items={['Planning accueil', 'Présences serviteurs', 'Visiteurs', 'Fiches pratiques', 'Reporting dimanche']} />} />
-          <Route path="/app/responsabilites/communication" element={<ResponsabilitePlaceholder title="Communication" description="Demandes visuelles, calendrier éditorial" icon={SettingsIcon} items={['Demandes visuelles', 'Calendrier éditorial', 'Médias', 'Publications', 'Validations']} />} />
-          <Route path="/app/responsabilites/musique" element={<ResponsabilitePlaceholder title="Prodiges Musique" description="Planning, setlists, répétitions" icon={Music} items={['Planning musique', 'Setlists', 'Répétitions', 'Chants', 'Reporting']} />} />
-          <Route path="/app/responsabilites/vie-academique" element={<ResponsabilitePlaceholder title="Vie Académique" description="Accompagnement étudiants, stages" icon={GraduationCap} items={['Suivi étudiants', 'Recherche stages', 'Accompagnement', 'CV / orientation', 'Besoins']} />} />
+          {/* === Lot 3 : Redirections placeholders vers moteur départemental === */}
+          <Route path="/app/responsabilites/accueil" element={<Navigate to="/app/departements/accueil" replace />} />
+          <Route path="/app/responsabilites/communication" element={<Navigate to="/app/departements/communication" replace />} />
+          <Route path="/app/responsabilites/musique" element={<Navigate to="/app/departements/prodiges-musique" replace />} />
+          {/* Vie Académique : département inactif — redirection vers Mon Service */}
+          <Route path="/app/responsabilites/vie-academique" element={<Navigate to="/app/service" replace />} />
 
           <Route path="/app/departements/:slug" element={<DepartmentEntry />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />

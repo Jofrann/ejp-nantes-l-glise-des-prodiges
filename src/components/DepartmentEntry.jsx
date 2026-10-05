@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { isFijDepartment } from '@/lib/departmentRouting';
+import { getRedirectForSlug } from '@/lib/departmentModules';
 import PageDepartement from '@/pages/departements/PageDepartement';
 
 /**
- * DepartmentEntry — protection routeur.
+ * DepartmentEntry — Protection routeur.
  * Charge le département par slug, puis :
- *  - si FIJ → redirige vers /app/departements/fij
- *  - sinon → affiche la page département standard
+ *  - si le département a une redirection configurée (pilote-fij, coordination-fij) → redirige
+ *  - sinon → affiche la page département standard (moteur commun)
  *
- * Ainsi, même si un lien ancien subsiste, FIJ ne tombera plus dans la mauvaise page.
+ * FIJ (slug: fij) affiche sa page générique avec un lien vers l'espace spécialisé.
  */
 export default function DepartmentEntry() {
   const { slug } = useParams();
@@ -19,12 +19,13 @@ export default function DepartmentEntry() {
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
-    // Recherche par slug, puis par ID (certains départements n'ont pas de slug défini)
+    let found = false;
     base44.entities.Department.filter({ slug }).then((results) => {
-      if (results?.[0]) { setDept(results[0]); setLoading(false); return; }
-      return base44.entities.Department.filter({ id: slug });
+      if (results?.[0]) { setDept(results[0]); found = true; }
+      if (!found) return base44.entities.Department.filter({ id: slug });
+      return null;
     }).then((results) => {
-      setDept(results?.[0] || null);
+      if (!found && results?.[0]) setDept(results[0]);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, [slug]);
@@ -37,8 +38,9 @@ export default function DepartmentEntry() {
     );
   }
 
-  if (dept && isFijDepartment(dept)) {
-    return <Navigate to="/app/responsabilites" replace />;
+  // Redirection vers espace spécialisé (pilote-fij, coordination-fij)
+  if (dept && getRedirectForSlug(dept.slug)) {
+    return <Navigate to={getRedirectForSlug(dept.slug)} replace />;
   }
 
   return <PageDepartement />;

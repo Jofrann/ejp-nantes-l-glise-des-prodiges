@@ -1,51 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-  LayoutDashboard, Building2, MessageSquare, Calendar, CheckCircle,
-  Users, ChevronRight, Loader2, MapPin, Clock, AlertCircle, Target,
-  FileText, Video, BookOpen, ArrowRight
+  Building2, ChevronRight, Loader2, Heart, Compass, ArrowRight,
+  Calendar, AlertCircle, Briefcase, Users
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { hasRole, isBureauLike } from '@/lib/permissions';
+import { isFijPilot, isFijCoordination, getInternalIdentifier, getDisplayName, isAccountBlocked } from '@/lib/permissions';
+import { loadCoordFijContext } from '@/lib/coordFijUtils';
+import { isHiddenFromService } from '@/lib/departmentModules';
 import PageHeader from '@/components/star/PageHeader';
 
-const TABS = [
-  { id: 'overview', label: 'Vue d\'ensemble', icon: LayoutDashboard },
-  { id: 'department', label: 'Mon Département', icon: Building2 },
-  { id: 'feedback', label: 'Mon Feedback', icon: MessageSquare },
-  { id: 'meetings', label: 'Mes Réunions', icon: Calendar },
-  { id: 'attendance', label: 'Mes Présences', icon: CheckCircle },
-];
-
+/**
+ * MonService — Point d'entrée personnel vers les départements de l'utilisateur.
+ *
+ * Sources de vérité :
+ *   - DepartmentMember (appartenance départementale, rôle)
+ *   - FIJ.pilot_user_id / copilot_user_id (pilote FIJ)
+ *   - DepartmentMember → coordination-fij (coordination FIJ)
+ *
+ * Affiche :
+ *   1. MES SERVICES — cartes pour chaque département actif (sauf pilote-fij, coordination-fij)
+ *   2. MES RESPONSABILITÉS — Pilote FIJ + Coordination FIJ (si applicable)
+ *   3. À VENIR — prochains événements globaux (si réels)
+ *
+ * Ne crée aucune donnée fictive. Les sections vides sans source réelle ne s'affichent pas.
+ */
 export default function MonService() {
   const [user, setUser] = useState(null);
   const [memberships, setMemberships] = useState([]);
   const [departments, setDepartments] = useState([]);
+  const [fijs, setFijs] = useState([]);
   const [events, setEvents] = useState([]);
-  const [attendances, setAttendances] = useState([]);
-  const [trainings, setTrainings] = useState([]);
-  const [submissions, setSubmissions] = useState([]);
+  const [coordFijData, setCoordFijData] = useState({ memberships: null, coordFijDeptId: null });
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
     Promise.all([
       base44.auth.me(),
-      base44.entities.DepartmentMember.filter({ is_active: true }, '-created_date', 50),
-      base44.entities.Department.filter({ is_active: true }, 'display_order', 50),
-      base44.entities.Event.filter({ is_active: true, event_date: { $gte: new Date().toISOString().split('T')[0] } }, 'event_date', 20),
-      base44.entities.AttendanceResponse.filter({}, '-created_date', 50),
-      base44.entities.TrainingProgram.filter({ status: 'published' }, 'display_order', 50),
-      base44.entities.TrainingSubmission.filter({}, '-created_date', 50),
-    ]).then(([u, m, d, e, a, t, s]) => {
+      base44.entities.DepartmentMember.filter({}, { limit: 500 }),
+      base44.entities.Department.filter({ is_active: true }, { sort: 'display_order', limit: 50 }),
+      base44.entities.FIJ.filter({ is_active: true }, { limit: 50 }),
+      base44.entities.Event.filter({ is_active: true, event_date: { $gte: today } }, { sort: 'event_date', limit: 10 }),
+      loadCoordFijContext(),
+    ]).then(([u, m, d, f, e, ctx]) => {
       setUser(u);
-      setMemberships(m || []);
-      setDepartments(d || []);
-      setEvents(e || []);
-      setAttendances(a || []);
-      setTrainings(t || []);
-      setSubmissions(s || []);
+      setMemberships(m?.items || m || []);
+      setDepartments(d?.items || d || []);
+      setFijs(f?.items || f || []);
+      setEvents(e?.items || e || []);
+      setCoordFijData(ctx);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -58,356 +63,241 @@ export default function MonService() {
     );
   }
 
-  // User's departments
-  const myDeptIds = memberships
-    .filter(m => m.user_id === user?.id)
-    .map(m => m.department_id);
-  const myDepartments = departments.filter(d => myDeptIds.includes(d.id));
-  const primaryDept = myDepartments[0];
+  // Compte bloqué — aucun accès
+  if (isAccountBlocked(user)) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12 text-center">
+        <AlertCircle className="w-10 h-10 text-danger/50 mx-auto mb-4" />
+        <p className="text-sm font-semibold text-foreground mb-1">Compte suspendu</p>
+        <p className="text-xs text-muted-foreground">Ton compte ne permet pas d'accéder à cet espace. Contacte un responsable.</p>
+      </div>
+    );
+  }
 
-  // Upcoming events for user
-  const upcomingEvents = events.filter(e =>
-    e.audience === 'all_members' || e.audience === 'all_servants'
-  ).slice(0, 5);
+  // Mes départements actifs (DepartmentMember où status = active ou is_active = true)
+  const myActiveMemberships = memberships.filter(m =>
+    m.user_id === user?.id &&
+    (m.status === 'active' || (!m.status && m.is_active !== false))
+  );
 
-  // Attendance history
-  const myAttendances = attendances.filter(a => a.created_by_id === user?.id);
-
-  // Training progress
-  const mySubmissions = submissions.filter(s => s.created_by_id === user?.id);
-  const pendingTrainings = trainings.filter(t =>
-    t.assigned_roles?.includes('all') || t.assigned_roles?.includes('star_serviteur')
-  ).filter(t => {
-    const sub = mySubmissions.find(s => s.program_id === t.id);
-    return !sub || sub.status === 'not_started' || sub.status === 'in_progress';
+  // Filtrer les départements masqués (pilote-fij, coordination-fij) — gérés via responsabilités
+  const myServiceMemberships = myActiveMemberships.filter(m => {
+    const dept = departments.find(d => d.id === m.department_id);
+    return dept && dept.is_active !== false && !isHiddenFromService(dept.slug);
   });
 
+  // FIJ Pilot — source : FIJ.pilot_user_id / copilot_user_id
+  const myPilotFijs = fijs.filter(f =>
+    f.pilot_user_id === user?.id || f.copilot_user_id === user?.id
+  );
+
+  // Coordination FIJ — source : DepartmentMember → coordination-fij
+  const isCoordFij = isFijCoordination(user, coordFijData.memberships, coordFijData.coordFijDeptId);
+  const coordFijMembership = myActiveMemberships.find(m =>
+    m.department_id === coordFijData.coordFijDeptId
+  );
+
+  // Événements à venir (globaux, audience pertinente)
+  const upcomingEvents = events.filter(e =>
+    e.audience === 'all_members' || e.audience === 'all_servants'
+  ).slice(0, 4);
+
+  const hasServices = myServiceMemberships.length > 0;
+  const hasResponsibilities = myPilotFijs.length > 0 || isCoordFij;
+  const hasUpcoming = upcomingEvents.length > 0;
+  const isEmpty = !hasServices && !hasResponsibilities && !hasUpcoming;
+
+  const firstName = user?.first_name || getDisplayName(user)?.split(' ')[0] || '';
+
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
-        title="Mon Service"
-        intention="Tout ce qui concerne ton service, ton département et tes engagements."
+        title={`Bonjour ${firstName}`}
+        intention="Retrouve ici tes services, tes prochaines échéances et les informations utiles à ton engagement."
         breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Mon Service' }]}
       />
 
-      {/* Tabs */}
-      <div className="flex items-center gap-1 mb-6 overflow-x-auto scrollbar-none -mx-1 px-1">
-        {TABS.map(tab => {
-          const Icon = tab.icon;
-          const active = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-                active
-                  ? 'bg-secondary text-white shadow-sm'
-                  : 'bg-surface text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
+      {isEmpty ? (
+        /* État vide — utilisateur sans département ni responsabilité */
+        <div className="text-center py-16">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-surface border border-border mb-4">
+            <Building2 className="w-6 h-6 text-muted-foreground" />
+          </div>
+          <p className="text-sm font-semibold text-foreground mb-1">Tu n'es actuellement rattaché à aucun département.</p>
+          <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+            Si tu penses qu'il s'agit d'une erreur, rapproche-toi d'un responsable.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {/* === MES SERVICES === */}
+          {hasServices && (
+            <section>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">Mes services</p>
+              <div className="space-y-3">
+                {myServiceMemberships.map(m => {
+                  const dept = departments.find(d => d.id === m.department_id);
+                  if (!dept) return null;
+                  const teamSize = memberships.filter(mm =>
+                    mm.department_id === dept.id &&
+                    (mm.status === 'active' || (!mm.status && mm.is_active !== false))
+                  ).length;
+                  const roleLabel = ROLE_LABELS[m.role_in_dept] || 'Membre';
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.15 }}
-        >
-          {activeTab === 'overview' && (
-            <OverviewTab
-              user={user}
-              primaryDept={primaryDept}
-              myDepartments={myDepartments}
-              upcomingEvents={upcomingEvents}
-              myAttendances={myAttendances}
-              pendingTrainings={pendingTrainings}
-            />
+                  return (
+                    <ServiceCard key={m.id} dept={dept} role={m.role_in_dept} roleLabel={roleLabel} teamSize={teamSize} />
+                  );
+                })}
+              </div>
+            </section>
           )}
-          {activeTab === 'department' && (
-            <DepartmentTab departments={myDepartments} memberships={memberships} />
+
+          {/* === MES RESPONSABILITÉS === */}
+          {hasResponsibilities && (
+            <section>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">Mes responsabilités</p>
+              <div className="space-y-3">
+                {/* Pilote FIJ — source : FIJ.pilot_user_id */}
+                {myPilotFijs.map(fij => (
+                  <ResponsibilityCard
+                    key={`pilot-${fij.id}`}
+                    icon={Compass}
+                    title={fij.name || 'FIJ'}
+                    roleLabel={fij.pilot_user_id === user?.id ? 'Pilote' : 'Copilote'}
+                    description="Ton espace de pilotage FIJ"
+                    to="/app/responsabilites/fij-pilote"
+                    color="rose"
+                  />
+                ))}
+
+                {/* Coordination FIJ — source : DepartmentMember → coordination-fij */}
+                {isCoordFij && (
+                  <ResponsibilityCard
+                    key="coord-fij"
+                    icon={Briefcase}
+                    title="Coordination FIJ"
+                    roleLabel={coordFijMembership ? (ROLE_LABELS[coordFijMembership.role_in_dept] || 'Membre') : 'Coordination'}
+                    description="Toutes les FIJ, relances, reporting"
+                    to="/app/responsabilites/fij-coordination"
+                    color="amber"
+                  />
+                )}
+              </div>
+            </section>
           )}
-          {activeTab === 'feedback' && <FeedbackTab />}
-          {activeTab === 'meetings' && <MeetingsTab events={upcomingEvents} />}
-          {activeTab === 'attendance' && (
-            <AttendanceTab events={events} attendances={myAttendances} />
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-}
 
-function OverviewTab({ user, primaryDept, myDepartments, upcomingEvents, myAttendances, pendingTrainings }) {
-  const nextEvent = upcomingEvents[0];
-  const recentAttendance = myAttendances[0];
-
-  const cards = [
-    {
-      icon: Building2,
-      label: 'Département',
-      value: primaryDept?.name || 'Non assigné',
-      sub: primaryDept?.description || 'Contacte un responsable',
-      to: primaryDept ? `/app/departements/${primaryDept.slug}` : null,
-    },
-    {
-      icon: Calendar,
-      label: 'Prochaine réunion',
-      value: nextEvent?.title || 'Aucune prévue',
-      sub: nextEvent ? `${nextEvent.event_date}${nextEvent.event_time ? ' à ' + nextEvent.event_time : ''}` : '',
-      to: nextEvent ? '/app/agenda' : null,
-    },
-    {
-      icon: CheckCircle,
-      label: 'Présence récente',
-      value: recentAttendance ? statusLabel(recentAttendance.status) : 'Aucun enregistrement',
-      sub: recentAttendance?.event_title || '',
-      to: null,
-    },
-    {
-      icon: AlertCircle,
-      label: 'Formation obligatoire',
-      value: pendingTrainings.length > 0 ? `${pendingTrainings.length} en attente` : 'À jour',
-      sub: pendingTrainings[0]?.title || '',
-      to: '/app/formations',
-    },
-  ];
-
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {cards.map((c, i) => {
-          const Icon = c.icon;
-          const content = (
-            <div className="flex items-start gap-3 bg-card border border-border rounded-2xl p-4 h-full hover:shadow-sm transition-all">
-              <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
-                <Icon className="w-5 h-5 text-secondary" />
+          {/* === À VENIR === */}
+          {hasUpcoming && (
+            <section>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">À venir</p>
+              <div className="space-y-2">
+                {upcomingEvents.map(e => (
+                  <Link
+                    key={e.id}
+                    to="/app/agenda"
+                    className="flex items-center gap-3 bg-card border border-border rounded-xl p-3.5 hover:border-secondary/30 transition-colors"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
+                      <Calendar className="w-4 h-4 text-secondary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground truncate">{e.title}</p>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                        <span>{e.event_date}</span>
+                        {e.event_time && <span>· {e.event_time}</span>}
+                        {e.location && <span>· {e.location}</span>}
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  </Link>
+                ))}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">{c.label}</p>
-                <p className="text-sm font-semibold text-foreground mt-0.5 truncate">{c.value}</p>
-                {c.sub && <p className="text-xs text-muted-foreground truncate mt-0.5">{c.sub}</p>}
-              </div>
-              {c.to && <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />}
-            </div>
-          );
-          return c.to ? (
-            <Link key={i} to={c.to}>{content}</Link>
-          ) : (
-            <div key={i}>{content}</div>
-          );
-        })}
-      </div>
-
-      {/* Badges / rôles */}
-      <div className="bg-card border border-border rounded-2xl p-4">
-        <p className="text-xs font-semibold text-foreground mb-3">Mes rattachements</p>
-        {myDepartments.length === 0 ? (
-          <p className="text-xs text-muted-foreground">Tu n'es pas encore rattaché à un département.</p>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {myDepartments.map(d => (
-              <Link
-                key={d.id}
-                to={`/app/departements/${d.slug}`}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border text-xs font-medium text-foreground hover:border-secondary/30 transition-colors"
-              >
-                <Building2 className="w-3 h-3 text-secondary" />
-                {d.name}
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function DepartmentTab({ departments, memberships }) {
-  if (departments.length === 0) {
-    return (
-      <div className="bg-card border border-border rounded-2xl p-8 text-center">
-        <Building2 className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">Tu n'es rattaché à aucun département.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      {departments.map(dept => {
-        const teamMembers = memberships.filter(m => m.department_id === dept.id && m.is_active !== false);
-        const referents = teamMembers.filter(m => m.role_in_dept === 'referent');
-        return (
-          <div key={dept.id} className="bg-card border border-border rounded-2xl overflow-hidden">
-            <div className="p-5 border-b border-border">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-base font-heading font-bold text-foreground">{dept.name}</h3>
-                  {dept.description && <p className="text-sm text-muted-foreground mt-0.5">{dept.description}</p>}
-                </div>
-                <Link
-                  to={`/app/departements/${dept.slug}`}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-secondary/10 text-secondary text-xs font-semibold hover:bg-secondary/20 transition-colors flex-shrink-0"
-                >
-                  Ouvrir <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
-            </div>
-            <div className="p-5 space-y-3">
-              {dept.mission && (
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-1">Mission</p>
-                  <p className="text-sm text-foreground leading-relaxed">{dept.mission}</p>
-                </div>
-              )}
-              {dept.rythme_travail && (
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Clock className="w-3.5 h-3.5" />
-                  Rythme : {dept.rythme_travail}
-                </div>
-              )}
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Users className="w-3.5 h-3.5" />
-                {teamMembers.length} membre(s) · {referents.length} référent(s)
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function FeedbackTab() {
-  return (
-    <div className="bg-card border border-border rounded-2xl p-8 text-center">
-      <MessageSquare className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-      <p className="text-sm font-semibold text-foreground mb-1">Aucun feedback pour le moment</p>
-      <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-        Les feedbacks de service sont rédigés par tes responsables. Ils apparaîtront ici quand ils seront disponibles.
-      </p>
-    </div>
-  );
-}
-
-function MeetingsTab({ events }) {
-  if (events.length === 0) {
-    return (
-      <div className="bg-card border border-border rounded-2xl p-8 text-center">
-        <Calendar className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">Aucune réunion à venir.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-2">
-      {events.map(e => (
-        <div key={e.id} className="flex items-center gap-3 bg-card border border-border rounded-xl p-3.5">
-          <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
-            <Calendar className="w-4 h-4 text-secondary" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-foreground truncate">{e.title}</p>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-              <span>{e.event_date}</span>
-              {e.event_time && <span>· {e.event_time}</span>}
-              {e.location && <span>· {e.location}</span>}
-            </div>
-          </div>
-          {e.meet_url && (
-            <a href={e.meet_url} target="_blank" rel="noopener noreferrer"
-              className="px-2.5 py-1.5 rounded-lg bg-secondary/10 text-secondary text-[10px] font-semibold hover:bg-secondary/20 transition-colors">
-              Rejoindre
-            </a>
+            </section>
           )}
         </div>
-      ))}
+      )}
     </div>
   );
 }
 
-function AttendanceTab({ events, attendances }) {
-  const culteEvents = events.filter(e => e.event_type === 'culte' || e.event_type === 'service');
+const ROLE_LABELS = {
+  responsable: 'Responsable',
+  referent: 'Référent',
+  coordinateur: 'Coordinateur',
+  adjoint: 'Adjoint',
+  pilote: 'Pilote',
+  serviteur: 'Serviteur',
+  membre: 'Membre',
+};
 
-  if (attendances.length === 0 && culteEvents.length === 0) {
-    return (
-      <div className="bg-card border border-border rounded-2xl p-8 text-center">
-        <CheckCircle className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">Aucune présence enregistrée.</p>
-        <Link to="/app/presences" className="inline-flex items-center gap-1 mt-3 text-xs text-secondary font-semibold">
-          Confirmer ma présence <ArrowRight className="w-3 h-3" />
-        </Link>
-      </div>
-    );
-  }
+const CARD_COLORS = {
+  amber:  { bg: 'bg-secondary/8',  border: 'border-secondary/20', text: 'text-secondary', icon: 'bg-secondary/10 border-secondary/20' },
+  rose:   { bg: 'bg-rose-500/8',   border: 'border-rose-400/20',  text: 'text-rose-600',   icon: 'bg-rose-500/10 border-rose-400/20' },
+  blue:   { bg: 'bg-blue-500/8',   border: 'border-blue-400/20',  text: 'text-blue-600',   icon: 'bg-blue-500/10 border-blue-400/20' },
+  green:  { bg: 'bg-green-500/8',  border: 'border-green-400/20', text: 'text-green-600',  icon: 'bg-green-500/10 border-green-400/20' },
+  purple: { bg: 'bg-purple-500/8', border: 'border-purple-400/20',text: 'text-purple-600', icon: 'bg-purple-500/10 border-purple-400/20' },
+  indigo: { bg: 'bg-indigo-500/8', border: 'border-indigo-400/20',text: 'text-indigo-600', icon: 'bg-indigo-500/10 border-indigo-400/20' },
+};
+
+function ServiceCard({ dept, role, roleLabel, teamSize }) {
+  const colors = CARD_COLORS[dept.color] || CARD_COLORS.amber;
+  const to = `/app/departements/${dept.slug || dept.id}`;
 
   return (
-    <div className="space-y-4">
-      <div className="bg-card border border-border rounded-2xl p-4">
-        <p className="text-xs font-semibold text-foreground mb-3">À confirmer</p>
-        {culteEvents.length === 0 ? (
-          <p className="text-xs text-muted-foreground">Aucune présence à confirmer.</p>
-        ) : (
-          <div className="space-y-2">
-            {culteEvents.map(e => (
-              <Link key={e.id} to="/app/presences"
-                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-surface transition-colors">
-                <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                  <Calendar className="w-3.5 h-3.5 text-secondary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{e.title}</p>
-                  <p className="text-xs text-muted-foreground">{e.event_date}{e.event_time ? ' à ' + e.event_time : ''}</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground" />
-              </Link>
-            ))}
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+      <Link
+        to={to}
+        className={`flex items-center gap-4 bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98]`}
+      >
+        <div className={`w-11 h-11 rounded-xl ${colors.icon} border flex items-center justify-center flex-shrink-0`}>
+          <Building2 className={`w-5 h-5 ${colors.text}`} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-semibold text-foreground truncate">{dept.name}</p>
+            {dept.short_name && (
+              <span className="text-[10px] text-muted-foreground bg-surface border border-border rounded px-1.5 py-0.5">{dept.short_name}</span>
+            )}
           </div>
-        )}
-      </div>
-
-      <div className="bg-card border border-border rounded-2xl p-4">
-        <p className="text-xs font-semibold text-foreground mb-3">Historique</p>
-        {attendances.length === 0 ? (
-          <p className="text-xs text-muted-foreground">Aucun historique.</p>
-        ) : (
-          <div className="space-y-2">
-            {attendances.slice(0, 10).map(a => (
-              <div key={a.id} className="flex items-center gap-3 p-2">
-                <div className={`w-2 h-2 rounded-full ${statusColor(a.status)}`} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{a.event_title || 'Événement'}</p>
-                  <p className="text-xs text-muted-foreground">{a.event_date}</p>
-                </div>
-                <span className="text-xs font-medium text-muted-foreground">{statusLabel(a.status)}</span>
-              </div>
-            ))}
+          <div className="flex items-center gap-2 mt-1">
+            <span className={`text-xs font-medium ${colors.text}`}>{roleLabel}</span>
+            {teamSize > 0 && (
+              <>
+                <span className="text-muted-foreground/30">·</span>
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Users className="w-3 h-3" /> {teamSize}
+                </span>
+              </>
+            )}
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+        <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+      </Link>
+    </motion.div>
   );
 }
 
-function statusLabel(status) {
-  const labels = { present: 'Présent', absent: 'Absent', late: 'En retard', no_response: 'En attente' };
-  return labels[status] || status;
-}
-
-function statusColor(status) {
-  const colors = {
-    present: 'bg-success',
-    absent: 'bg-danger',
-    late: 'bg-warning',
-    no_response: 'bg-muted-foreground/30',
-  };
-  return colors[status] || 'bg-muted-foreground/30';
+function ResponsibilityCard({ icon: Icon, title, roleLabel, description, to, color }) {
+  const colors = CARD_COLORS[color] || CARD_COLORS.amber;
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+      <Link
+        to={to}
+        className={`flex items-center gap-4 bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98]`}
+      >
+        <div className={`w-11 h-11 rounded-xl ${colors.icon} border flex items-center justify-center flex-shrink-0`}>
+          <Icon className={`w-5 h-5 ${colors.text}`} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-foreground truncate">{title}</p>
+          <div className="flex items-center gap-2 mt-1">
+            <span className={`text-xs font-medium ${colors.text}`}>{roleLabel}</span>
+            <span className="text-muted-foreground/30">·</span>
+            <span className="text-xs text-muted-foreground truncate">{description}</span>
+          </div>
+        </div>
+        <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+      </Link>
+    </motion.div>
+  );
 }

@@ -7,15 +7,14 @@ import { isFijPilot, isFijCoordination, isBureauLike, isAdmin, hasRole, getRoles
 import { loadCoordFijContext } from '@/lib/coordFijUtils';
 import PageHeader from '@/components/star/PageHeader';
 
+// Lot 3 — Les placeholders accueil, communication, musique, vie-academique ont été migrés
+// vers le moteur départemental (/app/departements/:slug) ou Mon Service (/app/service).
+// Seules restent les responsabilités spécialisées non couvertes par le moteur départemental.
 const TOOL_META = {
   fij_pilot: { icon: Heart, label: 'Pilote FIJ', desc: 'Ma FIJ, CR du jeudi, membres, assiduité', to: '/app/responsabilites/fij-pilote', color: 'from-rose-500/10 to-rose-500/5 border-rose-400/20 text-rose-600' },
   fij_coordination: { icon: Briefcase, label: 'Coordination FIJ', desc: 'Toutes les FIJ, relances, reporting', to: '/app/responsabilites/fij-coordination', color: 'from-secondary/10 to-secondary/5 border-secondary/20 text-secondary' },
   equipe: { icon: Users, label: 'Mon Équipe', desc: 'Membres, présences, entretiens, objectifs', to: '/app/equipe', color: 'from-blue-500/10 to-blue-500/5 border-blue-400/20 text-blue-600' },
   etudiant: { icon: GraduationCap, label: 'Mon Espace Étudiant', desc: 'Parcours, suivi, accompagnement', to: '/app/etudiant', color: 'from-green-500/10 to-green-500/5 border-green-400/20 text-green-600' },
-  accueil: { icon: Users, label: 'Accueil', desc: 'Planning, visiteurs, reporting dimanche', to: '/app/responsabilites/accueil', color: 'from-blue-500/10 to-blue-500/5 border-blue-400/20 text-blue-600' },
-  communication: { icon: Settings, label: 'Communication', desc: 'Demandes visuelles, calendrier éditorial', to: '/app/responsabilites/communication', color: 'from-purple-500/10 to-purple-500/5 border-purple-400/20 text-purple-600' },
-  music: { icon: Music, label: 'Prodiges Musique', desc: 'Planning, setlists, répétitions', to: '/app/responsabilites/musique', color: 'from-indigo-500/10 to-indigo-500/5 border-indigo-400/20 text-indigo-600' },
-  academic: { icon: GraduationCap, label: 'Vie Académique', desc: 'Accompagnement étudiants, stages', to: '/app/responsabilites/vie-academique', color: 'from-green-500/10 to-green-500/5 border-green-400/20 text-green-600' },
 };
 
 export default function Responsabilites() {
@@ -53,10 +52,8 @@ export default function Responsabilites() {
   // Mon Espace Étudiant: visible pour les étudiants, alternants, en recherche
   const roles = getRoles(user);
   if (roles.includes('etudiant') || roles.includes('alternant') || roles.includes('recherche_emploi') || roles.includes('recherche_stage')) tools.push('etudiant');
-  if (hasRole(user, 'accueil') || hasRole(user, 'accueil_servant')) tools.push('accueil');
-  if (hasRole(user, 'communication') || hasRole(user, 'communication_servant')) tools.push('communication');
-  if (hasRole(user, 'music')) tools.push('music');
-  if (hasRole(user, 'academic') || hasRole(user, 'academic_support')) tools.push('academic');
+  // Lot 3 : accueil, communication, musique, vie-academique sont désormais gérés par
+  // Mon Service + le moteur départemental. Les placeholders ont été supprimés.
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
