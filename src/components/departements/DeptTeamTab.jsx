@@ -1,7 +1,8 @@
 import React from 'react';
 import { Users } from 'lucide-react';
 import DeptRoleBadge from './DeptRoleBadge';
-import { POSITION_LABELS } from '@/lib/musicConstants';
+import { POSITION_LABELS as MUSIC_POSITION_LABELS } from '@/lib/musicConstants';
+import { POSITION_SHORT as SOUND_POSITION_SHORT } from '@/lib/soundConstants';
 
 /**
  * DeptTeamTab — Onglet Équipe du moteur départemental.
@@ -13,10 +14,14 @@ import { POSITION_LABELS } from '@/lib/musicConstants';
  * Un simple serviteur voit les mêmes informations qu'un responsable
  * (les capacités de gestion sont limitées à l'admin via Annuaire).
  */
-export default function DeptTeamTab({ members, colors, musicProfiles = null }) {
-  const profileMap = {};
+export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null }) {
+  const musicProfileMap = {};
   if (musicProfiles) {
-    musicProfiles.forEach(p => { if (p.user_id) profileMap[p.user_id] = p; });
+    musicProfiles.forEach(p => { if (p.user_id) musicProfileMap[p.user_id] = p; });
+  }
+  const soundProfileMap = {};
+  if (soundProfiles) {
+    soundProfiles.forEach(p => { if (p.user_id) soundProfileMap[p.user_id] = p; });
   }
   if (members.length === 0) {
     return (
@@ -62,11 +67,20 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null }) {
                 )}
                 {m.note && <span className="text-xs text-muted-foreground truncate">· {m.note}</span>}
               </div>
-              {profileMap[m.user_id]?.positions?.length > 0 && (
+              {musicProfileMap[m.user_id]?.positions?.length > 0 && (
                 <div className="flex items-center gap-1 mt-1 flex-wrap">
-                  {profileMap[m.user_id].positions.map(pos => (
+                  {musicProfileMap[m.user_id].positions.map(pos => (
                     <span key={pos} className="text-[10px] px-1.5 py-0.5 rounded border bg-surface text-muted-foreground">
-                      {POSITION_LABELS[pos] || pos}
+                      {MUSIC_POSITION_LABELS[pos] || pos}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {soundProfileMap[m.user_id]?.positions?.length > 0 && (
+                <div className="flex items-center gap-1 mt-1 flex-wrap">
+                  {soundProfileMap[m.user_id].positions.map(pos => (
+                    <span key={pos} className="text-[10px] px-1.5 py-0.5 rounded border bg-blue-500/5 text-blue-600 border-blue-400/20">
+                      {SOUND_POSITION_SHORT[pos] || pos}
                     </span>
                   ))}
                 </div>
