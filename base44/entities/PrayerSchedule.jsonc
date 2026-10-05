@@ -1,0 +1,85 @@
+{
+  "name": "PrayerSchedule",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement MPI"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du temps de pri\u00e8re (ex: Pri\u00e8re avant culte)"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date du temps de pri\u00e8re"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Heure de d\u00e9but (HH:MM)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Heure de fin (HH:MM)"
+    },
+    "location": {
+      "type": "string",
+      "description": "Lieu (ex: Salle X, Sanctuaire)"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "intercession",
+        "prayer_meeting",
+        "pre_service_prayer",
+        "special_prayer",
+        "other"
+      ],
+      "default": "intercession",
+      "description": "Type de temps de pri\u00e8re"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "scheduled",
+        "completed",
+        "cancelled"
+      ],
+      "default": "draft",
+      "description": "Statut du planning"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes / consignes pour ce temps de pri\u00e8re"
+    }
+  },
+  "required": [
+    "department_id",
+    "title",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

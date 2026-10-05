@@ -1,0 +1,58 @@
+{
+  "name": "PrayerRequestAssignee",
+  "type": "object",
+  "properties": {
+    "prayer_request_id": {
+      "type": "string",
+      "description": "ID du PrayerRequest"
+    },
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement (scoping)"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID de l'utilisateur explicitement autoris\u00e9"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nom (d\u00e9normalis\u00e9)"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "intercesseur",
+        "referent",
+        "autre"
+      ],
+      "default": "intercesseur",
+      "description": "R\u00f4le d'assignation"
+    }
+  },
+  "required": [
+    "prayer_request_id",
+    "user_id"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

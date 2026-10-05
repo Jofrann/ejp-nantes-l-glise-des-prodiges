@@ -1,0 +1,53 @@
+{
+  "name": "PrayerRequestUpdate",
+  "type": "object",
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "description": "ID du PrayerRequest"
+    },
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement (scoping)"
+    },
+    "text": {
+      "type": "string",
+      "description": "Texte de la mise \u00e0 jour (h\u00e9rite au minimum de la confidentialit\u00e9 de la demande)"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "ID de l'auteur"
+    },
+    "created_by_name": {
+      "type": "string",
+      "description": "Nom de l'auteur (d\u00e9normalis\u00e9)"
+    }
+  },
+  "required": [
+    "request_id",
+    "department_id",
+    "text"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

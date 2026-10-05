@@ -1,0 +1,97 @@
+{
+  "name": "PrayerRequest",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement MPI (scoping)"
+    },
+    "requester_user_id": {
+      "type": "string",
+      "description": "ID de l'utilisateur concern\u00e9 par la demande (optionnel \u2014 peut \u00eatre anonyme ou pour autrui)"
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "Nom de la personne qui a soumis la demande (d\u00e9normalis\u00e9)"
+    },
+    "title": {
+      "type": "string",
+      "description": "R\u00e9sum\u00e9 court / titre de la demande"
+    },
+    "request_text": {
+      "type": "string",
+      "description": "Texte de la demande de pri\u00e8re (contenu potentiellement sensible)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "sante",
+        "famille",
+        "orientation",
+        "deliverance",
+        "autre"
+      ],
+      "default": "general",
+      "description": "Cat\u00e9gorie de la demande"
+    },
+    "confidentiality": {
+      "type": "string",
+      "enum": [
+        "GENERAL_MPI",
+        "RESTRICTED_MPI",
+        "LEADERS_ONLY",
+        "PRIVATE_ASSIGNEES"
+      ],
+      "default": "GENERAL_MPI",
+      "description": "Niveau de confidentialit\u00e9 \u2014 filtr\u00e9 c\u00f4t\u00e9 backend"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "active",
+        "follow_up",
+        "closed",
+        "archived"
+      ],
+      "default": "new",
+      "description": "Statut de la demande"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "ID de l'utilisateur assign\u00e9 au suivi (optionnel)"
+    },
+    "closed_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de cl\u00f4ture"
+    }
+  },
+  "required": [
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

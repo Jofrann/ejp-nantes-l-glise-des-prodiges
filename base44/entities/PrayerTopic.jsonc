@@ -1,0 +1,99 @@
+{
+  "name": "PrayerTopic",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement MPI (scoping)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du sujet d'intercession"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description / contexte du sujet"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "EJP",
+        "evenement",
+        "jeunesse",
+        "etudes",
+        "familles",
+        "mission",
+        "eglise",
+        "autre"
+      ],
+      "default": "autre",
+      "description": "Cat\u00e9gorie du sujet"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium",
+      "description": "Priorit\u00e9 du sujet"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "closed",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Statut du sujet"
+    },
+    "starts_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de d\u00e9but de port\u00e9e du sujet (optionnel)"
+    },
+    "ends_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de fin de port\u00e9e du sujet (optionnel)"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "mpi",
+        "leaders",
+        "restricted"
+      ],
+      "default": "mpi",
+      "description": "Visibilit\u00e9 : mpi (membres MPI), leaders (leadership uniquement), restricted (responsables MPI + autoris\u00e9s)"
+    }
+  },
+  "required": [
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
