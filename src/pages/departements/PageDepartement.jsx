@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Settings, MessageCircle, Lock, Loader2, ArrowLeft,
   LayoutDashboard, Users, AlertCircle,
-  Calendar, Music, ListMusic, Library, CalendarCheck
+  Calendar, Music, ListMusic, Library, CalendarCheck,
+  SlidersHorizontal, Package, ListChecks, AlertTriangle
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { isBureauLike, isAccountBlocked } from '@/lib/permissions';
@@ -21,10 +22,17 @@ import MusicRehearsalsTab from '@/components/departements/music/MusicRehearsalsT
 import MusicSetlistsTab from '@/components/departements/music/MusicSetlistsTab';
 import MusicRepertoireTab from '@/components/departements/music/MusicRepertoireTab';
 import MusicAvailabilityTab from '@/components/departements/music/MusicAvailabilityTab';
+import SoundOverviewTab from '@/components/departements/sound/SoundOverviewTab';
+import SoundPlanningTab from '@/components/departements/sound/SoundPlanningTab';
+import SoundPositionsTab from '@/components/departements/sound/SoundPositionsTab';
+import SoundEquipmentTab from '@/components/departements/sound/SoundEquipmentTab';
+import SoundChecklistsTab from '@/components/departements/sound/SoundChecklistsTab';
+import SoundIncidentsTab from '@/components/departements/sound/SoundIncidentsTab';
 import { getEnabledModules, MODULE_META } from '@/lib/departmentModules';
 import { POSITION_LABELS } from '@/lib/musicConstants';
 
 const MUSIC_TABS = ['music_planning', 'music_rehearsals', 'music_setlists', 'music_repertoire', 'music_availability'];
+const SOUND_TABS = ['sound_planning', 'sound_positions', 'sound_equipment', 'sound_checklists', 'sound_incidents'];
 
 const COLOR_MAP = {
   amber:  { border: 'border-secondary/20', text: 'text-secondary', bg: 'bg-secondary/10', glow: 'bg-secondary/5' },
@@ -68,6 +76,8 @@ export default function PageDepartement() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [musicData, setMusicData] = useState(null);
   const [musicLoading, setMusicLoading] = useState(false);
+  const [soundData, setSoundData] = useState(null);
+  const [soundLoading, setSoundLoading] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -121,6 +131,12 @@ export default function PageDepartement() {
         loadMusicData(res.department.slug);
       }
 
+      // Charger les données sonorisation si le département a des modules sono
+      const hasSound = modules.some(m => SOUND_TABS.includes(m));
+      if (hasSound) {
+        loadSoundData(res.department.slug);
+      }
+
       // Messages non lus
       const deptId = res.department.id;
       const key = `dept_chat_seen_${deptId}`;
@@ -167,6 +183,20 @@ export default function PageDepartement() {
       // Silencieux — les données musicales sont optionnelles
     } finally {
       setMusicLoading(false);
+    }
+  };
+
+  const loadSoundData = async (slug) => {
+    setSoundLoading(true);
+    try {
+      const res = (await base44.functions.invoke('getSoundData', { department_slug: slug || (dept && dept.slug) || slugOrId })).data;
+      if (!res.access_denied && !res.not_found) {
+        setSoundData(res);
+      }
+    } catch (e) {
+      // Silencieux — les données sonorisation sont optionnelles
+    } finally {
+      setSoundLoading(false);
     }
   };
 
@@ -306,6 +336,8 @@ export default function PageDepartement() {
                 overview: LayoutDashboard, team: Users, messages: MessageCircle,
                 music_planning: Calendar, music_rehearsals: Music,
                 music_setlists: ListMusic, music_repertoire: Library, music_availability: CalendarCheck,
+                sound_planning: Calendar, sound_positions: SlidersHorizontal,
+                sound_equipment: Package, sound_checklists: ListChecks, sound_incidents: AlertTriangle,
               };
               const Icon = iconMap[modId] || MessageCircle;
               const active = currentTab === modId;
@@ -363,6 +395,15 @@ export default function PageDepartement() {
                       onNavigateTab={(tab) => setActiveTab(tab)}
                     />
                   ) : null}
+                  {soundData && SOUND_TABS.some(t => enabledModules.includes(t)) ? (
+                    <SoundOverviewTab
+                      soundData={soundData}
+                      isResponsable={isResponsable || canManage}
+                      currentUserId={soundData.current_user_id}
+                      colors={colors}
+                      onNavigateTab={(tab) => setActiveTab(tab)}
+                    />
+                  ) : null}
                   <DeptOverviewTab
                     dept={dept}
                     members={members}
@@ -377,6 +418,7 @@ export default function PageDepartement() {
                   members={members}
                   colors={colors}
                   musicProfiles={musicData ? musicData.profiles : null}
+                  soundProfiles={soundData ? soundData.profiles : null}
                 />
               )}
               {currentTab === 'messages' && (
@@ -427,6 +469,49 @@ export default function PageDepartement() {
                   currentUserId={musicData.current_user_id}
                   colors={colors}
                   onRefresh={() => loadMusicData()}
+                />
+              )}
+              {currentTab === 'sound_planning' && soundData && (
+                <SoundPlanningTab
+                  soundData={soundData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={soundData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadSoundData()}
+                />
+              )}
+              {currentTab === 'sound_positions' && soundData && (
+                <SoundPositionsTab
+                  soundData={soundData}
+                  isResponsable={isResponsable || canManage}
+                  colors={colors}
+                  onRefresh={() => loadSoundData()}
+                />
+              )}
+              {currentTab === 'sound_equipment' && soundData && (
+                <SoundEquipmentTab
+                  soundData={soundData}
+                  isResponsable={isResponsable || canManage}
+                  colors={colors}
+                  onRefresh={() => loadSoundData()}
+                />
+              )}
+              {currentTab === 'sound_checklists' && soundData && (
+                <SoundChecklistsTab
+                  soundData={soundData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={soundData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadSoundData()}
+                />
+              )}
+              {currentTab === 'sound_incidents' && soundData && (
+                <SoundIncidentsTab
+                  soundData={soundData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={soundData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadSoundData()}
                 />
               )}
             </motion.div>
