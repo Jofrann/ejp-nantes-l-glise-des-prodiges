@@ -1,0 +1,87 @@
+{
+  "name": "SoundIncident",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Sonorisation (scoping)"
+    },
+    "equipment_id": {
+      "type": "string",
+      "description": "ID du SoundEquipment li\u00e9 (optionnel)"
+    },
+    "service_plan_id": {
+      "type": "string",
+      "description": "ID du SoundServicePlan li\u00e9 (optionnel)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre court de l'incident (ex: Micro HF 2 \u2014 coupures intermittentes)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description d\u00e9taill\u00e9e du probl\u00e8me"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "low",
+      "description": "Niveau de gravit\u00e9"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "resolved",
+        "closed"
+      ],
+      "default": "open",
+      "description": "Statut de l'incident"
+    },
+    "reported_by_name": {
+      "type": "string",
+      "description": "Nom du signalant (d\u00e9normalis\u00e9)"
+    },
+    "assigned_to_name": {
+      "type": "string",
+      "description": "Nom de la personne assign\u00e9e (d\u00e9normalis\u00e9)"
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "Notes de r\u00e9solution"
+    }
+  },
+  "required": [
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

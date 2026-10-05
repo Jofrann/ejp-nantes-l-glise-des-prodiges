@@ -1,0 +1,88 @@
+{
+  "name": "SoundEquipment",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Sonorisation (scoping)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nom de l'\u00e9quipement (ex: Console X32, Micro HF 2)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "console",
+        "mic",
+        "speaker",
+        "cable",
+        "di",
+        "computer",
+        "audio_interface",
+        "headphone",
+        "stand",
+        "adapter",
+        "other"
+      ],
+      "default": "other",
+      "description": "Cat\u00e9gorie d'\u00e9quipement"
+    },
+    "identifier": {
+      "type": "string",
+      "description": "Tag / identifiant interne (ex: SONO-001)"
+    },
+    "location": {
+      "type": "string",
+      "description": "Lieu de stockage (ex: Local Sono, Rack principal)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "in_use",
+        "maintenance",
+        "broken",
+        "missing",
+        "retired"
+      ],
+      "default": "available",
+      "description": "\u00c9tat de l'\u00e9quipement"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes techniques non sensibles"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u00c9quipement actif (false = masqu\u00e9 des listes normales)"
+    }
+  },
+  "required": [
+    "department_id",
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

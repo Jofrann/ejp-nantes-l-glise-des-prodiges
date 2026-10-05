@@ -1,0 +1,69 @@
+{
+  "name": "SoundChecklistTemplate",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Sonorisation (scoping)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nom du template (ex: Checklist Avant Culte)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description courte"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Libell\u00e9 de l'\u00e9tape"
+          },
+          "item_order": {
+            "type": "number",
+            "default": 0
+          }
+        },
+        "required": [
+          "label"
+        ]
+      },
+      "description": "\u00c9tapes du template (configuration, pas donn\u00e9es op\u00e9rationnelles)"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Template actif"
+    }
+  },
+  "required": [
+    "department_id",
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

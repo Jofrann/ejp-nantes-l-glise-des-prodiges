@@ -1,22 +1,18 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { checkMusicAccess } from '../../shared/musicPermissions.ts';
+import { checkSoundAccess } from '../../shared/soundPermissions.ts';
 import { filterActiveMembers, loadUserMap, enrichMembers, enrichAssignments, groupBy, loadAssignmentsForPlans } from '../../shared/departmentDataUtils.ts';
 
 /**
- * getMusicData — Fonction backend gardien pour les données musicales.
+ * getSoundData — Fonction backend gardien pour les données Sonorisation.
  *
- * Vérifie l'appartenance au département Prodiges Musique, puis renvoie
- * toutes les données musicales autorisées (plans, affectations, répétitions,
- * chants, setlists, profils, disponibilités).
+ * Vérifie l'appartenance au département Sonorisation, puis renvoie
+ * toutes les données techniques autorisées (plans, affectations, matériel,
+ * incidents, checklists, profils, disponibilités).
  *
  * La sécurité ne repose PAS sur l'interface — cette fonction est le gardien backend.
  *
  * Paramètres :
- * - department_slug : slug du département musique
- *
- * Retour :
- * - access_denied si l'utilisateur n'appartient pas au département
- * - toutes les données musicales si autorisé
+ * - department_slug : slug du département sonorisation
  */
 export default async function(req: Request): Promise<Response> {
   try {
@@ -32,16 +28,16 @@ export default async function(req: Request): Promise<Response> {
     }
 
     // 1. Vérifier l'accès
-    const access = await checkMusicAccess(base44, department_slug);
+    const access = await checkSoundAccess(base44, department_slug);
     if (access.not_found) {
       return Response.json({ not_found: true });
     }
     if (access.access_denied) {
       await base44.asServiceRole.entities.AuditLog.create({
         action: 'access_denied',
-        entity_type: 'MusicDepartment',
+        entity_type: 'SoundDepartment',
         entity_id: access.department?.id || '',
-        details: `Tentative d'accès refusée aux données musicales (${department_slug})`,
+        details: `Tentative d'accès refusée aux données sonorisation (${department_slug})`,
         performed_by_id: user.id,
         performed_by_name: user.full_name || user.email,
         performed_by_role: user.role || '',
@@ -57,34 +53,34 @@ export default async function(req: Request): Promise<Response> {
     const isResponsable = access.isResponsable;
     const isAdmin = access.isAdmin;
 
-    // 2. Charger toutes les données musicales scopées au département
-    const [plans, rehearsals, songs, setlistItems, profiles, availabilities, members] = await Promise.all([
-      base44.asServiceRole.entities.MusicServicePlan.filter(
+    // 2. Charger toutes les données scopées au département
+    const [plans, equipment, incidents, templates, profiles, availabilities, members] = await Promise.all([
+      base44.asServiceRole.entities.SoundServicePlan.filter(
         { department_id: deptId },
         '-date',
         100
       ),
-      base44.asServiceRole.entities.MusicRehearsal.filter(
-        { department_id: deptId },
-        '-date',
-        50
-      ),
-      base44.asServiceRole.entities.MusicSong.filter(
+      base44.asServiceRole.entities.SoundEquipment.filter(
         { department_id: deptId, active: true },
-        'title',
+        'name',
         500
       ),
-      base44.asServiceRole.entities.MusicSetlistItem.filter(
-        { department_id: deptId },
-        'item_order',
-        500
+      base44.asServiceRole.entities.SoundIncident.filter(
+        { department_id: deptId, status: { $in: ['open', 'in_progress'] } },
+        '-created_date',
+        100
       ),
-      base44.asServiceRole.entities.MusicMemberProfile.filter(
+      base44.asServiceRole.entities.SoundChecklistTemplate.filter(
+        { department_id: deptId, active: true },
+        'name',
+        100
+      ),
+      base44.asServiceRole.entities.SoundMemberProfile.filter(
         { department_id: deptId, active: true },
         'full_name',
         200
       ),
-      base44.asServiceRole.entities.MusicAvailability.filter(
+      base44.asServiceRole.entities.SoundAvailability.filter(
         { department_id: deptId },
         '-date',
         200
@@ -101,9 +97,26 @@ export default async function(req: Request): Promise<Response> {
 
     // 4. Récupérer les assignments pour les plans
     const planIds = (plans || []).map((p: any) => p.id);
-    const assignments = await loadAssignmentsForPlans(base44, 'MusicAssignment', planIds);
+    const assignments = await loadAssignmentsForPlans(base44, 'SoundAssignment', planIds);
 
-    // 5. Enrichir les membres avec internal_identifier et profil musical
+    // 5. Récupérer les checklist runs pour les plans
+    let checklistRuns: any[] = [];
+    if (planIds.length > 0) {
+      checklistRuns = await base44.asServiceRole.entities.SoundChecklistRun.filter({
+        service_plan_id: { $in: planIds },
+      });
+    }
+
+    // 6. Récupérer les item states pour les runs
+    const runIds = (checklistRuns || []).map((r: any) => r.id);
+    let checklistItemStates: any[] = [];
+    if (runIds.length > 0) {
+      checklistItemStates = await base44.asServiceRole.entities.SoundChecklistItemState.filter({
+        run_id: { $in: runIds },
+      });
+    }
+
+    // 7. Enrichir les membres avec internal_identifier et profil technique
     const memberUserIds = activeMembers.map((m: any) => m.user_id).filter(Boolean);
     const userMap = await loadUserMap(base44, memberUserIds);
 
@@ -112,18 +125,24 @@ export default async function(req: Request): Promise<Response> {
       if (p.user_id) profileMap[p.user_id] = p;
     });
 
-    const enrichedMembers = enrichMembers(activeMembers, userMap, profileMap, 'music_profile');
+    const enrichedMembers = enrichMembers(activeMembers, userMap, profileMap, 'sound_profile');
 
-    // 6. Enrichir les assignments avec full_name si manquant
+    // 8. Enrichir les assignments avec full_name si manquant
     const assignmentUserIds = (assignments || []).map((a: any) => a.user_id).filter(Boolean);
     const assignmentUserMap = await loadUserMap(base44, assignmentUserIds);
     const enrichedAssignments = enrichAssignments(assignments, assignmentUserMap);
 
-    // 7. Grouper les setlists, assignments, répétitions et disponibilités
-    const setlistByPlan = groupBy(setlistItems || [], 'service_plan_id');
+    // 9. Grouper les données
     const assignmentsByPlan = groupBy(enrichedAssignments, 'service_plan_id');
-    const rehearsalsByPlan = groupBy((rehearsals || []).filter((r: any) => r.service_plan_id), 'service_plan_id');
+    const checklistRunsByPlan = groupBy((checklistRuns || []).filter((r: any) => r.service_plan_id), 'service_plan_id');
+    const itemStatesByRun = groupBy(checklistItemStates || [], 'run_id');
     const availabilityByDate = groupBy(availabilities || [], 'date');
+
+    // 10. Carte équipement pour les incidents
+    const equipmentMap: Record<string, any> = {};
+    (equipment || []).forEach((e: any) => {
+      equipmentMap[e.id] = e;
+    });
 
     return Response.json({
       access_granted: true,
@@ -135,11 +154,14 @@ export default async function(req: Request): Promise<Response> {
       plans: plans || [],
       assignments: enrichedAssignments,
       assignments_by_plan: assignmentsByPlan,
-      rehearsals: rehearsals || [],
-      rehearsals_by_plan: rehearsalsByPlan,
-      songs: songs || [],
-      setlist_items: setlistItems || [],
-      setlist_by_plan: setlistByPlan,
+      equipment: equipment || [],
+      equipment_map: equipmentMap,
+      incidents: incidents || [],
+      checklist_templates: templates || [],
+      checklist_runs: checklistRuns || [],
+      checklist_runs_by_plan: checklistRunsByPlan,
+      checklist_item_states: checklistItemStates || [],
+      item_states_by_run: itemStatesByRun,
       profiles: profiles || [],
       availabilities: availabilities || [],
       availability_by_date: availabilityByDate,

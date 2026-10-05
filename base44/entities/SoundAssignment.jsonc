@@ -1,0 +1,88 @@
+{
+  "name": "SoundAssignment",
+  "type": "object",
+  "properties": {
+    "service_plan_id": {
+      "type": "string",
+      "description": "ID du SoundServicePlan"
+    },
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement (scoping)"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID du membre affect\u00e9"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nom complet (d\u00e9normalis\u00e9)"
+    },
+    "position": {
+      "type": "string",
+      "enum": [
+        "foh",
+        "monitors",
+        "stage",
+        "mics",
+        "setup",
+        "cabling",
+        "broadcast",
+        "streaming",
+        "tech_assist",
+        "autre"
+      ],
+      "description": "Poste technique pour ce service"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "assigned",
+        "confirmed",
+        "declined",
+        "replaced"
+      ],
+      "default": "assigned",
+      "description": "Statut de l'affectation"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes courtes (ex: arrive \u00e0 13h15)"
+    }
+  },
+  "required": [
+    "service_plan_id",
+    "department_id",
+    "user_id",
+    "position"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

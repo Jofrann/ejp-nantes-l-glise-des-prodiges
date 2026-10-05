@@ -1,0 +1,63 @@
+{
+  "name": "SoundChecklistRun",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Sonorisation (scoping)"
+    },
+    "service_plan_id": {
+      "type": "string",
+      "description": "ID du SoundServicePlan li\u00e9 (optionnel)"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "ID du SoundChecklistTemplate utilis\u00e9"
+    },
+    "template_name": {
+      "type": "string",
+      "description": "Nom du template (d\u00e9normalis\u00e9)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "in_progress",
+      "description": "Statut de l'ex\u00e9cution"
+    },
+    "completed_by_name": {
+      "type": "string",
+      "description": "Nom de la personne qui a termin\u00e9 (d\u00e9normalis\u00e9)"
+    }
+  },
+  "required": [
+    "department_id",
+    "template_id",
+    "template_name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

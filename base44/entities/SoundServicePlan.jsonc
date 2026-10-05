@@ -1,0 +1,74 @@
+{
+  "name": "SoundServicePlan",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Sonorisation"
+    },
+    "event_id": {
+      "type": "string",
+      "description": "ID de l'Event global correspondant (optionnel \u2014 ne pas dupliquer Event)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du service technique (ex: Culte EJP)"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date du service"
+    },
+    "call_time": {
+      "type": "string",
+      "description": "Heure de pr\u00e9sence / appel (HH:MM)"
+    },
+    "service_start_time": {
+      "type": "string",
+      "description": "Heure de d\u00e9but du service (HH:MM)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "preparing",
+        "ready",
+        "completed",
+        "cancelled"
+      ],
+      "default": "draft",
+      "description": "Statut du plan technique"
+    },
+    "technical_notes": {
+      "type": "string",
+      "description": "Consignes techniques pour ce service"
+    }
+  },
+  "required": [
+    "department_id",
+    "title",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

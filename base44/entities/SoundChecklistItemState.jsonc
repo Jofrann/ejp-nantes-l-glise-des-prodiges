@@ -1,0 +1,64 @@
+{
+  "name": "SoundChecklistItemState",
+  "type": "object",
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "description": "ID du SoundChecklistRun"
+    },
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement (scoping)"
+    },
+    "item_label": {
+      "type": "string",
+      "description": "Libell\u00e9 de l'\u00e9tape (d\u00e9normalis\u00e9 depuis le template)"
+    },
+    "item_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Ordre de l'\u00e9tape"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "todo",
+        "done",
+        "problem"
+      ],
+      "default": "todo",
+      "description": "\u00c9tat de l'\u00e9tape"
+    },
+    "note": {
+      "type": "string",
+      "description": "Note courte (ex: probl\u00e8me sur canal 4)"
+    }
+  },
+  "required": [
+    "run_id",
+    "department_id",
+    "item_label"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
