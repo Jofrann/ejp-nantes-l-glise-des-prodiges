@@ -47,6 +47,12 @@ import LogisticsPlanningTab from '@/components/departements/logistics/LogisticsP
 import LogisticsTasksTab from '@/components/departements/logistics/LogisticsTasksTab';
 import LogisticsNeedsTab from '@/components/departements/logistics/LogisticsNeedsTab';
 import LogisticsEquipmentTab from '@/components/departements/logistics/LogisticsEquipmentTab';
+import CoordinationOverviewTab from '@/components/departements/coordination/CoordinationOverviewTab';
+import CoordinationPlanningTab from '@/components/departements/coordination/CoordinationPlanningTab';
+import CoordinationFollowUpsTab from '@/components/departements/coordination/CoordinationFollowUpsTab';
+import CoordinationAttentionTab from '@/components/departements/coordination/CoordinationAttentionTab';
+import CoordinationMeetingsTab from '@/components/departements/coordination/CoordinationMeetingsTab';
+import CoordinationReportsTab from '@/components/departements/coordination/CoordinationReportsTab';
 import { getEnabledModules, MODULE_META } from '@/lib/departmentModules';
 import { POSITION_LABELS } from '@/lib/musicConstants';
 
@@ -56,6 +62,7 @@ const PRAYER_TABS = ['prayer_planning', 'prayer_topics', 'prayer_requests', 'pra
 const WELCOME_TABS = ['welcome_planning', 'welcome_visitors', 'welcome_integration'];
 const MODERATION_TABS = ['moderation_planning', 'moderation_run', 'moderation_announcements'];
 const LOGISTICS_TABS = ['logistics_planning', 'logistics_tasks', 'logistics_needs', 'logistics_equipment'];
+const COORDINATION_TABS = ['coordination_planning', 'coordination_followups', 'coordination_attention', 'coordination_meetings', 'coordination_reports'];
 
 const COLOR_MAP = {
   amber:  { border: 'border-secondary/20', text: 'text-secondary', bg: 'bg-secondary/10', glow: 'bg-secondary/5' },
@@ -109,6 +116,8 @@ export default function PageDepartement() {
   const [moderationLoading, setModerationLoading] = useState(false);
   const [logisticsData, setLogisticsData] = useState(null);
   const [logisticsLoading, setLogisticsLoading] = useState(false);
+  const [coordinationData, setCoordinationData] = useState(null);
+  const [coordinationLoading, setCoordinationLoading] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -190,6 +199,12 @@ export default function PageDepartement() {
       const hasLogistics = modules.some(m => LOGISTICS_TABS.includes(m));
       if (hasLogistics) {
         loadLogisticsData(res.department.slug);
+      }
+
+      // Charger les données Coordination si le département a des modules coordination
+      const hasCoordination = modules.some(m => COORDINATION_TABS.includes(m));
+      if (hasCoordination) {
+        loadCoordinationData(res.department.slug);
       }
 
       // Messages non lus
@@ -308,6 +323,20 @@ export default function PageDepartement() {
       // Silencieux — les données Intendance sont optionnelles
     } finally {
       setLogisticsLoading(false);
+    }
+  };
+
+  const loadCoordinationData = async (slug) => {
+    setCoordinationLoading(true);
+    try {
+      const res = (await base44.functions.invoke('getCoordinationData', { department_slug: slug || (dept && dept.slug) || slugOrId })).data;
+      if (!res.access_denied && !res.not_found) {
+        setCoordinationData(res);
+      }
+    } catch (e) {
+      // Silencieux — les données Coordination sont optionnelles
+    } finally {
+      setCoordinationLoading(false);
     }
   };
 
@@ -454,6 +483,7 @@ export default function PageDepartement() {
                 welcome_planning: Calendar, welcome_visitors: UserCheck, welcome_integration: Heart,
                 moderation_planning: Calendar, moderation_run: ListChecks, moderation_announcements: Megaphone,
                 logistics_planning: Calendar, logistics_tasks: ListChecks, logistics_needs: Package, logistics_equipment: Package,
+                coordination_planning: Calendar, coordination_followups: ListChecks, coordination_attention: AlertTriangle, coordination_meetings: Users, coordination_reports: FileText,
               };
               const Icon = iconMap[modId] || MessageCircle;
               const active = currentTab === modId;
@@ -556,6 +586,15 @@ export default function PageDepartement() {
                       onNavigateTab={(tab) => setActiveTab(tab)}
                     />
                   ) : null}
+                  {coordinationData && COORDINATION_TABS.some(t => enabledModules.includes(t)) ? (
+                    <CoordinationOverviewTab
+                      coordinationData={coordinationData}
+                      isResponsable={isResponsable || canManage}
+                      currentUserId={coordinationData.current_user_id}
+                      colors={colors}
+                      onNavigateTab={(tab) => setActiveTab(tab)}
+                    />
+                  ) : null}
                   <DeptOverviewTab
                     dept={dept}
                     members={members}
@@ -575,13 +614,15 @@ export default function PageDepartement() {
                   welcomeProfiles={welcomeData ? welcomeData.profiles : null}
                   moderationProfiles={moderationData ? moderationData.profiles : null}
                   logisticsProfiles={logisticsData ? logisticsData.profiles : null}
+                  coordinationProfiles={coordinationData ? coordinationData.profiles : null}
                   departmentType={
                     MUSIC_TABS.some(t => enabledModules.includes(t)) ? 'music' :
                     SOUND_TABS.some(t => enabledModules.includes(t)) ? 'sound' :
                     PRAYER_TABS.some(t => enabledModules.includes(t)) ? 'prayer' :
                     WELCOME_TABS.some(t => enabledModules.includes(t)) ? 'welcome' :
                     MODERATION_TABS.some(t => enabledModules.includes(t)) ? 'moderation' :
-                    LOGISTICS_TABS.some(t => enabledModules.includes(t)) ? 'logistics' : null
+                    LOGISTICS_TABS.some(t => enabledModules.includes(t)) ? 'logistics' :
+                    COORDINATION_TABS.some(t => enabledModules.includes(t)) ? 'coordination' : null
                   }
                 />
               )}
@@ -802,6 +843,51 @@ export default function PageDepartement() {
                   currentUserId={logisticsData.current_user_id}
                   colors={colors}
                   onRefresh={() => loadLogisticsData()}
+                />
+              )}
+              {currentTab === 'coordination_planning' && coordinationData && (
+                <CoordinationPlanningTab
+                  coordinationData={coordinationData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={coordinationData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadCoordinationData()}
+                />
+              )}
+              {currentTab === 'coordination_followups' && coordinationData && (
+                <CoordinationFollowUpsTab
+                  coordinationData={coordinationData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={coordinationData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadCoordinationData()}
+                />
+              )}
+              {currentTab === 'coordination_attention' && coordinationData && (
+                <CoordinationAttentionTab
+                  coordinationData={coordinationData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={coordinationData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadCoordinationData()}
+                />
+              )}
+              {currentTab === 'coordination_meetings' && coordinationData && (
+                <CoordinationMeetingsTab
+                  coordinationData={coordinationData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={coordinationData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadCoordinationData()}
+                />
+              )}
+              {currentTab === 'coordination_reports' && coordinationData && (
+                <CoordinationReportsTab
+                  coordinationData={coordinationData}
+                  isResponsable={isResponsable || canManage}
+                  currentUserId={coordinationData.current_user_id}
+                  colors={colors}
+                  onRefresh={() => loadCoordinationData()}
                 />
               )}
             </motion.div>

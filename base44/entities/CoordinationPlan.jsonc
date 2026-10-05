@@ -1,0 +1,94 @@
+{
+  "name": "CoordinationPlan",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Coordination (scoping)"
+    },
+    "event_id": {
+      "type": "string",
+      "description": "ID de l'Event global correspondant (optionnel \u2014 ne donne aucun acc\u00e8s aux autres d\u00e9partements)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du plan"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description / contexte"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date du plan"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Heure de d\u00e9but (HH:MM, facultatif)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Heure de fin (HH:MM, facultatif)"
+    },
+    "location": {
+      "type": "string",
+      "description": "Lieu (facultatif)"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "meeting",
+        "follow_up",
+        "deadline",
+        "coordination",
+        "other"
+      ],
+      "default": "coordination",
+      "description": "Type de plan"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "planned",
+        "confirmed",
+        "completed",
+        "cancelled"
+      ],
+      "default": "draft",
+      "description": "Statut du plan"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "ID du cr\u00e9ateur"
+    }
+  },
+  "required": [
+    "department_id",
+    "title",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@ import { PROFILE_FUNCTION_SHORT as PRAYER_FUNCTION_SHORT } from '@/lib/prayerCon
 import { PROFILE_FUNCTION_SHORT as WELCOME_FUNCTION_SHORT } from '@/lib/welcomeConstants';
 import { PROFILE_FUNCTION_SHORT as MODERATION_FUNCTION_SHORT } from '@/lib/moderationConstants';
 import { PROFILE_FUNCTION_SHORT as LOGISTICS_FUNCTION_SHORT } from '@/lib/logisticsConstants';
+import { PROFILE_FUNCTION_SHORT as COORDINATION_FUNCTION_SHORT } from '@/lib/coordinationConstants';
 
 /**
  * DeptTeamTab — Onglet Équipe du moteur départemental.
@@ -18,7 +19,7 @@ import { PROFILE_FUNCTION_SHORT as LOGISTICS_FUNCTION_SHORT } from '@/lib/logist
  * Un simple serviteur voit les mêmes informations qu'un responsable
  * (les capacités de gestion sont limitées à l'admin via Annuaire).
  */
-export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null, prayerProfiles = null, welcomeProfiles = null, moderationProfiles = null, logisticsProfiles = null, departmentType = null }) {
+export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null, prayerProfiles = null, welcomeProfiles = null, moderationProfiles = null, logisticsProfiles = null, coordinationProfiles = null, departmentType = null }) {
   // CLOISONNEMENT : ne construire que la map correspondant au département courant.
   // Les profils spécialisés des autres départements ne sont pas chargés ni affichés.
   const musicProfileMap = {};
@@ -44,6 +45,10 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
   const logisticsProfileMap = {};
   if (logisticsProfiles && departmentType === 'logistics') {
     logisticsProfiles.forEach(p => { if (p.user_id) logisticsProfileMap[p.user_id] = p; });
+  }
+  const coordinationProfileMap = {};
+  if (coordinationProfiles && departmentType === 'coordination') {
+    coordinationProfiles.forEach(p => { if (p.user_id) coordinationProfileMap[p.user_id] = p; });
   }
   if (members.length === 0) {
     return (
@@ -139,6 +144,15 @@ export default function DeptTeamTab({ members, colors, musicProfiles = null, sou
                   {logisticsProfileMap[m.user_id].functions.map(fn => (
                     <span key={fn} className="text-[10px] px-1.5 py-0.5 rounded border bg-green-500/5 text-green-600 border-green-400/20">
                       {LOGISTICS_FUNCTION_SHORT[fn] || fn}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {departmentType === 'coordination' && coordinationProfileMap[m.user_id]?.functions?.length > 0 && (
+                <div className="flex items-center gap-1 mt-1 flex-wrap">
+                  {coordinationProfileMap[m.user_id].functions.map(fn => (
+                    <span key={fn} className="text-[10px] px-1.5 py-0.5 rounded border bg-indigo-500/5 text-indigo-600 border-indigo-400/20">
+                      {COORDINATION_FUNCTION_SHORT[fn] || fn}
                     </span>
                   ))}
                 </div>

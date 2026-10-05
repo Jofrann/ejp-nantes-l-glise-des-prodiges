@@ -1,0 +1,109 @@
+{
+  "name": "CoordinationMeeting",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Coordination (scoping)"
+    },
+    "event_id": {
+      "type": "string",
+      "description": "ID de l'Event global correspondant (optionnel \u2014 ne donne aucun acc\u00e8s aux autres d\u00e9partements)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre de la r\u00e9union"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de la r\u00e9union"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Heure de d\u00e9but (HH:MM)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Heure de fin (HH:MM, facultatif)"
+    },
+    "location": {
+      "type": "string",
+      "description": "Lieu (facultatif)"
+    },
+    "participant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs des participants internes (Users EJP existants)"
+    },
+    "participant_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Noms des participants (d\u00e9normalis\u00e9s)"
+    },
+    "external_participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Noms d'intervenants externes (ne cr\u00e9e pas de User)"
+    },
+    "agenda": {
+      "type": "string",
+      "description": "Ordre du jour"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Compte rendu / notes de la r\u00e9union"
+    },
+    "decisions": {
+      "type": "string",
+      "description": "D\u00e9cisions prises (facultatif)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "completed",
+        "cancelled"
+      ],
+      "default": "planned",
+      "description": "Statut de la r\u00e9union"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "ID du cr\u00e9ateur"
+    }
+  },
+  "required": [
+    "department_id",
+    "title",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

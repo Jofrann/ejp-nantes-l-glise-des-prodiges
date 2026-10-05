@@ -1,0 +1,85 @@
+{
+  "name": "CoordinationReport",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Coordination (scoping)"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "D\u00e9but de la p\u00e9riode"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Fin de la p\u00e9riode"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du rapport"
+    },
+    "summary": {
+      "type": "string",
+      "description": "R\u00e9sum\u00e9 / contenu du rapport"
+    },
+    "difficulties": {
+      "type": "string",
+      "description": "Difficult\u00e9s rencontr\u00e9es (facultatif)"
+    },
+    "needs": {
+      "type": "string",
+      "description": "Besoins identifi\u00e9s (facultatif)"
+    },
+    "decisions": {
+      "type": "string",
+      "description": "D\u00e9cisions prises (facultatif)"
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "ID de l'auteur"
+    },
+    "submitted_by_name": {
+      "type": "string",
+      "description": "Nom de l'auteur (d\u00e9normalis\u00e9)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "validated",
+        "correction_required"
+      ],
+      "default": "draft",
+      "description": "Statut du rapport"
+    }
+  },
+  "required": [
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

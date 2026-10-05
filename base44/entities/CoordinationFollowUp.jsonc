@@ -1,0 +1,112 @@
+{
+  "name": "CoordinationFollowUp",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement Coordination (scoping)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titre du suivi"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description / contexte du suivi"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "ID de l'utilisateur assign\u00e9 (facultatif)"
+    },
+    "assigned_to_name": {
+      "type": "string",
+      "description": "Nom de l'assign\u00e9 (d\u00e9normalis\u00e9)"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date d'\u00e9ch\u00e9ance (facultatif)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal",
+      "description": "Priorit\u00e9 du suivi"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "todo",
+        "in_progress",
+        "waiting",
+        "done",
+        "cancelled"
+      ],
+      "default": "todo",
+      "description": "Statut du suivi"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "meeting",
+        "request",
+        "decision",
+        "event",
+        "internal",
+        "other"
+      ],
+      "default": "internal",
+      "description": "Source du suivi (ne donne aucun acc\u00e8s vers la source)"
+    },
+    "source_meeting_id": {
+      "type": "string",
+      "description": "ID de la r\u00e9union source (facultatif)"
+    },
+    "source_event_id": {
+      "type": "string",
+      "description": "ID de l'Event source (facultatif \u2014 ne donne aucun acc\u00e8s aux d\u00e9partements)"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "ID du cr\u00e9ateur"
+    }
+  },
+  "required": [
+    "department_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.assigned_to": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

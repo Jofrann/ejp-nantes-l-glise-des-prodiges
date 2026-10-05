@@ -27,6 +27,7 @@ export const IMPLEMENTED_MODULES = [
   'welcome_planning', 'welcome_visitors', 'welcome_integration',
   'moderation_planning', 'moderation_run', 'moderation_announcements',
   'logistics_planning', 'logistics_tasks', 'logistics_needs', 'logistics_equipment',
+  'coordination_planning', 'coordination_followups', 'coordination_attention', 'coordination_meetings', 'coordination_reports',
 ];
 
 // Métadonnées d'affichage des modules (labels, icônes Lucide)
@@ -58,6 +59,11 @@ export const MODULE_META = {
   logistics_tasks:     { label: 'Tâches',    icon: 'ListChecks' },
   logistics_needs:     { label: 'Besoins',   icon: 'Package' },
   logistics_equipment: { label: 'Matériel',  icon: 'Package' },
+  coordination_planning:  { label: 'Planning',  icon: 'Calendar' },
+  coordination_followups:{ label: 'Suivis',    icon: 'ListChecks' },
+  coordination_attention:{ label: 'Points d\'attention', icon: 'AlertTriangle' },
+  coordination_meetings: { label: 'Réunions',  icon: 'Users' },
+  coordination_reports:  { label: 'Rapports',  icon: 'FileText' },
   // Modules non implémentés (documentés pour référence future)
   meetings:  { label: 'Réunions',  icon: 'Calendar' },
   resources: { label: 'Ressources', icon: 'FileText' },
@@ -121,6 +127,16 @@ const DEPARTMENT_OVERRIDES = {
     'logistics_tasks',
     'logistics_needs',
     'logistics_equipment',
+    'team',
+    'messages',
+  ],
+  'coordination': [
+    'overview',
+    'coordination_planning',
+    'coordination_followups',
+    'coordination_attention',
+    'coordination_meetings',
+    'coordination_reports',
     'team',
     'messages',
   ],
