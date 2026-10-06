@@ -2,7 +2,7 @@ import {
   Home, Calendar, CheckCircle, Sprout, GraduationCap,
   CalendarClock, BookOpen, Briefcase, Shield, Settings,
   Target, NotebookPen, TrendingUp, Clock, AlertCircle,
-  FileText, ShoppingBag, Heart, Users, Music, Award,
+  FileText, Heart, Users, Music, Award,
   BellRing, LayoutDashboard, MapPin, Phone, Wrench
 } from 'lucide-react';
 
@@ -30,7 +30,6 @@ export const MEGA_MENU = [
     items: [
       { label: 'Vue d\'ensemble', desc: 'Mon département, ma fonction', icon: LayoutDashboard, to: '/app/service' },
       { label: 'Mon Département', desc: 'Mission, équipe, actualités', icon: Briefcase, to: '/app/service' },
-      { label: 'Mon Feedback', desc: 'Feedbacks reçus', icon: FileText, to: '/app/service' },
       { label: 'Mes Présences', desc: 'Confirmer et historique', icon: CheckCircle, to: '/app/presences' },
     ],
   },
@@ -54,7 +53,6 @@ export const MEGA_MENU = [
     items: [
       { label: 'Documents', desc: 'Télécharger des ressources', icon: FileText, to: '/app/ressources' },
       { label: 'Liens utiles', desc: 'Accès rapides', icon: BookOpen, to: '/app/ressources' },
-      { label: 'Boutique', desc: 'Produits EJP', icon: ShoppingBag, to: '/app/ressources/boutique' },
       { label: 'Contacts utiles', desc: 'Joindre l\'équipe', icon: Phone, to: '/app/ressources' },
     ],
   },
@@ -105,12 +103,12 @@ export const MEGA_MENU_RESTRICTED = [
     id: 'pilotage',
     label: 'Pilotage',
     icon: Shield,
-    route: '/app/supervision',
+    route: '/app/pilotage',
     items: [
-      { label: 'Vue globale', desc: 'Effectifs et indicateurs', icon: LayoutDashboard, to: '/app/supervision' },
-      { label: 'Présences', desc: 'Agrégats par département', icon: CheckCircle, to: '/app/supervision' },
-      { label: 'FIJ', desc: 'Réseau et reporting', icon: Users, to: '/app/supervision' },
-      { label: 'Alertes', desc: 'Points d\'attention', icon: AlertCircle, to: '/app/supervision' },
+      { label: 'Vue globale', desc: 'Effectifs et indicateurs', icon: LayoutDashboard, to: '/app/pilotage' },
+      { label: 'Présences', desc: 'Agrégats par département', icon: CheckCircle, to: '/app/pilotage' },
+      { label: 'FIJ', desc: 'Réseau et reporting', icon: Users, to: '/app/pilotage' },
+      { label: 'Alertes', desc: 'Points d\'attention', icon: AlertCircle, to: '/app/pilotage' },
     ],
   },
   {

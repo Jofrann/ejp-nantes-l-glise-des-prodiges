@@ -193,8 +193,8 @@ const AuthenticatedApp = () => {
           <Route path="/app/departements/fij/coordination/registre/:fijId/cr-jeudi/nouveau" element={<Navigate to="/app/responsabilites/fij-coordination/registre/:fijId/cr-jeudi/nouveau" replace />} />
           <Route path="/app/departements/fij/coordination/registre/:fijId/cr-jeudi/:reportId" element={<Navigate to="/app/responsabilites/fij-coordination/registre/:fijId/cr-jeudi/:reportId" replace />} />
           <Route path="/app/departements/fij/coordination/cr-jeudi" element={<Navigate to="/app/responsabilites/fij-coordination/cr-jeudi" replace />} />
-          <Route path="/app/departements/fij/direction" element={<Navigate to="/app/supervision" replace />} />
-          <Route path="/app/departements/fij/direction/tableau-de-bord" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/departements/fij/direction" element={<Navigate to="/app/pilotage" replace />} />
+          <Route path="/app/departements/fij/direction/tableau-de-bord" element={<Navigate to="/app/pilotage" replace />} />
           <Route path="/app/departements/fij/fij/:id" element={<Navigate to="/app/responsabilites/fij-pilote/fij/:id" replace />} />
           <Route path="/app/departements/fij/fij/:id/cr/nouveau" element={<Navigate to="/app/responsabilites/fij-pilote/fij/:id/cr/nouveau" replace />} />
 
@@ -250,14 +250,14 @@ const AuthenticatedApp = () => {
           <Route path="/app/departements/louange" element={<Navigate to="/app/departements/prodiges-musique" replace />} />
           <Route path="/app/departements/:slug" element={<DepartmentEntry />} />
           <Route path="/app/departements/:slug/parametres" element={<EditerDepartement />} />
-          <Route path="/app/direction" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/direction" element={<Navigate to="/app/pilotage" replace />} />
           <Route path="/app/admin" element={<RoleGuard allowedRoles={['admin']}><AdminHome /></RoleGuard>} />
           <Route path="/app/annuaire" element={<RoleGuard allowedRoles={['admin']}><AnnuaireEJP /></RoleGuard>} />
           <Route path="/app/annuaire/:userId" element={<RoleGuard allowedRoles={['admin']}><PersonFiche /></RoleGuard>} />
           <Route path="/hub" element={<Navigate to="/app" replace />} />
           {/* Redirections anciennes routes */}
           <Route path="/admin" element={<Navigate to="/app/admin" replace />} />
-          <Route path="/bureau" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/bureau" element={<Navigate to="/app" replace />} />
           <Route path="/profil" element={<Navigate to="/app/profil" replace />} />
           <Route path="/departements" element={<Navigate to="/app/departements" replace />} />
           <Route path="*" element={<PageNotFound />} />

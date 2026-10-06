@@ -67,9 +67,9 @@ export default function BureauContextColumn({ events = [], user, favoriteShortcu
           <p className="text-xs font-heading font-semibold text-foreground mb-3">Espace direction</p>
           <div className="space-y-1">
             {isBureauLike(user) && (
-              <Link to="/app/supervision" className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-surface transition-colors">
+              <Link to="/app/pilotage" className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-surface transition-colors">
                 <Shield className="w-3.5 h-3.5 text-primary" />
-                <span className="text-xs text-foreground">Supervision</span>
+                <span className="text-xs text-foreground">Pilotage</span>
                 <ChevronRight className="w-3 h-3 text-muted-foreground/40 ml-auto" />
               </Link>
             )}

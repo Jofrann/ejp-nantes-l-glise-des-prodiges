@@ -64,8 +64,8 @@ export default function StarLayout({ children, user }) {
 
           {/* Mega-menu desktop — anchored per-trigger */}
           <MegaMenu
-            showSupervision={false}
-            showAdmin={false}
+            showSupervision={showSupervision}
+            showAdmin={showAdmin}
             extraModules={extraModules}
             onNavigate={() => {}}
           />
@@ -136,7 +136,7 @@ export default function StarLayout({ children, user }) {
                     >
                       <div className="px-3 py-2 border-b border-border/50 mb-1">
                         <p className="text-xs font-semibold text-foreground truncate">{user?.full_name}</p>
-                        <p className="text-[10px] text-muted-foreground truncate">{user?.email}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{user?.internal_identifier || user?.email}</p>
                       </div>
                       <button
                         onClick={() => { navigate('/app/profil'); setProfileOpen(false); }}
@@ -152,10 +152,10 @@ export default function StarLayout({ children, user }) {
                       </button>
                       {showSupervision && (
                         <button
-                          onClick={() => { navigate('/app/supervision'); setProfileOpen(false); }}
+                          onClick={() => { navigate('/app/pilotage'); setProfileOpen(false); }}
                           className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-foreground hover:bg-surface transition-colors text-left"
                         >
-                          <Shield className="w-3.5 h-3.5 text-primary" /> Supervision
+                          <Shield className="w-3.5 h-3.5 text-primary" /> Pilotage
                         </button>
                       )}
                       {showAdmin && (
