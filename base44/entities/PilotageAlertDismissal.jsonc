@@ -1,0 +1,59 @@
+{
+  "name": "PilotageAlertDismissal",
+  "type": "object",
+  "properties": {
+    "alert_key": {
+      "type": "string",
+      "description": "Cl\u00e9 d\u00e9terministe identifiant l'alerte masqu\u00e9e"
+    },
+    "alert_title": {
+      "type": "string",
+      "description": "Titre de l'alerte au moment du masquage (trace)"
+    },
+    "source_type": {
+      "type": "string",
+      "description": "Type de source de l'alerte (logistics_task, sound_incident, etc.)"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "ID de l'entit\u00e9 source (facultatif)"
+    },
+    "dismissed_by": {
+      "type": "string",
+      "description": "ID de l'utilisateur ayant masqu\u00e9 l'alerte"
+    },
+    "dismissed_by_name": {
+      "type": "string",
+      "description": "Nom de l'utilisateur (d\u00e9normalis\u00e9)"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Raison du masquage (facultatif)"
+    }
+  },
+  "required": [
+    "alert_key"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

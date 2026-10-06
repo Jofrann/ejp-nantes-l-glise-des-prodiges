@@ -52,6 +52,8 @@ import MemberDetail from '@/pages/fij/MemberDetail';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import DepartmentEntry from '@/components/DepartmentEntry';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
+import Pilotage from '@/pages/pilotage/Pilotage';
+import PilotageDeptDetail from '@/pages/pilotage/PilotageDeptDetail';
 import StarAgenda from '@/pages/star/Agenda';
 import StarPresences from '@/pages/star/Presences';
 import StarFormations from '@/pages/star/Formations';
@@ -229,13 +231,14 @@ const AuthenticatedApp = () => {
           <Route path="/app/equipe" element={<MonEquipe />} />
           <Route path="/app/equipe/membres/:userId" element={<MonEquipe />} />
           <Route path="/app/organisation" element={<StarOrganisation />} />
-          <Route path="/app/supervision" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><StarSupervision /></RoleGuard>} />
-          <Route path="/app/pilotage" element={<Navigate to="/app/supervision" replace />} />
-          <Route path="/app/pilotage/personnes" element={<Navigate to="/app/supervision" replace />} />
-          <Route path="/app/pilotage/departements" element={<Navigate to="/app/supervision" replace />} />
-          <Route path="/app/pilotage/croissance" element={<Navigate to="/app/supervision" replace />} />
-          <Route path="/app/pilotage/alertes" element={<Navigate to="/app/supervision" replace />} />
-          <Route path="/app/pilotage/rapports" element={<Navigate to="/app/supervision" replace />} />
+          <Route path="/app/supervision" element={<Navigate to="/app/pilotage" replace />} />
+          <Route path="/app/pilotage" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><Pilotage /></RoleGuard>} />
+          <Route path="/app/pilotage/departements/:slug" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><PilotageDeptDetail /></RoleGuard>} />
+          <Route path="/app/pilotage/personnes" element={<Navigate to="/app/pilotage" replace />} />
+          <Route path="/app/pilotage/departements" element={<Navigate to="/app/pilotage" replace />} />
+          <Route path="/app/pilotage/croissance" element={<Navigate to="/app/pilotage" replace />} />
+          <Route path="/app/pilotage/alertes" element={<Navigate to="/app/pilotage" replace />} />
+          <Route path="/app/pilotage/rapports" element={<Navigate to="/app/pilotage" replace />} />
 
           {/* === Lot 3 : Redirections placeholders vers moteur départemental === */}
           <Route path="/app/responsabilites/accueil" element={<Navigate to="/app/departements/accueil" replace />} />

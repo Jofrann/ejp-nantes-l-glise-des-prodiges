@@ -1,0 +1,120 @@
+{
+  "name": "PilotageDecision",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Titre de la d\u00e9cision / suivi"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description / contexte de la d\u00e9cision"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "logistics_task",
+        "sound_incident",
+        "coordination_followup",
+        "coordination_attention",
+        "prayer_request",
+        "welcome_visitor",
+        "fij_alert",
+        "event",
+        "department",
+        "manual"
+      ],
+      "default": "manual",
+      "description": "Type de la source ayant motiv\u00e9 la d\u00e9cision"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "ID de l'entit\u00e9 source (facultatif \u2014 r\u00e9f\u00e9rence, pas de copie)"
+    },
+    "source_department_id": {
+      "type": "string",
+      "description": "ID du d\u00e9partement source (facultatif)"
+    },
+    "source_department_slug": {
+      "type": "string",
+      "description": "Slug du d\u00e9partement source (pour navigation)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal",
+      "description": "Priorit\u00e9 de la d\u00e9cision"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "resolved",
+        "cancelled"
+      ],
+      "default": "open",
+      "description": "Statut de la d\u00e9cision"
+    },
+    "assigned_user_id": {
+      "type": "string",
+      "description": "ID de l'utilisateur assign\u00e9 (facultatif)"
+    },
+    "assigned_to_name": {
+      "type": "string",
+      "description": "Nom de l'assign\u00e9 (d\u00e9normalis\u00e9)"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "\u00c9ch\u00e9ance (facultatif)"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "ID du cr\u00e9ateur"
+    },
+    "created_by_name": {
+      "type": "string",
+      "description": "Nom du cr\u00e9ateur (d\u00e9normalis\u00e9)"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de r\u00e9solution (facultatif)"
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "Notes de r\u00e9solution (facultatif)"
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
