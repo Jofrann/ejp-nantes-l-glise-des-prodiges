@@ -186,21 +186,33 @@ export default function PilotageDeptDetail() {
             </div>
           )}
 
-          {/* Bouton ouvrir l'espace départemental */}
+          {/* Bouton ouvrir l'espace départemental — conditionnel selon l'accès réel */}
           <div className="pt-4 border-t border-border">
-            <Link
-              to={`/app/departements/${slug}`}
-              className="w-full glass-card border border-secondary/20 rounded-2xl p-4 flex items-center justify-between hover:bg-secondary/5 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <ExternalLink className="w-5 h-5 text-secondary" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Ouvrir l'espace du département</p>
-                  <p className="text-xs text-muted-foreground">Accès à l'espace métier complet (si autorisé)</p>
+            {data.accessible_department_slugs && data.accessible_department_slugs.includes(slug) ? (
+              <Link
+                to={`/app/departements/${slug}`}
+                className="w-full glass-card border border-secondary/20 rounded-2xl p-4 flex items-center justify-between hover:bg-secondary/5 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <ExternalLink className="w-5 h-5 text-secondary" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Ouvrir l'espace du département</p>
+                    <p className="text-xs text-muted-foreground">Accès à l'espace métier complet</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-secondary group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            ) : (
+              <div className="w-full glass-card border border-border rounded-2xl p-4 flex items-center justify-between opacity-60">
+                <div className="flex items-center gap-3">
+                  <Lock className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-semibold text-muted-foreground">Accès départemental requis</p>
+                    <p className="text-xs text-muted-foreground">Vous n'êtes pas membre de ce département</p>
+                  </div>
                 </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-secondary group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            )}
           </div>
         </div>
       </div>

@@ -461,6 +461,23 @@ export default async function(req: Request): Promise<Response> {
       }),
     };
 
+    // === 11b. Départements accessibles par l'utilisateur courant ===
+    // Un utilisateur Pilotage voit la synthèse de TOUS les départements,
+    // mais ne peut ouvrir l'espace opérationnel que s'il en est membre (ou admin/bergere).
+    const userRoles = Array.isArray(user.roles) && user.roles.length > 0
+      ? user.roles
+      : user.role ? [user.role] : [];
+    const userBadges = Array.isArray(user.badges) ? user.badges : [];
+    const myMemberDeptIds = new Set(
+      (members || []).filter((m: any) => m.user_id === user.id).map((m: any) => m.department_id)
+    );
+    const isBureauOrAdmin =
+      userRoles.includes('admin') || userRoles.includes('bergere') || userRoles.includes('bureau') ||
+      userBadges.includes('ADMIN') || userBadges.includes('BERGERE') || userBadges.includes('BUREAU');
+    const accessibleDepartmentSlugs = isBureauOrAdmin
+      ? (depts || []).map((d: any) => d.slug)
+      : (depts || []).filter((d: any) => myMemberDeptIds.has(d.id)).map((d: any) => d.slug);
+
     // === 12. Réponse finale ===
     return Response.json({
       access_granted: true,
@@ -470,6 +487,7 @@ export default async function(req: Request): Promise<Response> {
         roles: user.roles || (user.role ? [user.role] : []),
         badges: user.badges || [],
       },
+      accessible_department_slugs: accessibleDepartmentSlugs,
       overview: {
         department_health: Object.values(deptHealthMap),
         upcoming_deadlines: upcomingDeadlines.slice(0, 20),

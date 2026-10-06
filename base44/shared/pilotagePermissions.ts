@@ -24,6 +24,10 @@
 export function canAccessPilotage(user: any): boolean {
   if (!user) return false;
 
+  // Compte bloqué (suspended/archived) — refus même avec badge historique
+  const accountStatus = user.account_status;
+  if (accountStatus === 'suspended' || accountStatus === 'archived') return false;
+
   // Rôles
   const roles = Array.isArray(user.roles) && user.roles.length > 0
     ? user.roles
