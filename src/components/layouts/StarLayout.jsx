@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -26,6 +26,13 @@ export default function StarLayout({ children, user }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const showSupervision = isBureauLike(user);
   const showAdmin = isAdmin(user);
+
+  // Fermer overlays sur changement de route
+  useEffect(() => {
+    setPlanOpen(false);
+    setProfileOpen(false);
+    setQuickOpen(false);
+  }, [location.pathname]);
 
   // Modules conditionnels basés sur les badges
   const extraModules = [];

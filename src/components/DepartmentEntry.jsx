@@ -19,13 +19,9 @@ export default function DepartmentEntry() {
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
-    let found = false;
     base44.entities.Department.filter({ slug }).then((results) => {
-      if (results?.[0]) { setDept(results[0]); found = true; }
-      if (!found) return base44.entities.Department.filter({ id: slug });
-      return null;
-    }).then((results) => {
-      if (!found && results?.[0]) setDept(results[0]);
+      if (results?.[0]) setDept(results[0]);
+
       setLoading(false);
     }).catch(() => setLoading(false));
   }, [slug]);
