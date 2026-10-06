@@ -79,9 +79,8 @@ export default function MonProfil() {
     setPreview(localUrl);
     setUploading(true);
     try {
-      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file });
-      const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri });
-      setForm(f => ({ ...f, photo_url: signed_url }));
+      const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+      setForm(f => ({ ...f, photo_url: file_url }));
     } catch (err) {
       // fallback: keep existing photo
     }
