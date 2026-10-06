@@ -7,6 +7,7 @@ import GoogleIcon from "@/components/GoogleIcon";
 import PendingAccount from "@/components/PendingAccount";
 import { getRedirectPath, isAccountPending, isAccountSuspended } from "@/lib/permissions";
 import { resolveAuthEmail, getLoginErrorMessage } from "@/lib/ejpAuth";
+import { safeReturnTo } from "@/lib/authReturnTo";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState("");
@@ -49,6 +50,13 @@ export default function Login() {
       const isAdmin = user.role === "admin" || (Array.isArray(user.badges) && user.badges.includes("ADMIN"));
       if (user.first_login && !isAdmin) {
         window.location.href = "/first-login";
+        return;
+      }
+
+      // Flux consentement MCP OAuth : retourner à la page de consentement après login
+      const returnTo = safeReturnTo();
+      if (returnTo !== "/") {
+        window.location.href = returnTo;
         return;
       }
 

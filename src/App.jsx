@@ -14,6 +14,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
+import OAuthConsent from '@/pages/OAuthConsent';
 import FirstLogin from '@/pages/FirstLogin';
 import RoleLayout from '@/components/layouts/RoleLayout';
 import RoleGuard from '@/components/RoleGuard';
@@ -101,6 +102,7 @@ const AuthenticatedApp = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/oauth/consent" element={<OAuthConsent />} />
 
       {/* Vitrine publique */}
       <Route path="/" element={<Home />} />
