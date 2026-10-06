@@ -4,9 +4,10 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   CheckCircle, GraduationCap, Sprout, CalendarClock,
-  BookOpen, ChevronRight, Target, Briefcase, ShoppingBag,
+  BookOpen, ChevronRight, Target, Briefcase, ShoppingBag, Compass, ArrowRight,
 } from 'lucide-react';
 import { isBureauLike, isAdmin, isFijPilot } from '@/lib/permissions';
+import { isHiddenFromService } from '@/lib/departmentModules';
 import BureauHero from '@/components/star/bureau/BureauHero';
 import BureauActions from '@/components/star/bureau/BureauActions';
 import BureauAgendaCourt from '@/components/star/bureau/BureauAgendaCourt';
@@ -23,6 +24,16 @@ const ACCENT_CSS_MAP = {
 const DEFAULT_WIDGET_ORDER = ['actions', 'agenda', 'rythme', 'formations', 'croissance', 'ressources', 'responsabilites'];
 const DEFAULT_VISIBLE = ['actions', 'agenda', 'rythme', 'formations', 'croissance', 'ressources', 'responsabilites'];
 
+const ROLE_LABELS_BUREAU = {
+  responsable: 'Responsable',
+  referent: 'Référent',
+  coordinateur: 'Coordinateur',
+  adjoint: 'Adjoint',
+  pilote: 'Pilote',
+  serviteur: 'Serviteur',
+  membre: 'Membre',
+};
+
 export default function AppDashboard() {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
@@ -33,6 +44,8 @@ export default function AppDashboard() {
   const [programs, setPrograms] = useState([]);
   const [resources, setResources] = useState([]);
   const [pref, setPref] = useState(null);
+  const [memberships, setMemberships] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const actionsRef = useRef(null);
 
@@ -47,7 +60,9 @@ export default function AppDashboard() {
       base44.entities.TrainingProgram.filter({ status: 'published' }, 'display_order', 50),
       base44.entities.StarResource.filter({ is_active: true }, 'display_order', 5),
       base44.entities.UserWorkspacePreference.list('-updated_date', 1),
-    ]).then(([u, evs, resps, f, appts, subs, progs, rsrcs, prefs]) => {
+      base44.entities.DepartmentMember.filter({}, { limit: 100 }),
+      base44.entities.Department.filter({ is_active: true }, { sort: 'display_order', limit: 50 }),
+    ]).then(([u, evs, resps, f, appts, subs, progs, rsrcs, prefs, mems, depts]) => {
       setUser(u);
       const today = new Date().toISOString().split('T')[0];
       const upcoming = (evs || []).filter(e => e.is_active && e.event_date >= today);
@@ -58,6 +73,8 @@ export default function AppDashboard() {
       setSubmissions(subs || []);
       setPrograms(progs || []);
       setResources(rsrcs || []);
+      setMemberships(mems?.items || mems || []);
+      setDepartments(depts?.items || depts || []);
       const existing = prefs && prefs.length > 0 ? prefs[0] : null;
       setPref(existing || { accent_color: 'gold', visible_widgets: DEFAULT_VISIBLE, widget_order: DEFAULT_WIDGET_ORDER, show_right_panel: true });
       setLoading(false);
@@ -75,6 +92,27 @@ export default function AppDashboard() {
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
   const firstName = user?.full_name?.split(' ')[0] || 'Serviteur';
   const isPilot = isFijPilot(user, fijs);
+
+  // Mes services (DepartmentMember actifs, filtrés par isHiddenFromService)
+  const myActiveMemberships = memberships.filter(m =>
+    m.user_id === user?.id &&
+    (m.status === 'active' || (!m.status && m.is_active !== false))
+  );
+  const myServiceDepts = myActiveMemberships
+    .map(m => departments.find(d => d.id === m.department_id))
+    .filter(d => d && d.is_active !== false && !isHiddenFromService(d.slug));
+
+  // Mes responsabilités FIJ (source : FIJ.pilot_user_id / copilot_user_id)
+  const myPilotFijs = fijs.filter(f =>
+    f.pilot_user_id === user?.id || f.copilot_user_id === user?.id
+  );
+
+  // Coordination FIJ (source : DepartmentMember dans coordination-fij)
+  const coordFijDept = departments.find(d => d.slug === 'coordination-fij');
+  const isCoordFij = coordFijDept
+    ? myActiveMemberships.some(m => m.department_id === coordFijDept.id)
+    : false;
+
   const today = new Date();
   const isThursday = today.getDay() === 4;
   const todayStr = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
@@ -323,27 +361,79 @@ export default function AppDashboard() {
               </motion.div>
             )}
 
-            {/* Responsabilités actives */}
-            {showWidget('responsabilites') && (
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
+            {/* Mes services — accès rapide aux départements */}
+            {showWidget('responsabilites') && myServiceDepts.length > 0 && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes responsabilités</h2>
-                  <Link to="/app/responsabilites" className="text-xs text-secondary flex items-center gap-1">
-                    Voir mes outils <ChevronRight className="w-3 h-3" />
+                  <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes services</h2>
+                  <Link to="/app/service" className="text-xs text-secondary flex items-center gap-1">
+                    Voir tout <ChevronRight className="w-3 h-3" />
                   </Link>
                 </div>
-                <Link to="/app/responsabilites" className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
-                  <div className="w-9 h-9 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
-                    <Briefcase className="w-4 h-4 text-secondary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground">Mes outils actifs</p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {isPilot ? 'Pilote FIJ' : 'Voir mes responsabilités'}
-                    </p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                </Link>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {myServiceDepts.slice(0, 4).map(dept => {
+                    const m = myActiveMemberships.find(mm => mm.department_id === dept.id);
+                    const roleLabel = ROLE_LABELS_BUREAU[m?.role_in_dept] || 'Membre';
+                    return (
+                      <Link
+                        key={dept.id}
+                        to={`/app/departements/${dept.slug || dept.id}`}
+                        className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-secondary/30 hover:shadow-sm transition-all"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
+                          <Briefcase className="w-3.5 h-3.5 text-secondary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-foreground truncate">{dept.name}</p>
+                          <p className="text-[10px] text-muted-foreground">{roleLabel}</p>
+                        </div>
+                        <ArrowRight className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Mes responsabilités — FIJ Pilote/Copilote + Coordination FIJ */}
+            {showWidget('responsabilites') && (myPilotFijs.length > 0 || isCoordFij) && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
+                <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Mes responsabilités</h2>
+                <div className="space-y-2.5">
+                  {myPilotFijs.map(fij => (
+                    <Link
+                      key={`pilot-${fij.id}`}
+                      to="/app/responsabilites/fij-pilote"
+                      className="flex items-center gap-3 bg-card border border-rose-400/20 rounded-xl p-3.5 hover:border-rose-400/40 hover:shadow-sm transition-all"
+                    >
+                      <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-400/20 flex items-center justify-center flex-shrink-0">
+                        <Compass className="w-4 h-4 text-rose-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground truncate">{fij.name || 'FIJ'}</p>
+                        <p className="text-xs text-rose-600 font-medium">
+                          {fij.pilot_user_id === user?.id ? 'Pilote FIJ' : 'Copilote FIJ'}
+                        </p>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                    </Link>
+                  ))}
+                  {isCoordFij && (
+                    <Link
+                      to="/app/responsabilites/fij-coordination"
+                      className="flex items-center gap-3 bg-card border border-purple-400/20 rounded-xl p-3.5 hover:border-purple-400/40 hover:shadow-sm transition-all"
+                    >
+                      <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-400/20 flex items-center justify-center flex-shrink-0">
+                        <Compass className="w-4 h-4 text-purple-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground truncate">Coordination FIJ</p>
+                        <p className="text-xs text-purple-600 font-medium">Coordination</p>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                    </Link>
+                  )}
+                </div>
               </motion.div>
             )}
           </div>

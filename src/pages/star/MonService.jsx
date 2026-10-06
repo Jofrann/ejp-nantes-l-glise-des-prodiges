@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Building2, ChevronRight, Loader2, Heart, Compass, ArrowRight,
-  Calendar, AlertCircle, Users
+  Building2, ChevronRight, Loader2, Compass, ArrowRight,
+  Calendar, AlertCircle
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { isFijPilot, getInternalIdentifier, getDisplayName, isAccountBlocked } from '@/lib/permissions';
@@ -87,13 +87,19 @@ export default function MonService() {
     f.pilot_user_id === user?.id || f.copilot_user_id === user?.id
   );
 
+  // Coordination FIJ — source : DepartmentMember actif dans coordination-fij
+  const coordFijDept = departments.find(d => d.slug === 'coordination-fij');
+  const isCoordFij = coordFijDept
+    ? myActiveMemberships.some(m => m.department_id === coordFijDept.id)
+    : false;
+
   // Événements à venir (globaux, audience pertinente)
   const upcomingEvents = events.filter(e =>
     e.audience === 'all_members' || e.audience === 'all_servants'
   ).slice(0, 4);
 
   const hasServices = myServiceMemberships.length > 0;
-  const hasResponsibilities = myPilotFijs.length > 0;
+  const hasResponsibilities = myPilotFijs.length > 0 || isCoordFij;
   const hasUpcoming = upcomingEvents.length > 0;
   const isEmpty = !hasServices && !hasResponsibilities && !hasUpcoming;
 
@@ -128,14 +134,10 @@ export default function MonService() {
                 {myServiceMemberships.map(m => {
                   const dept = departments.find(d => d.id === m.department_id);
                   if (!dept) return null;
-                  const teamSize = memberships.filter(mm =>
-                    mm.department_id === dept.id &&
-                    (mm.status === 'active' || (!mm.status && mm.is_active !== false))
-                  ).length;
                   const roleLabel = ROLE_LABELS[m.role_in_dept] || 'Membre';
 
                   return (
-                    <ServiceCard key={m.id} dept={dept} role={m.role_in_dept} roleLabel={roleLabel} teamSize={teamSize} />
+                    <ServiceCard key={m.id} dept={dept} role={m.role_in_dept} roleLabel={roleLabel} />
                   );
                 })}
               </div>
@@ -159,6 +161,18 @@ export default function MonService() {
                 color="rose"
               />
             ))}
+            {/* Coordination FIJ — source : DepartmentMember dans coordination-fij */}
+            {isCoordFij && (
+              <ResponsibilityCard
+                key="coord-fij"
+                icon={Compass}
+                title="Coordination FIJ"
+                roleLabel="Coordination"
+                description="Outils spécialisés FIJ"
+                to="/app/responsabilites/fij-coordination"
+                color="purple"
+              />
+            )}
           </div>
           </section>
           )}
@@ -216,7 +230,7 @@ const CARD_COLORS = {
   indigo: { bg: 'bg-indigo-500/8', border: 'border-indigo-400/20',text: 'text-indigo-600', icon: 'bg-indigo-500/10 border-indigo-400/20' },
 };
 
-function ServiceCard({ dept, role, roleLabel, teamSize }) {
+function ServiceCard({ dept, role, roleLabel }) {
   const colors = CARD_COLORS[dept.color] || CARD_COLORS.amber;
   const to = `/app/departements/${dept.slug || dept.id}`;
 
@@ -238,14 +252,6 @@ function ServiceCard({ dept, role, roleLabel, teamSize }) {
           </div>
           <div className="flex items-center gap-2 mt-1">
             <span className={`text-xs font-medium ${colors.text}`}>{roleLabel}</span>
-            {teamSize > 0 && (
-              <>
-                <span className="text-muted-foreground/30">·</span>
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Users className="w-3 h-3" /> {teamSize}
-                </span>
-              </>
-            )}
           </div>
         </div>
         <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
