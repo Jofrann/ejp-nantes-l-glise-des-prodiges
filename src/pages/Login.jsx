@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
-import GoogleIcon from "@/components/GoogleIcon";
 import PendingAccount from "@/components/PendingAccount";
 import { getRedirectPath, isAccountPending, isAccountSuspended } from "@/lib/permissions";
 import { resolveAuthEmail, getLoginErrorMessage } from "@/lib/ejpAuth";
@@ -65,10 +64,6 @@ export default function Login() {
       setError(getLoginErrorMessage(err));
       setLoading(false);
     }
-  };
-
-  const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/app");
   };
 
   if (pendingUser) {
@@ -141,20 +136,6 @@ export default function Login() {
         </button>
       </form>
 
-      <div className="my-5 flex items-center gap-3">
-        <div className="flex-1 h-px bg-border" />
-        <span className="text-xs text-muted-foreground/60 uppercase">ou</span>
-        <div className="flex-1 h-px bg-border" />
-      </div>
-
-      <button
-        type="button"
-        onClick={handleGoogle}
-        className="w-full h-12 rounded-xl bg-card border border-border hover:bg-surface text-foreground font-medium text-sm transition flex items-center justify-center gap-2">
-
-        <GoogleIcon className="w-5 h-5" />
-        Continuer avec Google
-      </button>
     </AuthLayout>
   );
 }

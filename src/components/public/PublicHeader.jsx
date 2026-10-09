@@ -106,10 +106,6 @@ export default function PublicHeader() {
               </div>
             ))}
 
-            {/* Espace Serviteur */}
-            <Link to="/espace-serviteur" className="px-3.5 py-2 text-sm font-medium text-[#4B5563] hover:text-[#101827] transition-colors">
-              Espace Serviteur
-            </Link>
           </nav>
 
           {/* CTA + hamburger */}
@@ -171,14 +167,6 @@ export default function PublicHeader() {
                 </div>
               ))}
 
-              {/* Espace Serviteur */}
-              <Link
-                to="/espace-serviteur"
-                onClick={() => setMobileOpen(false)}
-                className="block text-sm font-semibold text-[#101827] py-3 border-b border-[#F0EBE0]"
-              >
-                Espace Serviteur
-              </Link>
             </div>
 
             <Link
