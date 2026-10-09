@@ -18,14 +18,34 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // Rediriger vers /reset-password si un jeton d'invitation/réinitialisation est présent dans l'URL
+  // Détection synchrone du jeton d'invitation/réinitialisation — avant tout rendu de la vitrine publique.
+  // On cherche dans les query params ET le hash, sous tous les noms de paramètres connus.
+  const [redirectingToReset] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const search = new URLSearchParams(window.location.search);
+    const hashRaw = window.location.hash.replace(/^#/, '');
+    const hash = new URLSearchParams(hashRaw);
+    const all = [search, hash];
+    return all.some(p =>
+      p.get('token') || p.get('reset_token') || p.get('invite_token')
+      || p.get('resetToken') || p.get('inviteToken')
+    );
+  });
+
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token') || params.get('reset_token') || params.get('invite_token');
+    if (!redirectingToReset) return;
+    const search = new URLSearchParams(window.location.search);
+    const hashRaw = window.location.hash.replace(/^#/, '');
+    const hash = new URLSearchParams(hashRaw);
+    const token =
+      search.get('token') || search.get('reset_token') || search.get('invite_token')
+      || search.get('resetToken') || search.get('inviteToken')
+      || hash.get('token') || hash.get('reset_token') || hash.get('invite_token')
+      || hash.get('resetToken') || hash.get('inviteToken');
     if (token) {
       window.location.href = `/reset-password?token=${encodeURIComponent(token)}`;
     }
-  }, []);
+  }, [redirectingToReset]);
 
   const fetchData = () => {
     setLoading(true);
@@ -41,6 +61,16 @@ export default function Home() {
   };
 
   useEffect(() => { fetchData(); }, []);
+
+  // Écran de transition pendant la redirection — la vitrine ne doit jamais s'afficher.
+  if (redirectingToReset) {
+    return (
+      <div className="min-h-screen bg-[#FBFAF7] flex flex-col items-center justify-center text-center px-6">
+        <div className="w-8 h-8 border-2 border-[#E8E2D5] border-t-[#D8B76A] rounded-full animate-spin mb-4" />
+        <p className="text-sm text-[#4B5563]">Redirection vers la sécurisation de ton compte…</p>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
