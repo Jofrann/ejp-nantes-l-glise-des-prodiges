@@ -91,7 +91,23 @@ export const AuthProvider = ({ children }) => {
     try {
       // Now check if the user is authenticated
       setIsLoadingAuth(true);
-      const currentUser = await base44.auth.me();
+      let currentUser = await base44.auth.me();
+
+      // Appliquer automatiquement les données du profil en attente (invitation admin)
+      // si l'utilisateur n'a pas encore d'internal_identifier (première connexion)
+      if (currentUser && !currentUser.internal_identifier) {
+        try {
+          const res = await base44.functions.invoke('applyPendingSetup', {});
+          if (res?.data?.applied) {
+            // Recharger l'utilisateur pour refléter les données appliquées
+            currentUser = await base44.auth.me();
+          }
+        } catch (e) {
+          // Non bloquant — l'utilisateur peut quand même accéder à l'app
+          console.error('applyPendingSetup failed:', e);
+        }
+      }
+
       setUser(currentUser);
       setIsAuthenticated(true);
       setIsLoadingAuth(false);

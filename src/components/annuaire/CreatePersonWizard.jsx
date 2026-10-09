@@ -87,7 +87,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
         ? `${extractUsername(previewIdentifier)}@${authDomain}`
         : email;
 
-      // 1. Create user + memberships via adminManageUser
+      // 1. Create user + memberships + FIJ assignment via adminManageUser
       const createRes = await base44.functions.invoke('adminManageUser', {
         action: 'create',
         first_name: firstName,
@@ -99,20 +99,10 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
           department_id: s.department_id,
           role_in_dept: s.role_in_dept,
         })),
+        fij_assignment: fijAssignment && fijAssignment.fij_id ? fijAssignment : null,
       });
 
-      const userId = createRes.data?.user_id;
-      if (!userId) throw new Error('Création échouée — aucun user_id retourné');
-
-      // 2. Assign FIJ pilot if selected
-      if (fijAssignment && fijAssignment.fij_id) {
-        await base44.functions.invoke('adminManageUser', {
-          action: 'assign_fij_pilot',
-          user_id: userId,
-          fij_id: fijAssignment.fij_id,
-          role: fijAssignment.role,
-        });
-      }
+      if (!createRes.data?.success) throw new Error(createRes.data?.error || 'Création échouée');
 
       setSuccessData({
         identifier: createRes.data?.internal_identifier || previewIdentifier,

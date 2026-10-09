@@ -63,7 +63,7 @@ export default async function(req: Request): Promise<Response> {
 }
 
 async function handleCreate(base44: any, admin: any, body: any): Promise<Response> {
-  const { first_name, last_name, email, phone, badges, department_memberships } = body;
+  const { first_name, last_name, email, phone, badges, department_memberships, fij_assignment } = body;
 
   if (!first_name || !last_name || !email) {
     return Response.json({ error: 'Prénom, nom et email sont requis' }, { status: 400 });
@@ -75,57 +75,47 @@ async function handleCreate(base44: any, admin: any, body: any): Promise<Respons
     return Response.json({ error: 'Un utilisateur avec cet email existe déjà' }, { status: 409 });
   }
 
-  // 2. Inviter l'utilisateur via le système Base44
+  // 2. Vérifier qu'il n'y a pas déjà une invitation en attente pour cet email
+  const existingPending = await base44.asServiceRole.entities.PendingUserSetup.filter({ email, applied: false });
+  if (existingPending && existingPending.length > 0) {
+    return Response.json({ error: 'Une invitation est déjà en attente pour cet email' }, { status: 409 });
+  }
+
+  // 3. Inviter l'utilisateur via le système Base44
   try {
     await base44.users.inviteUser(email, 'user');
   } catch (inviteErr) {
     return Response.json({ error: `Échec de l'invitation: ${inviteErr.message}` }, { status: 500 });
   }
 
-  // 3. Récupérer l'utilisateur créé
-  const users = await base44.asServiceRole.entities.User.filter({ email });
-  const user = users && users[0];
-  if (!user) {
-    return Response.json({ error: 'Utilisateur non trouvé après invitation' }, { status: 500 });
-  }
-
   // 4. Générer l'identifiant interne
   const internal_identifier = await generateUniqueIdentifier(base44, first_name, last_name);
 
-  // 5. Mettre à jour le profil
-  await base44.asServiceRole.entities.User.update(user.id, {
+  // 5. Stocker les données du profil en attente — l'utilisateur n'existe pas encore
+  //    dans la base ; il sera créé quand la personne accepte l'invitation.
+  //    Les données seront appliquées automatiquement à la première connexion.
+  await base44.asServiceRole.entities.PendingUserSetup.create({
+    email,
     first_name,
     last_name,
     phone: phone || null,
     internal_identifier,
     badges: badges || [],
-    account_status: 'pending',
-    first_login: true,
-    roles: ['serviteur'],
-    role: 'serviteur',
+    department_memberships: (department_memberships || []).map(dm => ({
+      department_id: dm.department_id,
+      role_in_dept: dm.role_in_dept || 'serviteur',
+    })),
+    fij_assignment: fij_assignment || null,
+    applied: false,
+    created_by_name: admin.full_name || admin.email,
   });
 
-  // 6. Créer les appartenances départementales
-  if (department_memberships && Array.isArray(department_memberships)) {
-    for (const dm of department_memberships) {
-      await base44.asServiceRole.entities.DepartmentMember.create({
-        user_id: user.id,
-        department_id: dm.department_id,
-        full_name: `${first_name} ${last_name}`,
-        role_in_dept: dm.role_in_dept || 'serviteur',
-        status: 'active',
-        joined_at: new Date().toISOString().split('T')[0],
-        is_active: true,
-      });
-    }
-  }
-
-  // 7. Journalisation
+  // 6. Journalisation
   await base44.asServiceRole.entities.AuditLog.create({
-    action: 'user_create',
-    entity_type: 'User',
-    entity_id: user.id,
-    details: `Création du compte ${internal_identifier} (${email}) — badges: ${(badges || []).join(', ') || 'aucun'}`,
+    action: 'user_invite',
+    entity_type: 'PendingUserSetup',
+    entity_id: null,
+    details: `Invitation envoyée à ${email} — identifiant EJP: ${internal_identifier}`,
     performed_by_id: admin.id,
     performed_by_name: admin.full_name || admin.email,
     performed_by_role: admin.role || (admin.roles || []).join(','),
@@ -133,9 +123,9 @@ async function handleCreate(base44: any, admin: any, body: any): Promise<Respons
 
   return Response.json({
     success: true,
-    user_id: user.id,
+    user_id: null,
     internal_identifier,
-    message: `Utilisateur ${internal_identifier} créé. Un email d'invitation a été envoyé à ${email}.`,
+    message: `Invitation envoyée à ${email}. Le profil sera configuré automatiquement quand la personne rejoindra l'app.`,
   });
 }
 
