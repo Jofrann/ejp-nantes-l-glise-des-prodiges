@@ -18,6 +18,15 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  // Rediriger vers /reset-password si un jeton d'invitation/réinitialisation est présent dans l'URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token') || params.get('reset_token') || params.get('invite_token');
+    if (token) {
+      window.location.href = `/reset-password?token=${encodeURIComponent(token)}`;
+    }
+  }, []);
+
   const fetchData = () => {
     setLoading(true);
     setError(false);
