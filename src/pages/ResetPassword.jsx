@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, Loader2, AlertTriangle } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import InviteIdentifierField from "@/components/auth/InviteIdentifierField";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -16,6 +17,15 @@ export default function ResetPassword() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [identifier, setIdentifier] = useState(null);
+
+  useEffect(() => {
+    if (!resetToken) return;
+    base44.functions
+      .invoke("getInviteIdentifier", { token: resetToken })
+      .then((res) => setIdentifier(res?.data?.identifier || null))
+      .catch(() => setIdentifier(null));
+  }, [resetToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,7 +63,7 @@ export default function ResetPassword() {
           <ol className="space-y-2 text-sm text-foreground">
             <li className="flex gap-2">
               <span className="text-secondary font-semibold">1.</span>
-              <span>Utilise ton <strong className="text-secondary">identifiant EJP</strong> au format <code className="text-xs bg-white px-1.5 py-0.5 rounded border border-border">prenom@prodiges</code></span>
+              <span>Utilise ton <strong className="text-secondary">identifiant EJP</strong> : <code className="text-xs bg-white px-1.5 py-0.5 rounded border border-border">{identifier || "prenom@prodiges"}</code></span>
             </li>
             <li className="flex gap-2">
               <span className="text-secondary font-semibold">2.</span>
@@ -95,7 +105,8 @@ export default function ResetPassword() {
     <AuthLayout>
       <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
       <h1 className="font-display text-3xl text-foreground font-light mb-2">Nouveau mot de passe</h1>
-      <p className="text-sm text-muted-foreground mb-8">Saisis ton nouveau mot de passe ci-dessous.</p>
+      <p className="text-sm text-muted-foreground mb-6">Saisis ton nouveau mot de passe ci-dessous.</p>
+      <InviteIdentifierField identifier={identifier} />
 
       {error && (
         <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">
