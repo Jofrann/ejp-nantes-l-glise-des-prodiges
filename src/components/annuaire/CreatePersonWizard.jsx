@@ -30,6 +30,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
   const [services, setServices] = useState([]); // [{ department_id, role_in_dept }]
   const [fijAssignment, setFijAssignment] = useState(null); // { fij_id, role }
   const [authDomain, setAuthDomain] = useState(null);
+  const [successData, setSuccessData] = useState(null);
 
   useEffect(() => {
     base44.entities.Department.filter({ is_active: true }, { sort: 'display_order', limit: 50 }).then(res => {
@@ -113,7 +114,11 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
         });
       }
 
-      onCreated();
+      setSuccessData({
+        identifier: createRes.data?.internal_identifier || previewIdentifier,
+        email: technicalEmail,
+        name: `${firstName} ${lastName}`,
+      });
     } catch (err) {
       const msg = err.response?.data?.error || err.message || 'Erreur lors de la création';
       setError(msg);
@@ -154,12 +159,39 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
 
         {/* Content */}
         <div className="px-6 py-5">
-          {error && (
+          {error && !successData && (
             <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">{error}</div>
           )}
 
-          {/* Step 1: Identité */}
-          {step === 1 && (
+          {/* Écran de confirmation — invitation envoyée */}
+          {successData && (
+            <div className="text-center py-6">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-5">
+                <CheckCircle2 className="w-7 h-7 text-emerald-600" />
+              </div>
+              <h3 className="font-display text-xl text-foreground font-light mb-2">Invitation envoyée</h3>
+              <p className="text-sm text-muted-foreground mb-5">
+                Le compte de <strong className="text-foreground">{successData.name}</strong> a été créé.
+                Une invitation sécurisée a été envoyée pour activer le compte et définir le mot de passe.
+              </p>
+              <div className="bg-surface/60 border border-border rounded-xl p-4 text-left space-y-2.5">
+                <div>
+                  <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Identifiant EJP</p>
+                  <p className="text-sm text-secondary font-mono font-medium">{successData.identifier}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Invitation envoyée à</p>
+                  <p className="text-sm text-foreground font-mono">{successData.email}</p>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground/70 mt-4 flex items-start justify-center gap-1.5">
+                <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                La personne recevra un email avec un lien pour choisir son mot de passe et accéder à son espace.
+              </p>
+            </div>
+          )}
+
+          {!successData && step === 1 && (
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Identité de la personne</p>
@@ -196,8 +228,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
             </div>
           )}
 
-          {/* Step 2: Compte */}
-          {step === 2 && (
+          {!successData && step === 2 && (
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Compte de connexion</p>
@@ -247,8 +278,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
             </div>
           )}
 
-          {/* Step 3: Badges */}
-          {step === 3 && (
+          {!successData && step === 3 && (
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Profil de la personne</p>
@@ -274,8 +304,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
             </div>
           )}
 
-          {/* Step 4: Services */}
-          {step === 4 && (
+          {!successData && step === 4 && (
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Services</p>
@@ -325,8 +354,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
             </div>
           )}
 
-          {/* Step 5: Responsabilités */}
-          {step === 5 && (
+          {!successData && step === 5 && (
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Responsabilités spécialisées</p>
@@ -374,8 +402,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
             </div>
           )}
 
-          {/* Step 6: Vérification */}
-          {step === 6 && (
+          {!successData && step === 6 && (
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Vérification</p>
@@ -448,6 +475,16 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
 
         {/* Footer */}
         <div className="sticky bottom-0 bg-card border-t border-border px-6 py-4 flex items-center justify-between gap-3">
+          {successData ? (
+            <button
+              onClick={onCreated}
+              className="w-full flex items-center justify-center gap-2 bg-secondary text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-secondary/90 transition"
+            >
+              <Check className="w-4 h-4" />
+              Terminer
+            </button>
+          ) : (
+          <>
           <button
             onClick={() => step > 1 ? setStep(step - 1) : onClose()}
             disabled={loading}
@@ -475,6 +512,8 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
               {loading ? 'Création...' : 'Créer le compte'}
             </button>
+          )}
+          </>
           )}
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, LogIn, UserPlus, ArrowLeft, Shield, Users, Calendar, MessageCircle } from 'lucide-react';
+import { Heart, LogIn, ArrowLeft, Shield, Users, Calendar, MessageCircle } from 'lucide-react';
 
 export default function EspaceServiteurSas() {
   return (
@@ -46,13 +46,6 @@ export default function EspaceServiteurSas() {
               <LogIn className="w-4 h-4" />
               Se connecter
             </Link>
-            <Link
-              to="/register"
-              className="flex items-center justify-center gap-2 w-full bg-card hover:bg-surface border border-border text-foreground text-sm font-medium py-3.5 rounded-xl transition-all"
-            >
-              <UserPlus className="w-4 h-4" />
-              Demander à rejoindre l'équipe
-            </Link>
           </motion.div>
 
           {/* Ce qu'on trouve dans l'espace */}
@@ -74,10 +67,6 @@ export default function EspaceServiteurSas() {
             </div>
           </motion.div>
 
-          {/* Note validation */}
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-center text-xs text-muted-foreground mt-8">
-            Les nouveaux comptes sont soumis à validation par l'équipe d'encadrement.
-          </motion.p>
         </div>
       </div>
     </div>

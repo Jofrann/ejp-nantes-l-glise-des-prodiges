@@ -73,12 +73,7 @@ export default function Login() {
   return (
     <AuthLayout
       footer={
-        <>
-          Pas encore de compte ?{" "}
-          <Link to="/register" className="text-secondary font-medium hover:underline">
-            Créer mon compte serviteur
-          </Link>
-        </>
+        <span className="text-muted-foreground/70">Les comptes sont créés par l'administration EJP.</span>
       }>
 
       <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
