@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: ejp-nantes
+    runtime: node
+    region: frankfurt
+    plan: starter
+    branch: deploy/ejp-nantes-autonome
+    buildCommand: npm ci && npm run build
+    startCommand: node server/web.mjs
+    healthCheckPath: /api/local/status
+    disk:
+      name: ejp-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 24
+      - key: EJP_DATA_DIR
+        value: /var/data/ejp
+      - key: EJP_SETUP_TOKEN
+        generateValue: true
+      - key: EJP_PUBLIC_ORIGIN
+        sync: false

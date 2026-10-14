@@ -11,13 +11,12 @@ export default function PublicFooter({ config }) {
   return (
     <footer className="bg-[#FBFAF7] border-t border-[#E8E2D5] pt-16 pb-24 md:pb-12 px-5 md:px-8">
       <div className="max-w-screen-xl mx-auto">
+        <p className="ejp-footer-word" aria-label="EJP Nantes">EJP <span>Nantes.</span></p>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full border-2 border-[#D8B76A] flex items-center justify-center">
-                <span className="font-display text-[#D8B76A] text-xs tracking-widest font-semibold">EJP</span>
-              </div>
+              <img src="/brand/ejp-logo.png" width="289" height="203" alt="Église des Jeunes Prodiges" className="ejp-footer-logo" />
               <div>
                 <p className="font-heading font-bold text-[#101827] text-sm">Église des Jeunes Prodiges</p>
                 <p className="text-xs text-[#9CA3AF]">Nantes, France</p>
@@ -36,6 +35,7 @@ export default function PublicFooter({ config }) {
           <div>
             <p className="text-xs uppercase tracking-widest text-[#D8B76A] font-semibold mb-4">Navigation</p>
             <div className="flex flex-col gap-2.5">
+              <Link to="/espace-serviteur" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Espace serviteur</Link>
               <Link to="/" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Accueil</Link>
               <Link to="/a-propos" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Qui sommes-nous ?</Link>
               <Link to="/programmes" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Nos Programmes</Link>
@@ -59,7 +59,7 @@ export default function PublicFooter({ config }) {
                 {socials.map(s => {
                   const Icon = s.icon;
                   return (
-                    <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-white border border-[#E8E2D5] flex items-center justify-center hover:border-[#D8B76A]/40 hover:bg-[#F5F0E8] transition-all">
+                    <a key={s.label} aria-label={s.label} href={s.url} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-white border border-[#E8E2D5] flex items-center justify-center hover:border-[#D8B76A]/40 hover:bg-[#F5F0E8] transition-all">
                       <Icon className="w-4 h-4 text-[#4B5563]" />
                     </a>
                   );

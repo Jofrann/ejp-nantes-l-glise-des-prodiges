@@ -47,7 +47,7 @@ export async function isAuthConfigured() {
  */
 export function isEjpIdentifier(identifier) {
   if (!identifier) return false;
-  return identifier.trim().toLowerCase().endsWith('@prodiges');
+  return /@prodiges?$/.test(identifier.trim().toLowerCase());
 }
 
 /**
@@ -62,7 +62,7 @@ export function normalizeIdentifier(identifier) {
  */
 export function extractUsername(identifier) {
   const normalized = normalizeIdentifier(identifier);
-  return normalized.replace(/@prodiges$/, '');
+  return normalized.replace(/@prodiges?$/, '');
 }
 
 /**

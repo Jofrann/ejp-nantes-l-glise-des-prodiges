@@ -1,109 +1,44 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Pause, Play } from 'lucide-react';
+import { PUBLIC_PHOTOS } from '../publicPhotos';
+import { PhotoCredit } from './PhotoStory';
 
 export default function HeroLumineux({ config }) {
+  const video = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [failed, setFailed] = useState(false);
   const videoUrl = config?.hero_video_url;
-  const title = config?.hero_title || 'Église des Jeunes Prodiges — Nantes';
-  const subtitle = config?.hero_subtitle || 'Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence.';
-
+  const imageUrl = config?.hero_image_url || PUBLIC_PHOTOS.worship.url;
+  useEffect(() => {
+    setFailed(false);
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => {
+      if (preference.matches) video.current?.pause();
+      else video.current?.play().catch(() => {});
+    };
+    sync(); preference.addEventListener('change', sync);
+    return () => preference.removeEventListener('change', sync);
+  }, [videoUrl]);
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#FBFAF7]">
-      {/* Background: video or gradient */}
-      {videoUrl ? (
-        <video
-          src={videoUrl}
-          className="absolute inset-0 w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-          playsInline
-        />
-      ) : (
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#FBFAF7] via-white to-[#F5F0E8]" />
-          <div
-            className="absolute inset-0 opacity-60"
-            style={{
-              backgroundImage: `
-                radial-gradient(ellipse 70% 50% at 30% 20%, rgba(216,183,106,0.12), transparent 60%),
-                radial-gradient(ellipse 60% 40% at 80% 70%, rgba(234,240,248,0.6), transparent 60%)
-              `,
-            }}
-          />
-        </div>
-      )}
-      {/* Glass overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-[#FBFAF7]/80 pointer-events-none" />
-
-      {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-3xl mx-auto pt-20">
-        <motion.span
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-block text-[11px] uppercase tracking-[0.35em] text-[#D8B76A] font-semibold mb-6"
-        >
-          Nantes, France
-        </motion.span>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="font-display text-4xl md:text-6xl lg:text-7xl text-[#101827] leading-[1.1] font-medium mb-6"
-        >
-          {title}
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.7 }}
-          className="text-[#4B5563] text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed"
-        >
-          {subtitle}
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="flex flex-col sm:flex-row gap-3 justify-center"
-        >
-          <Link
-            to="/venir"
-            className="group flex items-center justify-center gap-2 bg-[#101827] text-white text-sm font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a2740] transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(216,183,106,0.2)]"
-          >
-            Je viens dimanche
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <a
-            href="#immersion"
-            className="flex items-center justify-center gap-2 bg-white/70 backdrop-blur-md border border-[#D8B76A]/30 text-[#101827] text-sm font-semibold px-7 py-3.5 rounded-full hover:bg-white hover:border-[#D8B76A]/50 transition-all"
-          >
-            <Play className="w-3.5 h-3.5 text-[#D8B76A]" />
-            Découvrir l'ambiance
-          </a>
-        </motion.div>
+    <section className="ejp-hero" aria-labelledby="public-hero-title">
+      <div className="ejp-hero-art" aria-hidden="true"><div className="ejp-light-orbit" /><span className="ejp-art-word">EJP</span></div>
+      <div className="ejp-hero-visual"><img src={imageUrl} alt="" className="ejp-hero-media" fetchPriority="high" decoding="async" />
+      {videoUrl && !failed && <video ref={video} key={videoUrl} src={videoUrl} poster={imageUrl || undefined} className="ejp-hero-media" muted loop playsInline preload="metadata" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => setFailed(true)} />}
       </div>
-
-      {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-[#D8B76A]/40 flex items-start justify-center p-1.5"
-        >
-          <div className="w-1 h-2 rounded-full bg-[#D8B76A]/60" />
-        </motion.div>
-      </motion.div>
+      <div className="ejp-hero-shade" />
+      <div className="ejp-hero-content">
+        <p className="ejp-eyebrow"><span /> Église des Jeunes Prodiges · Nantes</p>
+        <h1 id="public-hero-title">{config?.hero_title ? <span className="ejp-title-line"><span>{config.hero_title}</span></span> : <><span className="ejp-title-line"><span>Une foi vivante.</span></span><span className="ejp-title-line"><span>Une génération</span></span><span className="ejp-title-line"><span><em>qui rayonne.</em></span></span></>}</h1>
+        <div className="ejp-hero-bottom">
+          <p>{config?.hero_subtitle || 'Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence.'}</p>
+          <Link to="/venir" className="ejp-button ejp-button-gold">Je viens dimanche <ArrowUpRight size={20} /></Link>
+        </div>
+      </div>
+      {!config?.hero_image_url && !videoUrl && <PhotoCredit photo={PUBLIC_PHOTOS.worship} />}
+      <div className="ejp-hero-caption"><a href="#ce-dimanche">Découvrir la maison <ArrowDown size={16} /></a><span>{config?.service_day || 'Dimanche'} · {config?.service_time?.replace(':', 'h') || '15h00'}</span>
+        {videoUrl && !failed && <button onClick={() => playing ? video.current?.pause() : video.current?.play().catch(() => {})} aria-label={playing ? 'Mettre la vidéo en pause' : 'Lire la vidéo'}>{playing ? <Pause size={16} /> : <Play size={16} />}<span>{playing ? 'Pause' : 'Lire'}</span></button>}
+      </div>
     </section>
   );
 }

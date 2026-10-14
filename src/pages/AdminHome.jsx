@@ -7,7 +7,6 @@ import AdminAppointmentsTab from '@/components/admin/AdminAppointmentsTab';
 import AdminFormationsTab from '@/components/admin/AdminFormationsTab';
 import AdminRessourcesTab from '@/components/admin/AdminRessourcesTab';
 import FirstVisitIntentsTab from '@/components/admin/FirstVisitIntentsTab';
-import { motion } from 'framer-motion';
 
 const TABS = [
   { id: 'hero', label: 'Hero & Général', icon: Church },
@@ -153,6 +152,13 @@ export default function AdminHome() {
                 <Field label="Sous-titre">
                   <textarea className={inputCls} rows={3} value={config.hero_subtitle || ''} onChange={e => setConfig(c => ({ ...c, hero_subtitle: e.target.value }))} />
                 </Field>
+                <Field label="Photo de fond / couverture vidéo (URL)">
+                  <input className={inputCls} placeholder="https://..." value={config.hero_image_url || ''} onChange={e => setConfig(c => ({ ...c, hero_image_url: e.target.value }))} />
+                  <p className="text-xs text-muted-foreground mt-2">Affichée sans vidéo, pendant son chargement et lorsque les animations sont réduites.</p>
+                </Field>
+                {[['community_image_url', 'Photo de la communauté (URL)'], ['nantes_image_url', 'Photo de Nantes (URL)']].map(([key, label]) => <Field key={key} label={label}>
+                  <input aria-label={label} className={inputCls} placeholder="https://..." value={config[key] || ''} onChange={e => setConfig(c => ({ ...c, [key]: e.target.value }))} />
+                </Field>)}
                 <Field label="Vidéo de fond (URL ou upload)">
                   <input className={inputCls + ' mb-2'} placeholder="https://..." value={config.hero_video_url || ''} onChange={e => setConfig(c => ({ ...c, hero_video_url: e.target.value }))} />
                   {config.hero_video_url && (

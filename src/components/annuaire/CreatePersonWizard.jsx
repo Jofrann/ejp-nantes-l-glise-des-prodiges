@@ -48,7 +48,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
   useEffect(() => {
     if (firstName && lastName) {
       const f = firstName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
-      if (f) setPreviewIdentifier(`${f}@prodiges`);
+      if (f) setPreviewIdentifier(`${f.charAt(0).toUpperCase()}${f.slice(1)}@prodige`);
     }
   }, [firstName, lastName]);
 
@@ -72,8 +72,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
     if (step === 1) return firstName.trim() && lastName.trim();
     if (step === 2) {
       // Si le domaine technique est configuré, l'email est auto-généré — pas de saisie requise
-      if (authDomain) return firstName.trim() !== '';
-      return email.trim() && /\S+@\S+\.\S+/.test(email);
+      return !email.trim() || /\S+@\S+\.\S+/.test(email);
     }
     return true;
   };
@@ -106,7 +105,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
 
       setSuccessData({
         identifier: createRes.data?.internal_identifier || previewIdentifier,
-        email: technicalEmail,
+        password: createRes.data.temporary_password,
         name: `${firstName} ${lastName}`,
       });
     } catch (err) {
@@ -159,24 +158,28 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
               <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-5">
                 <CheckCircle2 className="w-7 h-7 text-emerald-600" />
               </div>
-              <h3 className="font-display text-xl text-foreground font-light mb-2">Invitation envoyée</h3>
+              <h3 className="font-display text-xl text-foreground font-light mb-2">Compte créé</h3>
               <p className="text-sm text-muted-foreground mb-5">
                 Le compte de <strong className="text-foreground">{successData.name}</strong> a été créé.
-                Une invitation sécurisée a été envoyée pour activer le compte et définir le mot de passe.
+                Transmets ces identifiants à la personne pour sa première connexion.
               </p>
               <div className="bg-surface/60 border border-border rounded-xl p-4 text-left space-y-2.5">
+                <div>
+                  <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Lien de connexion à transmettre</p>
+                  <a className="text-sm text-secondary break-all" href="/login">{window.location.origin}/login</a>
+                </div>
                 <div>
                   <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Identifiant EJP</p>
                   <p className="text-sm text-secondary font-mono font-medium">{successData.identifier}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Invitation envoyée à</p>
-                  <p className="text-sm text-foreground font-mono">{successData.email}</p>
+                  <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Mot de passe provisoire — affiché une seule fois</p>
+                  <p className="text-sm text-foreground font-mono">{successData.password}</p>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground/70 mt-4 flex items-start justify-center gap-1.5">
                 <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
-                La personne recevra un email avec un lien pour choisir son mot de passe et accéder à son espace.
+                La personne devra changer ce mot de passe avant d’accéder à son espace.
               </p>
             </div>
           )}
@@ -224,8 +227,8 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
                 <p className="text-sm font-medium text-foreground mb-1">Compte de connexion</p>
                 <p className="text-xs text-muted-foreground">
                   {authDomain
-                    ? "L'adresse technique est générée automatiquement. L'invitation sera envoyée vers l'infrastructure EJP."
-                    : "Un email d'invitation sera envoyé à cette adresse. La personne choisira son mot de passe."}
+                    ? "Les identifiants seront créés automatiquement et affichés à la fin."
+                    : "L’admin transmettra l’identifiant et le mot de passe provisoire à la personne."}
                 </p>
               </div>
 
@@ -245,12 +248,12 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
                   </p>
                   <p className="text-[10px] text-blue-600/70 mt-1 flex items-start gap-1">
                     <Info className="w-3 h-3 flex-shrink-0 mt-0.5" />
-                    Cette adresse est contrôlée par l'EJP. L'invitation y sera envoyée automatiquement. Aucune action requise.
+                    La connexion utilise l’identifiant EJP affiché ci-dessus.
                   </p>
                 </div>
               ) : (
                 <div>
-                  <label className="text-xs text-muted-foreground font-medium block mb-1.5">Adresse email de connexion *</label>
+                  <label className="text-xs text-muted-foreground font-medium block mb-1.5">Email de contact (optionnel)</label>
                   <input
                     type="email"
                     className="w-full bg-white border border-border text-foreground rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-secondary/50"
@@ -261,7 +264,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
                   />
                   <p className="text-[10px] text-muted-foreground/70 mt-1.5 flex items-start gap-1">
                     <Info className="w-3 h-3 flex-shrink-0 mt-0.5" />
-                    Cette adresse reçoit l'invitation et sert à la connexion. Elle doit être une vraie boîte email que la personne consulte.
+                    La connexion utilise l’identifiant EJP. Aucun email d’invitation n’est envoyé.
                   </p>
                 </div>
               )}
@@ -456,7 +459,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
               <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-start gap-2">
                 <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-blue-700">
-                  Un email d'invitation sera envoyé à <strong>{email}</strong>. La personne recevra un lien pour choisir son mot de passe et accéder à son espace.
+                  Un identifiant et un mot de passe provisoire seront affichés après la création. Transmets-les à la personne.
                 </p>
               </div>
             </div>

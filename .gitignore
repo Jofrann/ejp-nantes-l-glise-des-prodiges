@@ -29,3 +29,6 @@ dist-ssr
 
 .env
 base44/.app.jsonc
+
+# Local SQLite database (contains private data)
+.local-data/

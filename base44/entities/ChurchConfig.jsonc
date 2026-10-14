@@ -2,6 +2,9 @@
   "name": "ChurchConfig",
   "type": "object",
   "properties": {
+    "community_image_url": { "type": "string", "description": "Photo de la communauté" },
+    "nantes_image_url": { "type": "string", "description": "Photo de Nantes" },
+    "hero_image_url": { "type": "string", "description": "Photo du hero et couverture de la vidéo" },
     "hero_video_url": {
       "type": "string",
       "description": "URL de la vid\u00e9o h\u00e9ro"

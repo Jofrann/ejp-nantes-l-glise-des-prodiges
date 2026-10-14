@@ -1,36 +1,15 @@
-import React, { useRef, useEffect, useState } from 'react';
-
-export default function RevealOnScroll({ children, delay = 0, y = 24, className = '' }) {
+import React, { useLayoutEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
+export default function RevealOnScroll({ children, delay = 0, y = 40, className = '' }) {
   const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.12 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : `translateY(${y}px)`,
-        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
-      }}
-    >
-      {children}
-    </div>
-  );
+  useLayoutEffect(() => {
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from(ref.current, { opacity: 0, y, duration: 1, delay: delay / 1000, ease: 'power3.out', scrollTrigger: { trigger: ref.current, start: 'top 92%', toggleActions: 'play none none none' } });
+    });
+    return () => mm.revert();
+  }, [delay, y]);
+  return <div ref={ref} className={className}>{children}</div>;
 }

@@ -10,7 +10,7 @@ import AuthLayout from '@/components/AuthLayout';
  * (user.first_login === true) et que l'authentification interne est configurée.
  *
  * Utilise base44.auth.changePassword({ user_id, current_password, new_password }).
- * Après succès, first_login est mis à false via updateMe.
+ * Le serveur valide le changement et lève l’obligation atomiquement.
  */
 export default function FirstLogin() {
   const [user, setUser] = useState(null);
@@ -37,8 +37,8 @@ export default function FirstLogin() {
       setError('Les mots de passe ne correspondent pas.');
       return;
     }
-    if (newPassword.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractères.');
+    if (newPassword.length < 12) {
+      setError('Le mot de passe doit contenir au moins 12 caractères.');
       return;
     }
     if (newPassword === currentPassword) {
@@ -53,7 +53,6 @@ export default function FirstLogin() {
         current_password: currentPassword,
         new_password: newPassword,
       });
-      await base44.auth.updateMe({ first_login: false });
       setSuccess(true);
       setTimeout(() => { window.location.href = '/app'; }, 1500);
     } catch (err) {
@@ -100,7 +99,7 @@ export default function FirstLogin() {
       </p>
 
       {error && (
-        <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20 flex items-start gap-2">
+        <div role="alert" className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20 flex items-start gap-2">
           <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
@@ -157,7 +156,7 @@ export default function FirstLogin() {
         </div>
 
         <p className="text-[10px] text-muted-foreground/70">
-          Minimum 8 caractères. Choisis un mot de passe que tu peux mémoriser.
+          Minimum 12 caractères. Choisis un mot de passe que tu peux mémoriser.
         </p>
 
         <button

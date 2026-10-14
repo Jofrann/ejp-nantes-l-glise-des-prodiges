@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import PublicHeader from '@/components/public/PublicHeader';
+import usePublicMotion from '@/components/public/motion/usePublicMotion';
+import PhotoStory from '@/components/public/sections/PhotoStory';
 import StickyCTA from '@/components/public/StickyCTA';
 import HeroLumineux from '@/components/public/sections/HeroLumineux';
 import CeDimanche from '@/components/public/sections/CeDimanche';
@@ -14,38 +16,20 @@ import { ArrowRight, Users, BookOpen, Heart } from 'lucide-react';
 
 export default function Home() {
   const [config, setConfig] = useState(null);
+  const motionRoot = usePublicMotion(config);
   const [testimonials, setTestimonials] = useState([]);
+  const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // Détection synchrone du jeton d'invitation/réinitialisation — avant tout rendu de la vitrine publique.
-  // On cherche dans les query params ET le hash, sous tous les noms de paramètres connus.
-  const [redirectingToReset] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const search = new URLSearchParams(window.location.search);
-    const hashRaw = window.location.hash.replace(/^#/, '');
-    const hash = new URLSearchParams(hashRaw);
-    const all = [search, hash];
-    return all.some(p =>
-      p.get('token') || p.get('reset_token') || p.get('invite_token')
-      || p.get('resetToken') || p.get('inviteToken')
-    );
-  });
-
+  // Rediriger vers /reset-password si un jeton d'invitation/réinitialisation est présent dans l'URL
   useEffect(() => {
-    if (!redirectingToReset) return;
-    const search = new URLSearchParams(window.location.search);
-    const hashRaw = window.location.hash.replace(/^#/, '');
-    const hash = new URLSearchParams(hashRaw);
-    const token =
-      search.get('token') || search.get('reset_token') || search.get('invite_token')
-      || search.get('resetToken') || search.get('inviteToken')
-      || hash.get('token') || hash.get('reset_token') || hash.get('invite_token')
-      || hash.get('resetToken') || hash.get('inviteToken');
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token') || params.get('reset_token') || params.get('invite_token');
     if (token) {
       window.location.href = `/reset-password?token=${encodeURIComponent(token)}`;
     }
-  }, [redirectingToReset]);
+  }, []);
 
   const fetchData = () => {
     setLoading(true);
@@ -53,24 +37,16 @@ export default function Home() {
     Promise.all([
       base44.entities.ChurchConfig.list(),
       base44.entities.Testimonial.filter({ is_published: true }, 'display_order', 3),
-    ]).then(([c, t]) => {
+      base44.entities.GalleryMedia.filter({ is_active: true }, 'display_order', 8).catch(() => []),
+    ]).then(([c, t, g]) => {
       setConfig(c?.[0] || null);
       setTestimonials(t || []);
+      setMedia(g || []);
     }).catch(() => setError(true))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { fetchData(); }, []);
-
-  // Écran de transition pendant la redirection — la vitrine ne doit jamais s'afficher.
-  if (redirectingToReset) {
-    return (
-      <div className="min-h-screen bg-[#FBFAF7] flex flex-col items-center justify-center text-center px-6">
-        <div className="w-8 h-8 border-2 border-[#E8E2D5] border-t-[#D8B76A] rounded-full animate-spin mb-4" />
-        <p className="text-sm text-[#4B5563]">Redirection vers la sécurisation de ton compte…</p>
-      </div>
-    );
-  }
 
   if (loading) {
     return (
@@ -93,17 +69,19 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-[#FBFAF7] overflow-x-hidden">
+    <div ref={motionRoot} className="ejp-public bg-[#FBFAF7] overflow-x-hidden">
       <PublicHeader />
 
       {/* 1. Hero cinématique */}
       <HeroLumineux config={config} />
 
+      <PhotoStory config={config} media={media} />
+
       {/* 2. Prochain culte */}
       <CeDimanche config={config} />
 
       {/* 3. Présentation courte — vers Qui sommes-nous ? */}
-      <section className="py-24 px-6">
+      <section className="ejp-identity py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <RevealOnScroll>
             <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center">Notre identité</p>
@@ -148,7 +126,7 @@ export default function Home() {
       </section>
 
       {/* 4. Aperçu des programmes — vers Nos Programmes */}
-      <section className="bg-[#101827] text-white py-24 px-6">
+      <section className="ejp-rendezvous bg-[#101827] text-white py-24 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <RevealOnScroll>
             <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">Nos rendez-vous</p>

@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { Clock, MapPin, Navigation, Calendar, MessageCircle, Mail, ArrowLeft, HelpCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import PublicHeader from '@/components/public/PublicHeader';
+import usePublicMotion from '@/components/public/motion/usePublicMotion';
+import { PUBLIC_PHOTOS } from '@/components/public/publicPhotos';
+import { EditorialPhoto } from '@/components/public/sections/PhotoStory';
+import PublicFooter from '@/components/public/sections/PublicFooter';
 import StickyCTA from '@/components/public/StickyCTA';
 import FirstVisitForm from '@/components/public/FirstVisitForm';
 import RevealOnScroll from '@/components/public/RevealOnScroll';
@@ -27,6 +31,7 @@ function getNextSunday() {
 
 export default function Venir() {
   const [config, setConfig] = useState(null);
+  const motionRoot = usePublicMotion(config);
   const nextSunday = getNextSunday();
 
   useEffect(() => {
@@ -43,10 +48,10 @@ export default function Venir() {
   )}`;
 
   return (
-    <div className="min-h-screen bg-[#FBFAF7]">
+    <div ref={motionRoot} className="ejp-public min-h-screen bg-[#FBFAF7]">
       <PublicHeader />
 
-      <div className="pt-20 md:pt-24">
+      <div className="pt-28 md:pt-36">
         <div className="max-w-4xl mx-auto px-5 md:px-8 pb-24">
           {/* Back link */}
           <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-[#4B5563] hover:text-[#101827] transition-colors mb-6">
@@ -63,6 +68,8 @@ export default function Venir() {
               Tout ce qu'il faut savoir pour vivre ton premier culte à l'EJP Nantes en toute simplicité.
             </p>
           </RevealOnScroll>
+
+          <EditorialPhoto className="ejp-visit-photo" src={config?.nantes_image_url} photo={PUBLIC_PHOTOS.nantes} />
 
           {/* Info cards */}
           <div className="grid sm:grid-cols-3 gap-4 mb-10">
@@ -178,6 +185,7 @@ export default function Venir() {
         </div>
       </div>
 
+      <PublicFooter config={config} />
       <StickyCTA />
     </div>
   );

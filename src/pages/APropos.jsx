@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import PublicHeader from '@/components/public/PublicHeader';
+import usePublicMotion from '@/components/public/motion/usePublicMotion';
+import { PUBLIC_PHOTOS } from '@/components/public/publicPhotos';
+import { EditorialPhoto } from '@/components/public/sections/PhotoStory';
 import PublicFooter from '@/components/public/sections/PublicFooter';
 import RevealOnScroll from '@/components/public/RevealOnScroll';
 
@@ -14,25 +17,27 @@ const VALEURS = [
 
 export default function APropos() {
   const [config, setConfig] = useState(null);
+  const motionRoot = usePublicMotion(config);
   const [leaders, setLeaders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [leadersError, setLeadersError] = useState(false);
 
   useEffect(() => {
     Promise.all([
       base44.entities.ChurchConfig.list(),
-      base44.entities.Leader.list('display_order', 20),
+      base44.entities.Leader.list('display_order', 20).catch(() => { setLeadersError(true); return []; }),
     ]).then(([c, l]) => {
       setConfig(c?.[0] || null);
       setLeaders(l || []);
-    }).finally(() => setLoading(false));
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="bg-[#FBFAF7] overflow-x-hidden">
+    <div ref={motionRoot} className="ejp-public bg-[#FBFAF7] overflow-x-hidden">
       <PublicHeader />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6 text-center bg-gradient-to-b from-[#EAF0F8] to-[#FBFAF7]">
+      <section className="ejp-page-intro">
         <RevealOnScroll>
           <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">EJP Nantes</p>
           <h1 className="font-display text-5xl md:text-7xl text-[#101827] leading-tight mb-6">
@@ -43,6 +48,8 @@ export default function APropos() {
           </p>
         </RevealOnScroll>
       </section>
+
+      <EditorialPhoto className="ejp-page-photo" src={config?.community_image_url} photo={PUBLIC_PHOTOS.community} />
 
       {/* 1. Introduction */}
       <section className="max-w-3xl mx-auto px-6 py-20">
@@ -181,7 +188,7 @@ export default function APropos() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-[#4B5563] text-sm">Les responsables seront présentés prochainement.</p>
+            <p className="text-center text-[#4B5563] text-sm">{leadersError ? 'La présentation des responsables est momentanément indisponible.' : 'Les responsables seront présentés prochainement.'}</p>
           )}
         </div>
       </section>

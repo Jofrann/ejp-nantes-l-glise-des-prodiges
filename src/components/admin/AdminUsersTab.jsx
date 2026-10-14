@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { UserPlus, Search, Shield, Ban, CheckCircle2, Archive, RefreshCw, Users, Loader2, Mail, Phone, BadgeCheck } from 'lucide-react';
+import { UserPlus, Search, Ban, CheckCircle2, Archive, RefreshCw, Users, Loader2, BadgeCheck } from 'lucide-react';
 
 const ALL_BADGES = ['STAR', 'ETUDIANT', 'LEADER', 'BERGERE', 'ADMIN', 'RESPONSABLE', 'PILOTE_FIJ', 'COORDINATION_FIJ'];
 const STATUS_LABELS = {
@@ -217,6 +217,7 @@ function CreateUserModal({ onClose, onCreated }) {
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [credentials, setCredentials] = useState(null);
 
   const toggleBadge = (b) => {
     setBadges(prev => prev.includes(b) ? prev.filter(x => x !== b) : [...prev, b]);
@@ -236,7 +237,7 @@ function CreateUserModal({ onClose, onCreated }) {
         phone,
         badges,
       });
-      onCreated();
+      setCredentials(res.data);
     } catch (err) {
       setError(err.message || 'Échec de la création');
     } finally {
@@ -246,7 +247,14 @@ function CreateUserModal({ onClose, onCreated }) {
 
   return (
     <ModalShell onClose={onClose} title="Créer un utilisateur">
-      <form onSubmit={submit} className="space-y-4">
+      {credentials ? <div className="space-y-4">
+        <p>Transmets ces identifiants à la personne. Elle devra changer le mot de passe à sa première connexion.</p>
+        <p>Lien de connexion : <a className="text-secondary break-all" href="/login">{window.location.origin}/login</a></p>
+        <p>Identifiant : <code>{credentials.internal_identifier}</code></p>
+        <p>Mot de passe provisoire : <code>{credentials.temporary_password}</code></p>
+        <p className="text-xs text-muted-foreground">Le mot de passe est affiché une seule fois.</p>
+        <button className="px-4 py-2 rounded-xl bg-primary text-primary-foreground" onClick={onCreated}>Terminer</button>
+      </div> : <form onSubmit={submit} className="space-y-4">
         {error && <div className="p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">{error}</div>}
         <div className="grid grid-cols-2 gap-3">
           <div>
@@ -290,10 +298,10 @@ function CreateUserModal({ onClose, onCreated }) {
             Annuler
           </button>
           <button type="submit" disabled={loading} className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition disabled:opacity-60 flex items-center justify-center gap-2">
-            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Création...</> : 'Créer & inviter'}
+            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Création...</> : 'Créer le compte'}
           </button>
         </div>
-      </form>
+      </form>}
     </ModalShell>
   );
 }

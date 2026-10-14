@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import PublicHeader from '@/components/public/PublicHeader';
+import usePublicMotion from '@/components/public/motion/usePublicMotion';
+import { PUBLIC_PHOTOS } from '@/components/public/publicPhotos';
+import { EditorialPhoto } from '@/components/public/sections/PhotoStory';
 import PublicFooter from '@/components/public/sections/PublicFooter';
 import RevealOnScroll from '@/components/public/RevealOnScroll';
-import { Calendar, Clock, MapPin, Users, Heart, Music, GraduationCap, Star } from 'lucide-react';
+import { Clock, MapPin, Users, Heart, Music, GraduationCap } from 'lucide-react';
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -24,17 +27,19 @@ const EVENT_TYPE_LABELS = {
 
 export default function Programmes() {
   const [config, setConfig] = useState(null);
+  const motionRoot = usePublicMotion(config);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [eventsError, setEventsError] = useState(false);
 
   useEffect(() => {
     Promise.all([
       base44.entities.ChurchConfig.list(),
-      base44.entities.Event.filter({ is_active: true }, 'event_date', 20),
+      base44.entities.Event.filter({ is_active: true }, 'event_date', 20).catch(() => { setEventsError(true); return []; }),
     ]).then(([c, e]) => {
       setConfig(c?.[0] || null);
       setEvents(e || []);
-    }).finally(() => setLoading(false));
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   // Filter upcoming events
@@ -43,15 +48,15 @@ export default function Programmes() {
   const special = events.filter(e => e.event_type === 'special' && e.event_date >= today);
 
   return (
-    <div className="bg-[#FBFAF7] overflow-x-hidden">
+    <div ref={motionRoot} className="ejp-public bg-[#FBFAF7] overflow-x-hidden">
       <PublicHeader />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6 text-center bg-gradient-to-b from-[#EAF0F8] to-[#FBFAF7]">
+      <section className="ejp-page-intro">
         <RevealOnScroll>
           <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">EJP Nantes</p>
           <h1 className="font-display text-5xl md:text-7xl text-[#101827] leading-tight mb-6">
-            Nos Programmes
+            Nos rendez-vous
           </h1>
           <p className="text-[#4B5563] text-lg max-w-xl mx-auto leading-relaxed">
             Des rendez-vous réguliers et exceptionnels pour grandir, se retrouver et servir ensemble.
@@ -59,6 +64,9 @@ export default function Programmes() {
         </RevealOnScroll>
       </section>
 
+      <EditorialPhoto className="ejp-page-photo" src={config?.hero_image_url} photo={PUBLIC_PHOTOS.worship} />
+
+      {eventsError && <p role="status" className="px-6 py-5 text-center text-sm text-[#4B5563]">Le calendrier est momentanément indisponible. Les informations de nos rendez-vous réguliers restent ci-dessous.</p>}
       {/* 1. Réunion de jeunesse */}
       <section id="reunion" className="py-24 px-6">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 items-center">

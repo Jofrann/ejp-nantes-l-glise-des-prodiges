@@ -1,37 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
+import { base44, localSetup } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import PendingAccount from "@/components/PendingAccount";
-import { getRedirectPath, isAccountPending, isAccountSuspended } from "@/lib/permissions";
-import { resolveAuthEmail, getLoginErrorMessage } from "@/lib/ejpAuth";
+import {
+  getRedirectPath,
+  isAccountPending,
+  isAccountSuspended,
+} from "@/lib/permissions";
+import { getLoginErrorMessage } from "@/lib/ejpAuth";
 import { safeReturnTo } from "@/lib/authReturnTo";
 
 export default function Login() {
+  const [setupRequired, setSetupRequired] = useState(false);
+  const [setupLocked, setSetupLocked] = useState(false);
+  const [setupToken, setSetupToken] = useState("");
+  const [checkingSetup, setCheckingSetup] = useState(true);
+  useEffect(() => {
+    localSetup
+      .status()
+      .then((s) => { setSetupRequired(s.setupRequired); setSetupLocked(s.setupLocked); })
+      .catch(() => setError("Serveur local indisponible."))
+      .finally(() => setCheckingSetup(false));
+  }, []);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [pendingUser, setPendingUser] = useState(null);
 
-  const inputCls = "w-full h-12 px-4 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary/40 transition";
+  const inputCls =
+    "w-full h-12 px-4 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary/40 transition";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      // Résout l'adresse technique : prenom@prodiges → prenom@<domaine> (ou email réel en fallback)
-      const { authEmail, error: resolveError } = await resolveAuthEmail(identifier);
-
-      if (resolveError === "not_configured") {
-        setError("Le système d'authentification interne n'est pas encore configuré. Contacte l'administration EJP.");
-        setLoading(false);
+      if (setupRequired) {
+        await localSetup.create({ email: identifier.trim(), password, setupToken });
+        window.location.href = "/app";
         return;
       }
-
-      await base44.auth.loginViaEmailPassword(authEmail, password);
+      await base44.auth.loginViaEmailPassword(identifier.trim(), password);
       const user = await base44.auth.me();
 
       if (isAccountPending(user)) {
@@ -46,8 +58,7 @@ export default function Login() {
       }
 
       // Première connexion (non-admin) → changement de mot de passe obligatoire
-      const isAdmin = user.role === "admin" || (Array.isArray(user.badges) && user.badges.includes("ADMIN"));
-      if (user.first_login && !isAdmin) {
+      if (user.first_login) {
         window.location.href = "/first-login";
         return;
       }
@@ -73,28 +84,50 @@ export default function Login() {
   return (
     <AuthLayout
       footer={
-        <span className="text-muted-foreground/70">Les comptes sont créés par l'administration EJP.</span>
-      }>
+        <span className="text-muted-foreground/70">
+          Version locale indépendante. Les données sont conservées sur ce
+          serveur.
+        </span>
+      }
+    >
+      <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">
+        EJP Nantes
+      </p>
+      <h1 className="font-display text-3xl text-foreground font-light mb-2">
+        {setupRequired
+          ? "Créer le compte administrateur"
+          : "Connexion à mon espace EJP"}
+      </h1>
+      <p className="text-sm text-muted-foreground mb-8">
+        Utilise les identifiants remis par l’administration. À ta première connexion,
+        tu devras remplacer ton mot de passe provisoire.
+      </p>
 
-      <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-medium mb-3">EJP Nantes</p>
-      <h1 className="font-display text-3xl text-foreground font-light mb-2">Connexion à mon espace EJP</h1>
-      <p className="text-sm text-muted-foreground mb-8">Retrouve tes départements, ton équipe et les informations liées à ton service.</p>
-
-      {error &&
-        <div className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">
+      {error && (
+        <div role="alert" className="mb-4 p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">
           {error}
         </div>
-      }
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {setupRequired && setupLocked && <div className="space-y-1.5">
+          <label className="text-xs text-muted-foreground font-medium" htmlFor="setup-token">Code de configuration administrateur</label>
+          <input id="setup-token" type="password" autoComplete="off" value={setupToken} onChange={e => setSetupToken(e.target.value)} required className={inputCls} />
+          <p className="text-xs text-muted-foreground">Code disponible pour le propriétaire dans les paramètres du serveur.</p>
+        </div>}
         <div className="space-y-1.5">
-          <label className="text-xs text-muted-foreground font-medium" htmlFor="identifier">Identifiant EJP</label>
+          <label
+            className="text-xs text-muted-foreground font-medium"
+            htmlFor="identifier"
+          >
+            Identifiant EJP
+          </label>
           <input
             id="identifier"
             type="text"
             autoComplete="username"
             autoFocus
-            placeholder="prenom@prodiges"
+            placeholder={setupRequired ? "admin@ejp.local" : "Jofran@prodige"}
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             required
@@ -103,7 +136,12 @@ export default function Login() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs text-muted-foreground font-medium" htmlFor="password">Mot de passe</label>
+          <label
+            className="text-xs text-muted-foreground font-medium"
+            htmlFor="password"
+          >
+            Mot de passe
+          </label>
           <input
             id="password"
             type="password"
@@ -117,20 +155,30 @@ export default function Login() {
         </div>
 
         <div className="flex items-center justify-end w-full">
-          <Link to="/forgot-password" className="text-xs text-muted-foreground hover:text-secondary transition">
+          <Link
+            to="/forgot-password"
+            className="text-xs text-muted-foreground hover:text-secondary transition"
+          >
             Mot de passe oublié ?
           </Link>
         </div>
 
         <button
           type="submit"
-          disabled={loading}
-          className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2">
-
-          {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Connexion...</> : "Se connecter"}
+          disabled={loading || checkingSetup}
+          className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition disabled:opacity-60 flex items-center justify-center gap-2"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" /> Connexion...
+            </>
+          ) : setupRequired ? (
+            "Créer mon compte (12 caractères minimum)"
+          ) : (
+            "Se connecter"
+          )}
         </button>
       </form>
-
     </AuthLayout>
   );
 }

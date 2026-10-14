@@ -14,70 +14,25 @@ export function normalizeName(name: string): string {
     .trim();
 }
 
-/**
- * Génère l'identifiant de base au format prenom@prodiges
- * @prodiges n'est PAS une adresse email — c'est un identifiant interne EJP.
- */
-export function generateBaseIdentifier(first_name: string, last_name: string): string {
+/** Identifiant visible : Jofran@prodige. La connexion ignore la casse. */
+export function generateBaseIdentifier(first_name: string, _last_name: string): string {
   const f = normalizeName(first_name);
-  if (!f) return null;
-  return `${f}@prodiges`;
+  return f ? `${f.charAt(0).toUpperCase()}${f.slice(1)}@prodige` : null;
 }
 
-/**
- * Génère un identifiant interne unique.
- * Si prenom.nom@prodiges.com existe déjà, propose prenom.nom2@prodiges.com, etc.
- * @param base44 - client Base44 (avec asServiceRole)
- * @param first_name
- * @param last_name
- * @param excludeUserId - ID d'utilisateur à exclure (pour les updates)
- */
-export async function generateUniqueIdentifier(
-  base44: any,
-  first_name: string,
-  last_name: string,
-  excludeUserId?: string
-): Promise<string> {
+export async function generateUniqueIdentifier(base44: any, first_name: string, last_name: string, excludeUserId?: string): Promise<string> {
   const base = generateBaseIdentifier(first_name, last_name);
   if (!base) return null;
-
-  // Vérifie si l'identifiant de base existe déjà
-  const existing = await base44.asServiceRole.entities.User.filter({
-    internal_identifier: base,
-  });
-
-  const baseTaken = (existing || []).some((u: any) => u.id !== excludeUserId);
-  if (!baseTaken) return base;
-
-  // Cherche une variante disponible : d'abord prenom.nom@prodiges, puis prenom2@prodiges
-  const f = normalizeName(first_name);
-  const l = normalizeName(last_name);
-
-  // Variante 1 : prenom.nom@prodiges
-  if (l) {
-    const candidate1 = `${f}.${l}@prodiges`;
-    const exists1 = await base44.asServiceRole.entities.User.filter({
-      internal_identifier: candidate1,
-    });
-    const taken1 = (exists1 || []).some((u: any) => u.id !== excludeUserId);
-    if (!taken1) return candidate1;
-  }
-
-  // Variante 2+ : prenom2@prodiges, prenom3@prodiges...
-  const basePrefix = base.replace('@prodiges', '');
+  const users = await base44.asServiceRole.entities.User.list(null, 100000);
+  const canonical = (value: string) => (value || '').toLowerCase().replace(/@prodiges$/, '@prodige');
+  const taken = (candidate: string) => users.some((user: any) => user.id !== excludeUserId && canonical(user.internal_identifier) === canonical(candidate));
+  if (!taken(base)) return base;
+  const prefix = base.replace('@prodige', '');
+  const last = normalizeName(last_name);
+  if (last && !taken(`${prefix}.${last}@prodige`)) return `${prefix}.${last}@prodige`;
   let counter = 2;
-  while (counter < 100) {
-    const candidate = `${basePrefix}${counter}@prodiges`;
-    const exists = await base44.asServiceRole.entities.User.filter({
-      internal_identifier: candidate,
-    });
-    const taken = (exists || []).some((u: any) => u.id !== excludeUserId);
-    if (!taken) return candidate;
-    counter++;
-  }
-
-  // Fallback improbable
-  return `${basePrefix}${Date.now()}@prodiges`;
+  while (taken(`${prefix}${counter}@prodige`)) counter++;
+  return `${prefix}${counter}@prodige`;
 }
 
 /**

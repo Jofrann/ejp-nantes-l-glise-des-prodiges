@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Loader2, Ban, CheckCircle2, Archive, RefreshCw, MoreVertical, KeyRound } from 'lucide-react';
-import { getInitials, STATUS_LABELS, getBadgeLabel, formatDate } from '@/lib/annuaireConstants';
-import { resetUserAccess } from '@/lib/ejpAuth';
+import { ArrowLeft, Loader2, Ban, CheckCircle2, Archive, MoreVertical, KeyRound } from 'lucide-react';
+import { getInitials, STATUS_LABELS, getBadgeLabel } from '@/lib/annuaireConstants';
 import FicheApercu from '@/components/annuaire/FicheApercu';
 import FicheBadges from '@/components/annuaire/FicheBadges';
 import FicheServices from '@/components/annuaire/FicheServices';
@@ -28,6 +27,9 @@ export default function PersonFiche() {
   const [tab, setTab] = useState('apercu');
   const [showActions, setShowActions] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [credentials, setCredentials] = useState(null);
+  const [accessError, setAccessError] = useState('');
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -46,22 +48,15 @@ export default function PersonFiche() {
   const resetAccess = async () => {
     const person = data?.person;
     if (!person) return;
-    if (!confirm(`Réinitialiser l'accès de ${person.first_name} ${person.last_name} ?\n\nUn email de réinitialisation sera envoyé vers l'adresse technique contrôlée par l'EJP. L'utilisateur recevra un lien pour choisir un nouveau mot de passe.`)) return;
+    setAccessError('');
+    setConfirmReset(false);
     setShowActions(false);
     setBusy(true);
     try {
-      const result = await resetUserAccess(person.internal_identifier || person.email);
-      if (result.success) {
-        alert(`Email de réinitialisation envoyé vers l'adresse technique de ${person.first_name}. Récupère le lien dans la boîte EJP et transmets-le à la personne.`);
-      } else if (result.error === 'not_configured') {
-        alert("Le système d'authentification interne n'est pas encore configuré. Configure d'abord le domaine email technique dans les paramètres du site (Admin → Paramètres).");
-      } else if (result.error === 'no_identifier') {
-        alert("Cette personne n'a pas d'identifiant EJP. Corrige sa fiche dans l'Annuaire avant de réinitialiser son accès.");
-      } else {
-        alert("Échec de l'envoi de l'email de réinitialisation. Réessaie plus tard.");
-      }
+      const result = await base44.functions.invoke('adminManageUser', { action: 'reset_access', user_id: person.id });
+      setCredentials(result.data);
     } catch (e) {
-      alert(e.message);
+      setAccessError(e.message);
     } finally {
       setBusy(false);
     }
@@ -111,6 +106,18 @@ export default function PersonFiche() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {accessError && <p role="alert" className="p-4 text-danger">{accessError}</p>}
+      {confirmReset && <div className="p-4 border border-border rounded-xl bg-card space-y-3">
+        <p>Créer un nouveau mot de passe provisoire pour {person.full_name || person.first_name} ? Ses sessions seront fermées et son ancien mot de passe sera remplacé.</p>
+        <button className="px-4 py-2 bg-primary text-primary-foreground rounded-xl" disabled={busy} onClick={resetAccess}>Réinitialiser l’accès</button>
+        <button className="px-4 py-2" onClick={() => setConfirmReset(false)}>Annuler</button>
+      </div>}
+      {credentials && <div className="p-4 border border-border rounded-xl bg-card space-y-2">
+        <p>Transmets ces identifiants à la personne. Le mot de passe est affiché une seule fois.</p>
+        <p>Identifiant : <code>{credentials.internal_identifier}</code></p>
+        <p>Mot de passe provisoire : <code>{credentials.temporary_password}</code></p>
+        <button className="px-4 py-2" onClick={() => setCredentials(null)}>Fermer</button>
+      </div>}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
         {/* Retour */}
         <button
@@ -190,7 +197,7 @@ export default function PersonFiche() {
                       </button>
                     )}
                     <div className="border-t border-border my-1" />
-                    <button onClick={resetAccess} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-surface text-left">
+                    <button onClick={() => { setConfirmReset(true); setShowActions(false); }} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-surface text-left">
                       <KeyRound className="w-3.5 h-3.5 text-secondary" /> Réinitialiser l'accès
                     </button>
                   </div>
