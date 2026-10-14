@@ -25,6 +25,12 @@ test('npm start serves the site, SPA routes and API without exposing server file
       assert.equal((await fetch(base + path)).status, 404);
     }
     assert.equal((await fetch(base + '/api/local/unknown')).status, 404);
+    for (const origin of [`https://127.0.0.1:${port}`, base]) {
+      const publicRead = await fetch(base + '/api/local/entities/ChurchConfig', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: origin }, body: JSON.stringify({ method: 'list', args: [] }) });
+      assert.equal(publicRead.status, 200);
+    }
+    const foreignRead = await fetch(base + '/api/local/entities/ChurchConfig', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://foreign.example' }, body: JSON.stringify({ method: 'list', args: [] }) });
+    assert.equal(foreignRead.status, 403);
     const denied = await fetch(base + '/api/local/setup', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://foreign.example' }, body: '{}' });
     assert.equal(denied.status, 403);
     const unprotected = await fetch(base + '/api/local/setup', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: base }, body: JSON.stringify({ email: 'intruder@ejp.local', password: 'test-web-password-123' }) });

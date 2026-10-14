@@ -64,6 +64,7 @@ const server = createServer(async (req, res) => {
     }
     const allowedOrigins = new Set([
       `http://${req.headers.host}`,
+      `https://${req.headers.host}`,
       process.env.EJP_PUBLIC_ORIGIN,
     ].filter(Boolean));
     if (
