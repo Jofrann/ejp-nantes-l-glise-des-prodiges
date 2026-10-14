@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { base44, publicContent } from '@/api/base44Client';
 import PublicHeader from '@/components/public/PublicHeader';
 import usePublicMotion from '@/components/public/motion/usePublicMotion';
+import Authorities from '@/components/public/sections/Authorities';
+import VisionEJP from '@/components/public/sections/VisionEJP';
+import FijInvitation from '@/components/public/sections/FijInvitation';
+import Ministeres from '@/components/public/sections/Ministeres';
+import GalerieVivante from '@/components/public/sections/GalerieVivante';
 import PhotoStory from '@/components/public/sections/PhotoStory';
 import StickyCTA from '@/components/public/StickyCTA';
 import HeroLumineux from '@/components/public/sections/HeroLumineux';
@@ -18,6 +23,8 @@ export default function Home() {
   const [config, setConfig] = useState(null);
   const motionRoot = usePublicMotion(config);
   const [testimonials, setTestimonials] = useState([]);
+  const [leaders, setLeaders] = useState([]);
+  const [ministries, setMinistries] = useState([]);
   const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -36,10 +43,14 @@ export default function Home() {
     setError(false);
     Promise.all([
       base44.entities.ChurchConfig.list(),
+      publicContent.leadership().catch(() => []),
+      publicContent.ministries().catch(() => []),
       base44.entities.Testimonial.filter({ is_published: true }, 'display_order', 3),
       base44.entities.GalleryMedia.filter({ is_active: true }, 'display_order', 8).catch(() => []),
-    ]).then(([c, t, g]) => {
+    ]).then(([c, l, m, t, g]) => {
       setConfig(c?.[0] || null);
+      setLeaders(l);
+      setMinistries(m);
       setTestimonials(t || []);
       setMedia(g || []);
     }).catch(() => setError(true))
@@ -75,6 +86,9 @@ export default function Home() {
       {/* 1. Hero cinématique */}
       <HeroLumineux config={config} />
 
+      <VisionEJP config={config} />
+      <Authorities config={config} leaders={leaders} />
+      <FijInvitation config={config} />
       <PhotoStory config={config} media={media} />
 
       {/* 2. Prochain culte */}
@@ -130,7 +144,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <RevealOnScroll>
             <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">Nos rendez-vous</p>
-            <h2 className="font-display text-4xl md:text-5xl mb-6">Chaque dimanche à 15h. Et bien plus.</h2>
+            <h2 className="font-display text-4xl md:text-5xl mb-6">{config?.service_day || 'Dimanche'} à {config?.service_time || '15:00'}. Et bien plus.</h2>
             <p className="text-white/70 max-w-xl mx-auto leading-relaxed mb-10">
               Le culte du dimanche, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée.
             </p>
@@ -145,6 +159,8 @@ export default function Home() {
       </section>
 
       {/* 5. Première visite */}
+      <Ministeres ministries={ministries} />
+      <GalerieVivante media={media} />
       <PremiereFois />
 
       {/* 6. Témoignages (3 max) */}

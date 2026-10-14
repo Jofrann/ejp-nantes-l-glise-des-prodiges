@@ -191,6 +191,19 @@ export default function AdminHome() {
                   <textarea className={inputCls} rows={4} value={config.vision_text || ''} onChange={e => setConfig(c => ({ ...c, vision_text: e.target.value }))} />
                 </Field>
               </Section>
+              <Section title="Présentation publique : autorités, mission et FIJ">
+                <Field label="Nom de l’Apôtre"><textarea className={inputCls} rows={1} value={config.apostle_name || ''} onChange={e => setConfig(c => ({ ...c, apostle_name: e.target.value }))} /></Field>
+                <Field label="Présentation de l’Apôtre"><textarea className={inputCls} rows={3} value={config.apostle_bio || ''} onChange={e => setConfig(c => ({ ...c, apostle_bio: e.target.value }))} /></Field>
+                <Field label="Portrait de l’Apôtre (URL)"><textarea className={inputCls} rows={1} value={config.apostle_photo_url || ''} onChange={e => setConfig(c => ({ ...c, apostle_photo_url: e.target.value }))} /></Field>
+                <Field label="Nom de la Bergère de Nantes"><textarea className={inputCls} rows={1} value={config.shepherd_name || ''} onChange={e => setConfig(c => ({ ...c, shepherd_name: e.target.value }))} /></Field>
+                <Field label="Présentation de la Bergère"><textarea className={inputCls} rows={3} value={config.shepherd_bio || ''} onChange={e => setConfig(c => ({ ...c, shepherd_bio: e.target.value }))} /></Field>
+                <Field label="Portrait de la Bergère (URL)"><textarea className={inputCls} rows={1} value={config.shepherd_image_url || ''} onChange={e => setConfig(c => ({ ...c, shepherd_image_url: e.target.value }))} /></Field>
+                <Field label="Titre de la mission"><textarea className={inputCls} rows={1} value={config.mission_title || ''} onChange={e => setConfig(c => ({ ...c, mission_title: e.target.value }))} /></Field>
+                <Field label="Texte de la mission"><textarea className={inputCls} rows={3} value={config.mission_text || ''} onChange={e => setConfig(c => ({ ...c, mission_text: e.target.value }))} /></Field>
+                <Field label="Titre de la page FIJ"><textarea className={inputCls} rows={1} value={config.fij_title || ''} onChange={e => setConfig(c => ({ ...c, fij_title: e.target.value }))} /></Field>
+                <Field label="Présentation des FIJ"><textarea className={inputCls} rows={3} value={config.fij_text || ''} onChange={e => setConfig(c => ({ ...c, fij_text: e.target.value }))} /></Field>
+                <Field label="Comment rejoindre une FIJ"><textarea className={inputCls} rows={3} value={config.fij_join_text || ''} onChange={e => setConfig(c => ({ ...c, fij_join_text: e.target.value }))} /></Field>
+              </Section>
               <Section title="Culte">
                 <div className="grid grid-cols-2 gap-4">
                   <Field label="Jour du culte">

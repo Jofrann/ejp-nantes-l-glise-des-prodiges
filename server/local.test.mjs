@@ -84,16 +84,32 @@ test("independent API: authentication, persistence, CRUD, business functions and
     await call("functions/createMeetLink", {}, 501);
     const churchConfig = await call("entities/ChurchConfig", {
       method: "create",
-      args: [{ hero_title: "Une maison vivante", hero_image_url: "https://example.org/cover.jpg", hero_video_url: "https://example.org/film.mp4", community_image_url: "https://example.org/community.jpg", nantes_image_url: "https://example.org/nantes.jpg", private_note: "internal-only" }],
+      args: [{ hero_title: "Une maison vivante", hero_image_url: "https://example.org/cover.jpg", hero_video_url: "https://example.org/film.mp4", community_image_url: "https://example.org/community.jpg", nantes_image_url: "https://example.org/nantes.jpg", mission_title: "Grandir et servir", fij_text: "Une famille", world_shepherd_first_name: "Samuel", private_note: "internal-only" }],
     });
     assert.equal((await call("entities/ChurchConfig", { method: "get", args: [churchConfig.id] })).private_note, "internal-only");
+    const publicLeader = await call("entities/Leader", { method: "create", args: [{ first_name: "Public", last_name: "Leader", is_active: true, email: "private@example.org" }] });
+    await call("entities/Leader", { method: "create", args: [{ first_name: "Hidden", is_active: false }] });
+    const publicMinistry = await call("entities/Ministry", { method: "create", args: [{ name: "Accueil", is_active: true, private_note: "hidden" }] });
+    await call("entities/Ministry", { method: "create", args: [{ name: "Hidden", is_active: false }] });
     await call("auth/logout", {});
+    const ministries = await call("public/ministries");
+    assert.equal(ministries.some(item => item.id === publicMinistry.id), true);
+    assert.equal(ministries.some(item => item.name === "Hidden"), false);
+    assert.equal(ministries.some(item => Object.hasOwn(item, "private_note")), false);
+    const leadership = await call("public/leadership");
+    assert.equal(leadership.some(person => person.id === publicLeader.id), true);
+    assert.equal(leadership.some(person => person.first_name === "Hidden"), false);
+    assert.equal(leadership.some(person => Object.hasOwn(person, "email")), false);
+    await call("entities/Leader", { method: "list", args: [] }, 401);
     const publicConfig = await call("entities/ChurchConfig", { method: "get", args: [churchConfig.id] });
     assert.equal(publicConfig.hero_image_url, "https://example.org/cover.jpg");
     assert.equal(publicConfig.hero_video_url, "https://example.org/film.mp4");
     assert.equal(publicConfig.community_image_url, "https://example.org/community.jpg");
     assert.equal(publicConfig.nantes_image_url, "https://example.org/nantes.jpg");
     assert.equal(publicConfig.private_note, undefined);
+    assert.equal(publicConfig.mission_title, "Grandir et servir");
+    assert.equal(publicConfig.fij_text, "Une famille");
+    assert.equal(publicConfig.world_shepherd_first_name, "Samuel");
     const publicConfigs = await call("entities/ChurchConfig", { method: "list", args: [] });
     assert.equal(publicConfigs.find(record => record.id === churchConfig.id).hero_title, "Une maison vivante");
     assert.equal(publicConfigs.some(record => Object.hasOwn(record, "private_note")), false);

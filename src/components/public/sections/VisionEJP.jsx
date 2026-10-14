@@ -24,6 +24,7 @@ export default function VisionEJP({ config }) {
           </p>
         </RevealOnScroll>
 
+        <RevealOnScroll><div className="ejp-mission"><p className="ejp-eyebrow">Notre mission</p><h3>{config?.mission_title || "Découvrir Dieu. Grandir. Servir."}</h3><p>{config?.mission_text || "Présenter Jésus-Christ à notre génération, accompagner chaque jeune dans sa croissance spirituelle et l’équiper pour servir Dieu et son prochain avec excellence."}</p></div></RevealOnScroll>
         <div className="grid md:grid-cols-3 gap-6">
           {PILLARS.map((pillar, i) => {
             const Icon = pillar.icon;

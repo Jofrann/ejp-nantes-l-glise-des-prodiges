@@ -30,3 +30,7 @@ Cette version est destinée au développement local et à l'administration. Elle
 Validation : `npm run build` ; `npm test`. Le lint et le contrôle de types du projet original présentent déjà des erreurs.
 
 Pour un hébergement HTTPS, définir `EJP_PUBLIC_ORIGIN` avec l’origine exacte du site (exemple : `https://votre-domaine.fr`, sans chemin ni barre finale) ; cette valeur autorise les formulaires de cette origine et active les cookies Secure. `EJP_HOST` contrôle l’interface d’écoute. Le mode `npm start` sert uniquement le dossier compilé `dist`, jamais les sources, la base de données ou les fichiers Git. Conserver `.local-data` sur un volume persistant. Ne pas exposer le premier lancement à des tiers avant d’avoir créé votre compte.
+
+## Premier administrateur sur Render
+
+Le premier compte peut être initialisé par EJP_INITIAL_ADMIN_IDENTIFIER et EJP_INITIAL_ADMIN_PASSWORD_HASH (format scrypt sel hex de 16 octets, deux-points, clé hex de 64 octets). Aucun mot de passe par défaut n’est livré. Initialisation uniquement en absence de toute credential ; aucun compte existant remplacé. Ne jamais versionner ces valeurs ni le dossier de données. Le formulaire de création et les changements de mot de passe conservent leur minimum de 12 caractères.

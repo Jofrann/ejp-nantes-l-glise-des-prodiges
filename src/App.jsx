@@ -18,6 +18,7 @@ import FirstLogin from '@/pages/FirstLogin';
 import RoleLayout from '@/components/layouts/RoleLayout';
 import RoleGuard from '@/components/RoleGuard';
 import Home from '@/pages/Home';
+import FijPublic from '@/pages/FijPublic';
 import APropos from '@/pages/APropos';
 import Programmes from '@/pages/Programmes';
 import Venir from '@/pages/Venir';
@@ -105,6 +106,7 @@ const AuthenticatedApp = () => {
 
       {/* Vitrine publique */}
       <Route path="/" element={<Home />} />
+      <Route path="/fij" element={<FijPublic />} />
       <Route path="/a-propos" element={<APropos />} />
       <Route path="/programmes" element={<Programmes />} />
       <Route path="/venir" element={<Venir />} />

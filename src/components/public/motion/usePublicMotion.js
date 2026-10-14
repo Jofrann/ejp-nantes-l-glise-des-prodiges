@@ -16,9 +16,10 @@ export default function usePublicMotion(revision) {
       const lines = select('.ejp-title-line > span');
       const entrance = gsap.timeline({ defaults: { ease: 'power3.out' } });
       if (lines.length) entrance.from(lines, { yPercent: 115, rotation: 3, duration: 1.25, stagger: .16 }, .12);
-      entrance.from(select('.ejp-hero .ejp-eyebrow'), { opacity: 0, y: 20, duration: .8 }, 0)
-        .from(select('.ejp-hero-bottom > *'), { opacity: 0, y: 35, duration: 1, stagger: .16 }, .7)
-        .from(select('.ejp-hero-caption'), { opacity: 0, duration: 1 }, 1.15);
+      [['.ejp-hero .ejp-eyebrow', { opacity: 0, y: 20, duration: .8 }, 0], ['.ejp-hero-bottom > *', { opacity: 0, y: 35, duration: 1, stagger: .16 }, .7], ['.ejp-hero-caption', { opacity: 0, duration: 1 }, 1.15]].forEach(([selector, animation, position]) => {
+        const targets = select(selector);
+        if (targets.length) entrance.from(targets, animation, position);
+      });
       const hero = select('.ejp-hero')[0];
       if (hero) {
         gsap.fromTo(select('.ejp-hero-visual'), { scale: 1.12 }, { scale: 1, duration: 3.5, ease: 'power2.out' });

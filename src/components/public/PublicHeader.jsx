@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
-const links = [['/', 'Accueil'], ['/a-propos', 'La maison'], ['/programmes', 'Nos rendez-vous'], ['/venir', 'Nous rejoindre']];
+const links = [['/', 'Accueil'], ['/a-propos', 'La maison'], ['/fij', 'Familles d’impact'], ['/programmes', 'Nos rendez-vous'], ['/venir', 'Nous rejoindre']];
 export default function PublicHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);

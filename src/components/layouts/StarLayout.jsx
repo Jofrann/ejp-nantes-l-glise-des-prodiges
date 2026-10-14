@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import {
-  Heart, LogOut, Plus, X, Menu as MenuIcon, Shield, Settings, User, ChevronDown,
+  LogOut, Plus, Menu as MenuIcon, Shield, Settings, User, ChevronDown,
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { isBureauLike, isAdmin, hasRole, getRoles } from '@/lib/permissions';
+import { isBureauLike, isAdmin, getRoles } from '@/lib/permissions';
 import { MOBILE_BOTTOM_NAV } from '@/lib/starMegaMenu';
 import MegaMenu, { MobilePlanStar } from '@/components/star/MegaMenu';
 import NotificationBell from '@/components/star/NotificationBell';
@@ -54,15 +54,13 @@ export default function StarLayout({ children, user }) {
   const handleLogout = () => base44.auth.logout('/');
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <MotionConfig reducedMotion="user"><div className="serviteur-app min-h-screen bg-background text-foreground flex flex-col" data-page={location.pathname}>
       {/* Header desktop — glass premium, simplified */}
       <header className="fixed top-0 left-0 right-0 z-50 glass-header">
         <div className="h-full flex items-center justify-between px-4 max-w-screen-2xl">
           {/* Logo */}
           <Link to="/app" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-secondary to-gold-light flex items-center justify-center shadow-sm">
-              <Heart className="w-4 h-4 text-white" />
-            </div>
+            <img src="/brand/ejp-logo.png" alt="Église des Jeunes Prodiges" className="serviteur-logo" width="75" height="55" />
             <div className="flex flex-col leading-none">
               <span className="font-heading font-bold text-sm text-foreground">EJP Nantes</span>
               <span className="text-[9px] uppercase tracking-widest text-secondary">STAR OS</span>
@@ -82,6 +80,7 @@ export default function StarLayout({ children, user }) {
             {/* Quick actions + */}
             <div className="relative hidden sm:block">
               <button
+                aria-label="Actions rapides" aria-expanded={quickOpen}
                 onClick={() => setQuickOpen(!quickOpen)}
                 className="w-8 h-8 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary hover:bg-secondary/20 transition-all"
               >
@@ -119,6 +118,7 @@ export default function StarLayout({ children, user }) {
             {/* Profil + restricted links */}
             <div className="relative">
               <button
+                aria-label="Mon profil et mes accès" aria-expanded={profileOpen}
                 onClick={() => setProfileOpen(!profileOpen)}
                 className="flex items-center gap-1.5 px-1.5 py-1 rounded-xl hover:bg-surface transition-all"
               >
@@ -189,8 +189,9 @@ export default function StarLayout({ children, user }) {
 
             {/* Mobile menu trigger */}
             <button
+              aria-label="Ouvrir le menu serviteur" aria-expanded={planOpen}
               onClick={() => setPlanOpen(true)}
-              className="lg:hidden w-8 h-8 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
+              className="xl:hidden w-8 h-8 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
             >
               <MenuIcon className="w-5 h-5" />
             </button>
@@ -204,7 +205,7 @@ export default function StarLayout({ children, user }) {
       </main>
 
       {/* Bottom nav mobile — Accueil, Agenda, Présences, Plus */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-bottom lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-bottom xl:hidden">
         <div className="flex items-center justify-around h-16 px-2">
           {MOBILE_BOTTOM_NAV.map(({ path, label, icon: Icon, end }) => (
             <Link
@@ -238,6 +239,6 @@ export default function StarLayout({ children, user }) {
         showAdmin={showAdmin}
         extraModules={extraModules}
       />
-    </div>
+    </div></MotionConfig>
   );
 }

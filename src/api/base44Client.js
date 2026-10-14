@@ -82,3 +82,5 @@ export const localSetup = {
   status: () => request("status"),
   create: (data) => request("setup", data),
 };
+
+export const publicContent = { leadership: () => request("public/leadership"), ministries: () => request("public/ministries") };

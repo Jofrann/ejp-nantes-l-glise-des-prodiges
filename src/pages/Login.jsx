@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44, localSetup } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
+import LoginBubbles from "@/components/LoginBubbles";
 import AuthLayout from "@/components/AuthLayout";
 import PendingAccount from "@/components/PendingAccount";
 import {
@@ -80,6 +81,9 @@ export default function Login() {
   if (pendingUser) {
     return <PendingAccount userName={pendingUser.first_name} />;
   }
+
+  if (checkingSetup) return <div className="min-h-screen bg-[#fbfaf7] grid place-items-center" role="status" aria-label="Chargement de la connexion"><Loader2 className="animate-spin" /></div>;
+  if (!setupRequired) return <LoginBubbles identifier={identifier} setIdentifier={setIdentifier} password={password} setPassword={setPassword} error={error} loading={loading} onSubmit={handleSubmit} />;
 
   return (
     <AuthLayout

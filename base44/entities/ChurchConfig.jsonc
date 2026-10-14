@@ -2,6 +2,18 @@
   "name": "ChurchConfig",
   "type": "object",
   "properties": {
+    "apostle_name": { "type": "string" },
+    "apostle_bio": { "type": "string" },
+    "apostle_photo_url": { "type": "string" },
+    "shepherd_name": { "type": "string" },
+    "shepherd_bio": { "type": "string" },
+    "shepherd_image_url": { "type": "string" },
+    "mission_title": { "type": "string" },
+    "mission_text": { "type": "string" },
+    "fij_title": { "type": "string" },
+    "fij_text": { "type": "string" },
+    "fij_join_text": { "type": "string" },
+
     "community_image_url": { "type": "string", "description": "Photo de la communauté" },
     "nantes_image_url": { "type": "string", "description": "Photo de Nantes" },
     "hero_image_url": { "type": "string", "description": "Photo du hero et couverture de la vidéo" },

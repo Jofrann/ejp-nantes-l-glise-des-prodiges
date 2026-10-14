@@ -1,3 +1,4 @@
+import { initializeAdmin } from './bootstrap-admin.mjs';
 import "./hooks.mjs";
 import { createServer } from "node:http";
 import {
@@ -10,6 +11,7 @@ import { entities, db } from "./store.mjs";
 import { context } from "./sdk.mjs";
 import { serveWebsite } from "./static.mjs";
 import { provisionAccount } from "./provision.mjs";
+await initializeAdmin({ identifier: process.env.EJP_INITIAL_ADMIN_IDENTIFIER, passwordHash: process.env.EJP_INITIAL_ADMIN_PASSWORD_HASH });
 const hash = (password, salt = randomBytes(16).toString("hex")) =>
   salt + ":" + scryptSync(password, salt, 64).toString("hex");
 const matches = (password, stored) => {
@@ -231,6 +233,14 @@ const server = createServer(async (req, res) => {
       } catch (error) { db.exec("ROLLBACK"); throw error; }
       sessionCookie(user.id);
       result = { success: true };
+    } else if (url.pathname === "/api/local/public/ministries" && req.method === "GET") {
+      const fields = ["id", "name", "description", "icon", "image_url", "benefit_text", "display_order"];
+      const ministries = await entities.Ministry.filter({ is_active: true }, "display_order", 100);
+      result = ministries.map(item => Object.fromEntries(fields.filter(key => Object.hasOwn(item, key)).map(key => [key, item[key]])));
+    } else if (url.pathname === "/api/local/public/leadership" && req.method === "GET") {
+      const fields = ["id", "first_name", "last_name", "role", "bio", "photo_url", "is_main_shepherd", "display_order"];
+      const people = await entities.Leader.filter({ is_active: true }, "display_order", 100);
+      result = people.map(person => Object.fromEntries(fields.filter(key => Object.hasOwn(person, key)).map(key => [key, person[key]])));
     } else if (
       url.pathname.startsWith("/api/local/entities/") &&
       req.method === "POST"
@@ -265,6 +275,7 @@ const server = createServer(async (req, res) => {
             "vision_title", "vision_text", "service_day", "service_time",
             "address_label", "maps_link", "contact_email", "instagram_url",
             "youtube_url", "whatsapp_url", "tiktok_url", "announcement_text",
+            "apostle_name", "apostle_bio", "apostle_photo_url", "world_shepherd_first_name", "world_shepherd_last_name", "world_shepherd_role", "world_shepherd_bio", "world_shepherd_photo_url", "mission_title", "mission_text", "fij_title", "fij_text", "fij_join_text",
             "announcement_active", "shepherd_name", "shepherd_bio", "shepherd_image_url",
           ];
           const projectPublic = record => Object.fromEntries(publicFields

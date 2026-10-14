@@ -29,7 +29,7 @@ export default function HeroLumineux({ config }) {
       <div className="ejp-hero-shade" />
       <div className="ejp-hero-content">
         <p className="ejp-eyebrow"><span /> Église des Jeunes Prodiges · Nantes</p>
-        <h1 id="public-hero-title">{config?.hero_title ? <span className="ejp-title-line"><span>{config.hero_title}</span></span> : <><span className="ejp-title-line"><span>Une foi vivante.</span></span><span className="ejp-title-line"><span>Une génération</span></span><span className="ejp-title-line"><span><em>qui rayonne.</em></span></span></>}</h1>
+        <h1 id="public-hero-title">{config?.hero_title ? <span className="ejp-title-line"><span>{config.hero_title}</span></span> : <><span className="ejp-title-line"><span>Une foi vivante.</span></span><span className="ejp-title-line"><span>Une génération</span></span><span className="ejp-title-line"><span><em className="ejp-gold-wave">qui rayonne.</em></span></span></>}</h1>
         <div className="ejp-hero-bottom">
           <p>{config?.hero_subtitle || 'Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence.'}</p>
           <Link to="/venir" className="ejp-button ejp-button-gold">Je viens dimanche <ArrowUpRight size={20} /></Link>

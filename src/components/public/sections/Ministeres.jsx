@@ -13,7 +13,7 @@ const FALLBACK_MINISTRIES = [
   { name: 'Prodiges Musique', icon: 'Music', description: 'Louange, répétitions et créations musicales qui élèvent le cœur vers Dieu.', benefit_text: 'Une louange vivante et sincère.' },
   { name: 'Coordination', icon: 'Settings', description: "Organisation, planning et cohérence des activités de l'église.", benefit_text: 'Un service fluide et excellent.' },
   { name: 'Vie Académique', icon: 'GraduationCap', description: 'Accompagnement des étudiants, orientation et soutien dans les études.', benefit_text: 'Des jeunes accompagnés et soutenus.' },
-  { name: 'FIJ', icon: 'Heart', description: 'Flux des Jeunes — petits groupes de croissance et de fraternité.', benefit_text: 'Des vies transformées en profondeur.' },
+  { name: 'FIJ', icon: 'Heart', description: 'Familles d’Impact Jeunes — petits groupes de croissance et de fraternité.', benefit_text: 'Des vies transformées en profondeur.' },
 ];
 
 export default function Ministeres({ ministries }) {

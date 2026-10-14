@@ -81,7 +81,7 @@ export default function Programmes() {
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
                   <Clock className="w-4 h-4 text-[#D8B76A]" />
                 </div>
-                <span>Chaque dimanche à <strong className="text-[#101827]">{config?.culte_time || '15h00'}</strong></span>
+                <span>Chaque dimanche à <strong className="text-[#101827]">{config?.service_time?.replace(':', 'h') || config?.culte_time || '15h00'}</strong></span>
               </div>
               <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
@@ -143,15 +143,16 @@ export default function Programmes() {
             <div className="bg-[#EAF0F8] rounded-3xl p-10 text-center">
               <Heart className="w-16 h-16 text-[#D8B76A] mx-auto mb-4" />
               <p className="font-display text-3xl text-[#101827] font-bold mb-2">FIJ</p>
-              <p className="text-[#4B5563] text-sm">Flux des Jeunes</p>
+              <p className="text-[#4B5563] text-sm">Familles d’Impact Jeunes</p>
             </div>
           </RevealOnScroll>
           <RevealOnScroll>
             <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">Petits groupes</p>
             <h2 className="font-display text-4xl text-[#101827] mb-6">Les FIJ</h2>
             <p className="text-[#4B5563] leading-relaxed">
-              Les Flux des Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du dimanche. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble.
+              Les Familles d’Impact Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du dimanche. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble.
             </p>
+            <Link to="/fij" className="ejp-pill mt-6">Découvrir les Familles d’Impact Jeunes</Link>
           </RevealOnScroll>
         </div>
       </section>

@@ -37,7 +37,7 @@ export default function BureauAgendaCourt({ events = [] }) {
   const groupKeys = Object.keys(grouped).slice(0, 3);
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
+    <motion.div className="maison-agenda" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mon agenda court</h2>
         <Link to="/app/agenda" className="text-xs text-secondary flex items-center gap-1 hover:text-secondary/80">

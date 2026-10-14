@@ -14,7 +14,7 @@ export default function BureauHero({ user, firstName, greeting, todayStr, pref, 
   const seasonPhrase = pref?.season_phrase;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+    <motion.div className="maison-hero" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
       {/* Greeting + personnaliser */}
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="flex-1 min-w-0">
@@ -34,7 +34,7 @@ export default function BureauHero({ user, firstName, greeting, todayStr, pref, 
       </div>
 
       {/* Bandeau identité + verset */}
-      <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+      <div className="maison-identity bg-card border border-border rounded-2xl p-5 shadow-sm">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-secondary/25 flex-shrink-0">
             {user?.photo_url ? (

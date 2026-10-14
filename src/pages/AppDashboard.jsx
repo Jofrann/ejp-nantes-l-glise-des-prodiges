@@ -220,7 +220,7 @@ export default function AppDashboard() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="flex gap-6">
           {/* Zone principale */}
-          <div className="flex-1 min-w-0 space-y-6">
+          <div className="maison-widgets flex-1 min-w-0 space-y-6">
             <BureauHero
               user={user}
               firstName={firstName}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import RevealOnScroll from '../RevealOnScroll';
 
 export default function GalerieVivante({ media }) {
@@ -63,18 +63,12 @@ export default function GalerieVivante({ media }) {
       </div>
 
       {/* Lightbox */}
-      {lightbox && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 backdrop-blur-md p-6" onClick={() => setLightbox(null)}>
-          <button className="absolute top-6 right-6 text-white/70 hover:text-white">
-            <X className="w-6 h-6" />
-          </button>
-          {lightbox.type === 'video' ? (
-            <video src={lightbox.file_url} controls autoPlay className="max-w-full max-h-[85vh] rounded-2xl" />
-          ) : (
-            <img src={lightbox.file_url} alt={lightbox.alt_text || ''} className="max-w-full max-h-[85vh] rounded-2xl object-contain" />
-          )}
-        </div>
-      )}
+      <Dialog open={!!lightbox} onOpenChange={open => { if (!open) setLightbox(null); }}>
+        <DialogContent className="max-w-5xl bg-[#101827] text-white border-0 p-6" aria-describedby={undefined}>
+          <DialogTitle className="text-white">{lightbox?.title || 'Galerie EJP Nantes'}</DialogTitle>
+          {lightbox?.type === 'video' ? <video src={lightbox.file_url} controls autoPlay className="w-full max-h-[75vh]" /> : lightbox && <img src={lightbox.file_url} alt={lightbox.alt_text || lightbox.title || ''} className="w-full max-h-[75vh] object-contain" />}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

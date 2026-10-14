@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { base44, publicContent } from '@/api/base44Client';
+import Authorities from '@/components/public/sections/Authorities';
 import PublicHeader from '@/components/public/PublicHeader';
 import usePublicMotion from '@/components/public/motion/usePublicMotion';
 import { PUBLIC_PHOTOS } from '@/components/public/publicPhotos';
@@ -25,10 +26,10 @@ export default function APropos() {
   useEffect(() => {
     Promise.all([
       base44.entities.ChurchConfig.list(),
-      base44.entities.Leader.list('display_order', 20).catch(() => { setLeadersError(true); return []; }),
+      publicContent.leadership().catch(() => { setLeadersError(true); return []; }),
     ]).then(([c, l]) => {
       setConfig(c?.[0] || null);
-      setLeaders(l || []);
+      setLeaders((l || []).map(person => ({ ...person, name: [person.first_name, person.last_name].filter(Boolean).join(' '), image_url: person.photo_url })));
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -66,15 +67,16 @@ export default function APropos() {
           <RevealOnScroll>
             <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">Notre vision</p>
             <h2 className="font-display text-4xl md:text-5xl mb-8 leading-tight">
-              Susciter une génération<br />de prodiges au service de Dieu.
+              {config?.vision_title || 'Susciter une génération de prodiges au service de Dieu.'}
             </h2>
             <p className="text-white/70 text-lg leading-relaxed max-w-2xl">
-              Nous croyons que Dieu appelle des jeunes ordinaires à vivre des vies extraordinaires. Notre vision est de former, ancrer et envoyer une génération de serviteurs excellents, profondément enracinés dans la Parole et audacieusement tournés vers leur génération.
+              {config?.vision_text || "Nous croyons que Dieu appelle des jeunes ordinaires à vivre des vies extraordinaires. Notre vision est de former, ancrer et envoyer une génération de serviteurs excellents, profondément enracinés dans la Parole et audacieusement tournés vers leur génération."}
             </p>
           </RevealOnScroll>
         </div>
       </section>
 
+      {config?.mission_text && <section className="max-w-4xl mx-auto px-6 py-12"><RevealOnScroll><p className="ejp-eyebrow">Notre mission</p><h2 className="font-display text-4xl mb-6">{config.mission_title || 'Notre mission'}</h2><p className="text-[#4B5563] leading-relaxed">{config.mission_text}</p></RevealOnScroll></section>}
       {/* 3. Notre mission */}
       <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
@@ -138,27 +140,7 @@ export default function APropos() {
         </div>
       </section>
 
-      {/* 6. Notre Bergère */}
-      <section className="bg-[#101827] text-white py-24 px-6">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-12 items-center">
-          <RevealOnScroll className="flex-1">
-            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">Notre Bergère</p>
-            <h2 className="font-display text-4xl mb-6">{config?.shepherd_name || 'Notre Bergère'}</h2>
-            <p className="text-white/70 leading-relaxed text-base">
-              {config?.shepherd_bio || "La Bergère de l'EJP Nantes guide la communauté avec vision, amour et rigueur. Son rôle est de conduire chaque personne vers son plein potentiel en Dieu, en veillant à la santé spirituelle, relationnelle et opérationnelle de la maison."}
-            </p>
-          </RevealOnScroll>
-          {config?.shepherd_image_url && (
-            <div className="flex-shrink-0">
-              <img
-                src={config.shepherd_image_url}
-                alt={config.shepherd_name}
-                className="w-48 h-48 md:w-64 md:h-64 rounded-3xl object-cover border-2 border-[#D8B76A]/30"
-              />
-            </div>
-          )}
-        </div>
-      </section>
+      <Authorities config={config} leaders={leaders} />
 
       {/* 7. Les responsables */}
       <section id="responsables" className="py-24 px-6">

@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { MEGA_MENU, MEGA_MENU_RESTRICTED, CONDITIONAL_MODULES } from '@/lib/starMegaMenu';
@@ -8,6 +8,9 @@ export default function MegaMenu({ showSupervision, showAdmin, extraModules = []
   const [activeMenu, setActiveMenu] = useState(null);
   const navigate = useNavigate();
   const timeoutRef = useRef(null);
+  const { pathname } = useLocation();
+  useEffect(() => () => clearTimeout(timeoutRef.current), []);
+  useEffect(() => { setActiveMenu(null); }, [pathname]);
 
   const allMenus = [...MEGA_MENU];
   // Modules conditionnels (badges: étudiant, équipe)
@@ -34,11 +37,13 @@ export default function MegaMenu({ showSupervision, showAdmin, extraModules = []
 
   return (
     <nav
-      className="hidden lg:flex items-center gap-0.5"
+      className="hidden xl:flex items-center gap-0.5"
       onMouseLeave={handleLeave}
     >
       {allMenus.map((menu) => {
         const isActive = activeMenu === menu.id;
+        const routeActive = menu.route === '/app' ? pathname === '/app' : menu.items.some(item => pathname === item.to || pathname.startsWith(item.to + '/'));
+
         return (
           <div
             key={menu.id}
@@ -46,9 +51,12 @@ export default function MegaMenu({ showSupervision, showAdmin, extraModules = []
             onMouseEnter={() => handleEnter(menu.id)}
           >
             <button
+              data-route-active={routeActive}
+              aria-current={routeActive ? "page" : undefined}
+              onKeyDown={event => { if (event.key === "Escape") { setActiveMenu(null); } }}
               onClick={() => handleClick(menu.route)}
               onFocus={() => handleEnter(menu.id)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+              className={`serviteur-nav-trigger flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                 isActive
                   ? 'bg-secondary/10 text-secondary'
                   : 'text-muted-foreground hover:text-foreground hover:bg-surface'

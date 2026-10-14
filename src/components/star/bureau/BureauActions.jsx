@@ -20,7 +20,7 @@ const BureauActions = forwardRef(({ actions = [] }, ref) => {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.05 }}
-      className="scroll-mt-24"
+      className="maison-actions scroll-mt-24"
     >
       <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">À traiter maintenant</h2>
 
