@@ -1,1 +1,15 @@
-{"name":"EJP Nantes","short_name":"EJP","start_url":"/","display":"standalone","theme_color":"#19243a","background_color":"#ffffff"}
+{
+  "name": "EJP Nantes",
+  "short_name": "EJP",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#19243a",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/brand/ejp-logo.png?v=20261014",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
