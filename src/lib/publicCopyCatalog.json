@@ -4,43 +4,50 @@
       "id": "4c93f684ff0ebbdc",
       "value": "Connexion impossible",
       "sections": ["Home"],
-      "source": "Connexion impossible"
+      "source": "Connexion impossible",
+      "static": true
     },
     {
       "id": "647db16ae1559bb6",
       "value": "Une erreur réseau est survenue. Vérifie ta connexion et réessaie.",
       "sections": ["Home"],
-      "source": "Une erreur réseau est survenue. Vérifie ta connexion et réessaie."
+      "source": "Une erreur réseau est survenue. Vérifie ta connexion et réessaie.",
+      "static": true
     },
     {
       "id": "af273d956b5bec8d",
       "value": "Réessayer",
       "sections": ["Home"],
-      "source": "Réessayer"
+      "source": "Réessayer",
+      "static": true
     },
     {
       "id": "2b89ca4a49a16366",
       "value": "Notre identité",
       "sections": ["Home"],
-      "source": "Notre identité"
+      "source": "Notre identité",
+      "static": true
     },
     {
       "id": "0f5fcae15ad2feb0",
       "value": "Une maison pour",
       "sections": ["Home"],
-      "source": "Une maison pour"
+      "source": "Une maison pour",
+      "static": true
     },
     {
       "id": "ed198e50b18b49e3",
       "value": "une génération entière.",
       "sections": ["Home"],
-      "source": "une génération entière."
+      "source": "une génération entière.",
+      "static": true
     },
     {
       "id": "da2138361fc39491",
       "value": "L'EJP Nantes réunit des jeunes qui croient, qui servent et qui grandissent ensemble — dans la foi, l'excellence et la fraternité.",
       "sections": ["Home"],
-      "source": "L'EJP Nantes réunit des jeunes qui croient, qui servent et qui grandissent ensemble — dans la foi, l'excellence et la fraternité."
+      "source": "L'EJP Nantes réunit des jeunes qui croient, qui servent et qui grandissent ensemble — dans la foi, l'excellence et la fraternité.",
+      "static": true
     },
     {
       "id": "4a77a351ff0d39a4",
@@ -82,37 +89,43 @@
       "id": "2151ce40298df4df",
       "value": "Découvrir qui nous sommes",
       "sections": ["Home"],
-      "source": "Découvrir qui nous sommes"
+      "source": "Découvrir qui nous sommes",
+      "static": true
     },
     {
       "id": "431d9f55c841f768",
       "value": "Nos rendez-vous",
       "sections": ["Home", "Programmes", "PublicHeader"],
-      "source": "Nos rendez-vous"
+      "source": "Nos rendez-vous",
+      "static": true
     },
     {
       "id": "b3fc9de526e253e7",
       "value": "à",
       "sections": ["Home", "PublicFooter"],
-      "source": "à"
+      "source": "à",
+      "static": true
     },
     {
       "id": "ed574e09109a509e",
       "value": ". Et bien plus.",
       "sections": ["Home"],
-      "source": ". Et bien plus."
+      "source": ". Et bien plus.",
+      "static": true
     },
     {
       "id": "fa76ab11f8e2d40c",
       "value": "Le culte du {{jour}}, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée.",
       "sections": ["Home"],
-      "source": "Le culte du dimanche, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée."
+      "source": "Le culte du dimanche, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée.",
+      "static": true
     },
     {
       "id": "28bdcde6e07ce916",
       "value": "Voir tous nos programmes",
       "sections": ["Home"],
-      "source": "Voir tous nos programmes"
+      "source": "Voir tous nos programmes",
+      "static": true
     },
     {
       "id": "2813b1cab4d1f5cb",
@@ -173,50 +186,58 @@
       "id": "1d301390f40f0659",
       "value": "EJP Nantes",
       "sections": ["APropos", "Programmes"],
-      "source": "EJP Nantes"
+      "source": "EJP Nantes",
+      "static": true
     },
     {
       "id": "731e0170ecd522e9",
       "value": "Qui sommes-nous ?",
       "sections": ["APropos", "PublicFooter"],
-      "source": "Qui sommes-nous ?"
+      "source": "Qui sommes-nous ?",
+      "static": true
     },
     {
       "id": "038838f500739936",
       "value": "Une génération qui croit, qui sert et qui grandit ensemble — au cœur de Nantes.",
       "sections": ["APropos"],
-      "source": "Une génération qui croit, qui sert et qui grandit ensemble — au cœur de Nantes."
+      "source": "Une génération qui croit, qui sert et qui grandit ensemble — au cœur de Nantes.",
+      "static": true
     },
     {
       "id": "749a43d458f5825a",
       "value": "L'EJP Nantes est une",
       "sections": ["APropos"],
-      "source": "L'EJP Nantes est une"
+      "source": "L'EJP Nantes est une",
+      "static": true
     },
     {
       "id": "ffc84ca232a5834b",
       "value": "église de jeunes",
       "sections": ["APropos"],
-      "source": "église de jeunes"
+      "source": "église de jeunes",
+      "static": true
     },
     {
       "id": "d4efb493ee7ba216",
       "value": ", ancrée dans la foi chrétienne évangélique, portée par la conviction que chaque génération peut marquer son époque.",
       "sections": ["APropos"],
-      "source": ", ancrée dans la foi chrétienne évangélique, portée par la conviction que chaque génération peut marquer son époque."
+      "source": ", ancrée dans la foi chrétienne évangélique, portée par la conviction que chaque génération peut marquer son époque.",
+      "static": true
     },
     {
       "id": "ccd3e8df8e52c2f5",
       "value": "Notre vision",
       "sections": ["APropos", "VisionEJP"],
-      "source": "Notre vision"
+      "source": "Notre vision",
+      "static": true
     },
     {
       "id": "06f37c9022f0ea5b",
       "value": "Notre mission",
       "sections": ["APropos", "VisionEJP"],
       "source": "Notre mission",
-      "field": "mission_title"
+      "field": "mission_title",
+      "static": true
     },
     {
       "id": "977ae6cb0c224bb8",
@@ -246,85 +267,99 @@
       "id": "c3201fad6f900150",
       "value": "Nos valeurs",
       "sections": ["APropos"],
-      "source": "Nos valeurs"
+      "source": "Nos valeurs",
+      "static": true
     },
     {
       "id": "ecdc2d03c29f7c00",
       "value": "Ce qui nous tient",
       "sections": ["APropos"],
-      "source": "Ce qui nous tient"
+      "source": "Ce qui nous tient",
+      "static": true
     },
     {
       "id": "652cd9603ac8474d",
       "value": "Notre histoire",
       "sections": ["APropos"],
-      "source": "Notre histoire"
+      "source": "Notre histoire",
+      "static": true
     },
     {
       "id": "f8285c268a7aeea4",
       "value": "Une maison qui a grandi",
       "sections": ["APropos"],
-      "source": "Une maison qui a grandi"
+      "source": "Une maison qui a grandi",
+      "static": true
     },
     {
       "id": "119671df42ee13fa",
       "value": "L'EJP Nantes est née d'une conviction simple : les jeunes méritent une église qui les prend au sérieux — spirituellement, académiquement, humainement.",
       "sections": ["APropos"],
-      "source": "L'EJP Nantes est née d'une conviction simple : les jeunes méritent une église qui les prend au sérieux — spirituellement, académiquement, humainement."
+      "source": "L'EJP Nantes est née d'une conviction simple : les jeunes méritent une église qui les prend au sérieux — spirituellement, académiquement, humainement.",
+      "static": true
     },
     {
       "id": "77e8c1e946f8282f",
       "value": "Fondée avec un groupe restreint de jeunes déterminés, elle a grandi {{jour}} après {{jour}}, serviteur après serviteur. Ce qui a commencé comme un rassemblement est devenu une maison, un ministère, une communauté.",
       "sections": ["APropos"],
-      "source": "Fondée avec un groupe restreint de jeunes déterminés, elle a grandi dimanche après dimanche, serviteur après serviteur. Ce qui a commencé comme un rassemblement est devenu une maison, un ministère, une communauté."
+      "source": "Fondée avec un groupe restreint de jeunes déterminés, elle a grandi dimanche après dimanche, serviteur après serviteur. Ce qui a commencé comme un rassemblement est devenu une maison, un ministère, une communauté.",
+      "static": true
     },
     {
       "id": "045f92ab24ccecc8",
       "value": "Aujourd'hui, l'EJP Nantes réunit des dizaines de jeunes chaque {{jour}} à {{horaire}}, portés par la louange, la Parole et une fraternité réelle qui dépasse les réunions.",
       "sections": ["APropos"],
-      "source": "Aujourd'hui, l'EJP Nantes réunit des dizaines de jeunes chaque dimanche à 15h, portés par la louange, la Parole et une fraternité réelle qui dépasse les réunions."
+      "source": "Aujourd'hui, l'EJP Nantes réunit des dizaines de jeunes chaque dimanche à 15h, portés par la louange, la Parole et une fraternité réelle qui dépasse les réunions.",
+      "static": true
     },
     {
       "id": "65d65b7a0e6fd143",
       "value": "Les responsables",
       "sections": ["APropos"],
-      "source": "Les responsables"
+      "source": "Les responsables",
+      "static": true
     },
     {
       "id": "7c1b8303b0303ac9",
       "value": "L'équipe de direction",
       "sections": ["APropos"],
-      "source": "L'équipe de direction"
+      "source": "L'équipe de direction",
+      "static": true
     },
     {
       "id": "0d1983ba04edcaa2",
       "value": "Notre ancrage",
       "sections": ["APropos"],
-      "source": "Notre ancrage"
+      "source": "Notre ancrage",
+      "static": true
     },
     {
       "id": "f7d80763bf5307d7",
       "value": "À Nantes, pour Nantes",
       "sections": ["APropos"],
-      "source": "À Nantes, pour Nantes"
+      "source": "À Nantes, pour Nantes",
+      "static": true
     },
     {
       "id": "d014595a43fed701",
       "value": "L'EJP Nantes n'est pas hors-sol. Elle est profondément ancrée dans la ville de Nantes, engagée pour sa génération, attentive à ses besoins et convaincue que l'Évangile est une bonne nouvelle pour cette cité.",
       "sections": ["APropos"],
-      "source": "L'EJP Nantes n'est pas hors-sol. Elle est profondément ancrée dans la ville de Nantes, engagée pour sa génération, attentive à ses besoins et convaincue que l'Évangile est une bonne nouvelle pour cette cité."
+      "source": "L'EJP Nantes n'est pas hors-sol. Elle est profondément ancrée dans la ville de Nantes, engagée pour sa génération, attentive à ses besoins et convaincue que l'Évangile est une bonne nouvelle pour cette cité.",
+      "static": true
     },
     {
       "id": "0ada187de05bf051",
       "value": "Prêt à nous rejoindre ?",
       "sections": ["APropos"],
-      "source": "Prêt à nous rejoindre ?"
+      "source": "Prêt à nous rejoindre ?",
+      "static": true
     },
     {
       "id": "0484d9bdee3dd649",
       "value": "Voir nos programmes",
       "sections": ["APropos"],
-      "source": "Voir nos programmes"
+      "source": "Voir nos programmes",
+      "static": true
     },
     {
       "id": "80826c063ab312b2",
@@ -339,7 +374,8 @@
         "CTAFinal",
         "HeroLumineux"
       ],
-      "source": "Je viens dimanche"
+      "source": "Je viens dimanche",
+      "static": true
     },
     {
       "id": "aa56c9fad3a11a3c",
@@ -371,31 +407,36 @@
       "id": "a6da390a9b84b751",
       "value": "EJP Nantes · FIJ",
       "sections": ["FijPublic"],
-      "source": "EJP Nantes · FIJ"
+      "source": "EJP Nantes · FIJ",
+      "static": true
     },
     {
       "id": "393369a756ebba7e",
       "value": "La foi se vit aussi en famille, au plus près de notre quotidien.",
       "sections": ["FijPublic"],
-      "source": "La foi se vit aussi en famille, au plus près de notre quotidien."
+      "source": "La foi se vit aussi en famille, au plus près de notre quotidien.",
+      "static": true
     },
     {
       "id": "12f7e0449e739165",
       "value": "Une famille dans la maison",
       "sections": ["FijPublic"],
-      "source": "Une famille dans la maison"
+      "source": "Une famille dans la maison",
+      "static": true
     },
     {
       "id": "554ec890798ad646",
       "value": "Se retrouver. Grandir.",
       "sections": ["FijPublic"],
-      "source": "Se retrouver. Grandir."
+      "source": "Se retrouver. Grandir.",
+      "static": true
     },
     {
       "id": "1f2307eec6b843ec",
       "value": "Rayonner ensemble.",
       "sections": ["FijPublic"],
-      "source": "Rayonner ensemble."
+      "source": "Rayonner ensemble.",
+      "static": true
     },
     {
       "id": "535b75191fab127b",
@@ -437,26 +478,30 @@
       "id": "3b5f09f4dd549163",
       "value": "Trouver ma famille à Nantes.",
       "sections": ["FijPublic"],
-      "source": "Trouver ma famille à Nantes."
+      "source": "Trouver ma famille à Nantes.",
+      "static": true
     },
     {
       "id": "cadc7ce3d84b3996",
       "value": "Contacter l’équipe FIJ",
       "sections": ["FijPublic"],
-      "source": "Contacter l’équipe FIJ"
+      "source": "Contacter l’équipe FIJ",
+      "static": true
     },
     {
       "id": "6e1af2f2149e5cc1",
       "value": "Rencontrer l’équipe à Nantes",
       "sections": ["FijPublic"],
-      "source": "Rencontrer l’équipe à Nantes"
+      "source": "Rencontrer l’équipe à Nantes",
+      "static": true
     },
     {
       "id": "cabaa035ed0ed64d",
       "value": "Familles d’Impact Jeunes",
       "sections": ["FijPublic", "Programmes", "FijInvitation", "PublicFooter"],
       "source": "Familles d’Impact Jeunes",
-      "field": "fij_title"
+      "field": "fij_title",
+      "static": true
     },
     {
       "id": "6e20daeb0a2cba02",
@@ -476,61 +521,71 @@
       "id": "4425c7373a9d4901",
       "value": "Des rendez-vous réguliers et exceptionnels pour grandir, se retrouver et servir ensemble.",
       "sections": ["Programmes"],
-      "source": "Des rendez-vous réguliers et exceptionnels pour grandir, se retrouver et servir ensemble."
+      "source": "Des rendez-vous réguliers et exceptionnels pour grandir, se retrouver et servir ensemble.",
+      "static": true
     },
     {
       "id": "45b898826abe5cf3",
       "value": "Le calendrier est momentanément indisponible. Les informations de nos rendez-vous réguliers restent ci-dessous.",
       "sections": ["Programmes"],
-      "source": "Le calendrier est momentanément indisponible. Les informations de nos rendez-vous réguliers restent ci-dessous."
+      "source": "Le calendrier est momentanément indisponible. Les informations de nos rendez-vous réguliers restent ci-dessous.",
+      "static": true
     },
     {
       "id": "56c1c0e46c342ea7",
       "value": "Chaque {{jour}}",
       "sections": ["Programmes"],
-      "source": "Chaque dimanche"
+      "source": "Chaque dimanche",
+      "static": true
     },
     {
       "id": "34779c592c94cbe9",
       "value": "Réunion de jeunesse",
       "sections": ["Programmes"],
-      "source": "Réunion de jeunesse"
+      "source": "Réunion de jeunesse",
+      "static": true
     },
     {
       "id": "d37f19b2ed36933e",
       "value": "Le cœur battant de l'EJP. Chaque {{jour}} à {{horaire}}, la communauté se réunit pour la louange, la prière et l'enseignement de la Parole. Trois cultes par {{jour}}, trois moments pour rencontrer Dieu.",
       "sections": ["Programmes"],
-      "source": "Le cœur battant de l'EJP. Chaque dimanche à 15h, la communauté se réunit pour la louange, la prière et l'enseignement de la Parole. Trois cultes par dimanche, trois moments pour rencontrer Dieu."
+      "source": "Le cœur battant de l'EJP. Chaque dimanche à 15h, la communauté se réunit pour la louange, la prière et l'enseignement de la Parole. Trois cultes par dimanche, trois moments pour rencontrer Dieu.",
+      "static": true
     },
     {
       "id": "07f5d37ef47df8a1",
       "value": "Chaque {{jour}} à",
       "sections": ["Programmes"],
-      "source": "Chaque dimanche à"
+      "source": "Chaque dimanche à",
+      "static": true
     },
     {
       "id": "6d1b38f42cae30a0",
       "value": "Ouvert à tous — entrée libre",
       "sections": ["Programmes"],
-      "source": "Ouvert à tous — entrée libre"
+      "source": "Ouvert à tous — entrée libre",
+      "static": true
     },
     {
       "id": "bf809949a5de9fa9",
       "value": "cultes chaque {{jour}}",
       "sections": ["Programmes"],
-      "source": "cultes chaque dimanche"
+      "source": "cultes chaque dimanche",
+      "static": true
     },
     {
       "id": "11d9d00981214c13",
       "value": "Louange · Prière · Parole · Fraternité",
       "sections": ["Programmes"],
-      "source": "Louange · Prière · Parole · Fraternité"
+      "source": "Louange · Prière · Parole · Fraternité",
+      "static": true
     },
     {
       "id": "ac72b31e08cf6053",
       "value": "Ce qui se passe chaque {{jour}}",
       "sections": ["Programmes"],
-      "source": "Ce qui se passe chaque dimanche"
+      "source": "Ce qui se passe chaque dimanche",
+      "static": true
     },
     {
       "id": "cb9dfa3a4b52f7d7",
@@ -584,43 +639,50 @@
       "id": "0facc44119cec002",
       "value": "FIJ",
       "sections": ["Programmes"],
-      "source": "FIJ"
+      "source": "FIJ",
+      "static": true
     },
     {
       "id": "3d13e0caf3d36cfe",
       "value": "Petits groupes",
       "sections": ["Programmes"],
-      "source": "Petits groupes"
+      "source": "Petits groupes",
+      "static": true
     },
     {
       "id": "1f8a50d591528c9f",
       "value": "Les FIJ",
       "sections": ["Programmes"],
-      "source": "Les FIJ"
+      "source": "Les FIJ",
+      "static": true
     },
     {
       "id": "42cb30b5c89a6a3b",
       "value": "Les Familles d’Impact Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du {{jour}}. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble.",
       "sections": ["Programmes"],
-      "source": "Les Familles d’Impact Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du dimanche. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble."
+      "source": "Les Familles d’Impact Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du dimanche. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble.",
+      "static": true
     },
     {
       "id": "a864ecae98e3e212",
       "value": "Découvrir les Familles d’Impact Jeunes",
       "sections": ["Programmes"],
-      "source": "Découvrir les Familles d’Impact Jeunes"
+      "source": "Découvrir les Familles d’Impact Jeunes",
+      "static": true
     },
     {
       "id": "a286a47affb7cccc",
       "value": "Parcours de formation",
       "sections": ["Programmes"],
-      "source": "Parcours de formation"
+      "source": "Parcours de formation",
+      "static": true
     },
     {
       "id": "02bc99fddf70ab5f",
       "value": "Se former pour mieux servir",
       "sections": ["Programmes"],
-      "source": "Se former pour mieux servir"
+      "source": "Se former pour mieux servir",
+      "static": true
     },
     {
       "id": "8706418ba5b4e331",
@@ -662,38 +724,44 @@
       "id": "4b563878b404e10e",
       "value": "À venir",
       "sections": ["Programmes"],
-      "source": "À venir"
+      "source": "À venir",
+      "static": true
     },
     {
       "id": "2481d887efac4db8",
       "value": "Événements spéciaux",
       "sections": ["Programmes"],
-      "source": "Événements spéciaux"
+      "source": "Événements spéciaux",
+      "static": true
     },
     {
       "id": "b65d9008e899b623",
       "value": "Calendrier",
       "sections": ["Programmes", "CeDimanche"],
-      "source": "Calendrier"
+      "source": "Calendrier",
+      "static": true
     },
     {
       "id": "8e4a03784f1b0ddd",
       "value": "Le calendrier sera mis à jour prochainement.",
       "sections": ["Programmes"],
-      "source": "Le calendrier sera mis à jour prochainement."
+      "source": "Le calendrier sera mis à jour prochainement.",
+      "static": true
     },
     {
       "id": "c37c25c73284a35a",
       "value": "Viens vivre tout ça de l'intérieur",
       "sections": ["Programmes"],
-      "source": "Viens vivre tout ça de l'intérieur"
+      "source": "Viens vivre tout ça de l'intérieur",
+      "static": true
     },
     {
       "id": "d2eed60c2abb6e80",
       "value": "Nantes, France",
       "sections": ["Programmes", "Venir", "CeDimanche", "PublicFooter"],
       "source": "Nantes, France",
-      "field": "address_label"
+      "field": "address_label",
+      "static": true
     },
     {
       "id": "400e725dc8fba689",
@@ -747,175 +815,204 @@
       "id": "8f9f9b08ec0d1a6a",
       "value": "Retour à l'accueil",
       "sections": ["Venir", "EspaceServiteurSas"],
-      "source": "Retour à l'accueil"
+      "source": "Retour à l'accueil",
+      "static": true
     },
     {
       "id": "84226bb791c5c294",
       "value": "Préparer ma venue",
       "sections": ["Venir", "CeDimanche", "PublicFooter"],
-      "source": "Préparer ma venue"
+      "source": "Préparer ma venue",
+      "static": true
     },
     {
       "id": "b45d6874904b0ccb",
       "value": "Tout ce qu'il faut savoir pour vivre ton premier culte à l'EJP Nantes en toute simplicité.",
       "sections": ["Venir"],
-      "source": "Tout ce qu'il faut savoir pour vivre ton premier culte à l'EJP Nantes en toute simplicité."
+      "source": "Tout ce qu'il faut savoir pour vivre ton premier culte à l'EJP Nantes en toute simplicité.",
+      "static": true
     },
     {
       "id": "5f0c29b70d7005d9",
       "value": "Horaire",
       "sections": ["Venir"],
-      "source": "Horaire"
+      "source": "Horaire",
+      "static": true
     },
     {
       "id": "baca56d8c3e4013f",
       "value": "{{Jour}} à {{horaire}}",
       "sections": ["Venir"],
-      "source": "Dimanche à 15h00"
+      "source": "Dimanche à 15h00",
+      "static": true
     },
     {
       "id": "79e5cf20de0ba454",
       "value": "Adresse",
       "sections": ["Venir"],
-      "source": "Adresse"
+      "source": "Adresse",
+      "static": true
     },
     {
       "id": "a55c6d6d5706abfe",
       "value": "Prochain culte",
       "sections": ["Venir"],
-      "source": "Prochain culte"
+      "source": "Prochain culte",
+      "static": true
     },
     {
       "id": "4eb85608d894b7b5",
       "value": "Itinéraire",
       "sections": ["Venir"],
-      "source": "Itinéraire"
+      "source": "Itinéraire",
+      "static": true
     },
     {
       "id": "21addbc83941c27a",
       "value": "Ajouter au calendrier",
       "sections": ["Venir"],
-      "source": "Ajouter au calendrier"
+      "source": "Ajouter au calendrier",
+      "static": true
     },
     {
       "id": "8d9896be1d2df31f",
       "value": "Comment se passe l'arrivée ?",
       "sections": ["Venir"],
-      "source": "Comment se passe l'arrivée ?"
+      "source": "Comment se passe l'arrivée ?",
+      "static": true
     },
     {
       "id": "5375277b3b8895fe",
       "value": "Tu arrives",
       "sections": ["Venir", "PremiereFois"],
-      "source": "Tu arrives"
+      "source": "Tu arrives",
+      "static": true
     },
     {
       "id": "45cd55317039c9ce",
       "value": "— une équipe t'accueille à l'entrée et t'oriente.",
       "sections": ["Venir"],
-      "source": "— une équipe t'accueille à l'entrée et t'oriente."
+      "source": "— une équipe t'accueille à l'entrée et t'oriente.",
+      "static": true
     },
     {
       "id": "cfc9b1686959d2da",
       "value": "Tu trouves ta place",
       "sections": ["Venir"],
-      "source": "Tu trouves ta place"
+      "source": "Tu trouves ta place",
+      "static": true
     },
     {
       "id": "584a759cae497997",
       "value": "— installe-toi tranquillement, le culte commence à {{horaire}}.",
       "sections": ["Venir"],
-      "source": "— installe-toi tranquillement, le culte commence à 15h."
+      "source": "— installe-toi tranquillement, le culte commence à 15h.",
+      "static": true
     },
     {
       "id": "88a523b96d7cd776",
       "value": "Tu participes",
       "sections": ["Venir"],
-      "source": "Tu participes"
+      "source": "Tu participes",
+      "static": true
     },
     {
       "id": "edea0359b875cefd",
       "value": "— louange, prière, Parole. Vis le moment à ton rythme.",
       "sections": ["Venir"],
-      "source": "— louange, prière, Parole. Vis le moment à ton rythme."
+      "source": "— louange, prière, Parole. Vis le moment à ton rythme.",
+      "static": true
     },
     {
       "id": "f437efbb2a49dfa4",
       "value": "Tu restes après",
       "sections": ["Venir"],
-      "source": "Tu restes après"
+      "source": "Tu restes après",
+      "static": true
     },
     {
       "id": "1ce11c3431bdd266",
       "value": "— un temps fraternel pour échanger et poser tes questions.",
       "sections": ["Venir"],
-      "source": "— un temps fraternel pour échanger et poser tes questions."
+      "source": "— un temps fraternel pour échanger et poser tes questions.",
+      "static": true
     },
     {
       "id": "5c2b18fc6f632075",
       "value": "Contact rapide",
       "sections": ["Venir"],
-      "source": "Contact rapide"
+      "source": "Contact rapide",
+      "static": true
     },
     {
       "id": "e031a681c6f22f76",
       "value": "Une question avant de venir ? Contacte-nous directement.",
       "sections": ["Venir"],
-      "source": "Une question avant de venir ? Contacte-nous directement."
+      "source": "Une question avant de venir ? Contacte-nous directement.",
+      "static": true
     },
     {
       "id": "6a40edf1fc87a29f",
       "value": "WhatsApp",
       "sections": ["Venir"],
-      "source": "WhatsApp"
+      "source": "WhatsApp",
+      "static": true
     },
     {
       "id": "83b0b5a7d6fd1ace",
       "value": "Réponse rapide",
       "sections": ["Venir"],
-      "source": "Réponse rapide"
+      "source": "Réponse rapide",
+      "static": true
     },
     {
       "id": "969ccbd3cf6300ec",
       "value": "Email",
       "sections": ["Venir", "PublicFooter"],
-      "source": "Email"
+      "source": "Email",
+      "static": true
     },
     {
       "id": "e09f2917381476c9",
       "value": "FAQ pratique",
       "sections": ["Venir"],
-      "source": "FAQ pratique"
+      "source": "FAQ pratique",
+      "static": true
     },
     {
       "id": "712e0c3f24752baf",
       "value": "Espace Serviteur",
       "sections": ["EspaceServiteurSas"],
-      "source": "Espace Serviteur"
+      "source": "Espace Serviteur",
+      "static": true
     },
     {
       "id": "5f125995289a12e5",
       "value": "Bienvenue dans l'espace serviteur",
       "sections": ["EspaceServiteurSas"],
-      "source": "Bienvenue dans l'espace serviteur"
+      "source": "Bienvenue dans l'espace serviteur",
+      "static": true
     },
     {
       "id": "51c48ad1eea78ddc",
       "value": "Cet espace est réservé aux personnes engagées au service de l'EJP Nantes. Connecte-toi pour accéder à ton tableau de bord, tes ministères et tes missions.",
       "sections": ["EspaceServiteurSas"],
-      "source": "Cet espace est réservé aux personnes engagées au service de l'EJP Nantes. Connecte-toi pour accéder à ton tableau de bord, tes ministères et tes missions."
+      "source": "Cet espace est réservé aux personnes engagées au service de l'EJP Nantes. Connecte-toi pour accéder à ton tableau de bord, tes ministères et tes missions.",
+      "static": true
     },
     {
       "id": "0ac3d2cb30052ced",
       "value": "Se connecter",
       "sections": ["EspaceServiteurSas"],
-      "source": "Se connecter"
+      "source": "Se connecter",
+      "static": true
     },
     {
       "id": "08ca3bc53576f360",
       "value": "Ce que tu trouveras dans l'espace",
       "sections": ["EspaceServiteurSas"],
-      "source": "Ce que tu trouveras dans l'espace"
+      "source": "Ce que tu trouveras dans l'espace",
+      "static": true
     },
     {
       "id": "c399e98d4d535c21",
@@ -993,61 +1090,71 @@
       "id": "26866b3c2036592c",
       "value": "Merci",
       "sections": ["FirstVisitForm"],
-      "source": "Merci"
+      "source": "Merci",
+      "static": true
     },
     {
       "id": "ca101bfc6042861a",
       "value": "Nous avons bien noté ton intention de venue. L'équipe d'accueil sera prévenue. On a hâte de te rencontrer ce {{jour}} !",
       "sections": ["FirstVisitForm"],
-      "source": "Nous avons bien noté ton intention de venue. L'équipe d'accueil sera prévenue. On a hâte de te rencontrer ce dimanche !"
+      "source": "Nous avons bien noté ton intention de venue. L'équipe d'accueil sera prévenue. On a hâte de te rencontrer ce dimanche !",
+      "static": true
     },
     {
       "id": "000aaed4b5db8efc",
       "value": "Remplis ce formulaire pour que l'équipe d'accueil sache que tu viens. C'est optionnel.",
       "sections": ["FirstVisitForm"],
-      "source": "Remplis ce formulaire pour que l'équipe d'accueil sache que tu viens. C'est optionnel."
+      "source": "Remplis ce formulaire pour que l'équipe d'accueil sache que tu viens. C'est optionnel.",
+      "static": true
     },
     {
       "id": "cb89d19749493681",
       "value": "Prénom *",
       "sections": ["FirstVisitForm"],
-      "source": "Prénom *"
+      "source": "Prénom *",
+      "static": true
     },
     {
       "id": "d40bff28070202e3",
       "value": "Téléphone ou email *",
       "sections": ["FirstVisitForm"],
-      "source": "Téléphone ou email *"
+      "source": "Téléphone ou email *",
+      "static": true
     },
     {
       "id": "33da121fa62c5cf5",
       "value": "Je viens",
       "sections": ["FirstVisitForm"],
-      "source": "Je viens"
+      "source": "Je viens",
+      "static": true
     },
     {
       "id": "c917e1ed7774a5cd",
       "value": "Question (optionnel)",
       "sections": ["FirstVisitForm"],
-      "source": "Question (optionnel)"
+      "source": "Question (optionnel)",
+      "static": true
     },
     {
       "id": "bf2f14e82f15b313",
       "value": "Envoi...",
       "sections": ["FirstVisitForm"],
-      "source": "Envoi..."
+      "source": "Envoi...",
+      "static": true
     },
     {
       "id": "c66ca8d92f515eed",
       "value": "Confirmer ma venue",
       "sections": ["FirstVisitForm"],
-      "source": "Confirmer ma venue"
+      "source": "Confirmer ma venue",
+      "static": true
     },
     {
       "id": "533161735639c51a",
       "value": "Accueil",
       "sections": ["PublicHeader", "PublicFooter"],
-      "source": "Accueil"
+      "source": "Accueil",
+      "static": true
     },
     {
       "id": "9db78c07d551a403",
@@ -1077,13 +1184,15 @@
       "id": "86b113cd92086e27",
       "value": "NANTES",
       "sections": ["PublicHeader"],
-      "source": "NANTES"
+      "source": "NANTES",
+      "static": true
     },
     {
       "id": "eb4151dd0f5a633f",
       "value": "Une génération qui rayonne",
       "sections": ["PublicHeader"],
-      "source": "Une génération qui rayonne"
+      "source": "Une génération qui rayonne",
+      "static": true
     },
     {
       "id": "4180b202f09c2749",
@@ -1101,7 +1210,8 @@
       "id": "58b274ab2a5567c6",
       "value": "Espace serviteur",
       "sections": ["PublicHeader", "PublicFooter"],
-      "source": "Espace serviteur"
+      "source": "Espace serviteur",
+      "static": true
     },
     {
       "id": "4e075e4efa912e2d",
@@ -1141,61 +1251,71 @@
       "id": "d938df9aa3898e77",
       "value": "Notre père spirituel · Une vision reçue",
       "sections": ["Authorities"],
-      "source": "Notre père spirituel · Une vision reçue"
+      "source": "Notre père spirituel · Une vision reçue",
+      "static": true
     },
     {
       "id": "cc7b0fb8bbf99786",
       "value": "Reconnaissance, fidélité et transmission.",
       "sections": ["Authorities"],
-      "source": "Reconnaissance, fidélité et transmission."
+      "source": "Reconnaissance, fidélité et transmission.",
+      "static": true
     },
     {
       "id": "7c0710127490215a",
       "value": "Une même vision.",
       "sections": ["Authorities"],
-      "source": "Une même vision."
+      "source": "Une même vision.",
+      "static": true
     },
     {
       "id": "66ab473201fcc7a7",
       "value": "Une génération accompagnée.",
       "sections": ["Authorities"],
-      "source": "Une génération accompagnée."
+      "source": "Une génération accompagnée.",
+      "static": true
     },
     {
       "id": "983dd6429dd3cad6",
       "value": "Ce {{jour}}",
       "sections": ["CeDimanche"],
-      "source": "Ce dimanche"
+      "source": "Ce dimanche",
+      "static": true
     },
     {
       "id": "82a6e1a8c8e50a41",
       "value": "Culte à",
       "sections": ["CeDimanche"],
-      "source": "Culte à"
+      "source": "Culte à",
+      "static": true
     },
     {
       "id": "52b4c5aed10e1da4",
       "value": "Un temps pour chercher Dieu, être édifié, et marcher avec une jeunesse qui désire porter du fruit.",
       "sections": ["CeDimanche"],
-      "source": "Un temps pour chercher Dieu, être édifié, et marcher avec une jeunesse qui désire porter du fruit."
+      "source": "Un temps pour chercher Dieu, être édifié, et marcher avec une jeunesse qui désire porter du fruit.",
+      "static": true
     },
     {
       "id": "4c5d3bba5112a15c",
       "value": "{{Jour}} à ",
       "sections": ["CeDimanche"],
-      "source": "Tous les dimanches à"
+      "source": "Tous les dimanches à",
+      "static": true
     },
     {
       "id": "2923740fe800e250",
       "value": "Google Maps",
       "sections": ["CeDimanche"],
-      "source": "Google Maps"
+      "source": "Google Maps",
+      "static": true
     },
     {
       "id": "66ffd1ccfafb52c6",
       "value": "Compte à rebours",
       "sections": ["CeDimanche"],
-      "source": "Compte à rebours"
+      "source": "Compte à rebours",
+      "static": true
     },
     {
       "id": "d5a8252500f852c9",
@@ -1225,43 +1345,50 @@
       "id": "337b214172d93bb4",
       "value": "Prochain culte :",
       "sections": ["CeDimanche"],
-      "source": "Prochain culte :"
+      "source": "Prochain culte :",
+      "static": true
     },
     {
       "id": "018aba90581f8711",
       "value": "Une porte t'est ouverte",
       "sections": ["CTAFinal"],
-      "source": "Une porte t'est ouverte"
+      "source": "Une porte t'est ouverte",
+      "static": true
     },
     {
       "id": "379aa33bb0b7eac4",
       "value": "Et si tu venais ce {{jour}} ?",
       "sections": ["CTAFinal"],
-      "source": "Et si tu venais ce dimanche ?"
+      "source": "Et si tu venais ce dimanche ?",
+      "static": true
     },
     {
       "id": "da9b686db67d11fb",
       "value": "Tu n'as pas besoin de tout comprendre. Viens comme tu es. Une place t'attend.",
       "sections": ["CTAFinal"],
-      "source": "Tu n'as pas besoin de tout comprendre. Viens comme tu es. Une place t'attend."
+      "source": "Tu n'as pas besoin de tout comprendre. Viens comme tu es. Une place t'attend.",
+      "static": true
     },
     {
       "id": "a1c90d0337d8b267",
       "value": "Une grande église.",
       "sections": ["FijInvitation"],
-      "source": "Une grande église."
+      "source": "Une grande église.",
+      "static": true
     },
     {
       "id": "c25ae21170c24750",
       "value": "Une famille tout près.",
       "sections": ["FijInvitation"],
-      "source": "Une famille tout près."
+      "source": "Une famille tout près.",
+      "static": true
     },
     {
       "id": "6a81390e3f40bab7",
       "value": "Découvrir les FIJ",
       "sections": ["FijInvitation"],
-      "source": "Découvrir les FIJ"
+      "source": "Découvrir les FIJ",
+      "static": true
     },
     {
       "id": "294b3a6f3ebf3ffc",
@@ -1274,19 +1401,22 @@
       "id": "7b27947821c85911",
       "value": "Galerie",
       "sections": ["GalerieVivante"],
-      "source": "Galerie"
+      "source": "Galerie",
+      "static": true
     },
     {
       "id": "cd4a68d8a33fa566",
       "value": "Une maison vivante",
       "sections": ["GalerieVivante"],
-      "source": "Une maison vivante"
+      "source": "Une maison vivante",
+      "static": true
     },
     {
       "id": "fbda20b13fba7110",
       "value": "Quelques instants de vie à l'EJP Nantes.",
       "sections": ["GalerieVivante"],
-      "source": "Quelques instants de vie à l'EJP Nantes."
+      "source": "Quelques instants de vie à l'EJP Nantes.",
+      "static": true
     },
     {
       "id": "af845394ff39283b",
@@ -1304,43 +1434,53 @@
       "id": "3862bd04591ced1b",
       "value": "Voir plus de photos et vidéos (",
       "sections": ["GalerieVivante"],
-      "source": "Voir plus de photos et vidéos ("
+      "source": "Voir plus de photos et vidéos (",
+      "static": true
     },
     {
       "id": "81bf3bea2c0058b8",
       "value": "EJP",
       "sections": ["HeroLumineux", "PublicFooter"],
-      "source": "EJP"
+      "source": "EJP",
+      "static": true
     },
     {
       "id": "9cf25b4f12beb678",
       "value": "Église des Jeunes Prodiges · Nantes",
       "sections": ["HeroLumineux"],
-      "source": "Église des Jeunes Prodiges · Nantes"
+      "source": "Église des Jeunes Prodiges · Nantes",
+      "static": true
     },
     {
       "id": "d3b5264b9f2cc770",
       "value": "Une foi vivante.",
       "sections": ["HeroLumineux"],
-      "source": "Une foi vivante."
+      "source": "Une foi vivante.",
+      "static": false,
+      "field": "hero_title"
     },
     {
       "id": "7609d2a84454d2b0",
       "value": "Une génération",
       "sections": ["HeroLumineux"],
-      "source": "Une génération"
+      "source": "Une génération",
+      "static": false,
+      "field": "hero_title"
     },
     {
       "id": "96e3955039e6ea38",
       "value": "qui rayonne.",
       "sections": ["HeroLumineux"],
-      "source": "qui rayonne."
+      "source": "qui rayonne.",
+      "static": false,
+      "field": "hero_title"
     },
     {
       "id": "f1f390fba93d7c72",
       "value": "Découvrir la maison",
       "sections": ["HeroLumineux"],
-      "source": "Découvrir la maison"
+      "source": "Découvrir la maison",
+      "static": true
     },
     {
       "id": "592792b13cc2ec96",
@@ -1359,7 +1499,8 @@
       "value": "Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence.",
       "sections": ["HeroLumineux", "PublicFooter"],
       "source": "Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence.",
-      "field": "hero_subtitle"
+      "field": "hero_subtitle",
+      "static": true
     },
     {
       "id": "858e4ba7a29fd38b",
@@ -1407,31 +1548,36 @@
       "id": "f4c704fba5a4d262",
       "value": "Ministères",
       "sections": ["Ministeres"],
-      "source": "Ministères"
+      "source": "Ministères",
+      "static": true
     },
     {
       "id": "74aad2ab9e78eada",
       "value": "Espaces de service",
       "sections": ["Ministeres"],
-      "source": "Espaces de service"
+      "source": "Espaces de service",
+      "static": true
     },
     {
       "id": "647b8ede4fc972e8",
       "value": "Chaque ministère porte une mission, sert des personnes et produit un fruit concret.",
       "sections": ["Ministeres"],
-      "source": "Chaque ministère porte une mission, sert des personnes et produit un fruit concret."
+      "source": "Chaque ministère porte une mission, sert des personnes et produit un fruit concret.",
+      "static": true
     },
     {
       "id": "fd7037373cc7ddfb",
       "value": "Photo d’illustration ·",
       "sections": ["PhotoStory"],
-      "source": "Photo d’illustration ·"
+      "source": "Photo d’illustration ·",
+      "static": true
     },
     {
       "id": "7f93ce4e792631c7",
       "value": "/ Unsplash",
       "sections": ["PhotoStory"],
-      "source": "/ Unsplash"
+      "source": "/ Unsplash",
+      "static": true
     },
     {
       "id": "e64e455e0781afe4",
@@ -1443,67 +1589,78 @@
       "id": "f2086a955d8036e6",
       "value": "Croire.",
       "sections": ["PhotoStory"],
-      "source": "Croire."
+      "source": "Croire.",
+      "static": true
     },
     {
       "id": "dfa8f194f80cb949",
       "value": "Grandir.",
       "sections": ["PhotoStory"],
-      "source": "Grandir."
+      "source": "Grandir.",
+      "static": true
     },
     {
       "id": "17943661d7682586",
       "value": "Servir.",
       "sections": ["PhotoStory"],
-      "source": "Servir."
+      "source": "Servir.",
+      "static": true
     },
     {
       "id": "4b43f3d47ecb2120",
       "value": "Ensemble.",
       "sections": ["PhotoStory"],
-      "source": "Ensemble."
+      "source": "Ensemble.",
+      "static": true
     },
     {
       "id": "b5701953761de8d8",
       "value": "La vie de la maison",
       "sections": ["PhotoStory"],
-      "source": "La vie de la maison"
+      "source": "La vie de la maison",
+      "static": true
     },
     {
       "id": "2ca35342ed4bcc61",
       "value": "La foi se vit.",
       "sections": ["PhotoStory"],
-      "source": "La foi se vit."
+      "source": "La foi se vit.",
+      "static": true
     },
     {
       "id": "738c6e81fb8db8c4",
       "value": "Des rencontres qui deviennent des liens. Une foi qui prend sa place dans la vie de tous les jours.",
       "sections": ["PhotoStory"],
-      "source": "Des rencontres qui deviennent des liens. Une foi qui prend sa place dans la vie de tous les jours."
+      "source": "Des rencontres qui deviennent des liens. Une foi qui prend sa place dans la vie de tous les jours.",
+      "static": true
     },
     {
       "id": "5129d6ba1d6e5b80",
       "value": "Une famille à découvrir",
       "sections": ["PhotoStory"],
-      "source": "Une famille à découvrir"
+      "source": "Une famille à découvrir",
+      "static": true
     },
     {
       "id": "58bb187e6cacc636",
       "value": "Une place pour toi.",
       "sections": ["PhotoStory"],
-      "source": "Une place pour toi."
+      "source": "Une place pour toi.",
+      "static": true
     },
     {
       "id": "141ef92021397c29",
       "value": "Au cœur de la ville",
       "sections": ["PhotoStory"],
-      "source": "Au cœur de la ville"
+      "source": "Au cœur de la ville",
+      "static": true
     },
     {
       "id": "547094c73321b6ad",
       "value": "À Nantes, pour Nantes.",
       "sections": ["PhotoStory"],
-      "source": "À Nantes, pour Nantes."
+      "source": "À Nantes, pour Nantes.",
+      "static": true
     },
     {
       "id": "ea7babebbc526b40",
@@ -1551,25 +1708,29 @@
       "id": "5a9b1303c214ed35",
       "value": "Première fois",
       "sections": ["PremiereFois"],
-      "source": "Première fois"
+      "source": "Première fois",
+      "static": true
     },
     {
       "id": "7b297275f7566ab0",
       "value": "Tu viens pour la première fois ?",
       "sections": ["PremiereFois"],
-      "source": "Tu viens pour la première fois ?"
+      "source": "Tu viens pour la première fois ?",
+      "static": true
     },
     {
       "id": "d628fb73134d52c9",
       "value": "Tu n'as pas besoin de tout connaître avant d'arriver. Notre équipe t'accueille, t'oriente et t'aide à vivre ce temps simplement.",
       "sections": ["PremiereFois"],
-      "source": "Tu n'as pas besoin de tout connaître avant d'arriver. Notre équipe t'accueille, t'oriente et t'aide à vivre ce temps simplement."
+      "source": "Tu n'as pas besoin de tout connaître avant d'arriver. Notre équipe t'accueille, t'oriente et t'aide à vivre ce temps simplement.",
+      "static": true
     },
     {
       "id": "1944218376570de3",
       "value": "Étape",
       "sections": ["PremiereFois"],
-      "source": "Étape"
+      "source": "Étape",
+      "static": true
     },
     {
       "id": "bad57ef7837c8e6b",
@@ -1587,67 +1748,78 @@
       "id": "4733d264074d8212",
       "value": "Nantes.",
       "sections": ["PublicFooter"],
-      "source": "Nantes."
+      "source": "Nantes.",
+      "static": true
     },
     {
       "id": "d5293ca713d82d44",
       "value": "Église des Jeunes Prodiges",
       "sections": ["PublicFooter"],
-      "source": "Église des Jeunes Prodiges"
+      "source": "Église des Jeunes Prodiges",
+      "static": true
     },
     {
       "id": "3db65f8c2a7d1861",
       "value": "Navigation",
       "sections": ["PublicFooter"],
-      "source": "Navigation"
+      "source": "Navigation",
+      "static": true
     },
     {
       "id": "5fa19a378dd1e64a",
       "value": "Photos & vidéos",
       "sections": ["PublicFooter"],
-      "source": "Photos & vidéos"
+      "source": "Photos & vidéos",
+      "static": true
     },
     {
       "id": "4be858b057bcb5b6",
       "value": "Nos Programmes",
       "sections": ["PublicFooter"],
-      "source": "Nos Programmes"
+      "source": "Nos Programmes",
+      "static": true
     },
     {
       "id": "57d6b9bf2c3d0659",
       "value": "Rejoins-nous",
       "sections": ["PublicFooter"],
-      "source": "Rejoins-nous"
+      "source": "Rejoins-nous",
+      "static": true
     },
     {
       "id": "9f38ae8098e231eb",
       "value": "Nous contacter",
       "sections": ["PublicFooter"],
-      "source": "Nous contacter"
+      "source": "Nous contacter",
+      "static": true
     },
     {
       "id": "de356f15bbd2c845",
       "value": "Église des Jeunes Prodiges Nantes. Tous droits réservés.",
       "sections": ["PublicFooter"],
-      "source": "Église des Jeunes Prodiges Nantes. Tous droits réservés."
+      "source": "Église des Jeunes Prodiges Nantes. Tous droits réservés.",
+      "static": true
     },
     {
       "id": "31418ae6255c0572",
       "value": "Témoignages",
       "sections": ["Temoignages"],
-      "source": "Témoignages"
+      "source": "Témoignages",
+      "static": true
     },
     {
       "id": "c405cc6c8815ad4a",
       "value": "Ce que Dieu fait ici",
       "sections": ["Temoignages"],
-      "source": "Ce que Dieu fait ici"
+      "source": "Ce que Dieu fait ici",
+      "static": true
     },
     {
       "id": "6b23d9ccbf456445",
       "value": "Des histoires vraies de transformation, de foi et de rencontre.",
       "sections": ["Temoignages"],
-      "source": "Des histoires vraies de transformation, de foi et de rencontre."
+      "source": "Des histoires vraies de transformation, de foi et de rencontre.",
+      "static": true
     },
     {
       "id": "17f5ae2f3ec16948",
@@ -1747,7 +1919,8 @@
       "id": "4e07408562bedb8b",
       "value": "3",
       "source": "3",
-      "sections": ["Programmes"]
+      "sections": ["Programmes"],
+      "static": true
     }
   ],
   "fields": [

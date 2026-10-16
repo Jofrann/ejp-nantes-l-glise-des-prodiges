@@ -18,14 +18,14 @@ export default function VisionEJP({ config }) {
         <RevealOnScroll>
           <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold"><PublicText value={"Notre vision"} /></span>
           <h2 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-6 font-medium leading-tight">
-            <PublicText value={config?.vision_title || 'Une génération qui sert'} />
+            <PublicText field="vision_title" value={config?.vision_title || 'Une génération qui sert'} />
           </h2>
           <p className="text-[#4B5563] text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-16">
             <PublicText value={visionText} />
           </p>
         </RevealOnScroll>
 
-        <RevealOnScroll><div className="ejp-mission"><p className="ejp-eyebrow"><PublicText value={"Notre mission"} /></p><h3><PublicText value={config?.mission_title || "Découvrir Dieu. Grandir. Servir."} /></h3><p><PublicText value={config?.mission_text || "Présenter Jésus-Christ à notre génération, accompagner chaque jeune dans sa croissance spirituelle et l’équiper pour servir Dieu et son prochain avec excellence."} /></p></div></RevealOnScroll>
+        <RevealOnScroll><div className="ejp-mission"><p className="ejp-eyebrow"><PublicText value={"Notre mission"} /></p><h3><PublicText field="mission_title" value={config?.mission_title || "Découvrir Dieu. Grandir. Servir."} /></h3><p><PublicText field="mission_text" value={config?.mission_text || "Présenter Jésus-Christ à notre génération, accompagner chaque jeune dans sa croissance spirituelle et l’équiper pour servir Dieu et son prochain avec excellence."} /></p></div></RevealOnScroll>
         <div className="grid md:grid-cols-3 gap-6">
           {PILLARS.map((pillar, i) => {
             const Icon = pillar.icon;

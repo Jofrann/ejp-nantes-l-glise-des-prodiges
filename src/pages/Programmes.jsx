@@ -76,13 +76,13 @@ export default function Programmes() {
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
                   <Clock className="w-4 h-4 text-[#D8B76A]" />
                 </div>
-                <span><PublicText value={"Chaque dimanche à "} /><strong className="text-[#101827]"><PublicText value={config?.service_time?.replace(':', 'h') || config?.culte_time || '15h00'} /></strong></span>
+                <span><PublicText value={"Chaque dimanche à "} /><strong className="text-[#101827]"><PublicText field="culte_time" value={config?.service_time?.replace(':', 'h') || config?.culte_time || '15h00'} /></strong></span>
               </div>
               <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-4 h-4 text-[#D8B76A]" />
                 </div>
-                <span><PublicText value={config?.address_label || 'Nantes, France'} /></span>
+                <span><PublicText field="address_label" value={config?.address_label || 'Nantes, France'} /></span>
               </div>
               <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">

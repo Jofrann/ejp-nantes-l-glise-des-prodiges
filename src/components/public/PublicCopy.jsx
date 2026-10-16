@@ -97,9 +97,9 @@ export function PublicCopyProvider({ children }) {
 }
 export function usePublicText() {
   const config = useContext(CopyContext);
-  return (value) => {
+  return (value, field = false) => {
     if (typeof value !== "string") return value;
-    const id = copyIds.get(normalizeCopy(value));
+    const id = field ? undefined : copyIds.get(normalizeCopy(value));
     const edited =
       id && Object.hasOwn(config.public_copy || {}, id)
         ? config.public_copy[id]
@@ -116,7 +116,7 @@ export function usePublicText() {
     return before + result + after;
   };
 }
-export function PublicText({ value }) {
+export function PublicText({ value, field }) {
   const text = usePublicText();
-  return <>{text(value)}</>;
+  return <>{text(value, field)}</>;
 }

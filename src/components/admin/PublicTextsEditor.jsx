@@ -124,11 +124,8 @@ export default function PublicTextsEditor({
   ].filter((key) => names[key] && !inactive.includes(key));
   const matching = catalog.entries.filter(
     (item) =>
-      !item.field &&
+      (!item.field || item.static) &&
       item.sections.some((key) => !inactive.includes(key)) &&
-      !catalog.fields.some(
-        (field) => field.value && field.value === item.source,
-      ) &&
       (section === "all" || item.sections.includes(section)) &&
       (!query ||
         `${item.value} ${config.public_copy?.[item.id] || ""}`

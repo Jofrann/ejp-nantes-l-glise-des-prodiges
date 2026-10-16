@@ -62,16 +62,16 @@ export default function APropos() {
           <RevealOnScroll>
             <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4"><PublicText value={"Notre vision"} /></p>
             <h2 className="font-display text-4xl md:text-5xl mb-8 leading-tight">
-              <PublicText value={config?.vision_title || 'Susciter une génération de prodiges au service de Dieu.'} />
+              <PublicText field="vision_title" value={config?.vision_title || 'Susciter une génération de prodiges au service de Dieu.'} />
             </h2>
             <p className="text-white/70 text-lg leading-relaxed max-w-2xl">
-              <PublicText value={config?.vision_text || "Nous croyons que Dieu appelle des jeunes ordinaires à vivre des vies extraordinaires. Notre vision est de former, ancrer et envoyer une génération de serviteurs excellents, profondément enracinés dans la Parole et audacieusement tournés vers leur génération."} />
+              <PublicText field="vision_text" value={config?.vision_text || "Nous croyons que Dieu appelle des jeunes ordinaires à vivre des vies extraordinaires. Notre vision est de former, ancrer et envoyer une génération de serviteurs excellents, profondément enracinés dans la Parole et audacieusement tournés vers leur génération."} />
             </p>
           </RevealOnScroll>
         </div>
       </section>
 
-      {config?.mission_text && <section className="max-w-4xl mx-auto px-6 py-12"><RevealOnScroll><p className="ejp-eyebrow"><PublicText value={"Notre mission"} /></p><h2 className="font-display text-4xl mb-6"><PublicText value={config.mission_title || 'Notre mission'} /></h2><p className="text-[#4B5563] leading-relaxed"><PublicText value={config.mission_text} /></p></RevealOnScroll></section>}
+      {config?.mission_text && <section className="max-w-4xl mx-auto px-6 py-12"><RevealOnScroll><p className="ejp-eyebrow"><PublicText value={"Notre mission"} /></p><h2 className="font-display text-4xl mb-6"><PublicText field="mission_title" value={config.mission_title || 'Notre mission'} /></h2><p className="text-[#4B5563] leading-relaxed"><PublicText field="mission_text" value={config.mission_text} /></p></RevealOnScroll></section>}
       {/* 3. Notre mission */}
       <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">

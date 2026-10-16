@@ -25,8 +25,8 @@ export default function PublicFooter({ config }) {
             </div>
             <p className="text-sm text-[#4B5563] leading-relaxed max-w-sm mb-4"><PublicText value={"Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence."} /></p>
             <p className="text-sm text-[#4B5563]">
-              <PublicText value={config?.service_day || 'Dimanche'} /><PublicText value={" à "} /><PublicText value={config?.service_time?.replace(':', 'h') || '15h'} />
-              <PublicText value={config?.address_label && ` · ${config.address_label}`} />
+              <PublicText field="service_day" value={config?.service_day || 'Dimanche'} /><PublicText value={" à "} /><PublicText field="service_time" value={config?.service_time?.replace(':', 'h') || '15h'} />
+              <PublicText field="address_label" value={config?.address_label && ` · ${config.address_label}`} />
             </p>
           </div>
 
