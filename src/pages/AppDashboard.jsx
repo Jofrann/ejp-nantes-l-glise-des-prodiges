@@ -222,11 +222,9 @@ export default function AppDashboard() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {loadError && <p role="alert" className="private-load-error">{loadError}</p>}
             <BureauHero
-              user={user}
               firstName={firstName}
               greeting={greeting}
               todayStr={todayStr}
-              pref={pref}
               todoCount={actions.length}
               onScrollToActions={scrollToActions}
             />
