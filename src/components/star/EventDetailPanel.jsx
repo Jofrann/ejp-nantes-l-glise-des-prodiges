@@ -1,3 +1,5 @@
+import { useAuth } from '@/lib/AuthContext';
+import { isBureauLike } from '@/lib/permissions';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Clock, MapPin, CheckCircle, AlertCircle, CalendarClock, Video, ExternalLink, Loader2 } from 'lucide-react';
@@ -14,6 +16,7 @@ const ABSENCE_REASONS = [
 ];
 
 export default function EventDetailPanel({ event, open, onClose, existingResponse, onResponded }) {
+  const { user } = useAuth();
   const [status, setStatus] = useState(existingResponse?.status || 'no_response');
   const [reason, setReason] = useState(existingResponse?.reason_category || '');
   const [lateTime, setLateTime] = useState(existingResponse?.estimated_arrival_time || '');
@@ -133,7 +136,7 @@ export default function EventDetailPanel({ event, open, onClose, existingRespons
                   </div>
                   <ExternalLink className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
                 </a>
-              ) : (
+              ) : isBureauLike(user) ? (
                 <button
                   onClick={handleGenerateMeet}
                   disabled={generatingMeet}
@@ -145,7 +148,7 @@ export default function EventDetailPanel({ event, open, onClose, existingRespons
                     <><Video className="w-3.5 h-3.5 text-green-600" /> Créer un lien Google Meet</>
                   )}
                 </button>
-              )}
+              ) : <p className="text-xs text-muted-foreground">Le responsable ajoutera ici le lien de visioconference.</p>}
             </div>
 
             {/* Présence */}

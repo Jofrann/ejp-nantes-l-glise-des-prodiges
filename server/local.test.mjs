@@ -81,7 +81,7 @@ test("independent API: authentication, persistence, CRUD, business functions and
         .not_found,
       true,
     );
-    await call("functions/createMeetLink", {}, 501);
+    await call("functions/createMeetLink", {}, 400);
     const churchConfig = await call("entities/ChurchConfig", {
       method: "create",
       args: [{ hero_title: "Une maison vivante", hero_image_url: "https://example.org/cover.jpg", hero_video_url: "https://example.org/film.mp4", community_image_url: "https://example.org/community.jpg", nantes_image_url: "https://example.org/nantes.jpg", mission_title: "Grandir et servir", fij_text: "Une famille", world_shepherd_first_name: "Samuel", private_note: "internal-only" }],

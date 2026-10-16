@@ -44,3 +44,29 @@ Audit des dépendances : `npm audit --omit=dev` signale 25 vulnérabilités (8 m
 ## Publication vérifiée
 
 Le code du commit `b2e139a` est Live sur Render (déploiement `dep-db8oqtff3r2c73esj9ng`). Sur le domaine officiel, connexion admin, affichage de la gestion des départements et ouverture du formulaire de création vérifiés à 390 × 844. Le formulaire a été ouvert sans enregistrer de département fictif. Les sources corrigées sont aussi synchronisées dans le dossier local `ejp-nantes`.
+
+
+## Correctif fichiers et intégrations — 16 octobre 2026
+
+- Uploads réellement enregistrés dans `EJP_DATA_DIR/files`, sur le disque existant. Métadonnées dans SQLite ; aucun compte ni historique réinitialisé. Maximum 50 Mo par fichier, contrôle du type déclaré et de la signature, quotas de stockage pour préserver la base.
+- Médias publics réservés à l’admin. Autres pièces jointes privées : propriétaire, admin, ou ressource publiée et lisible selon les droits existants. Les liens ne suffisent pas à contourner une révocation. Lecture partielle HTTP pour audio/vidéo.
+- Photo de profil : ancien appel UploadPublicFile remplacé par un upload privé, visible selon les droits du profil. États d’upload libérés en cas d’échec.
+- Boutique : abonnement idempotent enregistré en SQLite ; notification interne unique à la première publication d’un produit actif. Aucun email promis ni simulé. Les liens de paiement sont limités aux domaines Stripe HTTPS. Aucune commande n’est marquée payée par la plateforme sans confirmation de paiement.
+- IA : assistant accessible dans Mes Ressources, via OpenAI Responses, réponse libre ou JSON validé, secret exclusivement serveur, stockage de réponse désactivé chez le fournisseur, délai maximal et limite quotidienne. Aucune action métier automatique ni accès implicite aux documents privés.
+- Emails : adaptateur Resend, destinataire et permissions vérifiés, journal après acceptation fournisseur. Acceptation distinguée de livraison.
+- Meet : adaptateur Google Calendar avec refresh OAuth, événement enregistré comme source de vérité, fuseau Europe/Paris et identifiant Google déterministe pour éviter les doublons à la relance.
+- Administration : Fichiers & Intégrations affiche la présence de configuration sans exposer de secret ; ce statut ne prétend pas prouver la délivrabilité ni la validité des clés.
+- Dépendances : mises à jour compatibles, React Router 7 ; suppression de jsPDF et de l’éditeur Quill inutilisés. `npm audit --omit=dev` : 0 vulnérabilité. L’audit complet conserve 7 alertes (5 élevées, 2 modérées) dans le compilateur Tailwind 3 et ses dépendances de développement. Leur suppression nécessite une migration Tailwind 4 avec vérification visuelle et compatibilité navigateurs ; elle n’est pas présentée comme accomplie.
+
+### Limites de validation des fournisseurs
+
+Les noms des paramètres Render ont été lus sans afficher les valeurs. Aucune clé OpenAI, Resend ou OAuth Google n’était configurée au moment du contrôle. Les adaptateurs ont été testés avec des réponses HTTP simulées, sans envoi à de vrais destinataires et sans achat d’API. Les erreurs 503 sans clé et les refus de permission sont vérifiés. Une validation réelle par fournisseur reste nécessaire après configuration.
+
+### Paramètres à renseigner dans Render, jamais dans Git ou dans le navigateur
+
+- IA : OPENAI_API_KEY ; OPENAI_MODEL facultatif, défaut gpt-5-mini. EJP_AI_DAILY_LIMIT facultatif, défaut 20 par compte.
+- Emails : RESEND_API_KEY ; EJP_EMAIL_FROM (adresse sur domaine vérifié chez Resend).
+- Meet : GOOGLE_CLIENT_ID ; GOOGLE_CLIENT_SECRET ; GOOGLE_REFRESH_TOKEN ; GOOGLE_CALENDAR_ID facultatif (défaut primary). Le compte Google doit autoriser l’API Calendar et la création de conférences Meet.
+- Boutique : renseigner un Payment Link Stripe HTTPS par produit. Le lien existe chez Stripe ; cette livraison n’ajoute pas de webhook de commande ou de traitement de carte.
+
+Références techniques : [OpenAI Responses](https://developers.openai.com/api/docs/guides/text), [Resend Send Email](https://resend.com/docs/api-reference/emails/send-email), [Google Calendar events.insert](https://developers.google.com/workspace/calendar/api/v3/reference/events/insert).

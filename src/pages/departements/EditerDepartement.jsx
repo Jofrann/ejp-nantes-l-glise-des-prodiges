@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Upload, Trash2 } from 'lucide-react';
+import { Save, Upload, Trash2 } from 'lucide-react';
 import { isBureauLike } from '@/lib/permissions';
 import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
 
@@ -63,9 +63,12 @@ export default function EditerDepartement() {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setForm(f => ({ ...f, cover_url: file_url }));
-    setUploading(false);
+    let file_url;
+    try {
+      ({ file_url } = await base44.integrations.Core.UploadFile({ file, visibility: 'public' }));
+      setForm(f => ({ ...f, cover_url: file_url }));
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(false); }
   };
 
   const handleSave = async () => {

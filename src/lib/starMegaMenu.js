@@ -51,6 +51,7 @@ export const MEGA_MENU = [
     icon: BookOpen,
     route: '/app/ressources',
     items: [
+      { label: 'Assistant EJP', desc: 'Préparer, rédiger, organiser', icon: BookOpen, to: '/app/assistant' },
       { label: 'Documents', desc: 'Télécharger des ressources', icon: FileText, to: '/app/ressources' },
       { label: 'Liens utiles', desc: 'Accès rapides', icon: BookOpen, to: '/app/ressources' },
       { label: 'Contacts utiles', desc: 'Joindre l\'équipe', icon: Phone, to: '/app/ressources' },

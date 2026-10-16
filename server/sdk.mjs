@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import { invokeAI, sendEmail } from "./integrations.mjs";
 import { entities } from "./store.mjs";
 export const context = new AsyncLocalStorage();
 const unsupported = async () => {
@@ -15,7 +16,7 @@ export function createClientFromRequest() {
       me: async () => user,
       updateMe: async (data) => entities.User.update(user.id, data),
     },
-    integrations: { Core: new Proxy({}, { get: () => unsupported }) },
+    integrations: { Core: { InvokeLLM: input => invokeAI(input,user), SendEmail: input => sendEmail(input,user) } },
     users: { inviteUser: unsupported },
     connectors: { getAccessToken: unsupported },
   };

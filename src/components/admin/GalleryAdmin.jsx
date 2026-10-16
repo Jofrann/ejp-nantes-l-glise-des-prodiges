@@ -10,19 +10,21 @@ export default function GalleryAdmin({ gallery, setGallery }) {
   const uploadFiles = useCallback(async (files) => {
     if (!files?.length) return;
     setUploading(true);
-    for (const file of Array.from(files)) {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      const type = file.type.startsWith('video') ? 'video' : 'image';
-      const m = await base44.entities.GalleryMedia.create({
-        file_url,
-        type,
-        title: file.name.replace(/\.[^.]+$/, ''),
-        is_active: true,
-        display_order: gallery.length,
-      });
-      setGallery(prev => [m, ...prev]);
-    }
-    setUploading(false);
+    try {
+      for (const file of Array.from(files)) {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file, visibility: 'public' });
+        const type = file.type.startsWith('video') ? 'video' : 'image';
+        const m = await base44.entities.GalleryMedia.create({
+          file_url,
+          type,
+          title: file.name.replace(/\.[^.]+$/, ''),
+          is_active: true,
+          display_order: gallery.length,
+        });
+        setGallery(prev => [m, ...prev]);
+      }
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(false); }
   }, [gallery.length, setGallery]);
 
   const handleDrop = (e) => {
@@ -49,6 +51,8 @@ export default function GalleryAdmin({ gallery, setGallery }) {
 
       {/* Zone drag & drop */}
       <div
+        role="button" tabIndex={0} aria-label="Ajouter des photos ou vidéos"
+        onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); if (!uploading) inputRef.current?.click(); } }}
         onDragOver={e => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
@@ -61,7 +65,7 @@ export default function GalleryAdmin({ gallery, setGallery }) {
         <p className="text-sm text-muted-foreground">
           {uploading ? 'Upload en cours...' : 'Glissez des photos/vidéos ici, ou cliquez pour parcourir'}
         </p>
-        <p className="text-xs text-muted-foreground/60 mt-1">JPG, PNG, MP4, MOV…</p>
+        <p className="text-xs text-muted-foreground/60 mt-1">JPG, PNG, GIF, WebP, MP4, WebM, MOV · 50 Mo maximum par fichier</p>
       </div>
 
       {/* Grille */}

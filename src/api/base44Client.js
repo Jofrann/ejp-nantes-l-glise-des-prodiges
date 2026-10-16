@@ -8,10 +8,9 @@ async function request(path, data) {
       ? {}
       : {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+          ...(data instanceof FormData ? { body: data } : { headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }),
         }),
-  });
+  }).catch(() => { const error = new Error('Connexion interrompue. Réessaie.'); toast({variant:'destructive',title:'Action non terminée',description:error.message}); throw error; });
   const text = await response.text();
   let result;
   try { result = text ? JSON.parse(text) : {}; }
@@ -88,7 +87,17 @@ export const base44 = {
       data: await request("functions/" + name, data),
     }),
   },
-  integrations: { Core: new Proxy({}, { get: () => unsupported }) },
+  integrations: { Core: {
+    UploadFile: async ({ file, visibility = 'private' }) => {
+      if (!file || file.size > 50 * 1024 * 1024) { toast({variant:'destructive',title:'Fichier non envoyé',description:'Choisis un fichier de 50 Mo maximum.'}); throw new Error('Choisis un fichier de 50 Mo maximum.'); }
+      const data = new FormData(); data.append('file',file); data.append('visibility',visibility);
+      return request('files/upload',data);
+    },
+    InvokeLLM: input => request('integrations/InvokeLLM',input),
+    SendEmail: input => request('integrations/SendEmail',input),
+  } },
+  shop: { subscribe: () => request('shop/subscription', {}) },
+  integrationStatus: () => request('integrations/status'),
   appLogs: { logUserInApp: async () => {} },
 };
 export const localSetup = {

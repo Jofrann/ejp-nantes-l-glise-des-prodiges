@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Upload, Save, Shield, User, Instagram, Phone, FileText, Compass, BadgeCheck, AlertCircle } from 'lucide-react';
+import { Upload, Save, Shield, User, Instagram, Phone, FileText, Compass, BadgeCheck } from 'lucide-react';
 import ProfilDepartements from '@/components/profil/ProfilDepartements';
-import { getInternalIdentifier, getBadges, isAccountActive } from '@/lib/permissions';
+import { getInternalIdentifier, getBadges } from '@/lib/permissions';
 
 const inputCls = "w-full bg-white border border-border text-foreground placeholder-muted-foreground/60 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary/40 transition-colors";
 
@@ -79,11 +79,12 @@ export default function MonProfil() {
     setPreview(localUrl);
     setUploading(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
       setForm(f => ({ ...f, photo_url: file_url }));
     } catch (err) {
       // fallback: keep existing photo
     }
+    URL.revokeObjectURL(localUrl);
     setPreview(null);
     setUploading(false);
   };

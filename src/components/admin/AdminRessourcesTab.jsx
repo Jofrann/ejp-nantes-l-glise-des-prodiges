@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Plus, Trash2, Upload, Loader2, ShoppingBag, FileText, ExternalLink, DollarSign } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Plus, Trash2, Upload, Loader2, ShoppingBag, FileText, DollarSign } from 'lucide-react';
 
 const iCls = "w-full bg-white border border-border text-foreground rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-secondary/50";
 
@@ -26,8 +25,11 @@ function ResourceCard({ resource, onUpdate, onRemove }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setUploading(false);
+    let file_url;
+    try {
+      ({ file_url } = await base44.integrations.Core.UploadFile({ file }));
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(false); }
     save({ file_url });
   };
 
@@ -74,8 +76,11 @@ function ProductCard({ product, onUpdate, onRemove }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setUploading(false);
+    let file_url;
+    try {
+      ({ file_url } = await base44.integrations.Core.UploadFile({ file }));
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(false); }
     save({ image_url: file_url });
   };
 

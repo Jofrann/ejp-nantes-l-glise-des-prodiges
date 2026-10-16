@@ -13,9 +13,10 @@ const select = (row, keys) => Object.fromEntries(keys.filter(key => Object.hasOw
 export async function executeEntity({ entity, method, args, user, scope }) {
   const administrator = isAdmin(user);
   const self = scope === 'self' && personalEntities.has(entity);
-  const myMemberships = (await entities.DepartmentMember.filter({user_id:user.id})).filter(activeMembership);
   const departments = await entities.Department.list();
-  const allMemberships = (await entities.DepartmentMember.list()).filter(activeMembership);
+  const activeDepartmentIds = new Set(departments.filter(d => d.is_active !== false).map(d => d.id));
+  const allMemberships = (await entities.DepartmentMember.list()).filter(m => activeMembership(m) && activeDepartmentIds.has(m.department_id));
+  const myMemberships = allMemberships.filter(m => m.user_id === user.id);
   const managedIds = myMemberships.filter(m => ['referent','responsable','coordinateur'].includes(m.role_in_dept)).map(m => m.department_id);
   const teamUserIds = new Set(allMemberships.filter(m => managedIds.includes(m.department_id)).map(m => m.user_id));
   const coord = departments.find(row => row.slug === 'coordination-fij');
@@ -35,10 +36,12 @@ export async function executeEntity({ entity, method, args, user, scope }) {
       if (entity === 'AttendanceResponse') return teamUserIds.has(row.created_by_id || row.user_id) || isBureauLike(user);
       return false;
     }
+    if (entity === 'Post' || entity === 'PostComment') return true;
+    if (entity === 'PostReaction') return row.user_id === user.id;
     if (entity === 'Department') return true;
     if (entity === 'DepartmentMember') return row.user_id === user.id || managed(row.department_id) || isBureauLike(user);
     if (entity === 'DeptMessage' || entity === 'DepartmentReport') return isBureauLike(user) || myMemberships.some(m => m.department_id === row.department_id);
-    if (entity === 'User') return row.id === user.id || isBureauLike(user) || myMemberships.some(m => managed(m.department_id));
+    if (entity === 'User') return row.id === user.id || isBureauLike(user) || teamUserIds.has(row.id);
     if (entity === 'TrainingProgram') return programVisible(row);
     if (entity === 'TrainingModule') return programVisible(programs.find(p => p.id === row.program_id));
     if (entity === 'StarResource' || entity === 'StarProduct') return row.is_active !== false;
@@ -55,7 +58,7 @@ export async function executeEntity({ entity, method, args, user, scope }) {
     }
     return false;
   };
-  const permittedEntity = personalEntities.has(entity) || catalog.has(entity) || fijChildren.has(entity) || ['User','Department','DepartmentMember','DeptMessage','DepartmentReport','FIJ'].includes(entity);
+  const permittedEntity = personalEntities.has(entity) || catalog.has(entity) || fijChildren.has(entity) || ['User','Department','DepartmentMember','DeptMessage','DepartmentReport','FIJ','Post','PostComment','PostReaction'].includes(entity);
   if (!administrator && !permittedEntity) reject();
   const project = row => entity === 'User' && !administrator && row.id !== user.id ? select(row,['id','first_name','last_name','full_name','photo_url','role','roles','badges','account_status']) : row;
   if (['list','filter'].includes(method)) {
@@ -84,6 +87,12 @@ export async function executeEntity({ entity, method, args, user, scope }) {
         const module = await entities.TrainingModule.get(target.module_id);
         if (module.program_id !== target.program_id) reject('Module incohérent',400);
       }
+    } else if (['Post','PostComment','PostReaction'].includes(entity)) {
+      if (old && !owns(user,old) && !isBureauLike(user)) reject();
+      if (old && input.post_id && input.post_id !== old.post_id) reject();
+      if (entity === 'Post' && (target.type === 'announcement' || input.is_pinned !== undefined) && !isBureauLike(user)) reject();
+      if (['PostComment','PostReaction'].includes(entity)) await entities.Post.get(target.post_id);
+      if (entity === 'PostReaction' && (method === 'update' || typeof target.emoji !== 'string' || target.emoji.length > 8)) reject('Reaction invalide',400);
     } else if (entity === 'Department') { if(!isBureauLike(user) && (method==='create' || !managed(old.id)))reject(); }
     else if (entity === 'DepartmentMember') { if(!isBureauLike(user))reject(); }
     else if (entity === 'DeptMessage') {
@@ -96,7 +105,7 @@ export async function executeEntity({ entity, method, args, user, scope }) {
       if(!coordination && (!isPilotOfFij(user,fij) || (old && !canRead(old))))reject();
       if(!coordination && (method==='delete' || ['validated','approved','rejected'].includes(input.status) || input.validated_by || input.validated_by_id))reject();
     } else reject();
-    for(const key of ['id','created_by','created_by_id','created_date','roles','role','badges'])delete input[key];
+    for(const key of ['id','created_by','created_by_id','created_date','roles','role','badges','author_id','author_name','author_photo','author_role'])delete input[key];
     if(method==='create' && personalEntities.has(entity))input.user_id=user.id;
     if(old && personalEntities.has(entity) && input.event_id && input.event_id!==old.event_id)reject('Référence non modifiable',400);
     if(old && fijChildren.has(entity) && input.fij_id && input.fij_id!==old.fij_id)reject('FIJ non modifiable',400);
@@ -107,6 +116,10 @@ export async function executeEntity({ entity, method, args, user, scope }) {
     if(method==='create')input.slug=String(input.slug || input.name).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
     if(input.slug && departments.some(d=>d.slug===input.slug && d.id!==old?.id))reject('Un département utilise déjà ce nom ou cet identifiant',409);
   }
+  if (entity === 'StarProduct' && target.stripe_checkout_url) {
+    let url; try { url = new URL(target.stripe_checkout_url); } catch { reject('Lien Stripe invalide',400); }
+    if (url.protocol !== 'https:' || !['buy.stripe.com','checkout.stripe.com'].includes(url.hostname) || url.username || url.password) reject('Utilise un lien de paiement Stripe HTTPS',400);
+  }
   if (entity === 'DepartmentMember') {
     const department=await entities.Department.get(target.department_id);
     const person=await entities.User.get(target.user_id);
@@ -116,6 +129,8 @@ export async function executeEntity({ entity, method, args, user, scope }) {
     input.full_name=person.full_name; if(method==='create'){input.status='active';input.is_active=true;}
   }
   if(method==='create') {
+    if (['Post','PostComment'].includes(entity)) { input.author_id=user.id;input.author_name=user.full_name;input.author_photo=user.photo_url || '';input.author_role=user.role;if(!String(input.content || '').trim())reject('Message requis',400); }
+    if (entity === 'PostReaction') { input.user_id=user.id; const existing=(await entities.PostReaction.filter({post_id:input.post_id,user_id:user.id,emoji:input.emoji}))[0]; if(existing)return existing; }
     input.created_by_id=user.id; input.created_by=user.email; input.created_by_name=user.full_name;
     if(personalEntities.has(entity))input.user_id=user.id;
     if(entity==='AttendanceResponse') {const event=await entities.Event.get(input.event_id);if(event.is_active===false)reject('Événement inactif',400);input.event_title=event.title;input.event_date=event.event_date;const duplicate=(await entities.AttendanceResponse.filter({event_id:input.event_id})).find(row=>owns(user,row));if(duplicate)return entities.AttendanceResponse.update(duplicate.id,input);}

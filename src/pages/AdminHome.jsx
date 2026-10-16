@@ -1,3 +1,4 @@
+import IntegrationSettings from '@/components/admin/IntegrationSettings';
 import { useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
@@ -10,6 +11,7 @@ import AdminRessourcesTab from '@/components/admin/AdminRessourcesTab';
 import FirstVisitIntentsTab from '@/components/admin/FirstVisitIntentsTab';
 
 const TABS = [
+  { id: 'integrations', label: 'Fichiers & Intégrations', icon: Settings },
   { id: 'hero', label: 'Hero & Général', icon: Church },
   { id: 'leaders', label: 'Leaders', icon: Users },
   { id: 'events', label: 'Événements', icon: Calendar },
@@ -92,7 +94,7 @@ export default function AdminHome() {
   const uploadFile = async (e, field) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const { file_url } = await base44.integrations.Core.UploadFile({ file, visibility: 'public' });
     setConfig(c => {
       const updated = { ...c, [field]: file_url };
       if (updated.id) {
@@ -146,6 +148,7 @@ export default function AdminHome() {
           {tab === 'appointments' && <AdminAppointmentsTab />}
           {tab === 'formations' && <AdminFormationsTab />}
           {tab === 'ressources' && <AdminRessourcesTab />}
+          {tab === 'integrations' && <IntegrationSettings />}
           {tab === 'hero' && config && (
             <>
               <Section title="Contenu Hero">
@@ -179,8 +182,8 @@ export default function AdminHome() {
                     {uploadingVideo ? 'Upload en cours…' : 'Uploader une vidéo (MP4 recommandé)'}
                     <input type="file" accept="video/*" className="hidden" disabled={uploadingVideo} onChange={async (e) => {
                       setUploadingVideo(true);
-                      await uploadFile(e, 'hero_video_url');
-                      setUploadingVideo(false);
+                      try { await uploadFile(e, 'hero_video_url'); } catch { /* shared error */ }
+                      finally { setUploadingVideo(false); }
                     }} />
                   </label>
                   <p className="text-[10px] text-muted-foreground mt-1.5">Conseil : vidéo &lt; 10 Mo pour un chargement rapide.</p>
@@ -362,8 +365,11 @@ function LeaderCard({ leader, onUpdate, onRemove }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setUploading(false);
+    let file_url;
+    try {
+      ({ file_url } = await base44.integrations.Core.UploadFile({ file, visibility: 'public' }));
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(false); }
     setForm(f => ({ ...f, photo_url: file_url }));
     onUpdate(leader.id, { photo_url: file_url });
   };
@@ -460,8 +466,11 @@ function EventCard({ event: ev, onUpdate, onRemove }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setUploading(false);
+    let file_url;
+    try {
+      ({ file_url } = await base44.integrations.Core.UploadFile({ file, visibility: 'public' }));
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(false); }
     setForm(f => ({ ...f, image_url: file_url }));
     onUpdate(ev.id, { image_url: file_url });
   };

@@ -33,3 +33,8 @@ Apôtre en composition texte/portrait, puis deux présentations des bergers avec
 ## Responsive et barres fixes
 
 useChromeInset mesure les en-têtes et les barres du bas avec ResizeObserver. Les décalages et marges de défilement utilisent les variables de hauteur réelles. Sur téléphone, les en-têtes secondaires restent dans le flux, les onglets d’administration défilent horizontalement et les fenêtres passent devant la navigation avec une hauteur adaptée au viewport visuel. Les barres inférieures s’effacent pendant la saisie pour libérer le clavier. Zones de sécurité prises en compte. Les fonctions métier restent inchangées.
+
+
+## Fichiers, boutique et intégrations — 16 octobre 2026
+
+Les écrans d’upload existants restent propriétaires de la sélection et du chargement ; base44Client est l’adaptateur partagé. Une erreur serveur reste visible, les états de chargement sont libérés ; rien ne simule un fichier enregistré. L’onglet Admin Fichiers & Intégrations explique les états et les paramètres attendus. L’assistant utilise PageHeader, les couleurs et le layout existants ; il apparaît dans Mes Ressources sur desktop comme mobile. Les règles métier viennent de server/files.mjs, server/integrations.mjs et server/shop.mjs ; les messages ne présentent pas les réponses d’un fournisseur comme une preuve de livraison. L’abonnement boutique produit une notification interne persistante. Aucune refonte du design ni migration Tailwind majeure dans ce correctif.

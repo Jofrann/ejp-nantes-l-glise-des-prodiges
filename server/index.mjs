@@ -1,3 +1,6 @@
+import { integrationStatus, invokeAI, sendEmail, createMeet } from './integrations.mjs';
+import { subscribeShop, notifyShopOpening } from './shop.mjs';
+import { uploadFile, serveFile, maxUploadBytes } from './files.mjs';
 import { executeEntity } from './access.mjs';
 import { isAdminUser } from '../base44/shared/identityUtils.ts';
 import { initializeAdmin } from './bootstrap-admin.mjs';
@@ -77,12 +80,7 @@ const server = createServer(async (req, res) => {
       !allowedOrigins.has(req.headers.origin)
     )
       fail(403, "Origine non autorisée");
-    let raw = "";
-    for await (const chunk of req) {
-      raw += chunk;
-      if (raw.length > 1024 * 1024) fail(413, "Requête trop volumineuse");
-    }
-    const body = raw ? JSON.parse(raw) : {};
+    const isUpload = url.pathname === '/api/local/files/upload' && req.method === 'POST';
     const token = (req.headers.cookie || "")
       .split(";")
       .map((s) => s.trim())
@@ -118,6 +116,42 @@ const server = createServer(async (req, res) => {
         `ejp_session=${value}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400${process.env.EJP_PUBLIC_ORIGIN?.startsWith("https://") ? "; Secure" : ""}`,
       );
     };
+    if (isUpload) requireUser();
+    const chunks = []; let received = 0;
+    for await (const chunk of req) {
+      received += chunk.length;
+      if (received > (isUpload ? maxUploadBytes + 65536 : 1024 * 1024)) fail(413, isUpload ? 'Le fichier dépasse 50 Mo' : 'Requête trop volumineuse');
+      chunks.push(chunk);
+    }
+    const raw = Buffer.concat(chunks);
+    let body = {};
+    if (!isUpload && raw.length) {
+      try { body = JSON.parse(raw.toString('utf8')); }
+      catch { fail(400, 'Requête JSON invalide'); }
+    }
+    if (isUpload) {
+      requireUser();
+      const result = await uploadFile(raw, req.headers['content-type'], user);
+      res.end(JSON.stringify(result)); return;
+    }
+    if (url.pathname.startsWith('/api/local/files/')) {
+      const id = url.pathname.slice('/api/local/files/'.length);
+      if (!/^[a-f0-9-]{36}$/.test(id)) fail(404, 'Fichier introuvable');
+      await serveFile(req,res,id,user); return;
+    }
+    if (url.pathname === '/api/local/integrations/status') {
+      requireAdmin(); res.end(JSON.stringify(integrationStatus())); return;
+    }
+    if (url.pathname.startsWith('/api/local/integrations/') && req.method === 'POST') {
+      requireUser();
+      const name = url.pathname.split('/').pop();
+      const handlers = { InvokeLLM: invokeAI, SendEmail: sendEmail };
+      if (!handlers[name]) fail(404,'Intégration inconnue');
+      res.end(JSON.stringify(await handlers[name](body,user))); return;
+    }
+    if (url.pathname === '/api/local/shop/subscription' && req.method === 'POST') {
+      requireUser(); res.end(JSON.stringify(await subscribeShop(user))); return;
+    }
     let result;
     if (url.pathname === "/api/local/status")
       result = {
@@ -291,6 +325,7 @@ const server = createServer(async (req, res) => {
       } else {
         requireUser();
         result = await executeEntity({ entity, method, args, scope, user });
+        if (entity === 'StarProduct' && ['create','update'].includes(method)) await notifyShopOpening();
       }
     } else if (
       url.pathname.startsWith("/api/local/functions/") &&
@@ -298,6 +333,7 @@ const server = createServer(async (req, res) => {
     ) {
       requireUser();
       const name = url.pathname.split("/").pop();
+      if (name === "createMeetLink") { res.end(JSON.stringify(await createMeet(body,user))); return; }
       if (name === "adminManageUser" && ["create", "reset_access"].includes(body.action)) {
         requireAdmin();
         result = await provisionAccount(body, user, hash, fail);
@@ -321,6 +357,7 @@ const server = createServer(async (req, res) => {
     } else fail(404, "Route inconnue");
     res.end(JSON.stringify(result));
   } catch (e) {
+    if (res.headersSent) { res.destroy(); return; }
     res.statusCode = e.status || 500;
     res.end(
       JSON.stringify({

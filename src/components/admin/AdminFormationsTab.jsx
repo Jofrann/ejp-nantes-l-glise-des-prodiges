@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Plus, Trash2, Save, Upload, ChevronDown, ChevronRight, GraduationCap, Video, FileText, Send, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, ChevronRight, GraduationCap, Video, FileText, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CATEGORIES = [
@@ -30,8 +30,11 @@ function ProgramCard({ program, modules, submissions, onUpdate, onRemove, onAddM
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(moduleId || 'cover');
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setUploading(null);
+    let file_url;
+    try {
+      ({ file_url } = await base44.integrations.Core.UploadFile({ file }));
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(null); }
     if (moduleId) {
       onUpdateModule(moduleId, { [field]: file_url });
     } else {

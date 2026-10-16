@@ -36,6 +36,7 @@ export default function FijRelances() {
     try {
       await base44.integrations.Core.SendEmail({
         to: fij.pilot_email,
+        fij_id: fij.id,
         subject: `Rappel : CR hebdomadaire FIJ — ${fij.name}`,
         body: `Bonjour ${fij.pilot_name || ''},\n\nNous n'avons pas encore reçu votre compte rendu hebdomadaire pour la FIJ ${fij.name} (${fij.city}).\n\nMerci de le remplir dès que possible via l'application.\n\nCoordination FIJ — EJP Nantes`,
       });

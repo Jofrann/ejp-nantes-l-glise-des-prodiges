@@ -1,3 +1,4 @@
+import StarAssistant from '@/pages/star/Assistant';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -224,6 +225,7 @@ const AuthenticatedApp = () => {
           <Route path="/app/croissance" element={<StarCroissance />} />
           <Route path="/app/objectifs" element={<StarObjectifs />} />
           <Route path="/app/rendez-vous" element={<StarRendezVous />} />
+          <Route path="/app/assistant" element={<StarAssistant />} />
           <Route path="/app/ressources" element={<StarRessources />} />
           <Route path="/app/ressources/boutique" element={<StarBoutique />} />
           <Route path="/app/parcours" element={<StarParcours />} />

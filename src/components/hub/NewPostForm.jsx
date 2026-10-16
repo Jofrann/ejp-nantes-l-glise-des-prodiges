@@ -17,15 +17,19 @@ export default function NewPostForm({ currentUser, type = 'parvis', onPost, canP
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setMediaUrl(file_url);
-    setMediaType(file.type.startsWith('video') ? 'video' : 'image');
-    setUploading(false);
+    let file_url;
+    try {
+      ({ file_url } = await base44.integrations.Core.UploadFile({ file }));
+      setMediaUrl(file_url);
+      setMediaType(file.type.startsWith('video') ? 'video' : 'image');
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(false); }
   };
 
   const submit = async () => {
     if (!content.trim() || posting) return;
     setPosting(true);
+    try {
     const post = await base44.entities.Post.create({
       content: content.trim(),
       author_id: currentUser.id,
@@ -43,6 +47,8 @@ export default function NewPostForm({ currentUser, type = 'parvis', onPost, canP
     setMediaType('');
     setPosting(false);
     onPost?.(post);
+    } catch { /* shared request error */ }
+    finally { setPosting(false); }
   };
 
   return (

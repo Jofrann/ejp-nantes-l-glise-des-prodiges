@@ -106,16 +106,21 @@ function DocFormModal({ userName, onClose, onSaved }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setForm(f => ({ ...f, file_url }));
-    setUploading(false);
+    let file_url;
+    try {
+      ({ file_url } = await base44.integrations.Core.UploadFile({ file }));
+      setForm(f => ({ ...f, file_url }));
+    } catch { return; /* The shared request displays the error; keep the form editable. */ }
+    finally { setUploading(false); }
   };
 
   const save = async () => {
     setSaving(true);
-    await base44.entities.FijDocument.create({ ...form, uploaded_by_name: userName });
-    onSaved();
-    setSaving(false);
+    try {
+      await base44.entities.FijDocument.create({ ...form, uploaded_by_name: userName });
+      onSaved();
+    } catch { /* shared request error */ }
+    finally { setSaving(false); }
   };
 
   return (

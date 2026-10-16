@@ -9,6 +9,8 @@ export default function Boutique() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notifySent, setNotifySent] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const [notifyError, setNotifyError] = useState('');
 
   useEffect(() => {
     base44.entities.StarProduct.filter({ is_active: true }, 'display_order', 50)
@@ -16,8 +18,12 @@ export default function Boutique() {
       .catch(() => setLoading(false));
   }, []);
 
-  const handleNotify = () => {
-    setNotifySent(true);
+  const handleNotify = async () => {
+    if (subscribing) return;
+    setSubscribing(true); setNotifyError('');
+    try { await base44.shop.subscribe(); setNotifySent(true); }
+    catch (error) { setNotifyError(error.message); }
+    finally { setSubscribing(false); }
   };
 
   if (loading) {
@@ -94,13 +100,15 @@ export default function Boutique() {
           <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto leading-relaxed">
             Tu retrouveras ici les t-shirts, ressources et produits officiels de l'EJP Nantes.
           </p>
+          {notifyError && <p role="alert" className="text-danger text-sm">{notifyError}</p>}
           <div className="flex items-center justify-center gap-2 mt-5">
             {notifySent ? (
               <span className="flex items-center gap-1.5 text-xs font-medium text-success bg-success/10 border border-success/20 rounded-lg px-4 py-2">
-                <Bell className="w-3.5 h-3.5" /> Tu seras informé !
+                <Bell className="w-3.5 h-3.5" /> Inscription enregistrée : notification dans ton espace
               </span>
             ) : (
               <button
+                disabled={subscribing}
                 onClick={handleNotify}
                 className="flex items-center gap-1.5 text-xs font-semibold text-white bg-secondary rounded-lg px-4 py-2 hover:bg-secondary/90 transition-colors"
               >
