@@ -77,7 +77,7 @@ export default function ListeDepartements() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
           <p className="text-xs text-secondary uppercase tracking-widest mb-2">Espace Serviteur</p>
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex flex-col items-start sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <h1 className="text-3xl font-semibold text-foreground">Départements</h1>
               <p className="text-sm text-muted-foreground mt-1">
