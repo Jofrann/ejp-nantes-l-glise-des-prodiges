@@ -6,7 +6,7 @@ export default function PageHeader({ title, intention, breadcrumbs = [], actions
   const navigate = useNavigate();
 
   return (
-    <div className="mb-6">
+    <div className="private-page-header mb-6">
       {/* Breadcrumb + retour */}
       <div className="flex items-center gap-2 mb-3">
         <button

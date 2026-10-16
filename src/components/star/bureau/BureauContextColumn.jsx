@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Briefcase, Shield, Sparkles, Calendar, CheckCircle, Target, CalendarClock, BookOpen } from 'lucide-react';
+import BureauAgendaCourt from './BureauAgendaCourt';
 import { isBureauLike, isAdmin } from '@/lib/permissions';
 
 const DEFAULT_SHORTCUTS = [
@@ -11,7 +12,7 @@ const DEFAULT_SHORTCUTS = [
   { key: 'ressources', icon: BookOpen, label: 'Ressources', to: '/app/ressources' },
 ];
 
-export default function BureauContextColumn({ events = [], user, favoriteShortcuts = [], showRightPanel = true }) {
+export default function BureauContextColumn({ events = [], user, favoriteShortcuts = [], showRightPanel = true, pref, departments = [], showAgenda = true }) {
   if (!showRightPanel) return null;
 
   const shortcuts = favoriteShortcuts.length > 0
@@ -21,29 +22,10 @@ export default function BureauContextColumn({ events = [], user, favoriteShortcu
   const showDirection = isBureauLike(user) || isAdmin(user);
 
   return (
-    <aside className="hidden xl:block w-72 flex-shrink-0 space-y-4">
-      {/* Prochain programme */}
-      {events.length > 0 && (
-        <div className="glass-card rounded-2xl p-4">
-          <p className="text-xs font-heading font-semibold text-foreground mb-3">Prochain programme</p>
-          <Link to="/app/presences" className="block">
-            <p className="text-sm font-semibold text-foreground">{events[0].title}</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {new Date(events[0].event_date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
-              {events[0].event_time && ` · ${events[0].event_time}`}
-            </p>
-            {events[0].location && (
-              <p className="text-xs text-muted-foreground mt-0.5">{events[0].location}</p>
-            )}
-          </Link>
-          <Link
-            to="/app/presences"
-            className="mt-3 flex items-center justify-center gap-1.5 w-full bg-secondary/10 border border-secondary/20 text-secondary text-xs font-medium py-2 rounded-xl hover:bg-secondary/20 transition-all"
-          >
-            Confirmer ma présence
-          </Link>
-        </div>
-      )}
+    <aside className="private-context-column w-72 flex-shrink-0 space-y-4">
+      {showAgenda && <BureauAgendaCourt events={events} />}
+      <div className="glass-card rounded-2xl p-4"><h2>Mon département</h2>{departments.length ? departments.map(department=><Link key={department.id} to={`/app/departements/${department.slug || department.id}`} className="private-department-link"><span className="private-department-icon"><Briefcase aria-hidden="true"/></span><span><b>{department.name}</b><small>Retrouver mon équipe</small></span><ChevronRight aria-hidden="true"/></Link>) : <><p className="text-sm text-muted-foreground mt-3">Aucun département rattaché pour le moment.</p><Link to="/app/service" className="private-inline-link">Mon service <ChevronRight/></Link></>}</div>
+      <div className="glass-card private-personal-verse rounded-2xl p-4"><p className="private-eyebrow">MON VERSET</p><p>{pref?.personal_verse_text || "Chacun selon le don qu’il a reçu, employez-le à vous servir les uns les autres."}</p><small>{pref?.personal_verse_reference || '1 Pierre 4:10'}</small>{pref?.season_phrase&&<p className="mt-3">{pref.season_phrase}</p>}<Link to="/app/espace-personnel?section=verset" className="private-inline-link">Personnaliser mon verset <ChevronRight/></Link></div>
 
       {/* Raccourcis */}
       {shortcuts.length > 0 && (

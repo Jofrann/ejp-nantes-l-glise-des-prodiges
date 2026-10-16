@@ -8,9 +8,10 @@ import {
 } from 'lucide-react';
 import { isBureauLike, isAdmin, isFijPilot } from '@/lib/permissions';
 import { isHiddenFromService } from '@/lib/departmentModules';
+import BureauAgendaCourt from '@/components/star/bureau/BureauAgendaCourt';
+import BureauNextEvent from '@/components/star/bureau/BureauNextEvent';
 import BureauHero from '@/components/star/bureau/BureauHero';
 import BureauActions from '@/components/star/bureau/BureauActions';
-import BureauAgendaCourt from '@/components/star/bureau/BureauAgendaCourt';
 import BureauContextColumn from '@/components/star/bureau/BureauContextColumn';
 
 const ACCENT_CSS_MAP = {
@@ -47,6 +48,7 @@ export default function AppDashboard() {
   const [memberships, setMemberships] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const actionsRef = useRef(null);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ export default function AppDashboard() {
       setUser(u);
       const today = new Date().toISOString().split('T')[0];
       const upcoming = (evs || []).filter(e => e.is_active && e.event_date >= today);
-      setEvents(upcoming);
+      setEvents(upcoming.sort((a,b) => `${a.event_date} ${a.event_time || ''}`.localeCompare(`${b.event_date} ${b.event_time || ''}`)));
       setResponses(resps || []);
       setFijs(f || []);
       setAppointments(appts || []);
@@ -76,9 +78,9 @@ export default function AppDashboard() {
       setMemberships(mems?.items || mems || []);
       setDepartments(depts?.items || depts || []);
       const existing = prefs && prefs.length > 0 ? prefs[0] : null;
-      setPref(existing || { accent_color: 'gold', visible_widgets: DEFAULT_VISIBLE, widget_order: DEFAULT_WIDGET_ORDER, show_right_panel: true });
+      setPref(existing || { accent_color: 'blue', visible_widgets: DEFAULT_VISIBLE, widget_order: DEFAULT_WIDGET_ORDER, show_right_panel: true });
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => { setLoadError('Le bureau ne peut pas être chargé pour le moment. Recharge la page pour réessayer.'); setLoading(false); });
   }, []);
 
   useEffect(() => {
@@ -218,9 +220,7 @@ export default function AppDashboard() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div className="flex gap-6">
-          {/* Zone principale */}
-          <div className="maison-widgets flex-1 min-w-0 space-y-6">
+        {loadError && <p role="alert" className="private-load-error">{loadError}</p>}
             <BureauHero
               user={user}
               firstName={firstName}
@@ -230,14 +230,17 @@ export default function AppDashboard() {
               todoCount={actions.length}
               onScrollToActions={scrollToActions}
             />
+        <div className="private-dashboard-grid flex gap-6">
+          {/* Zone principale */}
+          <div className="maison-widgets flex-1 min-w-0 space-y-6">
+            {showWidget('agenda') && <BureauNextEvent events={events} responses={responses} />}
+            {showWidget('agenda') && pref?.show_right_panel === false && <BureauAgendaCourt events={events} />}
 
             {showWidget('actions') && (
               <BureauActions ref={actionsRef} actions={actions} />
             )}
 
-            {showWidget('agenda') && (
-              <BureauAgendaCourt events={events} />
-            )}
+
 
             {/* Mon rythme STAR */}
             {showWidget('rythme') && (
@@ -255,7 +258,7 @@ export default function AppDashboard() {
                     <GraduationCap className="w-4 h-4 text-indigo-600 mb-2" />
                     <p className="text-xs font-semibold text-foreground">Formation</p>
                     <p className="text-[10px] text-muted-foreground mt-0.5">
-                      {pendingSubs.length > 0 ? `${pendingSubs.length} en cours` : 'PCNC en cours'}
+                      {pendingSubs.length > 0 ? `${pendingSubs.length} en cours` : 'Voir mes formations'}
                     </p>
                   </Link>
                   <Link to="/app/croissance" className="bg-card border border-border rounded-2xl p-4 hover:shadow-sm transition-all">
@@ -443,6 +446,9 @@ export default function AppDashboard() {
             events={events}
             user={user}
             favoriteShortcuts={pref?.favorite_shortcuts || []}
+            pref={pref}
+            departments={myServiceDepts}
+            showAgenda={showWidget('agenda')}
             showRightPanel={pref?.show_right_panel !== false}
           />
         </div>

@@ -39,9 +39,9 @@ export default function BureauAgendaCourt({ events = [] }) {
   return (
     <motion.div className="maison-agenda" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mon agenda court</h2>
+        <h2 className="text-xs text-muted-foreground uppercase tracking-widest">À l’agenda</h2>
         <Link to="/app/agenda" className="text-xs text-secondary flex items-center gap-1 hover:text-secondary/80">
-          Ouvrir l'agenda complet <ChevronRight className="w-3 h-3" />
+          Tout voir <ChevronRight className="w-3 h-3" />
         </Link>
       </div>
 

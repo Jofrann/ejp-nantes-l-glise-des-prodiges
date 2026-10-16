@@ -60,6 +60,9 @@ export default function Formations() {
         breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Formation' }]}
       />
 
+      <nav className="private-learning-nav" aria-label="Formation et croissance"><Link aria-current="page" to="/app/formations">Mes formations</Link><Link to="/app/croissance">Croissance</Link><Link to="/app/objectifs">Objectifs</Link><Link to="/app/parcours">Mon parcours</Link><Link to="/app/rendez-vous">Rendez-vous</Link></nav>
+      {programs.length > 0 && <section className="private-next-event private-learning-feature mb-6"><p className="private-eyebrow">MON PARCOURS DE FORMATION</p><h2>{programs[0].title}</h2><p className="private-next-empty">{programs[0].description || 'Retrouve tes modules, tes supports et tes validations.'}</p><div className="private-next-footer"><span>{getProgress(programs[0].id).status === 'done' ? 'Parcours validé' : 'Un pas après l’autre, à ton rythme.'}</span><Link to={`/app/formations/${programs[0].id}`}>{getProgress(programs[0].id).status === 'not_started' ? 'Découvrir le parcours' : 'Reprendre mon parcours'}<ChevronRight className="w-4 h-4" /></Link></div></section>}
+
       {programs.length === 0 ? (
         <div className="bg-card border border-border rounded-2xl p-8 text-center">
           <GraduationCap className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />

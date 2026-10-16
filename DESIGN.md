@@ -38,3 +38,12 @@ useChromeInset mesure les en-têtes et les barres du bas avec ResizeObserver. Le
 ## Fichiers, boutique et intégrations — 16 octobre 2026
 
 Les écrans d’upload existants restent propriétaires de la sélection et du chargement ; base44Client est l’adaptateur partagé. Une erreur serveur reste visible, les états de chargement sont libérés ; rien ne simule un fichier enregistré. L’onglet Admin Fichiers & Intégrations explique les états et les paramètres attendus. L’assistant utilise PageHeader, les couleurs et le layout existants ; il apparaît dans Mes Ressources sur desktop comme mobile. Les règles métier viennent de server/files.mjs, server/integrations.mjs et server/shop.mjs ; les messages ne présentent pas les réponses d’un fournisseur comme une preuve de livraison. L’abonnement boutique produit une notification interne persistante. Aucune refonte du design ni migration Tailwind majeure dans ce correctif.
+## Espace privé approuvé — 16 octobre 2026
+
+La proposition interactive output/proposition-privee a été approuvée par l’utilisateur. Elle remplace le thème privé crème/or par un espace lumineux : fond #f3f6fa, surfaces #ffffff, texte #172b4b, actions #294d84, contours #e4e9f0, texte secondaire #637087 et or discret #b58b42. Typographie Manrope, titres 29–33 px, cartes 18–20 px. Ces variables restent sous .serviteur-app dans src/index.css ; public et connexion gardent leur identité.
+
+StarLayout reste propriétaire du shell : barre latérale PrivateSidebar à partir de 1280 px, en-tête à 78 px sur ordinateur et 68 px sur téléphone, navigation inférieure mesurée sous 1280 px. Le répertoire recherchable remplace le panneau de navigation complet et réutilise Dialog Radix (focus, Escape, fermeture). Les liens proviennent du registre starMegaMenu existant, complété par les accès personnels déjà routés. Aucun rôle de démonstration dans le produit.
+
+AppDashboard garde son chargement et ses composants métier. BureauHero accueille, BureauNextEvent affiche le prochain événement réel et mène au parcours de présences existant. Le contexte conserve agenda, départements, raccourcis, verset et phrase personnels. Les widgets et leur visibilité, les accents, les formulaires, les validations et les autorisations restent disponibles. Aucune donnée fictive ni statistique inventée. Les formations reprennent les programmes réels dans le même langage visuel.
+
+Pas de nouvel appel d’écriture, nouvelle bibliothèque ou modification serveur. Mouvement discret Framer Motion avec reducedMotion=user, défilement natif et CSS de mouvement réduit.

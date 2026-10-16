@@ -8,7 +8,8 @@ import {
 import { base44 } from '@/api/base44Client';
 import { isBureauLike, isAdmin, getRoles } from '@/lib/permissions';
 import { MOBILE_BOTTOM_NAV } from '@/lib/starMegaMenu';
-import MegaMenu, { MobilePlanStar } from '@/components/star/MegaMenu';
+import { MobilePlanStar } from '@/components/star/MegaMenu';
+import PrivateSidebar from '@/components/star/PrivateSidebar';
 import NotificationBell from '@/components/star/NotificationBell';
 
 const QUICK_ACTIONS = [
@@ -56,10 +57,17 @@ export default function StarLayout({ children, user }) {
     return location.pathname.startsWith(item.path);
   };
 
+  useEffect(() => {
+    const escape = event => { if (event.key === 'Escape') { setQuickOpen(false); setProfileOpen(false); } };
+    document.addEventListener('keydown', escape);
+    return () => document.removeEventListener('keydown', escape);
+  }, []);
+
   const handleLogout = () => base44.auth.logout('/');
 
   return (
     <MotionConfig reducedMotion="user"><div className="serviteur-app min-h-screen bg-background text-foreground flex flex-col" data-page={location.pathname}>
+      <PrivateSidebar showAdmin={showAdmin} showSupervision={showSupervision} extraModules={extraModules} onOpenTools={() => setPlanOpen(true)} />
       {/* Header desktop — glass premium, simplified */}
       <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 glass-header">
         <div className="h-full flex items-center justify-between px-4 max-w-screen-2xl">
@@ -68,17 +76,12 @@ export default function StarLayout({ children, user }) {
             <img src="/brand/ejp-logo.png" alt="Église des Jeunes Prodiges" className="serviteur-logo" width="75" height="55" />
             <div className="flex flex-col leading-none">
               <span className="font-heading font-bold text-sm text-foreground">EJP Nantes</span>
-              <span className="text-[9px] uppercase tracking-widest text-secondary">STAR OS</span>
+              <span className="text-[9px] uppercase tracking-widest text-secondary">ESPACE SERVITEUR</span>
             </div>
           </Link>
 
           {/* Mega-menu desktop — anchored per-trigger */}
-          <MegaMenu
-            showSupervision={showSupervision}
-            showAdmin={showAdmin}
-            extraModules={extraModules}
-            onNavigate={() => {}}
-          />
+          <div className="private-header-context"><span>Mon espace</span><span aria-hidden="true">/</span><b>{location.pathname === '/app' ? 'Mon bureau' : location.pathname.startsWith('/app/departements') ? 'Départements' : location.pathname.startsWith('/app/admin') ? 'Administration' : location.pathname.startsWith('/app/formations') ? 'Formations' : location.pathname.startsWith('/app/annuaire') ? 'Annuaire' : 'Espace serviteur'}</b></div>
 
           {/* Right actions */}
           <div className="flex items-center gap-1.5">
@@ -196,7 +199,7 @@ export default function StarLayout({ children, user }) {
             <button
               aria-label="Ouvrir le menu serviteur" aria-expanded={planOpen}
               onClick={() => setPlanOpen(true)}
-              className="xl:hidden w-8 h-8 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
+              className="private-menu-trigger xl:hidden w-8 h-8 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
             >
               <MenuIcon className="w-5 h-5" />
             </button>
@@ -216,6 +219,7 @@ export default function StarLayout({ children, user }) {
             <Link
               key={path}
               to={path}
+              aria-current={isActive({path,end}) ? "page" : undefined}
               className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-colors ${
                 isActive({ path, end })
                   ? 'text-secondary'
@@ -227,6 +231,7 @@ export default function StarLayout({ children, user }) {
             </Link>
           ))}
           <button
+            aria-expanded={planOpen} aria-label="Tous les outils"
             onClick={() => setPlanOpen(true)}
             className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg text-muted-foreground"
           >

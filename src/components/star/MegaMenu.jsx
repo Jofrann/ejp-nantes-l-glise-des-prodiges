@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Search, NotebookPen, BellRing, Compass, ShoppingBag, Shield, Users } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { MEGA_MENU, MEGA_MENU_RESTRICTED, CONDITIONAL_MODULES } from '@/lib/starMegaMenu';
 
 export default function MegaMenu({ showSupervision, showAdmin, extraModules = [], onNavigate }) {
@@ -109,76 +110,15 @@ export default function MegaMenu({ showSupervision, showAdmin, extraModules = []
   );
 }
 
-export function MobilePlanStar({ open, onClose, showSupervision, showAdmin, extraModules = [] }) {
-  const navigate = useNavigate();
-  const allMenus = [...MEGA_MENU];
-  extraModules.forEach(modKey => {
-    if (CONDITIONAL_MODULES[modKey]) allMenus.push(CONDITIONAL_MODULES[modKey]);
-  });
-  if (showSupervision) allMenus.push(MEGA_MENU_RESTRICTED[0]);
-  if (showAdmin) allMenus.push(MEGA_MENU_RESTRICTED[1]);
-
-  const handleNav = (to) => {
-    navigate(to);
-    onClose();
-  };
-
-  return (
-    <AnimatePresence>
-      {open && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 z-[60] bg-foreground/20 backdrop-blur-sm"
-          />
-          <motion.div
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-[70] glass-panel rounded-t-3xl p-6 pb-8 max-h-[85vh] overflow-y-auto"
-          >
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h3 className="text-base font-heading font-bold text-foreground">Plan STAR</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Navigation complète STAR OS</p>
-              </div>
-              <button onClick={onClose} className="text-muted-foreground p-1.5 rounded-lg hover:bg-surface">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {allMenus.map((menu) => (
-                <div key={menu.id}>
-                  <button
-                    onClick={() => handleNav(menu.route)}
-                    className="flex items-center gap-2 mb-2 text-xs font-heading font-semibold text-secondary uppercase tracking-wider"
-                  >
-                    <menu.icon className="w-3.5 h-3.5" />
-                    {menu.label}
-                  </button>
-                  <div className="grid grid-cols-2 gap-2 pl-5">
-                    {menu.items.map((item) => (
-                      <button
-                        key={item.label}
-                        onClick={() => handleNav(item.to)}
-                        className="flex items-center gap-2 p-2.5 rounded-xl bg-surface/50 border border-border/50 hover:border-secondary/20 hover:bg-surface transition-all text-left"
-                      >
-                        <item.icon className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-                        <span className="text-[11px] font-medium text-foreground leading-tight">{item.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  );
+export function MobilePlanStar({open,onClose,showSupervision,showAdmin,extraModules=[]}) {
+ const navigate=useNavigate();
+ const [query,setQuery]=useState('');
+ useEffect(()=>{if(!open)setQuery('');},[open]);
+ const menus=[...MEGA_MENU,...extraModules.filter(key=>CONDITIONAL_MODULES[key]).map(key=>CONDITIONAL_MODULES[key])];
+ if(showSupervision)menus.push(MEGA_MENU_RESTRICTED[0]);
+ if(showAdmin)menus.push(MEGA_MENU_RESTRICTED[1]);
+ const personal=[{label:'Mon parcours',desc:'Parcours du serviteur',icon:Compass,to:'/app/parcours'},{label:'Notes et occupations',desc:'Mon espace personnel',icon:NotebookPen,to:'/app/espace-personnel'},{label:'Confidentialité',desc:'Consentements et demandes',icon:Shield,to:'/app/espace-personnel/confidentialite'},{label:'Notifications',desc:'Informations et rappels',icon:BellRing,to:'/app/notifications'},{label:'Boutique EJP',desc:'Produits et informations',icon:ShoppingBag,to:'/app/ressources/boutique'}];
+ if(showSupervision)personal.push({label:'Direction',desc:'Vue de direction',icon:Users,to:'/app/direction'});
+ const groups=[...menus,{id:'personnel',label:'Mon espace personnel',items:personal}].map(group=>({...group,items:group.items.filter(item=>`${item.label} ${item.desc} ${group.label}`.toLocaleLowerCase('fr').includes(query.toLocaleLowerCase('fr')))})).filter(group=>group.items.length);
+ return <Dialog open={open} onOpenChange={value=>{if(!value)onClose();}}><DialogContent className="private-tools-dialog" onCloseAutoFocus={event=>{event.preventDefault();[...document.querySelectorAll('button[aria-label="Tous les outils"], .private-sidebar button')].find(element=>element.getClientRects().length)?.focus();}}><DialogTitle>Tous mes outils</DialogTitle><DialogDescription>Ton espace, tes responsabilités et tes accès.</DialogDescription><div className="private-tool-search"><Search aria-hidden="true"/><label className="sr-only" htmlFor="private-tool-query">Rechercher un outil</label><input id="private-tool-query" value={query} onChange={event=>setQuery(event.target.value)} placeholder="Rechercher un outil…"/>{query&&<button onClick={()=>{setQuery('');document.getElementById('private-tool-query')?.focus();}} aria-label="Effacer la recherche"><X/></button>}</div><div className="private-tool-results">{groups.length?groups.map(group=><section key={group.id}><h3>{group.label}</h3><div>{group.items.map(item=><button key={`${item.to}-${item.label}`} onClick={()=>{navigate(item.to);onClose();}}><item.icon aria-hidden="true"/><span><b>{item.label}</b><small>{item.desc}</small></span></button>)}</div></section>):<p className="private-tool-empty">Aucun outil trouvé. Essaie un autre nom ou efface ta recherche.</p>}</div></DialogContent></Dialog>;
 }
