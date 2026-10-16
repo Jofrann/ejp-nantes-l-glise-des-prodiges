@@ -38,3 +38,9 @@ flowchart LR
 Les connecteurs d’envoi de courriels, d’upload de fichiers, d’IA, de paiement et de visioconférence ne sont pas configurés sur le serveur autonome. Leur fonctionnement de bout en bout reste à traiter ; les tests ci-dessus ne les valident pas. Le bouton de notification de la boutique affiche actuellement une confirmation sans abonnement persistant. Les parcours FIJ ont été parcourus avec les deux profils testés, sans jeu métier complet de pilote et de coordination : cela ne constitue pas une validation de toutes leurs écritures.
 
 Le présent correctif traite en priorité les départements, affectations, données personnelles et accès mobile. Il ne prétend pas garantir l’absence de tout bug dans l’ensemble de l’application.
+
+Audit des dépendances : `npm audit --omit=dev` signale 25 vulnérabilités (8 modérées, 16 élevées, 1 critique dans jsPDF). Ces alertes demandent une analyse d’exposition et des mises à jour compatibles ; elles ne sont pas corrigées par cette livraison. Certaines corrections proposées changent de version majeure.
+
+## Publication vérifiée
+
+Le code du commit `b2e139a` est Live sur Render (déploiement `dep-db8oqtff3r2c73esj9ng`). Sur le domaine officiel, connexion admin, affichage de la gestion des départements et ouverture du formulaire de création vérifiés à 390 × 844. Le formulaire a été ouvert sans enregistrer de département fictif. Les sources corrigées sont aussi synchronisées dans le dossier local `ejp-nantes`.
