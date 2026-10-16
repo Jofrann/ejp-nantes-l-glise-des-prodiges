@@ -49,7 +49,7 @@ export default function GalerieVivante({ media }) {
                 )}
                 {item.title && (
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-white text-xs font-medium"><PublicText value={item.title} /></p>
+                    <p className="text-white text-xs font-medium"><PublicText field="entity" value={item.title} /></p>
                   </div>
                 )}
               </motion.button>
@@ -62,7 +62,7 @@ export default function GalerieVivante({ media }) {
       {/* Lightbox */}
       <Dialog open={!!lightbox} onOpenChange={open => { if (!open) setLightbox(null); }}>
         <DialogContent className="max-w-5xl bg-[#101827] text-white border-0 p-6" aria-describedby={undefined}>
-          <DialogTitle className="text-white"><PublicText value={lightbox?.title || 'Galerie EJP Nantes'} /></DialogTitle>
+          <DialogTitle className="text-white"><PublicText field={lightbox?.title ? "entity" : undefined} value={lightbox?.title || 'Galerie EJP Nantes'} /></DialogTitle>
           {lightbox?.type === 'video' ? <video src={lightbox.file_url} controls autoPlay className="w-full max-h-[75vh]" /> : lightbox && <img src={lightbox.file_url} alt={lightbox.alt_text || lightbox.title || ''} className="w-full max-h-[75vh] object-contain" />}
         </DialogContent>
       </Dialog>

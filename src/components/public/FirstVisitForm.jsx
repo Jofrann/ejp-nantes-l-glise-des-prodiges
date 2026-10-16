@@ -50,7 +50,7 @@ export default function FirstVisitForm({ sourceSection = 'venir', compact = fals
         <div className="w-14 h-14 rounded-full bg-[#DCEFE7] flex items-center justify-center mx-auto mb-4">
           <Check className="w-7 h-7 text-[#101827]" />
         </div>
-        <h3 className="font-display text-2xl text-[#101827] mb-2 font-medium"><PublicText value={"Merci "} /><PublicText value={firstName} /><PublicText value={" !"} /></h3>
+        <h3 className="font-display text-2xl text-[#101827] mb-2 font-medium"><PublicText value={"Merci "} /><PublicText field="visitor" value={firstName} /><PublicText value={" !"} /></h3>
         <p className="text-sm text-[#4B5563] leading-relaxed max-w-sm mx-auto"><PublicText value={"Nous avons bien noté ton intention de venue. L'équipe d'accueil sera prévenue. On a hâte de te rencontrer ce dimanche !"} /></p>
       </div>
     );

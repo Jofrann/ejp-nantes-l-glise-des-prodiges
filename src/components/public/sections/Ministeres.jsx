@@ -48,11 +48,11 @@ export default function Ministeres({ ministries }) {
                       <div className="w-10 h-10 rounded-xl bg-[#D8B76A]/15 flex items-center justify-center flex-shrink-0">
                         <Icon className="w-5 h-5 text-[#D8B76A]" />
                       </div>
-                      <h3 className="font-heading text-lg font-semibold text-[#101827]"><PublicText value={m.name} /></h3>
+                      <h3 className="font-heading text-lg font-semibold text-[#101827]"><PublicText field={m.id ? "entity" : undefined} value={m.name} /></h3>
                     </div>
-                    <p className="text-sm text-[#4B5563] leading-relaxed mb-3"><PublicText value={m.description} /></p>
+                    <p className="text-sm text-[#4B5563] leading-relaxed mb-3"><PublicText field={m.id ? "entity" : undefined} value={m.description} /></p>
                     {m.benefit_text && (
-                      <p className="text-xs text-[#D8B76A] font-medium italic"><PublicText value={"→ "} /><PublicText value={m.benefit_text} /></p>
+                      <p className="text-xs text-[#D8B76A] font-medium italic"><PublicText value={"→ "} /><PublicText field={m.id ? "entity" : undefined} value={m.benefit_text} /></p>
                     )}
                   </div>
                 </motion.div>

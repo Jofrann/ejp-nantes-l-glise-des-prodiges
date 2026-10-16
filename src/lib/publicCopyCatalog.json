@@ -638,7 +638,7 @@
     {
       "id": "0facc44119cec002",
       "value": "FIJ",
-      "sections": ["Programmes"],
+      "sections": ["Programmes", "Ministeres"],
       "source": "FIJ",
       "static": true
     },
@@ -1041,7 +1041,7 @@
     {
       "id": "3981a2b9c1ef7fce",
       "value": "Communication",
-      "sections": ["EspaceServiteurSas"],
+      "sections": ["EspaceServiteurSas", "Ministeres"],
       "source": "Communication"
     },
     {
@@ -1152,7 +1152,7 @@
     {
       "id": "533161735639c51a",
       "value": "Accueil",
-      "sections": ["PublicHeader", "PublicFooter"],
+      "sections": ["PublicHeader", "PublicFooter", "Ministeres"],
       "source": "Accueil",
       "static": true
     },
@@ -1920,6 +1920,132 @@
       "value": "3",
       "source": "3",
       "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "b744c0fc13264679",
+      "source": "Culte",
+      "value": "Culte",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "49a63d72be2fc0e6",
+      "source": "Formation",
+      "value": "Formation",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "649ad2fb60aef9b4",
+      "source": "Rendez-vous",
+      "value": "Rendez-vous",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "7cdf573b0c843945",
+      "source": "Réunion",
+      "value": "Réunion",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "1624566b2af77c30",
+      "source": "Spécial",
+      "value": "Spécial",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "eb72e1683b81c924",
+      "source": "Autre",
+      "value": "Autre",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "7f443fa81c021e1d",
+      "source": "PCNC 001",
+      "value": "PCNC 001",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "6c1f5adf382bac17",
+      "source": "PCNC 101",
+      "value": "PCNC 101",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "150afa3595185655",
+      "source": "PCNC 201",
+      "value": "PCNC 201",
+      "sections": ["Programmes"],
+      "static": true
+    },
+    {
+      "id": "1f16135bcd94ef3d",
+      "source": "Chaque visiteur se sent chez lui.",
+      "value": "Chaque visiteur se sent chez lui.",
+      "sections": ["Ministeres"],
+      "static": true
+    },
+    {
+      "id": "290d0a27a9b9073e",
+      "source": "Une voix claire qui rayonne.",
+      "value": "Une voix claire qui rayonne.",
+      "sections": ["Ministeres"],
+      "static": true
+    },
+    {
+      "id": "45f045f4ce0ec62c",
+      "source": "Prodiges Musique",
+      "value": "Prodiges Musique",
+      "sections": ["Ministeres"],
+      "static": true
+    },
+    {
+      "id": "8f1a6d0b0e40456a",
+      "source": "Une louange vivante et sincère.",
+      "value": "Une louange vivante et sincère.",
+      "sections": ["Ministeres"],
+      "static": true
+    },
+    {
+      "id": "9c0f7ed16a6e5dfe",
+      "source": "Coordination",
+      "value": "Coordination",
+      "sections": ["Ministeres"],
+      "static": true
+    },
+    {
+      "id": "3c6905246ae47c75",
+      "source": "Un service fluide et excellent.",
+      "value": "Un service fluide et excellent.",
+      "sections": ["Ministeres"],
+      "static": true
+    },
+    {
+      "id": "08eb55242e36ab21",
+      "source": "Vie Académique",
+      "value": "Vie Académique",
+      "sections": ["Ministeres"],
+      "static": true
+    },
+    {
+      "id": "57f1c63f5218e6c5",
+      "source": "Des jeunes accompagnés et soutenus.",
+      "value": "Des jeunes accompagnés et soutenus.",
+      "sections": ["Ministeres"],
+      "static": true
+    },
+    {
+      "id": "abc14f7d20156032",
+      "source": "Des vies transformées en profondeur.",
+      "value": "Des vies transformées en profondeur.",
+      "sections": ["Ministeres"],
       "static": true
     }
   ],

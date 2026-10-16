@@ -27,22 +27,22 @@ export default function Temoignages({ testimonials }) {
                 className={`bg-white rounded-[24px] border border-[#E8E2D5] p-7 h-full flex flex-col ${i === 0 ? 'md:row-span-2 md:col-span-1' : ''}`}
               >
                 <Quote className="w-8 h-8 text-[#D8B76A]/30 mb-4 flex-shrink-0" />
-                <p className={`text-[#101827] leading-relaxed flex-1 ${i === 0 ? 'text-lg' : 'text-sm'}`}><PublicText value={"« "} /><PublicText value={t.content} /><PublicText value={" »"} /></p>
+                <p className={`text-[#101827] leading-relaxed flex-1 ${i === 0 ? 'text-lg' : 'text-sm'}`}><PublicText value={"« "} /><PublicText field="entity" value={t.content} /><PublicText value={" »"} /></p>
                 <div className="flex items-center gap-3 mt-6 pt-5 border-t border-[#F0EBE0]">
                   {t.photo_url ? (
                     <img src={t.photo_url} alt={t.author_name} className="w-10 h-10 rounded-full object-cover" />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-[#F5F0E8] flex items-center justify-center">
                       <span className="font-display text-[#D8B76A] text-sm font-semibold">
-                        <PublicText value={(t.author_name || 'A')[0]} />
+                        <PublicText field="entity" value={(t.author_name || 'A')[0]} />
                       </span>
                     </div>
                   )}
                   <div>
                     <p className="text-sm font-semibold text-[#101827]">
-                      <PublicText value={t.is_anonymous ? 'Anonyme' : t.author_name} />
+                      <PublicText field={t.is_anonymous ? undefined : "entity"} value={t.is_anonymous ? 'Anonyme' : t.author_name} />
                     </p>
-                    {t.author_role && <p className="text-xs text-[#9CA3AF]"><PublicText value={t.author_role} /></p>}
+                    {t.author_role && <p className="text-xs text-[#9CA3AF]"><PublicText field="entity" value={t.author_role} /></p>}
                   </div>
                 </div>
               </motion.div>

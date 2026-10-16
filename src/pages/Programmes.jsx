@@ -194,11 +194,11 @@ export default function Programmes() {
                       </p>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-heading font-bold text-[#101827]"><PublicText value={ev.title} /></p>
-                      {ev.description && <p className="text-sm text-[#4B5563] mt-1 line-clamp-2"><PublicText value={ev.description} /></p>}
+                      <p className="font-heading font-bold text-[#101827]"><PublicText field="entity" value={ev.title} /></p>
+                      {ev.description && <p className="text-sm text-[#4B5563] mt-1 line-clamp-2"><PublicText field="entity" value={ev.description} /></p>}
                       <div className="flex items-center gap-4 mt-2 text-xs text-[#4B5563]">
-                        {ev.event_time && <span className="flex items-center gap-1"><Clock className="w-3 h-3" /><PublicText value={ev.event_time} /></span>}
-                        {ev.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /><PublicText value={ev.location} /></span>}
+                        {ev.event_time && <span className="flex items-center gap-1"><Clock className="w-3 h-3" /><PublicText field="entity" value={ev.event_time} /></span>}
+                        {ev.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /><PublicText field="entity" value={ev.location} /></span>}
                       </div>
                     </div>
                   </div>
@@ -230,8 +230,8 @@ export default function Programmes() {
                       </p>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-heading font-semibold text-sm text-[#101827] truncate"><PublicText value={ev.title} /></p>
-                      {ev.event_time && <p className="text-xs text-[#4B5563]"><PublicText value={ev.event_time} /></p>}
+                      <p className="font-heading font-semibold text-sm text-[#101827] truncate"><PublicText field="entity" value={ev.title} /></p>
+                      {ev.event_time && <p className="text-xs text-[#4B5563]"><PublicText field="entity" value={ev.event_time} /></p>}
                     </div>
                     <span className="text-[10px] bg-[#EAF0F8] text-[#4B5563] px-2 py-1 rounded-full font-medium flex-shrink-0">
                       <PublicText value={EVENT_TYPE_LABELS[ev.event_type] || ev.event_type} />

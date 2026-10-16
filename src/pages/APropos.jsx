@@ -148,12 +148,12 @@ export default function APropos() {
                         <img src={leader.image_url} alt={leader.name} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <span className="font-display text-[#D8B76A] text-2xl"><PublicText value={leader.name?.[0]} /></span>
+                          <span className="font-display text-[#D8B76A] text-2xl"><PublicText field="entity" value={leader.name?.[0]} /></span>
                         </div>
                       )}
                     </div>
-                    <p className="font-heading font-semibold text-sm text-[#101827]"><PublicText value={leader.name} /></p>
-                    <p className="text-xs text-[#4B5563] mt-0.5"><PublicText value={leader.role} /></p>
+                    <p className="font-heading font-semibold text-sm text-[#101827]"><PublicText field="entity" value={leader.name} /></p>
+                    <p className="text-xs text-[#4B5563] mt-0.5"><PublicText field="entity" value={leader.role} /></p>
                   </div>
                 </RevealOnScroll>
               ))}
