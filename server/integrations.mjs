@@ -79,7 +79,7 @@ export async function sendEmail(input,user) {
 }
 
 export async function createMeet(input,user) {
-  if (!isBureauLike(user)) fail(403,'La création de visioconférences est réservée aux responsables');
+  if (!isAdmin(user) && !isBureauLike(user)) fail(403,'La création de visioconférences est réservée aux responsables');
   if (!input.event_id) fail(400,'Choisis un événement enregistré');
   const event = await entities.Event.get(input.event_id);
   if (event.meet_url) return {meet_url:event.meet_url,calendar_event_id:event.calendar_event_id};

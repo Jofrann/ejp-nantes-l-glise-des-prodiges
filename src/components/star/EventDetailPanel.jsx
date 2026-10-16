@@ -1,5 +1,5 @@
 import { useAuth } from '@/lib/AuthContext';
-import { isBureauLike } from '@/lib/permissions';
+import { isBureauLike, isAdmin } from '@/lib/permissions';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Clock, MapPin, CheckCircle, AlertCircle, CalendarClock, Video, ExternalLink, Loader2 } from 'lucide-react';
@@ -136,7 +136,7 @@ export default function EventDetailPanel({ event, open, onClose, existingRespons
                   </div>
                   <ExternalLink className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
                 </a>
-              ) : isBureauLike(user) ? (
+              ) : (isAdmin(user) || isBureauLike(user)) ? (
                 <button
                   onClick={handleGenerateMeet}
                   disabled={generatingMeet}

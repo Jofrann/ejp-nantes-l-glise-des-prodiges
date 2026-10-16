@@ -38,6 +38,7 @@ test('external adapters: configuration, structured AI output, quotas, mail permi
   const event=await entities.Event.create({title:'Reunion',event_date:'2026-12-20',event_time:'15:00',end_time:'16:00'});
   await assert.rejects(()=>createMeet({event_id:event.id},member),{status:403});
   await assert.rejects(()=>createMeet({event_id:event.id},admin),{status:503});
+  await assert.rejects(()=>createMeet({event_id:event.id},{...member,badges:['ADMIN']}),{status:503});
   process.env.GOOGLE_CLIENT_ID='test-id';process.env.GOOGLE_CLIENT_SECRET='test-placeholder';process.env.GOOGLE_REFRESH_TOKEN='test-placeholder';
   let calendarCalls=0;
   globalThis.fetch=async(url,init)=>{
