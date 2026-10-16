@@ -17,7 +17,7 @@ export default function PhotoStory({ config, media = [] }) {
   const images = media.filter(item => item.type === 'image' && item.is_active !== false);
   const community = config?.community_image_url || images[0]?.file_url;
   const city = config?.nantes_image_url || images[1]?.file_url;
-  return <section className="ejp-photo-story" aria-labelledby="ejp-story-title">
+  return <section id="vie-de-la-maison" className="ejp-photo-story" aria-labelledby="ejp-story-title">
     <div className="ejp-scroll-ribbon" aria-hidden="true"><div className="ejp-scroll-ribbon-track">Croire. <i>Grandir.</i> Servir. <i>Ensemble.</i> Croire. <i>Grandir.</i> Servir.</div></div>
     <div className="ejp-story-intro" data-motion-reveal><p className="ejp-eyebrow">La vie de la maison</p><h2 id="ejp-story-title">La foi se vit.<br /><em>Ensemble.</em></h2><p>Des rencontres qui deviennent des liens. Une foi qui prend sa place dans la vie de tous les jours.</p></div>
     <div className="ejp-story-grid">

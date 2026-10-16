@@ -49,3 +49,11 @@ StarLayout reste propriétaire du shell : barre latérale PrivateSidebar à part
 AppDashboard garde son chargement et ses composants métier. BureauHero accueille, BureauNextEvent affiche le prochain événement réel et mène au parcours de présences existant. Le contexte conserve agenda, départements, raccourcis, verset et phrase personnels. Les widgets et leur visibilité, les accents, les formulaires, les validations et les autorisations restent disponibles. Aucune donnée fictive ni statistique inventée. Les formations reprennent les programmes réels dans le même langage visuel.
 
 Pas de nouvel appel d’écriture, nouvelle bibliothèque ou modification serveur. Mouvement discret Framer Motion avec reducedMotion=user, défilement natif et CSS de mouvement réduit.
+
+## Édition claire des photos publiques — 16 octobre 2026
+
+AdminHome ouvre Photos du site par défaut. PublicPhotosEditor présente six emplacements réels : accueil, communauté (également La maison et FIJ après affectation), Nantes (également Venir), Apôtre, Berger EJP Monde, Bergère Nantes. Chaque carte montre l’image actuelle, sa destination, le chargement d’un fichier public, le choix dans la galerie et un lien de consultation. Les changements de configuration restent en mémoire jusqu’au bouton Publier les modifications ; les emplacements en attente sont identifiés, y compris après changement d’onglet. La vidéo d’accueil est explicite, puisqu’elle recouvre la photo.
+
+GalleryAdmin conserve la source GalleryMedia et enregistre ses propres opérations immédiatement. Modifier titre/description/fichier, masquer/afficher, monter/descendre et retirer sont visibles au toucher. Retirer demande confirmation et ne détruit pas le fichier utilisé ailleurs. Les liens ouvrent Accueil → Galerie. Home charge jusqu’à 1000 médias actifs au lieu de huit ; GalerieVivante en montre neuf puis propose la suite. Une vidéo sans miniature utilise un élément video plutôt qu’un img pointant vers le fichier vidéo.
+
+Le stockage et les autorisations de server/files.mjs restent les propriétaires de l’upload. Les formulaires réutilisent le Dialog partagé. Aucun import de données de test en production. Les photos ne sont pas modifiées automatiquement au déploiement.

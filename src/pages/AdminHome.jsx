@@ -1,3 +1,4 @@
+import PublicPhotosEditor from '@/components/admin/PublicPhotosEditor';
 import IntegrationSettings from '@/components/admin/IntegrationSettings';
 import EJPPermissions from '@/components/admin/EJPPermissions';
 import { useSearchParams } from 'react-router-dom';
@@ -12,9 +13,10 @@ import AdminRessourcesTab from '@/components/admin/AdminRessourcesTab';
 import FirstVisitIntentsTab from '@/components/admin/FirstVisitIntentsTab';
 
 const TABS = [
+  { id: 'photos', label: 'Photos du site', icon: Image },
   { id: 'ejp-permissions', label: 'Habilitations EJP', icon: Users },
   { id: 'integrations', label: 'Fichiers & Intégrations', icon: Settings },
-  { id: 'hero', label: 'Hero & Général', icon: Church },
+  { id: 'hero', label: 'Textes & Réglages', icon: Church },
   { id: 'leaders', label: 'Leaders', icon: Users },
   { id: 'events', label: 'Événements', icon: Calendar },
   { id: 'programs', label: 'Programmes EJP', icon: CalendarClock },
@@ -50,7 +52,7 @@ const inputCls = "w-full bg-white border border-border text-foreground placehold
 
 export default function AdminHome() {
   const [params, setParams] = useSearchParams();
-  const tab = TABS.some(item => item.id === params.get('tab')) ? params.get('tab') : 'hero';
+  const tab = TABS.some(item => item.id === params.get('tab')) ? params.get('tab') : 'photos';
   const setTab = value => setParams({ tab: value });
   const [config, setConfig] = useState(null);
   const [leaders, setLeaders] = useState([]);
@@ -60,7 +62,10 @@ export default function AdminHome() {
   const [testimonials, setTestimonials] = useState([]);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
-  const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [photosPending, setPhotosPending] = useState([]);
+  const [mediaBusy, setMediaBusy] = useState(false);
+  const [loadError, setLoadError] = useState('');
+
 
   useEffect(() => {
     Promise.all([
@@ -68,7 +73,7 @@ export default function AdminHome() {
       base44.entities.Leader.list('display_order', 50),
       base44.entities.Event.list('-event_date', 50),
       base44.entities.Ministry.list('display_order', 50),
-      base44.entities.GalleryMedia.list('-created_date', 50),
+      base44.entities.GalleryMedia.list('display_order', 1000),
       base44.entities.Testimonial.list('display_order', 50),
     ]).then(([c, l, e, m, g, t]) => {
       setConfig(c?.[0] || {});
@@ -77,20 +82,20 @@ export default function AdminHome() {
       setMinistries(m || []);
       setGallery(g || []);
       setTestimonials(t || []);
-    });
+    }).catch(error => setLoadError(error.message || 'Impossible de charger la configuration du site. Recharge la page.'));
   }, []);
 
   const saveConfig = async () => {
-    setSaving(true);
-    if (config?.id) {
-      await base44.entities.ChurchConfig.update(config.id, config);
-    } else {
-      const created = await base44.entities.ChurchConfig.create(config);
-      setConfig(created);
-    }
-    setSaving(false);
-    setMsg('Sauvegardé !');
-    setTimeout(() => setMsg(''), 3000);
+    if (!config || saving || mediaBusy) return false;
+    setSaving(true); setMsg('');
+    try {
+      if (config.id) await base44.entities.ChurchConfig.update(config.id, config);
+      else setConfig(await base44.entities.ChurchConfig.create(config));
+      setMsg('Modifications publiées sur le site.');
+      setPhotosPending([]);
+      return true;
+    } catch (error) { setMsg(error.message || 'Publication impossible. Tes modifications sont conservées ici.'); return false; }
+    finally { setSaving(false); }
   };
 
   const uploadFile = async (e, field) => {
@@ -114,17 +119,17 @@ export default function AdminHome() {
           <div className="w-8 h-8 rounded-full bg-secondary/15 border border-secondary/30 flex items-center justify-center">
             <span className="text-secondary font-bold text-xs">EJP</span>
           </div>
-          <span className="text-foreground font-semibold">Admin — Page vitrine</span>
+          <span className="text-foreground font-semibold">Administration — Site public</span>
         </div>
         <div className="flex items-center gap-3">
-          {msg && <span className="text-xs text-success">{msg}</span>}
+          {msg && <span role="status" className="text-xs text-foreground">{msg}</span>}
           <button
             onClick={saveConfig}
-            disabled={saving}
+            disabled={saving || !config || mediaBusy}
             className="flex items-center gap-2 bg-primary text-primary-foreground text-sm font-semibold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            {saving ? 'Sauvegarde...' : 'Sauvegarder'}
+            {saving ? 'Publication…' : 'Publier les modifications'}
           </button>
         </div>
       </div>
@@ -146,6 +151,8 @@ export default function AdminHome() {
 
         {/* Contenu */}
         <div className="flex-1 min-w-0 w-full p-4 sm:p-6 max-w-3xl">
+          {loadError && <p role="alert" className="public-edit-error">{loadError}</p>}
+          {tab === 'photos' && config && <PublicPhotosEditor config={config} setConfig={setConfig} gallery={gallery} leaders={leaders} onOpenGallery={() => setTab('gallery')} onSave={saveConfig} saving={saving} pending={photosPending} setPending={setPhotosPending} onBusyChange={setMediaBusy} />}
           {tab === 'programs' && <AdminProgramsTab />}
           {tab === 'appointments' && <AdminAppointmentsTab />}
           {tab === 'formations' && <AdminFormationsTab />}
@@ -161,36 +168,7 @@ export default function AdminHome() {
                 <Field label="Sous-titre">
                   <textarea className={inputCls} rows={3} value={config.hero_subtitle || ''} onChange={e => setConfig(c => ({ ...c, hero_subtitle: e.target.value }))} />
                 </Field>
-                <Field label="Photo de fond / couverture vidéo (URL)">
-                  <input className={inputCls} placeholder="https://..." value={config.hero_image_url || ''} onChange={e => setConfig(c => ({ ...c, hero_image_url: e.target.value }))} />
-                  <p className="text-xs text-muted-foreground mt-2">Affichée sans vidéo, pendant son chargement et lorsque les animations sont réduites.</p>
-                </Field>
-                {[['community_image_url', 'Photo de la communauté (URL)'], ['nantes_image_url', 'Photo de Nantes (URL)']].map(([key, label]) => <Field key={key} label={label}>
-                  <input aria-label={label} className={inputCls} placeholder="https://..." value={config[key] || ''} onChange={e => setConfig(c => ({ ...c, [key]: e.target.value }))} />
-                </Field>)}
-                <Field label="Vidéo de fond (URL ou upload)">
-                  <input className={inputCls + ' mb-2'} placeholder="https://..." value={config.hero_video_url || ''} onChange={e => setConfig(c => ({ ...c, hero_video_url: e.target.value }))} />
-                  {config.hero_video_url && (
-                    <video
-                      src={config.hero_video_url}
-                      className="w-full h-32 object-cover rounded-xl mb-2 border border-border"
-                      muted
-                      loop
-                      autoPlay
-                      playsInline
-                    />
-                  )}
-                  <label className={`flex items-center gap-2 text-xs cursor-pointer ${uploadingVideo ? 'text-muted-foreground pointer-events-none' : 'text-secondary hover:text-secondary/80'}`}>
-                    <Upload className="w-3.5 h-3.5" />
-                    {uploadingVideo ? 'Upload en cours…' : 'Uploader une vidéo (MP4 recommandé)'}
-                    <input type="file" accept="video/*" className="hidden" disabled={uploadingVideo} onChange={async (e) => {
-                      setUploadingVideo(true);
-                      try { await uploadFile(e, 'hero_video_url'); } catch { /* shared error */ }
-                      finally { setUploadingVideo(false); }
-                    }} />
-                  </label>
-                  <p className="text-[10px] text-muted-foreground mt-1.5">Conseil : vidéo &lt; 10 Mo pour un chargement rapide.</p>
-                </Field>
+                <p className="public-edit-help">Les photos, portraits et la vidéo d’accueil se modifient dans <button className="public-edit-text" onClick={() => setTab('photos')}>Photos du site</button>.</p>
               </Section>
               <Section title="Vision">
                 <Field label="Titre vision">
@@ -203,10 +181,10 @@ export default function AdminHome() {
               <Section title="Présentation publique : autorités, mission et FIJ">
                 <Field label="Nom de l’Apôtre"><textarea className={inputCls} rows={1} value={config.apostle_name || ''} onChange={e => setConfig(c => ({ ...c, apostle_name: e.target.value }))} /></Field>
                 <Field label="Présentation de l’Apôtre"><textarea className={inputCls} rows={3} value={config.apostle_bio || ''} onChange={e => setConfig(c => ({ ...c, apostle_bio: e.target.value }))} /></Field>
-                <Field label="Portrait de l’Apôtre (URL)"><textarea className={inputCls} rows={1} value={config.apostle_photo_url || ''} onChange={e => setConfig(c => ({ ...c, apostle_photo_url: e.target.value }))} /></Field>
+
                 <Field label="Nom de la Bergère de Nantes"><textarea className={inputCls} rows={1} value={config.shepherd_name || ''} onChange={e => setConfig(c => ({ ...c, shepherd_name: e.target.value }))} /></Field>
                 <Field label="Présentation de la Bergère"><textarea className={inputCls} rows={3} value={config.shepherd_bio || ''} onChange={e => setConfig(c => ({ ...c, shepherd_bio: e.target.value }))} /></Field>
-                <Field label="Portrait de la Bergère (URL)"><textarea className={inputCls} rows={1} value={config.shepherd_image_url || ''} onChange={e => setConfig(c => ({ ...c, shepherd_image_url: e.target.value }))} /></Field>
+
                 <Field label="Titre de la mission"><textarea className={inputCls} rows={1} value={config.mission_title || ''} onChange={e => setConfig(c => ({ ...c, mission_title: e.target.value }))} /></Field>
                 <Field label="Texte de la mission"><textarea className={inputCls} rows={3} value={config.mission_text || ''} onChange={e => setConfig(c => ({ ...c, mission_text: e.target.value }))} /></Field>
                 <Field label="Titre de la page FIJ"><textarea className={inputCls} rows={1} value={config.fij_title || ''} onChange={e => setConfig(c => ({ ...c, fij_title: e.target.value }))} /></Field>
@@ -259,14 +237,7 @@ export default function AdminHome() {
                 <Field label="Biographie">
                   <textarea className={inputCls} rows={3} value={config.world_shepherd_bio || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_bio: e.target.value }))} />
                 </Field>
-                <Field label="Photo (URL ou upload)">
-                  <input className={inputCls + ' mb-2'} placeholder="https://..." value={config.world_shepherd_photo_url || ''} onChange={e => setConfig(c => ({ ...c, world_shepherd_photo_url: e.target.value }))} />
-                  <label className="flex items-center gap-2 text-xs text-secondary cursor-pointer hover:text-secondary/80">
-                    <Upload className="w-3.5 h-3.5" />
-                    Uploader une photo
-                    <input type="file" accept="image/*" className="hidden" onChange={e => uploadFile(e, 'world_shepherd_photo_url')} />
-                  </label>
-                </Field>
+
               </Section>
 
               <Section title="Image page Connexion / Inscription">

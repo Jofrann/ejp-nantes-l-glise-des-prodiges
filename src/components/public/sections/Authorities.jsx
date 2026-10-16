@@ -1,9 +1,6 @@
 import React from 'react';
 import RevealOnScroll from '../RevealOnScroll';
-const PORTRAITS = {
-  apostle: 'https://www.ejp-portonovo.com/assets/pp-WWxmMHpa.jpeg',
-  samuel: 'https://www.ejp-portonovo.com/assets/ejp_berger_samuel-B0krmCtv.png',
-};
+import { AUTHORITY_PHOTOS as PORTRAITS } from '@/lib/publicMedia';
 function Portrait({ src, name, initials, className = '' }) {
   const [failed, setFailed] = React.useState(false);
   React.useEffect(() => setFailed(false), [src]);

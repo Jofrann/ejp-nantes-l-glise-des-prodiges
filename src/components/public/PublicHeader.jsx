@@ -9,8 +9,13 @@ export default function PublicHeader() {
   const toggle = useRef(null);
   const headerRef = useRef(null);
   useChromeInset(headerRef, '--app-header-height');
-  const { pathname } = useLocation();
-  useEffect(() => { setOpen(false); window.scrollTo(0, 0); }, [pathname]);
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    setOpen(false);
+    if (!hash) { window.scrollTo(0, 0); return; }
+    const frame = requestAnimationFrame(() => document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' }));
+    return () => cancelAnimationFrame(frame);
+  }, [pathname, hash]);
   useEffect(() => {
     const scroll = () => setScrolled(window.scrollY > 24);
     scroll(); window.addEventListener('scroll', scroll, { passive: true });

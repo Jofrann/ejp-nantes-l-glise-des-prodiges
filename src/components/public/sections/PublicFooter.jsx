@@ -39,6 +39,7 @@ export default function PublicFooter({ config }) {
               <Link to="/" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Accueil</Link>
               <Link to="/a-propos" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Qui sommes-nous ?</Link>
               <Link to="/fij" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Familles d’Impact Jeunes</Link>
+              <Link to="/#galerie" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Photos & vidéos</Link>
               <Link to="/programmes" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Nos Programmes</Link>
               <Link to="/venir" className="text-sm text-[#4B5563] hover:text-[#101827] transition-colors">Rejoins-nous</Link>
             </div>

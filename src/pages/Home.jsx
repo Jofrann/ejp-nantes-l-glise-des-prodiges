@@ -46,7 +46,7 @@ export default function Home() {
       publicContent.leadership().catch(() => []),
       publicContent.ministries().catch(() => []),
       base44.entities.Testimonial.filter({ is_published: true }, 'display_order', 3),
-      base44.entities.GalleryMedia.filter({ is_active: true }, 'display_order', 8).catch(() => []),
+      base44.entities.GalleryMedia.filter({ is_active: true }, 'display_order', 1000).catch(() => []),
     ]).then(([c, l, m, t, g]) => {
       setConfig(c?.[0] || null);
       setLeaders(l);

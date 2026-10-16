@@ -5,7 +5,9 @@ import RevealOnScroll from '../RevealOnScroll';
 
 export default function GalerieVivante({ media }) {
   const [lightbox, setLightbox] = useState(null);
-  const items = (media || []).slice(0, 9);
+  const [limit, setLimit] = useState(9);
+  const visible = (media || []).filter(item => item.is_active !== false);
+  const items = visible.slice(0, limit);
 
   if (!items || items.length === 0) return null;
 
@@ -29,16 +31,13 @@ export default function GalerieVivante({ media }) {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 onClick={() => setLightbox(item)}
+                aria-label={`${item.type === 'video' ? 'Lire' : 'Ouvrir'} ${item.title || 'le média'}`}
                 className="block w-full overflow-hidden rounded-[20px] border border-[#E8E2D5] break-inside-avoid mb-4 group relative"
               >
                 {item.type === 'video' ? (
                   <>
-                    <img
-                      src={item.thumbnail_url || item.file_url}
-                      alt={item.alt_text || item.title || ''}
-                      className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    {item.thumbnail_url ? <img src={item.thumbnail_url} alt={item.alt_text || item.title || ''} className="w-full object-cover" /> : <video src={item.file_url} muted playsInline preload="metadata" className="w-full min-h-40 object-cover" aria-hidden="true" /> }
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-100 transition-opacity">
                       <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center">
                         <span className="text-[#101827] text-xl">▶</span>
                       </div>
@@ -60,6 +59,7 @@ export default function GalerieVivante({ media }) {
             </RevealOnScroll>
           ))}
         </div>
+        {visible.length > limit && <button onClick={() => setLimit(current => current + 9)} className="mt-8 mx-auto block border border-[#101827] text-[#101827] px-6 py-3 rounded-full text-sm font-semibold">Voir plus de photos et vidéos ({visible.length - limit})</button>}
       </div>
 
       {/* Lightbox */}
