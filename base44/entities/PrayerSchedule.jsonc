@@ -2,6 +2,7 @@
   "name": "PrayerSchedule",
   "type": "object",
   "properties": {
+    "event_id": { "type": "string", "description": "Programme EJP relié, sans duplication" },
     "department_id": {
       "type": "string",
       "description": "ID du d\u00e9partement MPI"

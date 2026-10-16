@@ -6,9 +6,9 @@ import PageDepartement from '@/pages/departements/PageDepartement';
 
 /**
  * DepartmentEntry — Protection routeur.
- * Charge le département par slug, puis :
- *  - si le département a une redirection configurée (pilote-fij, coordination-fij) → redirige
- *  - sinon → affiche la page département standard (moteur commun)
+ * Charge le ministère par slug, puis :
+ *  - si le ministère a une redirection configurée (pilote-fij, coordination-fij) → redirige
+ *  - sinon → affiche la page ministère standard (moteur commun)
  *
  * FIJ (slug: fij) affiche sa page générique avec un lien vers l'espace spécialisé.
  */

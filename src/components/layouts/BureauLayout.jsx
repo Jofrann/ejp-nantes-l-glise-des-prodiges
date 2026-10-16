@@ -6,7 +6,7 @@ import AppHeader from './AppHeader';
 
 const navItems = [
   { path: '/app/direction', label: 'Direction', icon: BarChart3 },
-  { path: '/app/departements', label: 'Départements', icon: Users },
+  { path: '/app/departements', label: 'Ministères', icon: Users },
   { path: '/app/profil', label: 'Mon Profil', icon: User },
   { path: '/app/admin', label: 'Admin vitrine', icon: Settings },
   { path: '/', label: 'Site public', icon: Home },

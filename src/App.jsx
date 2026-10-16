@@ -238,8 +238,8 @@ const AuthenticatedApp = () => {
           <Route path="/app/equipe/membres/:userId" element={<MonEquipe />} />
           <Route path="/app/organisation" element={<StarOrganisation />} />
           <Route path="/app/supervision" element={<Navigate to="/app/pilotage" replace />} />
-          <Route path="/app/pilotage" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><Pilotage /></RoleGuard>} />
-          <Route path="/app/pilotage/departements/:slug" element={<RoleGuard allowedRoles={['bureau', 'bergere', 'admin']}><PilotageDeptDetail /></RoleGuard>} />
+          <Route path="/app/pilotage" element={<RoleGuard allowEJPRead allowedRoles={['bureau', 'bergere', 'admin']}><Pilotage /></RoleGuard>} />
+          <Route path="/app/pilotage/departements/:slug" element={<RoleGuard allowEJPRead allowedRoles={['bureau', 'bergere', 'admin']}><PilotageDeptDetail /></RoleGuard>} />
           <Route path="/app/pilotage/personnes" element={<Navigate to="/app/pilotage" replace />} />
           <Route path="/app/pilotage/departements" element={<Navigate to="/app/pilotage" replace />} />
           <Route path="/app/pilotage/croissance" element={<Navigate to="/app/pilotage" replace />} />
@@ -250,7 +250,7 @@ const AuthenticatedApp = () => {
           <Route path="/app/responsabilites/accueil" element={<Navigate to="/app/departements/accueil" replace />} />
           <Route path="/app/responsabilites/communication" element={<Navigate to="/app/departements/communication" replace />} />
           <Route path="/app/responsabilites/musique" element={<Navigate to="/app/departements/prodiges-musique" replace />} />
-          {/* Vie Académique : département inactif — redirection vers Mon Service */}
+          {/* Vie Académique : ministère inactif — redirection vers Mon Service */}
           <Route path="/app/responsabilites/vie-academique" element={<Navigate to="/app/service" replace />} />
 
           <Route path="/app/departements/louange" element={<Navigate to="/app/departements/prodiges-musique" replace />} />

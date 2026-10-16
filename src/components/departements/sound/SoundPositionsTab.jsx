@@ -39,7 +39,7 @@ export default function SoundPositionsTab({ soundData, isResponsable, colors, on
         {(members || []).length === 0 ? (
           <div className="text-center py-8">
             <SlidersHorizontal className="w-7 h-7 text-muted-foreground/30 mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">Aucun membre dans le département.</p>
+            <p className="text-sm text-muted-foreground">Aucun membre dans le ministère.</p>
           </div>
         ) : (
           <div className="space-y-2">

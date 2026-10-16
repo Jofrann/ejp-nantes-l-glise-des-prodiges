@@ -2,6 +2,7 @@ import { integrationStatus, invokeAI, sendEmail, createMeet } from './integratio
 import { subscribeShop, notifyShopOpening } from './shop.mjs';
 import { uploadFile, serveFile, maxUploadBytes } from './files.mjs';
 import { executeEntity } from './access.mjs';
+import { operationNames, executeEJPOperation } from './ejp-operations.mjs';
 import { isAdminUser } from '../base44/shared/identityUtils.ts';
 import { initializeAdmin } from './bootstrap-admin.mjs';
 import "./hooks.mjs";
@@ -333,6 +334,7 @@ const server = createServer(async (req, res) => {
     ) {
       requireUser();
       const name = url.pathname.split("/").pop();
+      if (operationNames.has(name)) { res.end(JSON.stringify(await executeEJPOperation(name,body,user))); return; }
       if (name === "createMeetLink") { res.end(JSON.stringify(await createMeet(body,user))); return; }
       if (name === "adminManageUser" && ["create", "reset_access"].includes(body.action)) {
         requireAdmin();

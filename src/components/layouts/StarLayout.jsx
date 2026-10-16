@@ -30,8 +30,14 @@ export default function StarLayout({ children, user }) {
   const [planOpen, setPlanOpen] = useState(false);
   const [quickOpen, setQuickOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const showSupervision = isBureauLike(user);
+  const showSupervision = user?.account_status === 'active' && (user?.ejp_permissions?.canViewAllEJPData === true || user?.ejp_permissions?.canManagePilotageDecisions === true);
   const showAdmin = isAdmin(user);
+  const [workspaceAccess,setWorkspaceAccess]=useState({managed:false,student:false});
+  useEffect(()=>{let current=true;
+    if(!user?.id || user.first_login)return;
+    Promise.all([base44.functions.invoke('getManagedDepartments',{}),base44.functions.invoke('getAcademicEligibility',{})]).then(([managed,academic])=>{if(current)setWorkspaceAccess({managed:managed.data.departments.length>0,student:academic.data.is_student});}).catch(()=>{if(current)setWorkspaceAccess({managed:false,student:false});});
+    return()=>{current=false;};
+  },[user?.id,user?.first_login]);
 
   // Fermer overlays sur changement de route
   useEffect(() => {
@@ -44,11 +50,11 @@ export default function StarLayout({ children, user }) {
   const extraModules = [];
   const roles = getRoles(user);
   // Badge Étudiant: si l'utilisateur est étudiant, alternant ou en recherche
-  if (roles.includes('etudiant') || roles.includes('alternant') || roles.includes('recherche_emploi') || roles.includes('recherche_stage')) {
+  if (workspaceAccess.student) {
     extraModules.push('etudiant');
   }
   // Badge Responsable: référent ou bureau → Mon Équipe
-  if (roles.includes('referent') || isBureauLike(user)) {
+  if (workspaceAccess.managed) {
     extraModules.push('equipe');
   }
 
@@ -81,7 +87,7 @@ export default function StarLayout({ children, user }) {
           </Link>
 
           {/* Mega-menu desktop — anchored per-trigger */}
-          <div className="private-header-context"><span>Mon espace</span><span aria-hidden="true">/</span><b>{location.pathname === '/app' ? 'Mon bureau' : location.pathname.startsWith('/app/departements') ? 'Départements' : location.pathname.startsWith('/app/admin') ? 'Administration' : location.pathname.startsWith('/app/formations') ? 'Formations' : location.pathname.startsWith('/app/annuaire') ? 'Annuaire' : 'Espace serviteur'}</b></div>
+          <div className="private-header-context"><span>Mon espace</span><span aria-hidden="true">/</span><b>{location.pathname === '/app' ? 'Mon bureau' : location.pathname.startsWith('/app/departements') ? 'Ministères' : location.pathname.startsWith('/app/admin') ? 'Administration' : location.pathname.startsWith('/app/formations') ? 'Formations' : location.pathname.startsWith('/app/annuaire') ? 'Annuaire' : 'Espace serviteur'}</b></div>
 
           {/* Right actions */}
           <div className="flex items-center gap-1.5">

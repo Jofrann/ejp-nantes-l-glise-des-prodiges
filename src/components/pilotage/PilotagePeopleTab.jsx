@@ -32,7 +32,7 @@ export default function PilotagePeopleTab({ data }) {
         </div>
       </div>
 
-      {/* Départements sans responsable */}
+      {/* Ministères sans responsable */}
       {departments_without_responsible.length > 0 && (
         <div>
           <h2 className="text-xs text-muted-foreground uppercase tracking-widest font-medium mb-3">Rôles non pourvus</h2>
@@ -72,12 +72,12 @@ export default function PilotagePeopleTab({ data }) {
         </div>
       )}
 
-      {/* Personnes servant dans plusieurs départements */}
+      {/* Personnes servant dans plusieurs ministères */}
       {multi_dept_members.length > 0 && (
         <div>
           <h2 className="text-xs text-muted-foreground uppercase tracking-widest font-medium mb-3">Personnes très sollicitées</h2>
           <div className="glass-card border border-border rounded-2xl p-4">
-            <p className="text-xs text-muted-foreground mb-3">Ces personnes servent dans plusieurs départements. Veillons à leur charge.</p>
+            <p className="text-xs text-muted-foreground mb-3">Ces personnes servent dans plusieurs ministères. Veillons à leur charge.</p>
             <div className="space-y-2">
               {multi_dept_members.map((m, i) => (
                 <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-surface/50">
@@ -85,7 +85,7 @@ export default function PilotagePeopleTab({ data }) {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-foreground">{m.full_name}</p>
                   </div>
-                  <span className="text-xs text-muted-foreground">{m.dept_count} départements</span>
+                  <span className="text-xs text-muted-foreground">{m.dept_count} ministères</span>
                 </div>
               ))}
             </div>

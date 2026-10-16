@@ -52,8 +52,8 @@ export default function ProfilDepartements({ userId, memberships: propMembership
       {myServiceMemberships.length === 0 ? (
         <div className="bg-card border border-border rounded-2xl px-5 py-8 text-center shadow-sm">
           <Users className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Tu n'es encore membre d'aucun département.</p>
-          <p className="text-xs text-muted-foreground/70 mt-1">Un admin peut t'ajouter à un département.</p>
+          <p className="text-sm text-muted-foreground">Tu n'es encore membre d'aucun ministère.</p>
+          <p className="text-xs text-muted-foreground/70 mt-1">Un admin peut t'ajouter à un ministère.</p>
         </div>
       ) : (
         <div className="space-y-2.5">

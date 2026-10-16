@@ -5,14 +5,14 @@ import { filterActiveMembers, loadUserMap, enrichMembers, enrichAssignments, gro
 /**
  * getSoundData — Fonction backend gardien pour les données Sonorisation.
  *
- * Vérifie l'appartenance au département Sonorisation, puis renvoie
+ * Vérifie l'appartenance au ministère Sonorisation, puis renvoie
  * toutes les données techniques autorisées (plans, affectations, matériel,
  * incidents, checklists, profils, disponibilités).
  *
  * La sécurité ne repose PAS sur l'interface — cette fonction est le gardien backend.
  *
  * Paramètres :
- * - department_slug : slug du département sonorisation
+ * - department_slug : slug du ministère sonorisation
  */
 export default async function(req: Request): Promise<Response> {
   try {
@@ -44,7 +44,7 @@ export default async function(req: Request): Promise<Response> {
       });
       return Response.json({
         access_denied: true,
-        message: 'Tu ne fais pas partie de ce département.',
+        message: 'Tu ne fais pas partie de ce ministère.',
       });
     }
 
@@ -53,7 +53,7 @@ export default async function(req: Request): Promise<Response> {
     const isResponsable = access.isResponsable;
     const isAdmin = access.isAdmin;
 
-    // 2. Charger toutes les données scopées au département
+    // 2. Charger toutes les données scopées au ministère
     const [plans, equipment, incidents, templates, profiles, availabilities, members] = await Promise.all([
       base44.asServiceRole.entities.SoundServicePlan.filter(
         { department_id: deptId },

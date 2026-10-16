@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { HEALTH_META, ALERT_LEVEL_META } from '@/lib/pilotageConstants';
+import DepartmentAnalytics from '@/components/departements/DepartmentAnalytics';
 
 export default function PilotageDeptDetail() {
   const { slug } = useParams();
@@ -68,7 +69,7 @@ export default function PilotageDeptDetail() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 text-center">
         <AlertCircle className="w-10 h-10 text-muted-foreground mb-4" />
-        <p className="text-sm font-semibold text-foreground mb-1">Département introuvable</p>
+        <p className="text-sm font-semibold text-foreground mb-1">Ministère introuvable</p>
         <Link to="/app/pilotage" className="text-secondary text-sm mt-4">← Retour au Pilotage</Link>
       </div>
     );
@@ -111,6 +112,7 @@ export default function PilotageDeptDetail() {
 
       <div className="relative max-w-3xl mx-auto pb-20">
         <div className="px-4 pt-6 space-y-6">
+          {data.can_view_all_data && dept.id && <DepartmentAnalytics departmentId={dept.id} />}
           {/* Description */}
           {dept.description && (
             <p className="text-sm text-muted-foreground leading-relaxed">{dept.description}</p>
@@ -158,7 +160,7 @@ export default function PilotageDeptDetail() {
             </div>
           )}
 
-          {/* Alertes du département */}
+          {/* Alertes du ministère */}
           {deptAlerts.length > 0 && (
             <div>
               <h2 className="text-xs text-muted-foreground uppercase tracking-widest font-medium mb-3">Points d'attention</h2>
@@ -196,7 +198,7 @@ export default function PilotageDeptDetail() {
                 <div className="flex items-center gap-3">
                   <ExternalLink className="w-5 h-5 text-secondary" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Ouvrir l'espace du département</p>
+                    <p className="text-sm font-semibold text-foreground">Ouvrir l'espace du ministère</p>
                     <p className="text-xs text-muted-foreground">Accès à l'espace métier complet</p>
                   </div>
                 </div>
@@ -208,7 +210,7 @@ export default function PilotageDeptDetail() {
                   <Lock className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <p className="text-sm font-semibold text-muted-foreground">Accès départemental requis</p>
-                    <p className="text-xs text-muted-foreground">Vous n'êtes pas membre de ce département</p>
+                    <p className="text-xs text-muted-foreground">Vous n'êtes pas membre de ce ministère</p>
                   </div>
                 </div>
               </div>

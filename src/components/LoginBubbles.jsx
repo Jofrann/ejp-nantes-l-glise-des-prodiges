@@ -24,7 +24,7 @@ export default function LoginBubbles({ identifier, setIdentifier, password, setP
       <form onSubmit={submit} noValidate aria-busy={loading}>
         <div className={`ejp-login-stack ${step === 1 ? 'password-step' : ''}`}>
           <div className="ejp-login-bubble username-bubble" {...(step === 1 ? { inert: '' } : {})} aria-hidden={step === 1}>
-            <UserRound size={21} aria-hidden="true" /><div className="ejp-login-field"><label htmlFor="bubble-identifier">Identifiant EJP</label><Input ref={usernameRef} id="bubble-identifier" name="username" autoComplete="username" placeholder="Jofran@prodige" value={identifier} readOnly={step === 1 || loading} tabIndex={step === 0 ? 0 : -1} onChange={event => { setIdentifier(event.target.value); setValidation(''); }} aria-invalid={step === 0 && !!message} aria-describedby={message ? 'bubble-error' : undefined} /></div>
+            <UserRound size={21} aria-hidden="true" /><div className="ejp-login-field"><label htmlFor="bubble-identifier">Identifiant EJP</label><Input ref={usernameRef} id="bubble-identifier" name="username" autoComplete="username" placeholder="prenom@prodiges" value={identifier} readOnly={step === 1 || loading} tabIndex={step === 0 ? 0 : -1} onChange={event => { setIdentifier(event.target.value); setValidation(''); }} aria-invalid={step === 0 && !!message} aria-describedby={message ? 'bubble-error' : undefined} /></div>
             <button type="submit" disabled={loading} aria-label="Continuer vers le mot de passe"><ArrowRight size={22} /></button>
           </div>
           <div className="ejp-login-bubble password-bubble" {...(step === 0 ? { inert: '' } : {})} aria-hidden={step === 0}>

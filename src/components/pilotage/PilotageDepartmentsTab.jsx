@@ -10,7 +10,7 @@ export default function PilotageDepartmentsTab({ data }) {
     return (
       <div className="text-center py-12">
         <Users className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">Aucun département actif.</p>
+        <p className="text-sm text-muted-foreground">Aucun ministère actif.</p>
       </div>
     );
   }

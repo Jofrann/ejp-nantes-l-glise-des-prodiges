@@ -28,8 +28,8 @@ export const MEGA_MENU = [
     icon: Briefcase,
     route: '/app/service',
     items: [
-      { label: 'Vue d\'ensemble', desc: 'Mon département, ma fonction', icon: LayoutDashboard, to: '/app/service' },
-      { label: 'Mon Département', desc: 'Mission, équipe, actualités', icon: Briefcase, to: '/app/service' },
+      { label: 'Vue d\'ensemble', desc: 'Mon ministère, ma fonction', icon: LayoutDashboard, to: '/app/service' },
+      { label: 'Mon Ministère', desc: 'Mission, équipe, actualités', icon: Briefcase, to: '/app/service' },
       { label: 'Mes Présences', desc: 'Confirmer et historique', icon: CheckCircle, to: '/app/presences' },
     ],
   },
@@ -107,7 +107,7 @@ export const MEGA_MENU_RESTRICTED = [
     route: '/app/pilotage',
     items: [
       { label: 'Vue globale', desc: 'Effectifs et indicateurs', icon: LayoutDashboard, to: '/app/pilotage' },
-      { label: 'Présences', desc: 'Agrégats par département', icon: CheckCircle, to: '/app/pilotage' },
+      { label: 'Présences', desc: 'Agrégats par ministère', icon: CheckCircle, to: '/app/pilotage' },
       { label: 'FIJ', desc: 'Réseau et reporting', icon: Users, to: '/app/pilotage' },
       { label: 'Alertes', desc: 'Points d\'attention', icon: AlertCircle, to: '/app/pilotage' },
     ],
@@ -120,7 +120,7 @@ export const MEGA_MENU_RESTRICTED = [
     items: [
       { label: 'Contenus publics', desc: 'Vitrine et programmes', icon: FileText, to: '/app/admin' },
       { label: 'Utilisateurs', desc: 'Gérer les comptes', icon: Users, to: '/app/annuaire' },
-      { label: 'Départements', desc: 'Créer et gérer les équipes', icon: Briefcase, to: '/app/departements' },
+      { label: 'Ministères', desc: 'Créer et gérer les équipes', icon: Briefcase, to: '/app/departements' },
       { label: 'Formations', desc: 'Créer modules et parcours', icon: GraduationCap, to: '/app/admin?tab=formations' },
       { label: 'Ressources', desc: 'Publier documents', icon: BookOpen, to: '/app/admin?tab=ressources' },
     ],

@@ -17,9 +17,9 @@ export default function PilotageOverviewTab({ data, onNavigateTab }) {
 
   return (
     <div className="space-y-6">
-      {/* A. Santé générale des départements */}
+      {/* A. Santé générale des ministères */}
       <div>
-        <h2 className="text-xs text-muted-foreground uppercase tracking-widest font-medium mb-3">Santé des départements</h2>
+        <h2 className="text-xs text-muted-foreground uppercase tracking-widest font-medium mb-3">Santé des ministères</h2>
         <div className="glass-card border border-border rounded-2xl p-5">
           {deptHealth.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-4">Pas encore suffisamment de données.</p>

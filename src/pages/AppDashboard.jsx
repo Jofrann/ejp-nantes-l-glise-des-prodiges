@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import MyAssignments from '@/components/star/MyAssignments';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -220,6 +221,7 @@ export default function AppDashboard() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <MyAssignments />
         {loadError && <p role="alert" className="private-load-error">{loadError}</p>}
             <BureauHero
               firstName={firstName}
@@ -362,7 +364,7 @@ export default function AppDashboard() {
               </motion.div>
             )}
 
-            {/* Mes services — accès rapide aux départements */}
+            {/* Mes services — accès rapide aux ministères */}
             {showWidget('responsabilites') && myServiceDepts.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
                 <div className="flex items-center justify-between mb-3">

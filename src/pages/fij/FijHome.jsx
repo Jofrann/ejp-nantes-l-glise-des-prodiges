@@ -66,11 +66,11 @@ export default function FijHome() {
           <PageBreadcrumb
             items={[
               { label: 'Tableau de bord', to: '/app' },
-              { label: 'Départements', to: '/app/departements' },
+              { label: 'Ministères', to: '/app/departements' },
               { label: 'FIJ', to: '/app/responsabilites' },
             ]}
             backTo="/app/departements"
-            backLabel="← Tous les départements"
+            backLabel="← Tous les ministères"
           />
         </div>
       </div>
@@ -79,7 +79,7 @@ export default function FijHome() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
           {/* En-tête */}
           <div>
-            <p className="text-xs text-secondary uppercase tracking-widest mb-2">Département</p>
+            <p className="text-xs text-secondary uppercase tracking-widest mb-2">Ministère</p>
             <h1 className="text-2xl font-heading font-bold text-foreground">FIJ</h1>
             <p className="text-sm text-muted-foreground mt-2">
               Familles d'Impact Jeunes — suivi des maisons, pilotes, comptes rendus et données opérationnelles.
@@ -96,7 +96,7 @@ export default function FijHome() {
           {/* Bloc "Votre accès" */}
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
             <h2 className="text-sm font-heading font-bold text-foreground mb-1">Votre accès</h2>
-            <p className="text-xs text-muted-foreground mb-5">Choisissez votre espace selon votre rôle dans le département FIJ.</p>
+            <p className="text-xs text-muted-foreground mb-5">Choisissez votre espace selon votre rôle dans le ministère FIJ.</p>
 
             <div className="space-y-3">
               {/* Pilote */}
@@ -158,7 +158,7 @@ export default function FijHome() {
                     Si vous êtes pilote ou membre de la coordination FIJ, demandez à un administrateur de configurer votre rôle.
                   </p>
                   <Link to="/app/departements" className="text-secondary text-sm font-medium">
-                    ← Retour aux départements
+                    ← Retour aux ministères
                   </Link>
                 </div>
               )}

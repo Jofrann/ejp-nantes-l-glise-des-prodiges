@@ -44,7 +44,7 @@ export default function Organisation() {
       {memberships.length === 0 ? (
         <div className="text-center py-8 mb-6">
           <Users className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Tu n'es rattaché à aucun département.</p>
+          <p className="text-sm text-muted-foreground">Tu n'es rattaché à aucun ministère.</p>
         </div>
       ) : (
         <div className="space-y-2 mb-6">
@@ -73,8 +73,8 @@ export default function Organisation() {
         </div>
       )}
 
-      {/* Tous les départements */}
-      <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Tous les départements</h2>
+      {/* Tous les ministères */}
+      <h2 className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Tous les ministères</h2>
       <div className="space-y-2">
         {departments.filter(d => d.is_active).map(dept => (
           <Link key={dept.id} to={getDepartmentRoute(dept)}

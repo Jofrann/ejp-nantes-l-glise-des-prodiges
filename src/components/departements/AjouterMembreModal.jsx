@@ -113,9 +113,9 @@ export default function AjouterMembreModal({ departmentId, existingUserIds = [],
             </div>
           </div>
 
-          {/* Rôle dans le département */}
+          {/* Rôle dans le ministère */}
           <div>
-            <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Rôle dans le département</label>
+            <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Rôle dans le ministère</label>
             <select className={inputCls} value={roleInDept} onChange={e => setRoleInDept(e.target.value)}>
               <option value="membre">Membre</option>
               <option value="referent">Référent</option>

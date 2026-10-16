@@ -5,7 +5,7 @@ import { filterActiveMembers, loadUserMap, enrichMembers, groupBy } from '../../
 /**
  * getModerationData — Fonction backend gardien pour les données Modération.
  *
- * Vérifie l'appartenance au département Modération, puis renvoie
+ * Vérifie l'appartenance au ministère Modération, puis renvoie
  * les données autorisées (planning, conducteurs, annonces, profils).
  */
 export default async function(req: Request): Promise<Response> {
@@ -33,7 +33,7 @@ export default async function(req: Request): Promise<Response> {
         performed_by_name: user.full_name || user.email,
         performed_by_role: user.role || '',
       });
-      return Response.json({ access_denied: true, message: 'Tu ne fais pas partie de ce département.' });
+      return Response.json({ access_denied: true, message: 'Tu ne fais pas partie de ce ministère.' });
     }
 
     const department = access.department;

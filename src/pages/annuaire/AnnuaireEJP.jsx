@@ -161,16 +161,16 @@ export default function AnnuaireEJP() {
               </div>
             </div>
 
-            {/* Département + Rôle */}
+            {/* Ministère + Rôle */}
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-muted-foreground font-medium block mb-2">Département</label>
+                <label className="text-xs text-muted-foreground font-medium block mb-2">Ministère</label>
                 <select
                   value={filterDept}
                   onChange={(e) => setFilterDept(e.target.value)}
                   className="w-full bg-white border border-border text-foreground rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-secondary/50"
                 >
-                  <option value="all">Tous les départements</option>
+                  <option value="all">Tous les ministères</option>
                   {departments.map(d => (
                     <option key={d.id} value={d.id}>{d.name}</option>
                   ))}

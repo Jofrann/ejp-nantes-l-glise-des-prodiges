@@ -1,26 +1,28 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { isBureauLike } from '../../../src/lib/permissions.js';
+import { isAdmin } from '../../../src/lib/permissions.js';
+import { findOfficialStructure } from '../../../src/lib/officialStructures.js';
+import { canViewAllEJPData, departmentManager } from '../../../src/lib/ejpAccess.js';
 
 /**
- * getDepartmentData — Fonction backend pour l'accès aux données d'un département.
+ * getDepartmentData — Fonction backend pour l'accès aux données d'un ministère.
  *
- * Vérifie l'appartenance de l'utilisateur au département au niveau backend,
+ * Vérifie l'appartenance de l'utilisateur au ministère au niveau backend,
  * puis renvoie les données autorisées (membres, messages, etc.).
  *
  * La sécurité ne repose PAS sur l'interface — cette fonction est le gardien backend.
  *
  * Paramètres :
- * - department_slug : slug du département à charger
+ * - department_slug : slug du ministère à charger
  *
  * Retour :
- * - access_denied si l'utilisateur n'appartient pas au département
+ * - access_denied si l'utilisateur n'appartient pas au ministère
  * - department + members + messages si autorisé
  */
 export default async function(req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user || user.account_status !== 'active') return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json().catch(() => ({}));
     const { department_slug } = body;
@@ -29,18 +31,23 @@ export default async function(req: Request): Promise<Response> {
       return Response.json({ error: 'department_slug requis' }, { status: 400 });
     }
 
-    // 1. Trouver le département par slug
+    // 1. Trouver le ministère par slug
     const depts = await base44.asServiceRole.entities.Department.filter({ slug: department_slug });
-    const department = depts?.[0] || (await base44.asServiceRole.entities.Department.filter({ id: department_slug }))?.[0];
+    const canonical = findOfficialStructure({ slug: department_slug });
+    const department = depts?.[0]
+      || (await base44.asServiceRole.entities.Department.filter({ id: department_slug }))?.[0]
+      || (canonical ? (await base44.asServiceRole.entities.Department.filter({ slug: canonical.slug }))?.[0] : null);
     if (!department) {
-      return Response.json({ not_found: true, error: 'Département introuvable' });
+      return Response.json({ not_found: true, error: 'Ministère introuvable' });
     }
 
     // 2. Vérifier l'accès
-    const admin = isBureauLike(user);
+    const admin = isAdmin(user);
+    const globalReader = canViewAllEJPData(user);
+    if (department.is_active === false && !admin) return Response.json({ access_denied: true, message: 'Ce ministère est archivé.' });
     let membership = null;
 
-    if (!admin) {
+    if (!admin && !globalReader) {
       const memberships = await base44.asServiceRole.entities.DepartmentMember.filter({
         user_id: user.id,
         department_id: department.id,
@@ -48,29 +55,29 @@ export default async function(req: Request): Promise<Response> {
       membership = (memberships || []).find((m: any) => m.status === 'active' || (!m.status && m.is_active !== false));
 
       if (!membership) {
-        // Accès refusé — ne renvoyer AUCUNE donnée du département
+        // Accès refusé — ne renvoyer AUCUNE donnée du ministère
         await base44.asServiceRole.entities.AuditLog.create({
           action: 'access_denied',
           entity_type: 'Department',
           entity_id: department.id,
-          details: `Tentative d'accès refusée au département '${department.name}' (${department_slug})`,
+          details: `Tentative d'accès refusée au ministère '${department.name}' (${department_slug})`,
           performed_by_id: user.id,
           performed_by_name: user.full_name || user.email,
           performed_by_role: user.role || (user.roles || []).join(','),
         });
         return Response.json({
           access_denied: true,
-          message: 'Tu ne fais pas partie de ce département.',
+          message: 'Tu ne fais pas partie de ce ministère.',
         });
       }
     }
 
-    // 3. Déterminer le rôle dans le département
+    // 3. Déterminer le rôle dans le ministère
     const roleInDept = admin ? 'admin' : (membership?.role_in_dept || 'membre');
     // can_manage = admin uniquement (gestion des membres, paramètres)
     // Les responsables ne reçoivent PAS les droits admin dans ce lot.
     const canManage = admin;
-    // is_responsable = admin ou rôle de direction dans le département (peut poster des messages)
+    // is_responsable = admin ou rôle de direction dans le ministère (peut poster des messages)
     const isResponsable = admin || ['responsable', 'referent', 'coordinateur'].includes(roleInDept);
 
     // 4. Charger les membres actifs
@@ -109,6 +116,7 @@ export default async function(req: Request): Promise<Response> {
       department,
       role_in_dept: roleInDept,
       can_manage: canManage,
+      can_analyze: canViewAllEJPData(user) || departmentManager(user, department.id, membership ? [membership] : (await base44.asServiceRole.entities.DepartmentMember.filter({ user_id: user.id, department_id: department.id }))),
       is_responsable: isResponsable,
       members: enrichedMembers,
       messages: messages || [],

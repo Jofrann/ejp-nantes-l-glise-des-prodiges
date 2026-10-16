@@ -5,11 +5,11 @@ import { MessageCircle, Send, Loader2 } from 'lucide-react';
 /**
  * DeptMessagesTab — Onglet Actualités du moteur départemental.
  *
- * Affiche les messages DeptMessage scopés au département.
+ * Affiche les messages DeptMessage scopés au ministère.
  * Les responsables et admin peuvent poster des messages.
  *
  * Source : DeptMessage (entity fonctionnelle, 0 messages actuellement).
- * Un message est limité à son département — pas de fuite inter-départements.
+ * Un message est limité à son ministère — pas de fuite inter-ministères.
  */
 export default function DeptMessagesTab({ dept, messages, canPost, onRefresh }) {
   const [content, setContent] = useState('');
@@ -49,7 +49,7 @@ export default function DeptMessagesTab({ dept, messages, canPost, onRefresh }) 
           <textarea
             value={content}
             onChange={e => setContent(e.target.value)}
-            placeholder="Partager une information avec le département..."
+            placeholder="Partager une information avec le ministère..."
             rows={2}
             className="w-full text-sm bg-transparent resize-none focus:outline-none placeholder:text-muted-foreground/50 text-foreground"
           />

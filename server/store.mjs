@@ -2,6 +2,9 @@ import { DatabaseSync } from "node:sqlite";
 import { mkdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { randomUUID } from "node:crypto";
+import { isRetiredStructure, findOfficialStructure } from '../src/lib/officialStructures.js';
+import { validateEventWrite } from './event-integrity.mjs';
+import { isActiveDepartment } from '../src/lib/departmentState.js';
 const dir = resolve(process.env.EJP_DATA_DIR || ".local-data");
 mkdirSync(dir, { recursive: true });
 export const db = new DatabaseSync(resolve(dir, "ejp.sqlite"));
@@ -84,6 +87,7 @@ export const entities = new Proxy(
         return JSON.parse(row.data);
       };
       const create = async (data) => {
+        await validateWrite(entity, null, data);
         const now = new Date().toISOString();
         const row = {
           ...defaults(entity),
@@ -101,6 +105,7 @@ export const entities = new Proxy(
         return row;
       };
       const update = async (id, data) => {
+        await validateWrite(entity, await get(id), data);
         const row = {
           ...(await get(id)),
           ...data,
@@ -115,6 +120,8 @@ export const entities = new Proxy(
         return row;
       };
       const remove = async (id) => {
+        if (entity === 'Department' || entity === 'DepartmentMember')
+          throw Object.assign(new Error('Archiver cette structure ou appartenance pour conserver son historique'), { status: 400 });
         await get(id);
         db.prepare("DELETE FROM records WHERE entity=? AND id=?").run(
           entity,
@@ -138,6 +145,43 @@ export const entities = new Proxy(
     },
   },
 );
+// Used by both HTTP entity operations and the service-role compatibility SDK.
+async function validateWrite(entity, old, input) {
+  await validateEventWrite(entities, entity, old, input);
+  if (entity === 'Department') {
+    if (Object.hasOwn(input, 'status')) input.is_active = input.status === 'active';
+    else if (Object.hasOwn(input, 'is_active')) input.status = input.is_active ? 'active' : 'inactive';
+  }
+  const row = { ...old, ...input };
+  const reject = (message, status = 400) => { throw Object.assign(new Error(message), { status }); };
+  if(entity==='AttendanceResponse' && row.status && !['present','late','absent','excused','absent_justified','pending','no_response'].includes(row.status))reject('Statut de présence invalide');
+  if (entity === 'Department' && row.is_active !== false) {
+    if (isRetiredStructure(row)) reject('Cette structure est retirée de l’organisation active');
+    const official = findOfficialStructure(row);
+    if (official?.kind) reject('Utiliser l’espace spécialisé et ses responsabilités');
+    if (official && (await entities.Department.list(null, 100000)).some(d => d.id !== old?.id && d.is_active !== false && findOfficialStructure(d)?.slug === official.slug))
+      reject('Cette structure officielle existe déjà', 409);
+    if (official) input.name = official.name;
+  }
+  if (entity === 'DepartmentMember') {
+    if (old && (row.department_id !== old.department_id || row.user_id !== old.user_id)) reject('Archiver puis créer une nouvelle appartenance pour conserver l’historique');
+    if (!['serviteur','membre','referent','responsable','coordinateur','adjoint','pilote'].includes(row.role_in_dept || 'serviteur')) reject('Rôle départemental invalide');
+    // A consistent status is required even for legacy callers updating only is_active.
+    if (Object.hasOwn(input, 'status')) input.is_active = input.status === 'active';
+    else if (Object.hasOwn(input, 'is_active')) input.status = input.is_active ? 'active' : 'inactive';
+    const active = (input.status ?? row.status) ? (input.status ?? row.status) === 'active' : row.is_active !== false;
+    if (old && Object.hasOwn(input, 'is_active')) input.ended_at = active ? null : (old.ended_at || new Date().toISOString().slice(0, 10));
+    if (!active) return;
+    const department = await entities.Department.get(row.department_id);
+    if (!isActiveDepartment(department) || isRetiredStructure(department)) reject('Ministère inactif : nouvelle affectation interdite');
+    if (findOfficialStructure(department)?.kind) reject('Utiliser les responsabilités de l’espace spécialisé');
+    const person = await entities.User.get(row.user_id);
+    if (person.account_status !== 'active') reject('Compte inactif');
+    if ((await entities.DepartmentMember.filter({ department_id: row.department_id, user_id: row.user_id })).some(m => m.id !== old?.id && (m.status ? m.status === 'active' : m.is_active !== false)))
+      reject('Cette affectation existe déjà', 409);
+    if (!old) input.joined_at ||= new Date().toISOString().slice(0, 10);
+  }
+}
 if (!(await entities.ChurchConfig.list()).length)
   await entities.ChurchConfig.create({
     church_name: "EJP Nantes",

@@ -1,6 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { invokeAI, sendEmail } from "./integrations.mjs";
 import { entities } from "./store.mjs";
+import { filterSensitiveRead } from './sensitive-access.mjs';
+import { checkDepartmentWrite } from './department-write-access.mjs';
 export const context = new AsyncLocalStorage();
 const unsupported = async () => {
   throw Object.assign(
@@ -10,8 +12,13 @@ const unsupported = async () => {
 };
 export function createClientFromRequest() {
   const user = context.getStore();
+  const protectedEntities=new Proxy({}, {get:(_,entity)=>new Proxy({}, {get:(_,method)=>async(...args)=>{
+    await checkDepartmentWrite(entities,user,entity,method,args);
+    const result=await entities[entity][method](...args);
+    return ['get','list','filter'].includes(method) ? filterSensitiveRead(entities,user,entity,result) : result;
+  }})});
   const client = {
-    entities,
+    entities: protectedEntities,
     auth: {
       me: async () => user,
       updateMe: async (data) => entities.User.update(user.id, data),

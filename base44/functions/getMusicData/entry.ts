@@ -5,17 +5,17 @@ import { filterActiveMembers, loadUserMap, enrichMembers, enrichAssignments, gro
 /**
  * getMusicData — Fonction backend gardien pour les données musicales.
  *
- * Vérifie l'appartenance au département Prodiges Musique, puis renvoie
+ * Vérifie l'appartenance au ministère Prodiges Musique, puis renvoie
  * toutes les données musicales autorisées (plans, affectations, répétitions,
  * chants, setlists, profils, disponibilités).
  *
  * La sécurité ne repose PAS sur l'interface — cette fonction est le gardien backend.
  *
  * Paramètres :
- * - department_slug : slug du département musique
+ * - department_slug : slug du ministère musique
  *
  * Retour :
- * - access_denied si l'utilisateur n'appartient pas au département
+ * - access_denied si l'utilisateur n'appartient pas au ministère
  * - toutes les données musicales si autorisé
  */
 export default async function(req: Request): Promise<Response> {
@@ -48,7 +48,7 @@ export default async function(req: Request): Promise<Response> {
       });
       return Response.json({
         access_denied: true,
-        message: 'Tu ne fais pas partie de ce département.',
+        message: 'Tu ne fais pas partie de ce ministère.',
       });
     }
 
@@ -57,7 +57,7 @@ export default async function(req: Request): Promise<Response> {
     const isResponsable = access.isResponsable;
     const isAdmin = access.isAdmin;
 
-    // 2. Charger toutes les données musicales scopées au département
+    // 2. Charger toutes les données musicales scopées au ministère
     const [plans, rehearsals, songs, setlistItems, profiles, availabilities, members] = await Promise.all([
       base44.asServiceRole.entities.MusicServicePlan.filter(
         { department_id: deptId },

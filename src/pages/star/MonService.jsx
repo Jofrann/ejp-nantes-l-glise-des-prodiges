@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import MyAssignments from '@/components/star/MyAssignments';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -11,7 +12,7 @@ import { isHiddenFromService } from '@/lib/departmentModules';
 import PageHeader from '@/components/star/PageHeader';
 
 /**
- * MonService — Point d'entrée personnel vers les départements de l'utilisateur.
+ * MonService — Point d'entrée personnel vers les ministères de l'utilisateur.
  *
  * Sources de vérité :
  *   - DepartmentMember (appartenance départementale, rôle)
@@ -19,7 +20,7 @@ import PageHeader from '@/components/star/PageHeader';
  *   - DepartmentMember → coordination-fij (coordination FIJ)
  *
  * Affiche :
- *   1. MES SERVICES — cartes pour chaque département actif (sauf pilote-fij, coordination-fij)
+ *   1. MES SERVICES — cartes pour chaque ministère actif (sauf pilote-fij, coordination-fij)
  *   2. MES RESPONSABILITÉS — Pilote FIJ + Coordination FIJ (si applicable)
  *   3. À VENIR — prochains événements globaux (si réels)
  *
@@ -70,13 +71,13 @@ export default function MonService() {
     );
   }
 
-  // Mes départements actifs (DepartmentMember où status = active ou is_active = true)
+  // Mes ministères actifs (DepartmentMember où status = active ou is_active = true)
   const myActiveMemberships = memberships.filter(m =>
     m.user_id === user?.id &&
     (m.status === 'active' || (!m.status && m.is_active !== false))
   );
 
-  // Filtrer les départements masqués (pilote-fij, coordination-fij) — gérés via responsabilités
+  // Filtrer les ministères masqués (pilote-fij, coordination-fij) — gérés via responsabilités
   const myServiceMemberships = myActiveMemberships.filter(m => {
     const dept = departments.find(d => d.id === m.department_id);
     return dept && dept.is_active !== false && !isHiddenFromService(dept.slug);
@@ -107,20 +108,21 @@ export default function MonService() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-      {isBureauLike(user) && <Link to="/app/departements" className="inline-flex gap-2 items-center mb-6 px-4 py-3 rounded-xl border border-secondary/30 text-secondary text-sm"><Building2 size={18} /> Gérer les départements</Link>}
+      {isBureauLike(user) && <Link to="/app/departements" className="inline-flex gap-2 items-center mb-6 px-4 py-3 rounded-xl border border-secondary/30 text-secondary text-sm"><Building2 size={18} /> Gérer les ministères</Link>}
       <PageHeader
         title={`Bonjour ${firstName}`}
         intention="Retrouve ici tes services, tes prochaines échéances et les informations utiles à ton engagement."
         breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Mon Service' }]}
       />
 
+      <MyAssignments />
       {isEmpty ? (
-        /* État vide — utilisateur sans département ni responsabilité */
+        /* État vide — utilisateur sans ministère ni responsabilité */
         <div className="text-center py-16">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-surface border border-border mb-4">
             <Building2 className="w-6 h-6 text-muted-foreground" />
           </div>
-          <p className="text-sm font-semibold text-foreground mb-1">Tu n'es actuellement rattaché à aucun département.</p>
+          <p className="text-sm font-semibold text-foreground mb-1">Tu n'es actuellement rattaché à aucun ministère.</p>
           <p className="text-xs text-muted-foreground max-w-sm mx-auto">
             Si tu penses qu'il s'agit d'une erreur, rapproche-toi d'un responsable.
           </p>

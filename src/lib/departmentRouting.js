@@ -1,6 +1,6 @@
 /**
- * Helper central pour le routage des départements.
- * Aucune page ne doit construire manuellement une URL de département.
+ * Helper central pour le routage des ministères.
+ * Aucune page ne doit construire manuellement une URL de ministère.
  */
 
 export function isFijDepartment(dept) {
@@ -25,6 +25,10 @@ export function isFijDepartment(dept) {
 
 export function getDepartmentRoute(dept) {
   if (!dept) return '/app/departements';
+
+  if (dept.slug === 'coordination-fij') return '/app/responsabilites/fij-coordination';
+  if (dept.slug === 'pilote-fij') return '/app/responsabilites/fij-pilote';
+  if (dept.slug === 'fij') return '/app/departements/fij';
 
   if (isFijDepartment(dept)) {
     return '/app/responsabilites';

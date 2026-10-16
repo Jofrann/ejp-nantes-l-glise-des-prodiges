@@ -19,8 +19,8 @@ export default function DeptOverviewTab({ dept, members, roleInDept, canManage, 
           <DeptRoleBadge role={roleInDept} size="lg" />
           <span className="text-sm text-muted-foreground">
             {canManage
-              ? 'Tu as des capacités de gestion dans ce département.'
-              : 'Tu es membre actif de ce département.'}
+              ? 'Tu as des capacités de gestion dans ce ministère.'
+              : 'Tu es membre actif de ce ministère.'}
           </span>
         </div>
       </section>
@@ -100,7 +100,7 @@ export default function DeptOverviewTab({ dept, members, roleInDept, canManage, 
         </section>
       )}
 
-      {/* Statut département */}
+      {/* Statut ministère */}
       <section>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Users className="w-3.5 h-3.5" />

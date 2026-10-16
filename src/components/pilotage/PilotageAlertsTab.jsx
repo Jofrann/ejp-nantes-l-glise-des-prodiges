@@ -78,14 +78,14 @@ export default function PilotageAlertsTab({ data, onRefresh }) {
                   </Link>
                 </div>
               </div>
-              <button
+              {data.can_manage_decisions && <button
                 onClick={() => dismissAlert(alert)}
                 disabled={dismissing === alert.key}
                 className="w-7 h-7 rounded-lg hover:bg-surface flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
                 title="Masquer cette alerte"
               >
                 <X className="w-3.5 h-3.5" />
-              </button>
+              </button>}
             </div>
           </div>
         );

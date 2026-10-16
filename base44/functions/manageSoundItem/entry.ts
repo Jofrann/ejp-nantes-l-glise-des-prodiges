@@ -5,7 +5,7 @@ import { checkSoundAccess } from '../../shared/soundPermissions.ts';
  * manageSoundItem — Fonction backend pour les écritures Sonorisation.
  *
  * Toutes les écritures passent par cette fonction qui vérifie :
- * 1. L'appartenance au département Sonorisation
+ * 1. L'appartenance au ministère Sonorisation
  * 2. Le statut responsable pour les opérations de gestion
  * 3. La propriété pour les opérations personnelles (confirmer affectation, disponibilité)
  *
@@ -372,7 +372,7 @@ export default async function(req: Request): Promise<Response> {
         return Response.json({ error: 'Opération non reconnue: ' + operation }, { status: 400 });
     }
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: error.message }, { status: error.status || 500 });
   }
 }
 

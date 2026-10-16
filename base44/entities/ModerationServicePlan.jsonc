@@ -2,6 +2,7 @@
   "name": "ModerationServicePlan",
   "type": "object",
   "properties": {
+    "end_time": { "type": "string", "description": "Heure de fin prévue, si connue (HH:MM)" },
     "department_id": {
       "type": "string",
       "description": "ID du d\u00e9partement Mod\u00e9ration"

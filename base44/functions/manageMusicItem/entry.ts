@@ -5,12 +5,12 @@ import { checkMusicAccess } from '../../shared/musicPermissions.ts';
  * manageMusicItem — Fonction backend pour les écritures musicales.
  *
  * Toutes les écritures passent par cette fonction qui vérifie :
- * 1. L'appartenance au département Prodiges Musique
+ * 1. L'appartenance au ministère Prodiges Musique
  * 2. Le statut responsable pour les opérations de gestion
  * 3. La propriété pour les opérations personnelles (confirmer affectation, disponibilité)
  *
  * Paramètres :
- * - department_slug : slug du département
+ * - department_slug : slug du ministère
  * - operation : type d'opération (voir switch ci-dessous)
  * - item : données de l'élément à créer/modifier
  * - item_id : ID de l'élément à modifier/supprimer
@@ -300,7 +300,7 @@ export default async function(req: Request): Promise<Response> {
         return Response.json({ error: 'Opération non reconnue: ' + operation }, { status: 400 });
     }
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: error.message }, { status: error.status || 500 });
   }
 }
 

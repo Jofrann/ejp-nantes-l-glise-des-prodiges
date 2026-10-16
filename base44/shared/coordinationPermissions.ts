@@ -36,12 +36,12 @@ export async function checkCoordinationAccess(
     slug: departmentSlug,
   });
   const department = depts && depts[0];
-  if (!department) {
+  if (!department || department.is_active === false) {
     return { granted: false, not_found: true };
   }
 
   const user = await base44.auth.me();
-  if (!user) {
+  if (!user || user.account_status !== 'active') {
     return { granted: false, access_denied: true, error: 'Unauthorized' };
   }
 

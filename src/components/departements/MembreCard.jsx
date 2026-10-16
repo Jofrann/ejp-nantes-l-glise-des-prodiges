@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 
 export default function MembreCard({ member: m, index, colors, isAdmin, onDelete, badge }) {
   const handleDelete = async () => {
-    if (!confirm(`Retirer ${m.full_name} du département ?`)) return;
+    if (!confirm(`Retirer ${m.full_name} du ministère ?`)) return;
     await base44.entities.DepartmentMember.update(m.id, { is_active: false });
     onDelete?.();
   };

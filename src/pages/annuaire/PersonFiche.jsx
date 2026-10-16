@@ -69,7 +69,7 @@ export default function PersonFiche() {
       ? `Suspendre ${person.first_name} ${person.last_name} ?\n\nElle ne pourra plus accéder à son espace EJP. Ses données et son historique seront conservés.`
       : newStatus === 'archived'
       ? `Archiver ${person.first_name} ${person.last_name} ?\n\nElle ne fera plus partie des comptes actifs. Son historique sera conservé.`
-      : `Réactiver ${person.first_name} ${person.last_name} ?\n\nAttention : ses anciens départements ne seront pas réactivés automatiquement.`;
+      : `Réactiver ${person.first_name} ${person.last_name} ?\n\nAttention : ses anciens ministères ne seront pas réactivés automatiquement.`;
 
     if (!confirm(confirmMsg)) return;
     setShowActions(false);

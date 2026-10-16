@@ -9,7 +9,7 @@ export default function GestionMembres({ members, colors, departmentId, existing
   const [changingRole, setChangingRole] = useState(null);
 
   const handleRemove = async (m) => {
-    if (!confirm(`Retirer ${m.full_name} du département ?`)) return;
+    if (!confirm(`Retirer ${m.full_name} du ministère ?`)) return;
     setRemoving(m.id);
     await base44.entities.DepartmentMember.update(m.id, { is_active: false });
     setRemoving(null);
@@ -61,7 +61,7 @@ export default function GestionMembres({ members, colors, departmentId, existing
           >
             {members.length === 0 ? (
               <div className="px-4 py-8 text-center text-muted-foreground">
-                <p className="text-sm">Aucun membre dans ce département.</p>
+                <p className="text-sm">Aucun membre dans ce ministère.</p>
                 <button
                   onClick={onOpenAdd}
                   className={`mt-3 text-xs ${colors.text} hover:underline`}

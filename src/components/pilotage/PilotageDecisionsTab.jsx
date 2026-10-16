@@ -61,12 +61,12 @@ export default function PilotageDecisionsTab({ data, onRefresh }) {
   return (
     <div className="space-y-4">
       {/* Bouton créer */}
-      <button
+      {data.can_manage_decisions && <button
         onClick={() => setShowForm(true)}
         className="w-full glass-card border border-border rounded-2xl p-4 flex items-center justify-center gap-2 text-sm text-secondary hover:bg-secondary/5 transition-all"
       >
         <Plus className="w-4 h-4" /> Créer un suivi décisionnel
-      </button>
+      </button>}
 
       {/* Formulaire de création */}
       {showForm && (
@@ -181,7 +181,7 @@ export default function PilotageDecisionsTab({ data, onRefresh }) {
                       <p className="text-xs text-success mt-2 italic">« {d.resolution_notes} »</p>
                     )}
                   </div>
-                  {!isClosed && (
+                  {!isClosed && data.can_manage_decisions && (
                     <div className="flex flex-col gap-1.5 flex-shrink-0">
                       <button
                         onClick={() => resolveDecision(d.id)}
@@ -205,7 +205,7 @@ export default function PilotageDecisionsTab({ data, onRefresh }) {
                     to={`/app/pilotage/departements/${d.source_department_slug}`}
                     className="flex items-center gap-1 text-xs text-secondary mt-3 hover:underline"
                   >
-                    Voir le département source <ChevronRight className="w-3 h-3" />
+                    Voir le ministère source <ChevronRight className="w-3 h-3" />
                   </Link>
                 )}
               </div>

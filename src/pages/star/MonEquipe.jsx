@@ -9,6 +9,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import { hasRole, isBureauLike, canReadDepartment } from '@/lib/permissions';
 import PageHeader from '@/components/star/PageHeader';
+import DepartmentAnalytics from '@/components/departements/DepartmentAnalytics';
 
 const TABS = [
   { id: 'overview', label: 'Vue d\'ensemble', icon: LayoutDashboard },
@@ -30,6 +31,7 @@ export default function MonEquipe() {
 }
 
 function EquipeDashboard() {
+  const [loadError,setLoadError]=useState('');
   const [user, setUser] = useState(null);
   const [memberships, setMemberships] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -41,15 +43,8 @@ function EquipeDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    Promise.all([
-      base44.auth.me(),
-      base44.entities.DepartmentMember.filter({ is_active: true }, '-created_date', 200),
-      base44.entities.Department.filter({ is_active: true }, 'display_order', 50),
-      base44.entities.User.list('-created_date', 200),
-      base44.entities.AttendanceResponse.filter({}, '-created_date', 200),
-      base44.entities.AppointmentRequest.filter({}, '-created_date', 100),
-      base44.entities.PersonalGoal.filter({}, '-created_date', 200),
-    ]).then(([u, m, d, users, a, appt, g]) => {
+    Promise.all([base44.auth.me(),base44.functions.invoke('getReferentTeamData',{})]).then(([u,result]) => {
+      const {memberships:m,departments:d,users,attendances:a,appointments:appt,goals:g}=result.data;
       setUser(u);
       setMemberships(m || []);
       setDepartments(d || []);
@@ -58,7 +53,7 @@ function EquipeDashboard() {
       setAppointments(appt || []);
       setGoals(g || []);
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(e => {setLoadError(e.message);setLoading(false);});
   }, []);
 
   if (loading) {
@@ -70,10 +65,11 @@ function EquipeDashboard() {
   }
 
   // User's managed departments (as referent or bureau)
+  if(loadError)return <div role="alert" className="p-6"><p>{loadError}</p><Link className="underline" to="/app">Retour à mon bureau</Link></div>;
   const myManagedDeptIds = memberships
-    .filter(m => m.user_id === user?.id && m.role_in_dept === 'referent')
+    .filter(m => m.user_id === user?.id && ['referent','responsable','coordinateur'].includes(m.role_in_dept))
     .map(m => m.department_id);
-  const isBureau = isBureauLike(user);
+  const isBureau = user?.ejp_permissions?.canViewAllEJPData === true;
   const managedDepts = isBureau
     ? departments
     : departments.filter(d => myManagedDeptIds.includes(d.id));
@@ -96,9 +92,10 @@ function EquipeDashboard() {
   const teamGoals = goals.filter(g => teamMemberIds.includes(g.created_by_id));
 
   // Stats
-  const presentCount = teamAttendances.filter(a => a.status === 'present').length;
-  const attendanceRate = teamAttendances.length > 0
-    ? Math.round((presentCount / teamAttendances.length) * 100)
+  const recordedAttendances=teamAttendances.filter(a=>['present','late','absent','excused','absent_justified'].includes(a.status));
+  const presentCount = recordedAttendances.filter(a => ['present','late'].includes(a.status)).length;
+  const attendanceRate = recordedAttendances.length > 0
+    ? Math.round((presentCount / recordedAttendances.length) * 100)
     : 0;
   const pendingAppointments = teamAppointments.filter(a => a.status === 'pending');
   const activeGoals = teamGoals.filter(g => g.status === 'active');
@@ -107,11 +104,12 @@ function EquipeDashboard() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
         title="Mon Équipe"
-        intention={isBureau ? 'Vue globale sur tous les serviteurs et départements.' : 'Vision de ton équipe, limitée à ton périmètre.'}
+        intention={isBureau ? 'Vue globale sur tous les serviteurs et ministères.' : 'Vision de ton équipe, limitée à ton périmètre.'}
         breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Mon Équipe' }]}
       />
 
       {/* Departments chips */}
+      {managedDepts.map(d=><details key={d.id} className="bg-card border border-border rounded-xl p-4 mb-4"><summary className="cursor-pointer font-semibold">Suivi de l’équipe · {d.name}</summary><div className="mt-4"><DepartmentAnalytics departmentId={d.id}/></div></details>)}
       <div className="flex flex-wrap gap-2 mb-5">
         {managedDepts.map(d => (
           <Link key={d.id} to={`/app/departements/${d.slug}`}
@@ -203,7 +201,7 @@ function OverviewTab({ memberCount, attendanceRate, pendingAppointments, activeG
       </div>
 
       <div className="bg-card border border-border rounded-2xl p-4">
-        <p className="text-xs font-semibold text-foreground mb-3">Départements sous ma responsabilité</p>
+        <p className="text-xs font-semibold text-foreground mb-3">Ministères sous ma responsabilité</p>
         <div className="space-y-2">
           {managedDepts.map(d => (
             <Link key={d.id} to={`/app/departements/${d.slug}`}
@@ -366,13 +364,8 @@ function MemberDetail({ userId, onBack }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      base44.entities.User.list('-created_date', 200),
-      base44.entities.DepartmentMember.filter({ user_id: userId, is_active: true }, '-created_date', 50),
-      base44.entities.AttendanceResponse.filter({ created_by_id: userId }, '-created_date', 50),
-      base44.entities.AppointmentRequest.filter({ created_by_id: userId }, '-created_date', 20),
-      base44.entities.PersonalGoal.filter({ created_by_id: userId }, '-created_date', 50),
-    ]).then(([users, m, a, appt, g]) => {
+    base44.functions.invoke('getReferentTeamData',{user_id:userId}).then(result => {
+      const {users,memberships:m,attendances:a,appointments:appt,goals:g}=result.data;
       setMember(users?.find(u => u.id === userId) || null);
       setMemberships(m || []);
       setAttendances(a || []);
@@ -422,7 +415,7 @@ function MemberDetail({ userId, onBack }) {
         {/* Departments */}
         <div className="bg-card border border-border rounded-2xl p-4">
           <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5 text-secondary" /> Départements
+            <Users className="w-3.5 h-3.5 text-secondary" /> Ministères
           </p>
           {memberships.length === 0 ? (
             <p className="text-xs text-muted-foreground">Aucun rattachement.</p>

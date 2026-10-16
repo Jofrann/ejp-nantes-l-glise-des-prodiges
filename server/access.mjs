@@ -1,6 +1,8 @@
 import { entities } from './store.mjs';
 import { isAdmin, isBureauLike, getRoles, canManageDepartment } from '../src/lib/permissions.js';
 import { canReadFijV2, canReadFijMembers, canReadMemberNotes, isPilotOfFij } from '../src/lib/fijPermissions.js';
+import { filterSensitiveRead } from './sensitive-access.mjs';
+import { departmentManager,canViewAllEJPData } from '../src/lib/ejpAccess.js';
 
 export const personalEntities = new Set(['AttendanceResponse','AppointmentRequest','BookLog','DataRequest','PersonalGoal','PersonalNote','PersonalTimeBlock','PrivacyConsent','ScriptureReadingLog','ServantJourney','StarNotification','TrainingSubmission','UserWorkspacePreference']);
 const catalog = new Set(['TrainingProgram','TrainingModule','StarResource','StarProduct']);
@@ -24,7 +26,7 @@ export async function executeEntity({ entity, method, args, user, scope }) {
   const fijUser = coordination ? {...user,roles:[...getRoles(user),'coordination_fij']} : user;
   const fijs = await entities.FIJ.list();
   const accessibleFij = id => fijs.find(row => row.id === id);
-  const managed = id => canManageDepartment(user,id,myMemberships);
+  const managed = id => departmentManager(user,id,myMemberships);
   const programVisible = program => program && program.status === 'published' && (program.is_public || !program.assigned_roles?.length || program.assigned_roles.includes('all') || program.assigned_roles.some(role => getRoles(user).includes(role) || getRoles(user).some(ownRole => role === `star_${ownRole}`)));
   const programs = await entities.TrainingProgram.list();
   const canRead = row => {
@@ -32,16 +34,16 @@ export async function executeEntity({ entity, method, args, user, scope }) {
     if (administrator) return true;
     if (personalEntities.has(entity)) {
       if (owns(user,row)) return true;
-      if (entity === 'PersonalGoal') return row.visibility !== 'private' && (teamUserIds.has(row.created_by_id || row.user_id) || isBureauLike(user));
-      if (entity === 'AttendanceResponse') return teamUserIds.has(row.created_by_id || row.user_id) || isBureauLike(user);
+      if (entity === 'PersonalGoal') return row.visibility !== 'private' && teamUserIds.has(row.created_by_id || row.user_id);
+      if (entity === 'AttendanceResponse') return false; // Referent history uses the event-scoped analytical endpoint.
       return false;
     }
     if (entity === 'Post' || entity === 'PostComment') return true;
     if (entity === 'PostReaction') return row.user_id === user.id;
     if (entity === 'Department') return true;
-    if (entity === 'DepartmentMember') return row.user_id === user.id || managed(row.department_id) || isBureauLike(user);
-    if (entity === 'DeptMessage' || entity === 'DepartmentReport') return isBureauLike(user) || myMemberships.some(m => m.department_id === row.department_id);
-    if (entity === 'User') return row.id === user.id || isBureauLike(user) || teamUserIds.has(row.id);
+    if (entity === 'DepartmentMember') return row.user_id === user.id || managed(row.department_id) || canViewAllEJPData(user);
+    if (entity === 'DeptMessage' || entity === 'DepartmentReport') return canViewAllEJPData(user) || myMemberships.some(m => m.department_id === row.department_id);
+    if (entity === 'User') return row.id === user.id || teamUserIds.has(row.id);
     if (entity === 'TrainingProgram') return programVisible(row);
     if (entity === 'TrainingModule') return programVisible(programs.find(p => p.id === row.program_id));
     if (entity === 'StarResource' || entity === 'StarProduct') return row.is_active !== false;
@@ -67,13 +69,14 @@ export async function executeEntity({ entity, method, args, user, scope }) {
     const take = Math.min(10000,Math.max(0,Number(options.limit ?? limit ?? 1000)));
     const offset = Math.max(0,Number(options.skip ?? skip ?? 0));
     const rows = await entities[entity].filter(query || {}, options.sort ?? sort,100000);
-    return rows.filter(canRead).slice(offset,offset+take).map(project);
+    return filterSensitiveRead(entities,user,entity,rows.filter(canRead).slice(offset,offset+take).map(project));
   }
-  if (method === 'get') { const row=await entities[entity].get(args[0]); if(!canRead(row))reject(); return project(row); }
+  if (method === 'get') { const row=await entities[entity].get(args[0]); if(!canRead(row))reject(); return filterSensitiveRead(entities,user,entity,project(row)); }
   if (['bulkCreate','deleteMany'].includes(method)) { if(!administrator)reject(); return entities[entity][method](...args); }
   const old = method === 'create' ? null : await entities[entity].get(args[0]);
   const input = {...(method === 'create' ? args[0] : args[1])};
   const target = {...old,...input};
+  if(entity==='User' && Object.hasOwn(input,'ejp_permissions'))reject('Utiliser la gestion nominative des habilitations');
   if (!administrator || self) {
     if (personalEntities.has(entity)) {
       if (old && !owns(user,old)) reject();

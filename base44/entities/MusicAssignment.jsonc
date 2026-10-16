@@ -2,6 +2,9 @@
   "name": "MusicAssignment",
   "type": "object",
   "properties": {
+    "service_status": { "type": "string", "enum": ["not_recorded", "completed", "not_completed"], "default": "not_recorded", "description": "Service réalisé, distinct de l’affectation et de la présence" },
+    "start_time": { "type": "string", "description": "Début spécifique du poste (HH:MM)" },
+    "end_time": { "type": "string", "description": "Fin spécifique du poste (HH:MM)" },
     "service_plan_id": {
       "type": "string",
       "description": "ID du MusicServicePlan"

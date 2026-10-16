@@ -102,7 +102,7 @@ export default function PilotageMinistryLifeTab({ data }) {
         </div>
       )}
 
-      {/* Activités par département */}
+      {/* Activités par ministère */}
       <div>
         <h2 className="text-xs text-muted-foreground uppercase tracking-widest font-medium mb-3">Prochaines activités</h2>
         <div className="glass-card border border-border rounded-2xl p-5">

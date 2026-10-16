@@ -5,7 +5,7 @@ import { checkPrayerAccess, canReadRequest } from '../../shared/prayerPermission
  * managePrayerItem — Fonction backend pour les écritures MPI.
  *
  * Toutes les écritures passent par cette fonction qui vérifie :
- * 1. L'appartenance au département MPI
+ * 1. L'appartenance au ministère MPI
  * 2. Le statut responsable pour les opérations de gestion
  * 3. La propriété pour les opérations personnelles (confirmer affectation, disponibilité)
  * 4. Le niveau de confidentialité pour les demandes de prière
@@ -363,7 +363,7 @@ export default async function(req: Request): Promise<Response> {
         return Response.json({ error: 'Opération non reconnue: ' + operation }, { status: 400 });
     }
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: error.message }, { status: error.status || 500 });
   }
 }
 

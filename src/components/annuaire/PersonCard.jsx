@@ -51,7 +51,7 @@ export default function PersonCard({ person }) {
             </div>
           )}
 
-          {/* Départements */}
+          {/* Ministères */}
           {person.departments?.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {person.departments.slice(0, 2).map(d => (

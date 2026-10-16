@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { isAdminUser } from '../../shared/identityUtils.ts';
+import { isActiveDepartment } from '../../../src/lib/departmentState.js';
 
 /**
  * annuaireSearch — Fonction backend de lecture pour l'Annuaire EJP.
@@ -47,7 +48,7 @@ async function handleSearch(base44: any, body: any): Promise<Response> {
   const allMemberships = allMembershipsRaw?.items || allMembershipsRaw || [];
   const activeMemberships = allMemberships.filter(m => m.status === 'active' || m.is_active !== false);
 
-  // 3. Tous les départements
+  // 3. Tous les ministères
   const allDepts = await base44.asServiceRole.entities.Department.filter({}, { limit: 50 });
   const deptMap = {};
   (allDepts.items || allDepts || []).forEach(d => { deptMap[d.id] = d; });
@@ -136,7 +137,7 @@ async function handleGetPerson(base44: any, body: any): Promise<Response> {
   const allMembershipsRaw = await base44.asServiceRole.entities.DepartmentMember.filter({ user_id }, { limit: 100, sort: '-created_date' });
   const allMemberships = allMembershipsRaw?.items || allMembershipsRaw || [];
 
-  // Tous les départements
+  // Tous les ministères
   const allDepts = await base44.asServiceRole.entities.Department.filter({}, { limit: 50 });
   const deptMap = {};
   (allDepts.items || allDepts || []).forEach(d => { deptMap[d.id] = d; });
@@ -202,9 +203,9 @@ async function handleGetPerson(base44: any, body: any): Promise<Response> {
     return true;
   }).sort((a, b) => new Date(b.created_date).getTime() - new Date(a.created_date).getTime()).slice(0, 30);
 
-  // Tous les départements actifs (pour l'ajout)
+  // Tous les ministères actifs (pour l'ajout)
   const activeDepts = (allDepts.items || allDepts || [])
-    .filter(d => d.is_active !== false && d.status === 'active')
+    .filter(isActiveDepartment)
     .map(d => ({ id: d.id, name: d.name, slug: d.slug, icon: d.icon, color: d.color }))
     .sort((a, b) => a.name.localeCompare(b.name));
 

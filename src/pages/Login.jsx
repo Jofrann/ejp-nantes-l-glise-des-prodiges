@@ -131,7 +131,7 @@ export default function Login() {
             type="text"
             autoComplete="username"
             autoFocus
-            placeholder={setupRequired ? "admin@ejp.local" : "Jofran@prodige"}
+            placeholder={setupRequired ? "admin@ejp.local" : "prenom@prodiges"}
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             required

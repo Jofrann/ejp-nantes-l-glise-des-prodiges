@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { Users, Plus, ChevronRight, Crown } from 'lucide-react';
 import DeptIcon from '@/components/departements/DeptIcon';
 import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
-import { isBureauLike } from '@/lib/permissions';
+import { isAdmin as isAdministrator } from '@/lib/permissions';
+import { canViewAllEJPData } from '@/lib/ejpAccess';
 import { getDepartmentRoute } from '@/lib/departmentRouting';
 
 const COLOR_MAP = {
@@ -33,7 +34,7 @@ export default function ListeDepartements() {
     ]).then(([u, deps, members]) => {
       setUser(u);
       const allDepts = (deps || []).filter(d => d.is_active);
-      const admin = isBureauLike(u);
+      const admin = isAdministrator(u) || canViewAllEJPData(u);
       const myDeptIds = (members || []).filter(m => m.user_id === u?.id).map(m => m.department_id);
       const visibleDepts = admin ? allDepts : allDepts.filter(d => myDeptIds.includes(d.id));
       setDepts(visibleDepts);
@@ -48,7 +49,7 @@ export default function ListeDepartements() {
       setCounts(c);
       setReferentCounts(r);
       setLoading(false);
-    }).catch(err => { setError(err.message || "Impossible de charger les départements."); setLoading(false); });
+    }).catch(err => { setError(err.message || "Impossible de charger les ministères."); setLoading(false); });
   }, []);
 
   if (loading) return (
@@ -57,7 +58,7 @@ export default function ListeDepartements() {
     </div>
   );
 
-  const isAdmin = isBureauLike(user);
+  const isAdmin = isAdministrator(user);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -68,7 +69,7 @@ export default function ListeDepartements() {
         <PageBreadcrumb
           items={[
             { label: 'Tableau de bord', to: '/app' },
-            { label: 'Départements', to: '/app/departements' },
+            { label: 'Ministères', to: '/app/departements' },
           ]}
           backTo="/app"
           backLabel="← Tableau de bord"
@@ -79,9 +80,9 @@ export default function ListeDepartements() {
           <p className="text-xs text-secondary uppercase tracking-widest mb-2">Espace Serviteur</p>
           <div className="flex flex-col items-start sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-semibold text-foreground">Départements</h1>
+              <h1 className="text-3xl font-semibold text-foreground">Ministères</h1>
               <p className="text-sm text-muted-foreground mt-1">
-                {depts.length} département{depts.length > 1 ? 's' : ''} actif{depts.length > 1 ? 's' : ''}
+                {depts.length} ministère{depts.length > 1 ? 's' : ''} actif{depts.length > 1 ? 's' : ''}
               </p>
             </div>
             {isAdmin && (
@@ -89,7 +90,7 @@ export default function ListeDepartements() {
                 to="/app/departements/nouveau/parametres"
                 className="flex items-center gap-2 text-xs bg-secondary/10 hover:bg-secondary/20 border border-secondary/25 text-secondary px-4 py-2.5 rounded-xl transition-all font-medium flex-shrink-0"
               >
-                <Plus className="w-3.5 h-3.5" /> Nouveau département
+                <Plus className="w-3.5 h-3.5" /> Nouveau ministère
               </Link>
             )}
           </div>
@@ -99,7 +100,7 @@ export default function ListeDepartements() {
         {depts.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">
             <Users className="w-12 h-12 mx-auto mb-4 opacity-20" />
-            <p className="text-sm">Aucun département rattaché pour l'instant.</p>
+            <p className="text-sm">Aucun ministère rattaché pour l'instant.</p>
             {!isAdmin && <p className="text-xs text-muted-foreground/70 mt-2">Contacte un responsable pour rejoindre une équipe.</p>}
           </div>
         ) : (

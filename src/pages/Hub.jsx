@@ -12,7 +12,7 @@ import { isBureauLike, getPrimaryRoleLabel } from '@/lib/permissions';
 
 const NAV = [
   { id: 'feed', label: 'Hub', icon: LayoutDashboard, to: '/hub' },
-  { id: 'departements', label: 'Départements', icon: Users2, to: '/app/departements' },
+  { id: 'departements', label: 'Ministères', icon: Users2, to: '/app/departements' },
   { id: 'workspace', label: 'Mon Espace', icon: Briefcase, to: '/app' },
   { id: 'profil', label: 'Mon Profil', icon: Settings, to: '/app/profil' },
 ];
@@ -117,7 +117,7 @@ export default function Hub() {
 
           {departments.length > 0 && (
             <div className="pt-4">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 px-3 mb-2">Mes Départements</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 px-3 mb-2">Mes Ministères</p>
               {departments.slice(0, 4).map(d => (
                 <Link
                   key={d.id}

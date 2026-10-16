@@ -130,7 +130,7 @@ export default function APropos() {
                 L'EJP Nantes est née d'une conviction simple : les jeunes méritent une église qui les prend au sérieux — spirituellement, académiquement, humainement.
               </p>
               <p>
-                Fondée avec un groupe restreint de jeunes déterminés, elle a grandi dimanche après dimanche, serviteur après serviteur. Ce qui a commencé comme un rassemblement est devenu une maison, un département, une communauté.
+                Fondée avec un groupe restreint de jeunes déterminés, elle a grandi dimanche après dimanche, serviteur après serviteur. Ce qui a commencé comme un rassemblement est devenu une maison, un ministère, une communauté.
               </p>
               <p>
                 Aujourd'hui, l'EJP Nantes réunit des dizaines de jeunes chaque dimanche à 15h, portés par la louange, la Parole et une fraternité réelle qui dépasse les réunions.

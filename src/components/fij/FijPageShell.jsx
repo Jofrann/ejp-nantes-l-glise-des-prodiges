@@ -99,7 +99,7 @@ export function RoleShell({ role, title, subtitle, children, actions, requiredRo
           <PageBreadcrumb
             items={[
               { label: 'Tableau de bord', to: '/app' },
-              { label: 'Départements', to: '/app/departements' },
+              { label: 'Ministères', to: '/app/departements' },
               { label: 'FIJ', to: '/app/responsabilites' },
               { label: breadcrumbLabel || title, to: location.pathname },
             ]}

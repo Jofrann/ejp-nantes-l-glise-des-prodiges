@@ -21,7 +21,10 @@
         "present",
         "absent",
         "late",
-        "no_response"
+        "no_response",
+        "excused",
+        "absent_justified",
+        "pending"
       ],
       "default": "no_response",
       "description": "Statut de pr\u00e9sence"

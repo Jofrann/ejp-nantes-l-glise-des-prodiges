@@ -5,7 +5,7 @@ import { filterActiveMembers, loadUserMap, enrichMembers, enrichAssignments, gro
 /**
  * getPrayerData — Fonction backend gardien pour les données MPI.
  *
- * Vérifie l'appartenance au département MPI, puis renvoie
+ * Vérifie l'appartenance au ministère MPI, puis renvoie
  * les données autorisées (planning, affectations, sujets, demandes, disponibilités).
  *
  * CONFIDENTIALITÉ ABSOLU :
@@ -15,7 +15,7 @@ import { filterActiveMembers, loadUserMap, enrichMembers, enrichAssignments, gro
  * - PrayerRequestAssignee n'est retourné que pour les demandes visibles.
  *
  * Paramètres :
- * - department_slug : slug du département MPI
+ * - department_slug : slug du ministère MPI
  */
 export default async function(req: Request): Promise<Response> {
   try {
@@ -47,7 +47,7 @@ export default async function(req: Request): Promise<Response> {
       });
       return Response.json({
         access_denied: true,
-        message: 'Tu ne fais pas partie de ce département.',
+        message: 'Tu ne fais pas partie de ce ministère.',
       });
     }
 
@@ -58,7 +58,7 @@ export default async function(req: Request): Promise<Response> {
     const isLeader = access.isLeader;
     const userId = user.id;
 
-    // 2. Charger toutes les données scopées au département
+    // 2. Charger toutes les données scopées au ministère
     const [schedules, profiles, availabilities, members, allTopics, allRequests] = await Promise.all([
       base44.asServiceRole.entities.PrayerSchedule.filter(
         { department_id: deptId },

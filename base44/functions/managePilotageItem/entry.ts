@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { canAccessPilotage, canDismissPilotageAlerts } from '../../shared/pilotagePermissions.ts';
+import { canManagePilotageDecisions, canDismissPilotageAlerts } from '../../shared/pilotagePermissions.ts';
 
 /**
  * managePilotageItem — Gestion des décisions et alertes Pilotage.
@@ -21,7 +21,7 @@ export default async function(req: Request): Promise<Response> {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    if (!canAccessPilotage(user)) {
+    if (!canManagePilotageDecisions(user)) {
       return Response.json({ access_denied: true, message: 'Accès Pilotage non autorisé.' }, { status: 403 });
     }
 

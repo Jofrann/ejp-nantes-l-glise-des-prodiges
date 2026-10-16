@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 
 export default function MembresGrid({ membres, colors, isAdmin, onDelete }) {
   const handleDelete = async (m) => {
-    if (!confirm(`Retirer ${m.full_name} du département ?`)) return;
+    if (!confirm(`Retirer ${m.full_name} du ministère ?`)) return;
     await base44.entities.DepartmentMember.update(m.id, { is_active: false });
     onDelete?.();
   };

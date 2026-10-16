@@ -321,14 +321,14 @@ async function handleAddMembership(base44: any, admin: any, body: any): Promise<
   });
   const activeExisting = (existing || []).find(m => m.status === 'active' || m.is_active !== false);
   if (activeExisting) {
-    return Response.json({ error: 'Cette personne fait déjà partie de ce département', existing: activeExisting }, { status: 409 });
+    return Response.json({ error: 'Cette personne fait déjà partie de ce ministère', existing: activeExisting }, { status: 409 });
   }
 
   const user = await base44.asServiceRole.entities.User.get(user_id);
   if (!user) return Response.json({ error: 'Utilisateur introuvable' }, { status: 404 });
 
   const dept = await base44.asServiceRole.entities.Department.get(department_id);
-  if (!dept) return Response.json({ error: 'Département introuvable' }, { status: 404 });
+  if (!dept) return Response.json({ error: 'Ministère introuvable' }, { status: 404 });
 
   const membership = await base44.asServiceRole.entities.DepartmentMember.create({
     user_id,
@@ -372,7 +372,7 @@ async function handleRemoveMembership(base44: any, admin: any, body: any): Promi
     action: 'membership_remove',
     entity_type: 'DepartmentMember',
     entity_id: membership_id,
-    details: `Retrait de ${dept?.name || 'département'} (rôle: ${membership.role_in_dept})`,
+    details: `Retrait de ${dept?.name || 'ministère'} (rôle: ${membership.role_in_dept})`,
     performed_by_id: admin.id,
     performed_by_name: admin.full_name || admin.email,
     performed_by_role: admin.role || (admin.roles || []).join(','),
@@ -402,7 +402,7 @@ async function handleChangeRole(base44: any, admin: any, body: any): Promise<Res
     action: 'membership_role_change',
     entity_type: 'DepartmentMember',
     entity_id: membership_id,
-    details: `${dept?.name || 'Département'}: ${oldRole} → ${new_role}`,
+    details: `${dept?.name || 'Ministère'}: ${oldRole} → ${new_role}`,
     performed_by_id: admin.id,
     performed_by_name: admin.full_name || admin.email,
     performed_by_role: admin.role || (admin.roles || []).join(','),
@@ -507,11 +507,11 @@ async function handleMigrateAccountStatus(base44: any, admin: any): Promise<Resp
 }
 
 async function handleMigrateCoordFij(base44: any, admin: any): Promise<Response> {
-  // 1. Trouver le département Coordination FIJ par slug
+  // 1. Trouver le ministère Coordination FIJ par slug
   const depts = await base44.asServiceRole.entities.Department.filter({ slug: 'coordination-fij' });
   const coordFijDept = (depts || [])[0];
   if (!coordFijDept) {
-    return Response.json({ error: 'Département "Coordination FIJ" (slug: coordination-fij) introuvable' }, { status: 404 });
+    return Response.json({ error: 'Ministère "Coordination FIJ" (slug: coordination-fij) introuvable' }, { status: 404 });
   }
 
   // 2. Lister tous les utilisateurs

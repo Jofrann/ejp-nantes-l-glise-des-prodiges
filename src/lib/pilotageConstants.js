@@ -3,7 +3,7 @@
 
 export const PILOTAGE_TABS = [
   { id: 'overview', label: 'Vue globale', icon: 'LayoutDashboard' },
-  { id: 'departments', label: 'Départements', icon: 'Building2' },
+  { id: 'departments', label: 'Ministères', icon: 'Building2' },
   { id: 'people', label: 'Personnes', icon: 'Users' },
   { id: 'growth', label: 'Croissance', icon: 'TrendingUp' },
   { id: 'ministry', label: 'Vie du ministère', icon: 'Calendar' },
@@ -49,6 +49,6 @@ export const SOURCE_TYPE_LABELS = {
   welcome_visitor: 'Visiteur',
   fij_alert: 'Alerte FIJ',
   event: 'Événement',
-  department: 'Département',
+  department: 'Ministère',
   manual: 'Manuel',
 };

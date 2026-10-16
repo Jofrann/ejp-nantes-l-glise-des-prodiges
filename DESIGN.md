@@ -2,6 +2,12 @@
 
 Audience : jeunes découvrant la communauté à Nantes. Objectif : comprendre la maison et préparer une première venue.
 
+## Évolution métier — cahier des charges du 16 octobre 2026
+
+Les lots 02 à 07 étendent les écrans existants : suivi de l’équipe dans PageDepartement, équipes des programmes dans Coordination, données détaillées dans Pilotage. Aucune nouvelle identité visuelle. Les primitives Input/Button et les contrôles natifs des formulaires métier restent canoniques. Les graphiques réutilisent les variables CSS --success, --danger et --muted-foreground ; une donnée manquante est explicitement distinguée d’une absence. Aucun score individuel.
+
+Le format des nouveaux identifiants demandé dans ce cahier des charges est prenom@prodiges. Il remplace le format de création décrit plus bas dans les décisions historiques du 14 octobre ; les identifiants existants sont conservés et restent utilisables.
+
 Direction : compositions éditoriales, ouverture cinématographique, bleu nuit et lumière dorée. Signature : entrée du titre par lignes masquées, photo immersive avec parallaxe, récit photographique et bandeau typographique lié au défilement. Logo officiel dans public/brand/ejp-logo.png, original préservé ; inversion CSS sur fond sombre.
 
 Périmètre : /, /a-propos, /programmes, /venir. Styles sous `.ejp-public`, navigation publique partagée. Espace interne indépendant.
@@ -34,10 +40,6 @@ Apôtre en composition texte/portrait, puis deux présentations des bergers avec
 
 useChromeInset mesure les en-têtes et les barres du bas avec ResizeObserver. Les décalages et marges de défilement utilisent les variables de hauteur réelles. Sur téléphone, les en-têtes secondaires restent dans le flux, les onglets d’administration défilent horizontalement et les fenêtres passent devant la navigation avec une hauteur adaptée au viewport visuel. Les barres inférieures s’effacent pendant la saisie pour libérer le clavier. Zones de sécurité prises en compte. Les fonctions métier restent inchangées.
 
-
-## Fichiers, boutique et intégrations — 16 octobre 2026
-
-Les écrans d’upload existants restent propriétaires de la sélection et du chargement ; base44Client est l’adaptateur partagé. Une erreur serveur reste visible, les états de chargement sont libérés ; rien ne simule un fichier enregistré. L’onglet Admin Fichiers & Intégrations explique les états et les paramètres attendus. L’assistant utilise PageHeader, les couleurs et le layout existants ; il apparaît dans Mes Ressources sur desktop comme mobile. Les règles métier viennent de server/files.mjs, server/integrations.mjs et server/shop.mjs ; les messages ne présentent pas les réponses d’un fournisseur comme une preuve de livraison. L’abonnement boutique produit une notification interne persistante. Aucune refonte du design ni migration Tailwind majeure dans ce correctif.
 ## Espace privé approuvé — 16 octobre 2026
 
 La proposition interactive output/proposition-privee a été approuvée par l’utilisateur. Elle remplace le thème privé crème/or par un espace lumineux : fond #f3f6fa, surfaces #ffffff, texte #172b4b, actions #294d84, contours #e4e9f0, texte secondaire #637087 et or discret #b58b42. Typographie Manrope, titres 29–33 px, cartes 18–20 px. Ces variables restent sous .serviteur-app dans src/index.css ; public et connexion gardent leur identité.

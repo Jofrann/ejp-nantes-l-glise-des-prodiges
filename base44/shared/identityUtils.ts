@@ -14,10 +14,10 @@ export function normalizeName(name: string): string {
     .trim();
 }
 
-/** Identifiant visible : Jofran@prodige. La connexion ignore la casse. */
+/** Nouveaux comptes : prenom@prodiges. Les anciens identifiants restent acceptés. */
 export function generateBaseIdentifier(first_name: string, _last_name: string): string {
   const f = normalizeName(first_name);
-  return f ? `${f.charAt(0).toUpperCase()}${f.slice(1)}@prodige` : null;
+  return f ? `${f}@prodiges` : null;
 }
 
 export async function generateUniqueIdentifier(base44: any, first_name: string, last_name: string, excludeUserId?: string): Promise<string> {
@@ -27,12 +27,12 @@ export async function generateUniqueIdentifier(base44: any, first_name: string, 
   const canonical = (value: string) => (value || '').toLowerCase().replace(/@prodiges$/, '@prodige');
   const taken = (candidate: string) => users.some((user: any) => user.id !== excludeUserId && canonical(user.internal_identifier) === canonical(candidate));
   if (!taken(base)) return base;
-  const prefix = base.replace('@prodige', '');
+  const prefix = base.replace(/@prodiges?$/, '');
   const last = normalizeName(last_name);
-  if (last && !taken(`${prefix}.${last}@prodige`)) return `${prefix}.${last}@prodige`;
+  if (last && !taken(`${prefix}.${last}@prodiges`)) return `${prefix}.${last}@prodiges`;
   let counter = 2;
-  while (taken(`${prefix}${counter}@prodige`)) counter++;
-  return `${prefix}${counter}@prodige`;
+  while (taken(`${prefix}${counter}@prodiges`)) counter++;
+  return `${prefix}${counter}@prodiges`;
 }
 
 /**

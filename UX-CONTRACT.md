@@ -1,5 +1,14 @@
 # EJP Nantes — propriétaires des interactions conservées
 
+## Lots métier du 16 octobre 2026
+
+- Suivi de l’équipe : DepartmentAnalytics, lecture getDepartmentAnalytics autorisée côté serveur ; filtres date natifs via Input, sélection nominative limitée au département. Les taux indiquent leur dénominateur et excluent les données non renseignées. Les périodes portent sur les affectations reliées à des événements ; les plannings sans lien restent explicitement hors calcul.
+- Coordination : ProgramTeams réutilise AssignmentList. Vue de lecture opérationnelle, sans historique de présence, visiteurs, prière ou notes académiques. Rattachement d’un planning et service réalisé réservés au Référent du département, avec audit et confirmation serveur.
+- Pilotage : même route et onglets existants, ajout LeaderDataBrowser. Habilitations nominatives indépendantes des rôles/badges. Consultation sensible tracée, 25 dossiers au plus par page, aucun export global. Les secrets ne sont jamais des champs métier consultables.
+- Administration : EJPPermissions utilise les contrôles de formulaire existants et une validation explicite avant écriture. Aucune attribution automatique ni changement de droit optimiste.
+- Chargement/erreur/réessai : ReadState et useEJPRead ; une réponse obsolète n’écrase pas le nouveau périmètre. Pas de cache personnel persistant dans le navigateur. Les erreurs backend restent visibles.
+- Tableaux et graphiques : pas de sélection multiple, pas de nouveau moteur de défilement. Thème et espacements existants ; graphiques sans animation, alternatives textuelles pour les indicateurs, contenu inférieur atteignable sur mobile et paysage.
+
 Périmètre de cette refonte : présentation publique, thème StarLayout et connexion. Les données et les opérations métier existantes restent inchangées.
 
 | Capacité | Propriétaire canonique | Variante touchée | Vérification |

@@ -33,7 +33,7 @@ export default function EspaceServiteurSas() {
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
               Cet espace est réservé aux personnes engagées au service de l'EJP Nantes.
-              Connecte-toi pour accéder à ton tableau de bord, tes départements et tes missions.
+              Connecte-toi pour accéder à ton tableau de bord, tes ministères et tes missions.
             </p>
           </motion.div>
 
@@ -53,7 +53,7 @@ export default function EspaceServiteurSas() {
             <p className="text-xs text-muted-foreground/60 uppercase tracking-widest text-center mb-5">Ce que tu trouveras dans l'espace</p>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { icon: Users, label: 'Mes départements', desc: 'Équipes & missions' },
+                { icon: Users, label: 'Mes ministères', desc: 'Équipes & missions' },
                 { icon: Calendar, label: 'Agenda', desc: 'Cultes & événements' },
                 { icon: MessageCircle, label: 'Communication', desc: 'Groupes & annonces' },
                 { icon: Shield, label: 'Mon profil', desc: 'Rôle & informations' },

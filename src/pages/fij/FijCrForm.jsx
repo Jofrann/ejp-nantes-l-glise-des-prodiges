@@ -110,7 +110,7 @@ export default function FijCrForm() {
           <PageBreadcrumb
             items={[
               { label: 'Tableau de bord', to: '/app' },
-              { label: 'Départements', to: '/app/departements' },
+              { label: 'Ministères', to: '/app/departements' },
               { label: 'FIJ', to: '/app/responsabilites' },
               { label: fij.name, to: `/app/responsabilites/fij-pilote/fij/${id}` },
               { label: 'Nouveau CR', to: location.pathname },

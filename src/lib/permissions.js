@@ -87,7 +87,7 @@ export function getDisplayName(user) {
 
 // === HELPERS DÉPARTEMENT ===
 
-// Retourne les IDs de départements visibles par l'utilisateur
+// Retourne les IDs de ministères visibles par l'utilisateur
 export function getVisibleDepartmentIds(user, memberships = []) {
   if (!user) return [];
   if (isBureauLike(user)) return null; // null = tous visibles
@@ -106,7 +106,7 @@ export function canManageDepartment(user, departmentId, memberships = []) {
   if (!user) return false;
   if (isAdmin(user)) return true;
   if (hasRole(user, 'bergere') || hasBadge(user, 'BERGERE')) return true;
-  // Responsable, référent ou coordinateur du département
+  // Responsable, référent ou coordinateur du ministère
   return memberships.some(m =>
     m.user_id === user.id &&
     m.department_id === departmentId &&
@@ -148,7 +148,7 @@ export function canDeleteDepartmentData(user, departmentId, record, memberships 
   return canManageDepartment(user, departmentId, memberships);
 }
 
-// Retourne le rôle de l'utilisateur dans un département spécifique
+// Retourne le rôle de l'utilisateur dans un ministère spécifique
 export function getRoleInDepartment(user, departmentId, memberships = []) {
   if (!user || !departmentId) return null;
   if (isAdmin(user)) return 'admin';

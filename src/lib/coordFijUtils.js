@@ -1,7 +1,7 @@
 /**
  * coordFijUtils.js — Helper pour la logique de Coordination FIJ.
  *
- * Source principale : DepartmentMember actif dans le département "Coordination FIJ" (slug: coordination-fij).
+ * Source principale : DepartmentMember actif dans le ministère "Coordination FIJ" (slug: coordination-fij).
  * Fallback temporaire : badge COORDINATION_FIJ / role fij_coordination (legacy).
  */
 
@@ -13,7 +13,7 @@ let _coordFijDeptId = null;
 let _coordFijDeptPromise = null;
 
 /**
- * Retourne l'ID du département Coordination FIJ (mis en cache après le premier appel).
+ * Retourne l'ID du ministère Coordination FIJ (mis en cache après le premier appel).
  */
 export async function getCoordFijDeptId() {
   if (_coordFijDeptId) return _coordFijDeptId;
@@ -36,7 +36,7 @@ export async function getCoordFijDeptId() {
 }
 
 /**
- * Charge les memberships du user courant + l'ID du département Coordination FIJ.
+ * Charge les memberships du user courant + l'ID du ministère Coordination FIJ.
  * Retourne { memberships, coordFijDeptId }.
  */
 export async function loadCoordFijContext() {

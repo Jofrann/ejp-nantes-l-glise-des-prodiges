@@ -87,7 +87,7 @@ export default function EditerDepartement() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Supprimer ce département ? Cette action est irréversible.')) return;
+    if (!confirm('Supprimer ce ministère ? Cette action est irréversible.')) return;
     await base44.entities.Department.delete(form.id);
     navigate('/app/departements');
   };
@@ -101,7 +101,7 @@ export default function EditerDepartement() {
   if (!authorized) return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center text-muted-foreground px-5 text-center">
       <p className="text-sm font-semibold text-foreground mb-1">Accès réservé</p>
-      <p className="text-xs text-muted-foreground mb-5 max-w-xs">Seuls les responsables peuvent modifier ce département.</p>
+      <p className="text-xs text-muted-foreground mb-5 max-w-xs">Seuls les responsables peuvent modifier ce ministère.</p>
       <Link to={isNew ? '/app/departements' : `/app/departements/${form.slug || form.id || slugOrId}`} className="text-secondary text-sm">← Retour</Link>
     </div>
   );
@@ -118,18 +118,18 @@ export default function EditerDepartement() {
             isNew
               ? [
                   { label: 'Tableau de bord', to: '/app' },
-                  { label: 'Départements', to: '/app/departements' },
-                  { label: 'Nouveau département', to: '/app/departements/nouveau/parametres' },
+                  { label: 'Ministères', to: '/app/departements' },
+                  { label: 'Nouveau ministère', to: '/app/departements/nouveau/parametres' },
                 ]
               : [
                   { label: 'Tableau de bord', to: '/app' },
-                  { label: 'Départements', to: '/app/departements' },
-                  { label: form.name || 'Département', to: `/app/departements/${deptPath}` },
+                  { label: 'Ministères', to: '/app/departements' },
+                  { label: form.name || 'Ministère', to: `/app/departements/${deptPath}` },
                   { label: 'Paramètres', to: `/app/departements/${deptPath}/parametres` },
                 ]
           }
           backTo={isNew ? '/app/departements' : `/app/departements/${deptPath}`}
-          backLabel={isNew ? '← Départements' : '← Département'}
+          backLabel={isNew ? '← Ministères' : '← Ministère'}
           rightAction={
             <div className="flex items-center gap-3">
               {msg && <span className="text-xs text-success">{msg}</span>}
@@ -145,7 +145,7 @@ export default function EditerDepartement() {
           }
         />
 
-        <h1 className="text-xl font-bold text-foreground mb-6">{isNew ? 'Nouveau département' : 'Modifier le département'}</h1>
+        <h1 className="text-xl font-bold text-foreground mb-6">{isNew ? 'Nouveau ministère' : 'Modifier le ministère'}</h1>
 
         {/* Champs */}
         <div className="space-y-5">
@@ -157,7 +157,7 @@ export default function EditerDepartement() {
 
           <div>
             <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Sous-titre</label>
-            <input className={inputCls} placeholder="Ex: Département musical de l'Église" value={form.description || ''} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
+            <input className={inputCls} placeholder="Ex: Ministère musical de l'Église" value={form.description || ''} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
           </div>
 
           <div>
@@ -165,7 +165,7 @@ export default function EditerDepartement() {
             <textarea
               className={inputCls}
               rows={3}
-              placeholder="Quelques phrases qui décrivent la vision de ce département..."
+              placeholder="Quelques phrases qui décrivent la vision de ce ministère..."
               value={form.mission || ''}
               onChange={e => setForm(f => ({ ...f, mission: e.target.value }))}
             />
@@ -177,7 +177,7 @@ export default function EditerDepartement() {
             <div className="space-y-5">
               <div>
                 <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Attente supérieure</label>
-                <input className={inputCls} placeholder="Ce que ce département vise en priorité..." value={form.attente_superieure || ''} onChange={e => setForm(f => ({ ...f, attente_superieure: e.target.value }))} />
+                <input className={inputCls} placeholder="Ce que ce ministère vise en priorité..." value={form.attente_superieure || ''} onChange={e => setForm(f => ({ ...f, attente_superieure: e.target.value }))} />
               </div>
               <div>
                 <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Rythme de travail</label>
@@ -256,7 +256,7 @@ export default function EditerDepartement() {
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
               <input type="checkbox" checked={form.is_active} onChange={e => setForm(f => ({ ...f, is_active: e.target.checked }))} className="accent-secondary" />
-              Département actif
+              Ministère actif
             </label>
           </div>
 
@@ -267,7 +267,7 @@ export default function EditerDepartement() {
                 onClick={handleDelete}
                 className="flex items-center gap-2 text-xs text-danger/60 hover:text-danger transition-colors"
               >
-                <Trash2 className="w-3.5 h-3.5" /> Supprimer ce département
+                <Trash2 className="w-3.5 h-3.5" /> Supprimer ce ministère
               </button>
             </div>
           )}

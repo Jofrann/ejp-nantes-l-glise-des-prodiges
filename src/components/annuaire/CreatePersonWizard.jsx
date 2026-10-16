@@ -48,7 +48,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
   useEffect(() => {
     if (firstName && lastName) {
       const f = firstName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
-      if (f) setPreviewIdentifier(`${f.charAt(0).toUpperCase()}${f.slice(1)}@prodige`);
+      if (f) setPreviewIdentifier(`${f}@prodiges`);
     }
   }, [firstName, lastName]);
 
@@ -301,19 +301,19 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Services</p>
-                <p className="text-xs text-muted-foreground">Dans quel(s) département(s) sert-elle ? Tu peux en ajouter plusieurs.</p>
+                <p className="text-xs text-muted-foreground">Dans quel(s) ministère(s) sert-elle ? Tu peux en ajouter plusieurs.</p>
               </div>
               {services.length === 0 ? (
                 <div className="text-center py-6 bg-surface/50 rounded-xl">
-                  <p className="text-sm text-muted-foreground mb-2">Aucun département sélectionné.</p>
-                  <button onClick={addService} className="text-xs text-secondary hover:underline">+ Ajouter un département</button>
+                  <p className="text-sm text-muted-foreground mb-2">Aucun ministère sélectionné.</p>
+                  <button onClick={addService} className="text-xs text-secondary hover:underline">+ Ajouter un ministère</button>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {services.map((s, idx) => (
                     <div key={idx} className="bg-card border border-border rounded-xl p-3.5">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-muted-foreground font-medium">Département {idx + 1}</span>
+                        <span className="text-xs text-muted-foreground font-medium">Ministère {idx + 1}</span>
                         <button onClick={() => removeService(idx)} className="text-muted-foreground hover:text-danger"><X className="w-3.5 h-3.5" /></button>
                       </div>
                       <div className="space-y-2">
@@ -322,7 +322,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
                           onChange={e => updateService(idx, 'department_id', e.target.value)}
                           className="w-full bg-white border border-border text-foreground rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-secondary/50"
                         >
-                          <option value="">Choisir un département...</option>
+                          <option value="">Choisir un ministère...</option>
                           {departments.map(d => (
                             <option key={d.id} value={d.id}>{d.name}</option>
                           ))}
@@ -340,7 +340,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
                     </div>
                   ))}
                   <button onClick={addService} className="flex items-center gap-1.5 text-xs font-medium text-secondary hover:text-secondary/80 transition">
-                    + Ajouter un département
+                    + Ajouter un ministère
                   </button>
                 </div>
               )}

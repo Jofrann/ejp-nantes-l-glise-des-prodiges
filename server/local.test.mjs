@@ -54,6 +54,8 @@ test("independent API: authentication, persistence, CRUD, business functions and
       409,
     );
     assert.equal((await call("auth/me")).id, u.id);
+    await call('functions/getPilotageData',{},403);
+    await call('functions/setEJPPermissions',{user_id:u.id,permissions:{canViewAllEJPData:true}});
     const event = await call("entities/Event", {
       method: "create",
       args: [{ title: "Test", is_active: true }],
@@ -126,11 +128,11 @@ test("independent API: authentication, persistence, CRUD, business functions and
     });
     const created = await call("functions/adminManageUser", { action: "create", first_name: "\u00c9lodie", last_name: "Test" });
     assert.ok(created.temporary_password.length >= 12);
-    assert.equal(created.internal_identifier, "Elodie@prodige");
+    assert.equal(created.internal_identifier, "elodie@prodiges");
     const second = await call("functions/adminManageUser", { action: "create", first_name: "\u00c9lodie", last_name: "Autre" });
     assert.notEqual(created.internal_identifier, second.internal_identifier);
     const jofran = await call("functions/adminManageUser", { action: "create", first_name: "Jofran", last_name: "Test" });
-    assert.equal(jofran.internal_identifier, "Jofran@prodige");
+    assert.equal(jofran.internal_identifier, "jofran@prodiges");
     await call("auth/logout", {});
     await call("auth/login", { email: "ADMIN@PRODIGES", password: "testing-password-123" });
     await call("auth/logout", {});

@@ -5,7 +5,7 @@ import { filterActiveMembers, loadUserMap, enrichMembers, enrichAssignments, gro
 /**
  * getWelcomeData — Fonction backend gardien pour les données Accueil.
  *
- * Vérifie l'appartenance au département Accueil, puis renvoie
+ * Vérifie l'appartenance au ministère Accueil, puis renvoie
  * les données autorisées (planning, affectations, visiteurs, profils).
  *
  * CONFIDENTIALITÉ VISITEURS :
@@ -39,7 +39,7 @@ export default async function(req: Request): Promise<Response> {
         performed_by_name: user.full_name || user.email,
         performed_by_role: user.role || '',
       });
-      return Response.json({ access_denied: true, message: 'Tu ne fais pas partie de ce département.' });
+      return Response.json({ access_denied: true, message: 'Tu ne fais pas partie de ce ministère.' });
     }
 
     const department = access.department;

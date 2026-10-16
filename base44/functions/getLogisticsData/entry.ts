@@ -5,7 +5,7 @@ import { filterActiveMembers, loadUserMap, enrichMembers, groupBy } from '../../
 /**
  * getLogisticsData — Fonction backend gardien pour les données Intendance.
  *
- * Vérifie l'appartenance au département Intendance, puis renvoie
+ * Vérifie l'appartenance au ministère Intendance, puis renvoie
  * les données autorisées (planning, tâches, besoins, matériel, profils).
  */
 export default async function(req: Request): Promise<Response> {
@@ -33,7 +33,7 @@ export default async function(req: Request): Promise<Response> {
         performed_by_name: user.full_name || user.email,
         performed_by_role: user.role || '',
       });
-      return Response.json({ access_denied: true, message: 'Tu ne fais pas partie de ce département.' });
+      return Response.json({ access_denied: true, message: 'Tu ne fais pas partie de ce ministère.' });
     }
 
     const department = access.department;

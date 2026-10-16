@@ -2,6 +2,15 @@
   "name": "User",
   "type": "object",
   "properties": {
+    "ejp_permissions": {
+      "type": "object",
+      "description": "Habilitations nominatives gérées et auditées par l’administration, distinctes des rôles et badges",
+      "properties": {
+        "canViewAllEJPData": {"type":"boolean","default":false},
+        "canViewSensitiveEJPData": {"type":"boolean","default":false},
+        "canManagePilotageDecisions": {"type":"boolean","default":false}
+      }
+    },
     "role": {
       "type": "string",
       "enum": [

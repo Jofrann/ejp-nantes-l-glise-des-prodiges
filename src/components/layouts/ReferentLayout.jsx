@@ -6,7 +6,7 @@ import AppHeader from './AppHeader';
 
 const navItems = [
   { path: '/app', label: 'Tableau de bord', icon: Home },
-  { path: '/app/departements', label: 'Départements', icon: Users },
+  { path: '/app/departements', label: 'Ministères', icon: Users },
   { path: '/app/profil', label: 'Mon Profil', icon: User },
   { path: '/', label: 'Site public', icon: BookOpen },
 ];

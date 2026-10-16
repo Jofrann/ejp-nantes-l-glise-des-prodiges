@@ -13,6 +13,8 @@ import { isBureauLike, isAccountBlocked } from '@/lib/permissions';
 import DeptIcon from '@/components/departements/DeptIcon';
 import DeptRoleBadge from '@/components/departements/DeptRoleBadge';
 import DeptOverviewTab from '@/components/departements/DeptOverviewTab';
+import DepartmentAnalytics from '@/components/departements/DepartmentAnalytics';
+import ProgramTeams, { DepartmentPlanningTools } from '@/components/departements/coordination/ProgramTeams';
 import DeptTeamTab from '@/components/departements/DeptTeamTab';
 import DeptMessagesTab from '@/components/departements/DeptMessagesTab';
 import AjouterMembreModal from '@/components/departements/AjouterMembreModal';
@@ -74,7 +76,7 @@ const COLOR_MAP = {
 };
 
 /**
- * PageDepartement — Moteur commun pour afficher un département.
+ * PageDepartement — Moteur commun pour afficher un ministère.
  *
  * Architecture :
  *   1. Utilisateur courant
@@ -84,7 +86,7 @@ const COLOR_MAP = {
  *   5. Configuration des modules (departmentModules.js)
  *   6. Données autorisées (membres, messages)
  *
- * UN MOTEUR COMMUN — pas de page par département.
+ * UN MOTEUR COMMUN — pas de page par ministère.
  * Les modules sont activés selon la configuration centralisée.
  */
 export default function PageDepartement() {
@@ -94,6 +96,7 @@ export default function PageDepartement() {
   const [messages, setMessages] = useState([]);
   const [roleInDept, setRoleInDept] = useState(null);
   const [canManage, setCanManage] = useState(false);
+  const [canAnalyze, setCanAnalyze] = useState(false);
   const [isResponsable, setIsResponsable] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -161,47 +164,48 @@ export default function PageDepartement() {
       setMessages(res.messages || []);
       setRoleInDept(res.role_in_dept || 'membre');
       setCanManage(res.can_manage || false);
+      setCanAnalyze(res.can_analyze === true);
       setIsResponsable(res.is_responsable || false);
       setLoading(false);
 
-      // Charger les données musicales si le département a des modules musique
+      // Charger les données musicales si le ministère a des modules musique
       const modules = getEnabledModules(res.department.slug);
       const hasMusic = modules.some(m => MUSIC_TABS.includes(m));
       if (hasMusic) {
         loadMusicData(res.department.slug);
       }
 
-      // Charger les données sonorisation si le département a des modules sono
+      // Charger les données sonorisation si le ministère a des modules sono
       const hasSound = modules.some(m => SOUND_TABS.includes(m));
       if (hasSound) {
         loadSoundData(res.department.slug);
       }
 
-      // Charger les données MPI si le département a des modules prière
+      // Charger les données MPI si le ministère a des modules prière
       const hasPrayer = modules.some(m => PRAYER_TABS.includes(m));
       if (hasPrayer) {
         loadPrayerData(res.department.slug);
       }
 
-      // Charger les données Accueil si le département a des modules accueil
+      // Charger les données Accueil si le ministère a des modules accueil
       const hasWelcome = modules.some(m => WELCOME_TABS.includes(m));
       if (hasWelcome) {
         loadWelcomeData(res.department.slug);
       }
 
-      // Charger les données Modération si le département a des modules modération
+      // Charger les données Modération si le ministère a des modules modération
       const hasModeration = modules.some(m => MODERATION_TABS.includes(m));
       if (hasModeration) {
         loadModerationData(res.department.slug);
       }
 
-      // Charger les données Intendance si le département a des modules logistique
+      // Charger les données Intendance si le ministère a des modules logistique
       const hasLogistics = modules.some(m => LOGISTICS_TABS.includes(m));
       if (hasLogistics) {
         loadLogisticsData(res.department.slug);
       }
 
-      // Charger les données Coordination si le département a des modules coordination
+      // Charger les données Coordination si le ministère a des modules coordination
       const hasCoordination = modules.some(m => COORDINATION_TABS.includes(m));
       if (hasCoordination) {
         loadCoordinationData(res.department.slug);
@@ -364,8 +368,8 @@ export default function PageDepartement() {
         <div className="w-14 h-14 rounded-2xl bg-surface border border-border flex items-center justify-center mb-5">
           <AlertCircle className="w-6 h-6 text-muted-foreground" />
         </div>
-        <p className="text-sm font-semibold text-foreground mb-1">Département introuvable</p>
-        <p className="text-xs text-muted-foreground mb-5 max-w-xs">Ce département n'existe pas ou n'est plus disponible.</p>
+        <p className="text-sm font-semibold text-foreground mb-1">Ministère introuvable</p>
+        <p className="text-xs text-muted-foreground mb-5 max-w-xs">Ce ministère n'existe pas ou n'est plus disponible.</p>
         <Link to="/app/service" className="text-secondary text-sm">← Retour à Mon Service</Link>
       </div>
     );
@@ -378,7 +382,7 @@ export default function PageDepartement() {
           <Lock className="w-6 h-6 text-danger/60" />
         </div>
         <p className="text-sm font-semibold text-foreground mb-1">Accès restreint</p>
-        <p className="text-xs text-muted-foreground mb-5 max-w-xs">Tu n'as pas accès à cet espace. Ce département nécessite une appartenance active.</p>
+        <p className="text-xs text-muted-foreground mb-5 max-w-xs">Tu n'as pas accès à cet espace. Ce ministère nécessite une appartenance active.</p>
         <Link to="/app/service" className="text-secondary text-sm">← Retour à Mon Service</Link>
       </div>
     );
@@ -391,7 +395,7 @@ export default function PageDepartement() {
           <AlertCircle className="w-6 h-6 text-muted-foreground" />
         </div>
         <p className="text-sm font-semibold text-foreground mb-1">Une erreur est survenue</p>
-        <p className="text-xs text-muted-foreground mb-5">{error || 'Impossible de charger ce département.'}</p>
+        <p className="text-xs text-muted-foreground mb-5">{error || 'Impossible de charger ce ministère.'}</p>
         <Link to="/app/service" className="text-secondary text-sm">← Retour à Mon Service</Link>
       </div>
     );
@@ -400,7 +404,7 @@ export default function PageDepartement() {
   // === Page principale ===
 
   const colors = COLOR_MAP[dept.color] || COLOR_MAP.amber;
-  const enabledModules = getEnabledModules(dept.slug);
+  const enabledModules = [...getEnabledModules(dept.slug), ...(canAnalyze ? ['analytics'] : [])];
   const currentTab = enabledModules.includes(activeTab) ? activeTab : enabledModules[0];
   const isAdmin = isBureauLike(user);
   const canPost = isAdmin || isResponsable;
@@ -424,7 +428,7 @@ export default function PageDepartement() {
             <span className="text-xs text-muted-foreground truncate">{dept.name}</span>
           </div>
 
-          {/* Identité département */}
+          {/* Identité ministère */}
           <div className="py-2.5 flex items-center gap-3">
             <div className={`w-9 h-9 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0`}>
               <DeptIcon name={dept.icon} className={`w-4 h-4 ${colors.text}`} />
@@ -530,6 +534,8 @@ export default function PageDepartement() {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.15 }}
             >
+              {currentTab === 'analytics' && <><DepartmentAnalytics departmentId={dept.id} /><DepartmentPlanningTools departmentId={dept.id}/></>}
+              {currentTab === 'program_teams' && <ProgramTeams />}
               {currentTab === 'overview' && (
                 <>
                   {musicData && MUSIC_TABS.some(t => enabledModules.includes(t)) ? (

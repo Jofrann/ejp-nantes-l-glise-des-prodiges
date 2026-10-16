@@ -1,15 +1,16 @@
+import { findOfficialStructure, isRetiredStructure } from './officialStructures.js';
 /**
- * departmentModules.js — Configuration modulaire centralisée des départements.
+ * departmentModules.js — Configuration modulaire centralisée des ministères.
  *
  * Principe : UN MOTEUR COMMUN + DES MODULES ACTIVABLES SELON LE DÉPARTEMENT.
  *
  * Lot 3 V1 — Modules réellement implémentés :
  *   - overview  : Aperçu (mission, rôle, référents, infos clés)
  *   - team      : Équipe (membres actifs avec rôles)
- *   - messages  : Actualités (DeptMessage scopé au département)
+ *   - messages  : Actualités (DeptMessage scopé au ministère)
  *
  * Modules NON implémentés faute de source métier départementale validée :
- *   - meetings  : Event est global, pas scopé par département
+ *   - meetings  : Event est global, pas scopé par ministère
  *   - resources : StarResource n'a pas de champ department_id
  *   - objectives: Aucune entité DepartmentObjective validée
  *
@@ -20,6 +21,7 @@
 
 // Modules réellement implémentés dans le Lot 3 + Lot 4A (Musique) + Lot 4B (Sono) + Lot 4C (MPI) + Lot 4D (Accueil/Modération/Intendance)
 export const IMPLEMENTED_MODULES = [
+  'program_teams',
   'overview', 'team', 'messages',
   'music_planning', 'music_rehearsals', 'music_setlists', 'music_repertoire', 'music_availability',
   'sound_planning', 'sound_positions', 'sound_equipment', 'sound_checklists', 'sound_incidents',
@@ -32,6 +34,8 @@ export const IMPLEMENTED_MODULES = [
 
 // Métadonnées d'affichage des modules (labels, icônes Lucide)
 export const MODULE_META = {
+  program_teams: { label: 'Équipes des programmes', icon: 'Calendar' },
+  analytics: { label: 'Suivi de l’équipe', icon: 'BarChart3' },
   overview:           { label: 'Aperçu',      icon: 'LayoutDashboard' },
   team:               { label: 'Équipe',      icon: 'Users' },
   messages:           { label: 'Actualités',   icon: 'MessageCircle' },
@@ -70,10 +74,10 @@ export const MODULE_META = {
   objectives:{ label: 'Objectifs', icon: 'Target' },
 };
 
-// Modules communs à tous les départements (Lot 3 V1)
+// Modules communs à tous les ministères (Lot 3 V1)
 const DEFAULT_MODULES = ['overview', 'team', 'messages'];
 
-// Overrides par slug de département (extensible pour les lots futurs)
+// Overrides par slug de ministère (extensible pour les lots futurs)
 // Si un slug n'est pas listé, il utilise DEFAULT_MODULES.
 const DEPARTMENT_OVERRIDES = {
   'prodiges-musique': [
@@ -132,6 +136,7 @@ const DEPARTMENT_OVERRIDES = {
   ],
   'coordination': [
     'overview',
+    'program_teams',
     'coordination_planning',
     'coordination_followups',
     'coordination_attention',
@@ -142,18 +147,18 @@ const DEPARTMENT_OVERRIDES = {
   ],
 };
 
-// Départements qui redirigent vers un espace spécialisé au lieu d'une page départementale générique.
-// Ces départements ont une application métier dédiée (FIJ).
+// Ministères qui redirigent vers un espace spécialisé au lieu d'une page départementale générique.
+// Ces ministères ont une application métier dédiée (FIJ).
 const DEPARTMENT_REDIRECTS = {
   'pilote-fij':      '/app/responsabilites/fij-pilote',
 };
 
-// Départements masqués de la liste "Mes Services" car ils sont gérés
+// Ministères masqués de la liste "Mes Services" car ils sont gérés
 // via les responsabilités spécialisées (Pilote FIJ via FIJ.pilot_user_id,
 // Coordination FIJ via DepartmentMember → coordination-fij).
 const HIDDEN_FROM_SERVICE = ['pilote-fij'];
 
-// Départements qui ont un lien vers un espace métier spécialisé dans leur page générique.
+// Ministères qui ont un lien vers un espace métier spécialisé dans leur page générique.
 // La page départementale s'affiche normalement, mais un lien vers l'espace métier est ajouté.
 const SPECIALIZED_SPACE_LINK = {
   'fij': {
@@ -169,31 +174,32 @@ const SPECIALIZED_SPACE_LINK = {
 };
 
 /**
- * Retourne la liste des modules activés pour un département (filtrés par IMPLEMENTED_MODULES).
+ * Retourne la liste des modules activés pour un ministère (filtrés par IMPLEMENTED_MODULES).
  */
 export function getEnabledModules(deptSlug) {
-  const configured = DEPARTMENT_OVERRIDES[deptSlug] || DEFAULT_MODULES;
+  if (isRetiredStructure({ slug: deptSlug })) return [];
+  const configured = DEPARTMENT_OVERRIDES[findOfficialStructure({ slug: deptSlug })?.slug || deptSlug] || DEFAULT_MODULES;
   return configured.filter(m => IMPLEMENTED_MODULES.includes(m));
 }
 
 /**
- * Retourne l'URL de redirection si le département doit rediriger vers un espace spécialisé.
- * Retourne null si le département doit afficher sa page générique.
+ * Retourne l'URL de redirection si le ministère doit rediriger vers un espace spécialisé.
+ * Retourne null si le ministère doit afficher sa page générique.
  */
 export function getRedirectForSlug(deptSlug) {
   return DEPARTMENT_REDIRECTS[deptSlug] || null;
 }
 
 /**
- * Retourne true si le département ne doit pas apparaître dans "Mes Services".
+ * Retourne true si le ministère ne doit pas apparaître dans "Mes Services".
  */
 export function isHiddenFromService(deptSlug) {
-  return HIDDEN_FROM_SERVICE.includes(deptSlug);
+  return HIDDEN_FROM_SERVICE.includes(deptSlug) || isRetiredStructure({ slug: deptSlug });
 }
 
 /**
- * Retourne les informations du lien vers l'espace spécialisé pour un département.
- * Retourne null si le département n'a pas d'espace spécialisé.
+ * Retourne les informations du lien vers l'espace spécialisé pour un ministère.
+ * Retourne null si le ministère n'a pas d'espace spécialisé.
  */
 export function getSpecializedSpaceLink(deptSlug) {
   return SPECIALIZED_SPACE_LINK[deptSlug] || null;
@@ -203,7 +209,7 @@ export function getSpecializedSpaceLink(deptSlug) {
  * Documentation des modules non implémentés (pour le rapport).
  */
 export const NOT_IMPLEMENTED_MODULES = {
-  meetings: 'Aucune source de réunions départementales validée — Event est global, pas scopé par département.',
-  resources: 'StarResource n\'est pas scopée par département (pas de champ department_id).',
+  meetings: 'Aucune source de réunions départementales validée — Event est global, pas scopé par ministère.',
+  resources: 'StarResource n\'est pas scopée par ministère (pas de champ department_id).',
   objectives: 'Aucune entité DepartmentObjective validée — les objectifs actuels sont personnels (PersonalGoal), pas départementaux.',
 };

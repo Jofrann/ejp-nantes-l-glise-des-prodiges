@@ -12,7 +12,7 @@ import { PROFILE_FUNCTION_SHORT as COORDINATION_FUNCTION_SHORT } from '@/lib/coo
 /**
  * DeptTeamTab — Onglet Équipe du moteur départemental.
  *
- * Affiche TOUS les membres actifs du département (référents + serviteurs),
+ * Affiche TOUS les membres actifs du ministère (référents + serviteurs),
  * avec leur rôle et internal_identifier.
  *
  * IMPORTANT : N'affiche JAMAIS le vrai email technique.
@@ -20,8 +20,8 @@ import { PROFILE_FUNCTION_SHORT as COORDINATION_FUNCTION_SHORT } from '@/lib/coo
  * (les capacités de gestion sont limitées à l'admin via Annuaire).
  */
 export default function DeptTeamTab({ members, colors, musicProfiles = null, soundProfiles = null, prayerProfiles = null, welcomeProfiles = null, moderationProfiles = null, logisticsProfiles = null, coordinationProfiles = null, departmentType = null }) {
-  // CLOISONNEMENT : ne construire que la map correspondant au département courant.
-  // Les profils spécialisés des autres départements ne sont pas chargés ni affichés.
+  // CLOISONNEMENT : ne construire que la map correspondant au ministère courant.
+  // Les profils spécialisés des autres ministères ne sont pas chargés ni affichés.
   const musicProfileMap = {};
   if (musicProfiles && departmentType === 'music') {
     musicProfiles.forEach(p => { if (p.user_id) musicProfileMap[p.user_id] = p; });

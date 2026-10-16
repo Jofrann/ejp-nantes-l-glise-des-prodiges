@@ -5,14 +5,14 @@ import { filterActiveMembers, loadUserMap, enrichMembers, groupBy } from '../../
 /**
  * getCoordinationData — Fonction backend gardien pour les données Coordination.
  *
- * Vérifie l'appartenance au département Coordination, puis renvoie
+ * Vérifie l'appartenance au ministère Coordination, puis renvoie
  * les données autorisées (planning, suivis, points d'attention, réunions, rapports, profils).
  *
  * CLOISONNEMENT :
- * - NE charge JAMAIS les données des autres départements.
+ * - NE charge JAMAIS les données des autres ministères.
  * - NE charge pas MusicAssignment, SoundEquipment, PrayerSchedule, VisitorContact,
  *   ModerationRunItem, LogisticsTask, FIJ, etc.
- * - Un Event référencé ne donne aucun accès aux modules des autres départements.
+ * - Un Event référencé ne donne aucun accès aux modules des autres ministères.
  */
 export default async function(req: Request): Promise<Response> {
   try {
@@ -39,7 +39,7 @@ export default async function(req: Request): Promise<Response> {
         performed_by_name: user.full_name || user.email,
         performed_by_role: user.role || '',
       });
-      return Response.json({ access_denied: true, message: 'Tu ne fais pas partie de ce département.' });
+      return Response.json({ access_denied: true, message: 'Tu ne fais pas partie de ce ministère.' });
     }
 
     const department = access.department;
@@ -61,7 +61,7 @@ export default async function(req: Request): Promise<Response> {
     const activeMembers = filterActiveMembers(members);
 
     // Filtrage des suivis : les membres ordinaires ne voient que leurs propres suivis
-    // Les responsables voient tous les suivis du département
+    // Les responsables voient tous les suivis du ministère
     let visibleFollowups: any[] = followups || [];
     if (!isResponsable) {
       visibleFollowups = (followups || []).filter((f: any) => f.assigned_to === userId || f.created_by === userId);

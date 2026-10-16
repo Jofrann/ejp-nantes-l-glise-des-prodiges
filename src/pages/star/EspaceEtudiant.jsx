@@ -25,10 +25,15 @@ export default function EspaceEtudiant() {
   const [resources, setResources] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [allowed,setAllowed]=useState(false);
+  const [loadError,setLoadError]=useState('');
   const [activeTab, setActiveTab] = useState('parcours');
 
   useEffect(() => {
-    Promise.all([
+    base44.functions.invoke('getAcademicEligibility',{}).then(result=>{
+      if(!result.data.is_student){setLoading(false);return;}
+      setAllowed(true);
+      return Promise.all([
       base44.auth.me(),
       base44.personal.ServantJourney.list('-updated_date', 1),
       base44.personal.PersonalGoal.filter({}, '-created_date', 50),
@@ -41,7 +46,7 @@ export default function EspaceEtudiant() {
       setResources(r || []);
       setAppointments(appt || []);
       setLoading(false);
-    }).catch(() => setLoading(false));
+    });}).catch(e=>{setLoadError(e.message);setLoading(false);});
   }, []);
 
   if (loading) {
@@ -52,6 +57,8 @@ export default function EspaceEtudiant() {
     );
   }
 
+  if(loadError)return <p role="alert" className="p-6">{loadError}</p>;
+  if(!allowed)return <div className="p-6"><h1 className="text-xl font-semibold">Vie Académique</h1><p className="my-3">Cet espace est accessible selon le badge Étudiant ou la situation d’études enregistrée dans ton parcours.</p><Link className="text-secondary underline" to="/app/espace-personnel">Mettre à jour mon parcours</Link></div>;
   const academicGoals = goals.filter(g => g.category === 'academique' || g.category === 'professionnel');
   const studentResources = resources.filter(r =>
     r.category === 'document' || r.category === 'lien' || r.category === 'livre' || r.category === 'video'

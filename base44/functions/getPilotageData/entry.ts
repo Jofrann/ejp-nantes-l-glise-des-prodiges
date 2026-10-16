@@ -36,6 +36,7 @@ export default async function(req: Request): Promise<Response> {
       return Response.json({ access_denied: true, message: 'Accès Pilotage non autorisé.' }, { status: 403 });
     }
 
+    if (user?.ejp_permissions?.canViewAllEJPData !== true) return Response.json({access_granted:true,can_view_all_data:false,can_manage_decisions:true,decisions:await base44.asServiceRole.entities.PilotageDecision.list('-created_date',100),alerts:[]});
     const today = new Date().toISOString().split('T')[0];
     const in14Days = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0];
 
@@ -60,7 +61,7 @@ export default async function(req: Request): Promise<Response> {
     const dismissalList = dismissals || [];
     const users = totalUsers || [];
 
-    // === 2. Map des membres par département ===
+    // === 2. Map des membres par ministère ===
     const membersByDept: Record<string, any[]> = {};
     (members || []).forEach((m: any) => {
       if (!membersByDept[m.department_id]) membersByDept[m.department_id] = [];
@@ -100,7 +101,7 @@ export default async function(req: Request): Promise<Response> {
     const alerts: any[] = [];
     const dismissedKeys = new Set((dismissalList || []).map((d: any) => d.alert_key));
 
-    // 4a. Départements sans responsable
+    // 4a. Ministères sans responsable
     (depts || []).forEach((dept: any) => {
       const deptMembers = membersByDept[dept.id] || [];
       const hasResponsable = deptMembers.some((m: any) =>
@@ -112,7 +113,7 @@ export default async function(req: Request): Promise<Response> {
           level: 'IMPORTANT',
           title: `${dept.name} : aucun responsable désigné`,
           description: `${deptMembers.length} membre(s) actif(s) mais aucun responsable, référent ou coordinateur.`,
-          action_label: 'Voir le département',
+          action_label: 'Voir le ministère',
           action_url: `/app/pilotage/departements/${dept.slug}`,
           source_type: 'department',
           source_id: dept.id,
@@ -245,7 +246,7 @@ export default async function(req: Request): Promise<Response> {
     // Filtrer les alertes masquées
     const visibleAlerts = alerts.filter((a: any) => !dismissedKeys.has(a.key));
 
-    // === 5. Santé des départements ===
+    // === 5. Santé des ministères ===
     const deptHealthMap: Record<string, any> = {};
     (depts || []).forEach((dept: any) => {
       const deptMembers = membersByDept[dept.id] || [];
@@ -461,8 +462,8 @@ export default async function(req: Request): Promise<Response> {
       }),
     };
 
-    // === 11b. Départements accessibles par l'utilisateur courant ===
-    // Un utilisateur Pilotage voit la synthèse de TOUS les départements,
+    // === 11b. Ministères accessibles par l'utilisateur courant ===
+    // Un utilisateur Pilotage voit la synthèse de TOUS les ministères,
     // mais ne peut ouvrir l'espace opérationnel que s'il en est membre (ou admin/bergere).
     const userRoles = Array.isArray(user.roles) && user.roles.length > 0
       ? user.roles
@@ -481,6 +482,8 @@ export default async function(req: Request): Promise<Response> {
     // === 12. Réponse finale ===
     return Response.json({
       access_granted: true,
+      can_view_all_data: user?.ejp_permissions?.canViewAllEJPData === true,
+      can_manage_decisions: user?.ejp_permissions?.canManagePilotageDecisions === true,
       user: {
         id: user.id,
         full_name: user.full_name || user.email,

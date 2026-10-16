@@ -9,6 +9,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import { PILOTAGE_TABS } from '@/lib/pilotageConstants';
 import PilotageOverviewTab from '@/components/pilotage/PilotageOverviewTab';
+import LeaderDataBrowser from '@/components/pilotage/LeaderDataBrowser';
 import PilotageDepartmentsTab from '@/components/pilotage/PilotageDepartmentsTab';
 import PilotagePeopleTab from '@/components/pilotage/PilotagePeopleTab';
 import PilotageGrowthTab from '@/components/pilotage/PilotageGrowthTab';
@@ -39,6 +40,7 @@ export default function Pilotage() {
         setError(res.error);
       } else {
         setData(res);
+        if(!res.can_view_all_data)setActiveTab('decisions');
       }
     } catch (e) {
       const msg = e?.message || e?.toString() || '';
@@ -146,7 +148,7 @@ export default function Pilotage() {
 
           {/* Navigation par onglets */}
           <div className="flex items-center gap-1 overflow-x-auto scrollbar-none -mx-1 px-1 pb-2">
-            {PILOTAGE_TABS.map(tab => {
+            {[...PILOTAGE_TABS.filter(t=>data.can_view_all_data || t.id==='decisions'), ...(data.can_view_all_data ? [{id:'details',label:'Données détaillées',icon:'Building2'}] : [])].map(tab => {
               const Icon = ICON_MAP[tab.icon] || LayoutDashboard;
               const active = activeTab === tab.id;
               const badge = tab.id === 'alerts' ? alertCount : tab.id === 'decisions' ? openDecisions : 0;
@@ -188,6 +190,7 @@ export default function Pilotage() {
               {activeTab === 'overview' && (
                 <PilotageOverviewTab data={data} onNavigateTab={setActiveTab} />
               )}
+              {activeTab === 'details' && data.can_view_all_data && <LeaderDataBrowser />}
               {activeTab === 'departments' && (
                 <PilotageDepartmentsTab data={data} />
               )}

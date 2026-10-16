@@ -1,4 +1,5 @@
 import IntegrationSettings from '@/components/admin/IntegrationSettings';
+import EJPPermissions from '@/components/admin/EJPPermissions';
 import { useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
@@ -11,6 +12,7 @@ import AdminRessourcesTab from '@/components/admin/AdminRessourcesTab';
 import FirstVisitIntentsTab from '@/components/admin/FirstVisitIntentsTab';
 
 const TABS = [
+  { id: 'ejp-permissions', label: 'Habilitations EJP', icon: Users },
   { id: 'integrations', label: 'Fichiers & Intégrations', icon: Settings },
   { id: 'hero', label: 'Hero & Général', icon: Church },
   { id: 'leaders', label: 'Leaders', icon: Users },
@@ -149,6 +151,7 @@ export default function AdminHome() {
           {tab === 'formations' && <AdminFormationsTab />}
           {tab === 'ressources' && <AdminRessourcesTab />}
           {tab === 'integrations' && <IntegrationSettings />}
+          {tab === 'ejp-permissions' && <EJPPermissions />}
           {tab === 'hero' && config && (
             <>
               <Section title="Contenu Hero">

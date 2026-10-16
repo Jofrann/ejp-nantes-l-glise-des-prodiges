@@ -3,12 +3,14 @@ import { useAuth } from '@/lib/AuthContext';
 import { hasAnyRole, isAdmin, isBureauLike } from '@/lib/permissions';
 import { ShieldCheck, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { canAccessEJPPilotage } from '@/lib/ejpAccess';
 
-export default function RoleGuard({ allowedRoles, children }) {
+export default function RoleGuard({ allowedRoles, allowEJPRead = false, children }) {
   const { user } = useAuth();
 
   // Si l'utilisateur n'est pas encore chargé, on laisse passer — ProtectedRoute gère le loading
   if (!user) return null;
+  if (allowEJPRead && canAccessEJPPilotage(user)) return children;
 
   if (hasAnyRole(user, allowedRoles) || (allowedRoles.includes('admin') && isAdmin(user)) || (allowedRoles.includes('bureau') && isBureauLike(user))) return children;
 
