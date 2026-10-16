@@ -139,6 +139,7 @@ export default function PublicTextsEditor({
         .toLocaleLowerCase("fr")
         .includes(query.toLocaleLowerCase("fr")),
   );
+  const matchCount = matching.length + (section === "all" ? fields.length : 0);
   const update = (id, value) =>
     setConfig((current) => ({
       ...current,
@@ -228,7 +229,7 @@ export default function PublicTextsEditor({
         ))}
       {section !== "shared" && (
         <p className="text-xs text-muted-foreground">
-          {matching.length} textes · Les champs ci-dessous correspondent au
+          {matchCount} textes · Les champs ci-dessous correspondent au
           contenu existant.
         </p>
       )}
@@ -257,7 +258,7 @@ export default function PublicTextsEditor({
             </span>
           </label>
         ))}
-      {section !== "shared" && !matching.length && (
+      {section !== "shared" && !matchCount && (
         <p role="status">Aucun texte ne correspond à cette recherche.</p>
       )}
       <div className="rounded-2xl border border-border bg-white p-5">
