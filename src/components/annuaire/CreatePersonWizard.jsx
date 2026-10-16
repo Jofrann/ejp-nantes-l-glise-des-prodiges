@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { isActiveDepartment } from '@/lib/departmentState';
 import { base44 } from '@/api/base44Client';
 import { X, Loader2, Check, ChevronRight, ChevronLeft, User, Mail, Award, Users, Heart, CheckCircle2, Info } from 'lucide-react';
 import { BADGES, DEPT_ROLES, getBadgeLabel, getRoleLabel } from '@/lib/annuaireConstants';
@@ -34,7 +35,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
 
   useEffect(() => {
     base44.entities.Department.filter({ is_active: true }, { sort: 'display_order', limit: 50 }).then(res => {
-      const list = (res?.items || res || []).filter(d => d.status === 'active');
+      const list = (res?.items || res || []).filter(isActiveDepartment);
       setDepartments(list);
     });
     base44.entities.FIJ.filter({ is_active: true }, { limit: 50 }).then(res => {
