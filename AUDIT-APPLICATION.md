@@ -22,12 +22,15 @@ flowchart LR
  D --> E[Retrait de l’affectation : accès révoqué]
 ```
 
+| Zone de notifications invisible interceptant les clics en paysage | Conteneur non bloquant, fermeture et expiration des notifications rétablies |
+
 ## Vérifications réalisées
 
 - Quatre suites automatisées passent : initialisation admin sans écrasement, API et persistance, serveur web, parcours départements et autorisations.
 - Navigateur : création de département, affectation depuis la fiche d’annuaire, connexion du serviteur, remplacement du mot de passe initial et ouverture du département.
 - 92 adresses internes visitées pour chacun des deux profils admin et serviteur : pas d’erreur JavaScript, d’erreur HTTP inattendue ni de débordement horizontal détecté à 390 × 844. Cela couvre la navigation, pas toutes les opérations de chaque écran.
 - Contrôles responsive locaux : 55 combinaisons de pages et tailles lors de la correction des barres fixes.
+- Navigation en paysage 844 × 390 : ouverture du panneau Plan STAR et limites du panneau vérifiées après correction des notifications.
 - Isolation des notes privées, refus de l’auto-attribution de droits, retrait d’affectation et refus d’accès d’un compte suspendu vérifiés par tests serveur.
 
 ## Limites identifiées
