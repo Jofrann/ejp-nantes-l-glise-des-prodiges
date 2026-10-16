@@ -150,7 +150,7 @@ export default function PublicTextsEditor({
         <p className="text-xs uppercase tracking-widest text-[#dcc38c]">
           Site public
         </p>
-        <h2 className="text-2xl font-semibold mt-2">Vos mots, partout.</h2>
+        <h2 className="!text-2xl !text-white font-semibold mt-2">Vos mots, partout.</h2>
         <p className="text-sm text-white/75 mt-3">
           Les textes affichés sont déjà remplis. Modifiez une section, vérifiez
           le résultat puis publiez vos modifications.
