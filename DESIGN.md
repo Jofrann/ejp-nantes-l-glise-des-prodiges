@@ -57,3 +57,12 @@ AdminHome ouvre Photos du site par défaut. PublicPhotosEditor présente six emp
 GalleryAdmin conserve la source GalleryMedia et enregistre ses propres opérations immédiatement. Modifier titre/description/fichier, masquer/afficher, monter/descendre et retirer sont visibles au toucher. Retirer demande confirmation et ne détruit pas le fichier utilisé ailleurs. Les liens ouvrent Accueil → Galerie. Home charge jusqu’à 1000 médias actifs au lieu de huit ; GalerieVivante en montre neuf puis propose la suite. Une vidéo sans miniature utilise un élément video plutôt qu’un img pointant vers le fichier vidéo.
 
 Le stockage et les autorisations de server/files.mjs restent les propriétaires de l’upload. Les formulaires réutilisent le Dialog partagé. Aucun import de données de test en production. Les photos ne sont pas modifiées automatiquement au déploiement.
+
+
+## Édition des textes publics
+
+PublicTextsEditor étend AdminHome et ChurchConfig ; public_copy est la source des textes de présentation, les champs publics existants restent la source des horaires, de l’adresse et des présentations partagées. Les champs montrent le texte effectif. La recherche et les sections remplacent une liste indifférenciée. Les informations répétées utilisent {{jour}}, {{horaire}} et {{adresse}}. Un état visible distingue les modifications non publiées.
+
+Aperçu : Dialog Radix partagé, iframe des vraies routes publiques, sélection page/ordinateur/téléphone, fermeture et Échap accessibles. Transfert postMessage limité à même origine/source/canal et vérification administrateur actif sans première connexion ; liste explicite de champs publics, aucune intégration privée. Aucun envoi de formulaire ni navigation externe dans l’aperçu. Publier utilise le CRUD ChurchConfig existant. En cas d’erreur les valeurs restent dans le formulaire. Les listes métier conservent leur enregistrement immédiat, signalé explicitement.
+
+PublicText et usePublicText rendent des chaînes React échappées, sans moteur de traduction du DOM. Le calendrier et le compte à rebours partagent publicSchedule.js et le fuseau Europe/Paris. Le serveur valide les textes publics et le jour/heure du culte. Les champs du formulaire de visite possèdent des identifiants uniques liés à leurs libellés.

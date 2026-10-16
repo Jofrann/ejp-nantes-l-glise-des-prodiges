@@ -1,3 +1,4 @@
+import { PublicCopyProvider } from '@/components/public/PublicCopy';
 import StarAssistant from '@/pages/star/Assistant';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -281,7 +282,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <NavigationTracker />
-          <AuthenticatedApp />
+          <PublicCopyProvider><AuthenticatedApp /></PublicCopyProvider>
         </Router>
         <Toaster />
 

@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { DoorOpen, HandHeart, Users, Coffee } from 'lucide-react';
 import RevealOnScroll from '../RevealOnScroll';
@@ -34,13 +35,9 @@ export default function PremiereFois() {
     <section id="premiere-fois" className="py-20 md:py-28 px-5 md:px-8 bg-white">
       <div className="max-w-5xl mx-auto">
         <RevealOnScroll className="text-center mb-12">
-          <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold">Première fois</span>
-          <h2 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-4 font-medium leading-tight">
-            Tu viens pour la première fois ?
-          </h2>
-          <p className="text-[#4B5563] text-base max-w-xl mx-auto leading-relaxed">
-            Tu n'as pas besoin de tout connaître avant d'arriver. Notre équipe t'accueille, t'oriente et t'aide à vivre ce temps simplement.
-          </p>
+          <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold"><PublicText value={"Première fois"} /></span>
+          <h2 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-4 font-medium leading-tight"><PublicText value={"Tu viens pour la première fois ?"} /></h2>
+          <p className="text-[#4B5563] text-base max-w-xl mx-auto leading-relaxed"><PublicText value={"Tu n'as pas besoin de tout connaître avant d'arriver. Notre équipe t'accueille, t'oriente et t'aide à vivre ce temps simplement."} /></p>
         </RevealOnScroll>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -52,9 +49,9 @@ export default function PremiereFois() {
                   <div className={`w-12 h-12 rounded-2xl ${card.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <Icon className="w-5 h-5 text-[#101827]" />
                   </div>
-                  <div className="text-xs text-[#D8B76A] font-semibold mb-1">Étape {i + 1}</div>
-                  <h3 className="font-heading text-lg font-semibold text-[#101827] mb-2">{card.title}</h3>
-                  <p className="text-sm text-[#4B5563] leading-relaxed">{card.text}</p>
+                  <div className="text-xs text-[#D8B76A] font-semibold mb-1"><PublicText value={"Étape "} /><PublicText value={i + 1} /></div>
+                  <h3 className="font-heading text-lg font-semibold text-[#101827] mb-2"><PublicText value={card.title} /></h3>
+                  <p className="text-sm text-[#4B5563] leading-relaxed"><PublicText value={card.text} /></p>
                 </div>
               </RevealOnScroll>
             );

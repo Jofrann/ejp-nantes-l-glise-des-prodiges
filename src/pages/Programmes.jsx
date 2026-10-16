@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -54,56 +55,48 @@ export default function Programmes() {
       {/* Hero */}
       <section className="ejp-page-intro">
         <RevealOnScroll>
-          <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">EJP Nantes</p>
-          <h1 className="font-display text-5xl md:text-7xl text-[#101827] leading-tight mb-6">
-            Nos rendez-vous
-          </h1>
-          <p className="text-[#4B5563] text-lg max-w-xl mx-auto leading-relaxed">
-            Des rendez-vous réguliers et exceptionnels pour grandir, se retrouver et servir ensemble.
-          </p>
+          <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4"><PublicText value={"EJP Nantes"} /></p>
+          <h1 className="font-display text-5xl md:text-7xl text-[#101827] leading-tight mb-6"><PublicText value={"Nos rendez-vous"} /></h1>
+          <p className="text-[#4B5563] text-lg max-w-xl mx-auto leading-relaxed"><PublicText value={"Des rendez-vous réguliers et exceptionnels pour grandir, se retrouver et servir ensemble."} /></p>
         </RevealOnScroll>
       </section>
 
       <EditorialPhoto className="ejp-page-photo" src={config?.hero_image_url} photo={PUBLIC_PHOTOS.worship} />
 
-      {eventsError && <p role="status" className="px-6 py-5 text-center text-sm text-[#4B5563]">Le calendrier est momentanément indisponible. Les informations de nos rendez-vous réguliers restent ci-dessous.</p>}
+      {eventsError && <p role="status" className="px-6 py-5 text-center text-sm text-[#4B5563]"><PublicText value={"Le calendrier est momentanément indisponible. Les informations de nos rendez-vous réguliers restent ci-dessous."} /></p>}
       {/* 1. Réunion de jeunesse */}
       <section id="reunion" className="py-24 px-6">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <RevealOnScroll>
-            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">Chaque dimanche</p>
-            <h2 className="font-display text-4xl md:text-5xl text-[#101827] mb-6">Réunion de jeunesse</h2>
-            <p className="text-[#4B5563] leading-relaxed mb-6">
-              Le cœur battant de l'EJP. Chaque dimanche à 15h, la communauté se réunit pour la louange, la prière et l'enseignement de la Parole. Trois cultes par dimanche, trois moments pour rencontrer Dieu.
-            </p>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4"><PublicText value={"Chaque dimanche"} /></p>
+            <h2 className="font-display text-4xl md:text-5xl text-[#101827] mb-6"><PublicText value={"Réunion de jeunesse"} /></h2>
+            <p className="text-[#4B5563] leading-relaxed mb-6"><PublicText value={"Le cœur battant de l'EJP. Chaque dimanche à 15h, la communauté se réunit pour la louange, la prière et l'enseignement de la Parole. Trois cultes par dimanche, trois moments pour rencontrer Dieu."} /></p>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
                   <Clock className="w-4 h-4 text-[#D8B76A]" />
                 </div>
-                <span>Chaque dimanche à <strong className="text-[#101827]">{config?.service_time?.replace(':', 'h') || config?.culte_time || '15h00'}</strong></span>
+                <span><PublicText value={"Chaque dimanche à "} /><strong className="text-[#101827]"><PublicText value={config?.service_time?.replace(':', 'h') || config?.culte_time || '15h00'} /></strong></span>
               </div>
               <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-4 h-4 text-[#D8B76A]" />
                 </div>
-                <span>{config?.address || 'Nantes, France'}</span>
+                <span><PublicText value={config?.address_label || 'Nantes, France'} /></span>
               </div>
               <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
                   <Users className="w-4 h-4 text-[#D8B76A]" />
                 </div>
-                <span>Ouvert à tous — entrée libre</span>
+                <span><PublicText value={"Ouvert à tous — entrée libre"} /></span>
               </div>
             </div>
           </RevealOnScroll>
           <RevealOnScroll>
             <div className="bg-[#101827] rounded-3xl p-10 text-white text-center">
-              <p className="font-display text-7xl text-[#D8B76A] font-bold mb-2">3</p>
-              <p className="font-heading font-semibold text-lg mb-4">cultes chaque dimanche</p>
-              <p className="text-white/60 text-sm leading-relaxed">
-                Louange · Prière · Parole · Fraternité
-              </p>
+              <p className="font-display text-7xl text-[#D8B76A] font-bold mb-2"><PublicText value={"3"} /></p>
+              <p className="font-heading font-semibold text-lg mb-4"><PublicText value={"cultes chaque dimanche"} /></p>
+              <p className="text-white/60 text-sm leading-relaxed"><PublicText value={"Louange · Prière · Parole · Fraternité"} /></p>
             </div>
           </RevealOnScroll>
         </div>
@@ -113,7 +106,7 @@ export default function Programmes() {
       <section className="bg-[#F5F0E8] py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <RevealOnScroll>
-            <h3 className="font-heading text-xl font-bold text-[#101827] mb-8 text-center">Ce qui se passe chaque dimanche</h3>
+            <h3 className="font-heading text-xl font-bold text-[#101827] mb-8 text-center"><PublicText value={"Ce qui se passe chaque dimanche"} /></h3>
           </RevealOnScroll>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -127,8 +120,8 @@ export default function Programmes() {
                   <div className="w-10 h-10 rounded-xl bg-[#EAF0F8] flex items-center justify-center mx-auto mb-3">
                     <item.icon className="w-5 h-5 text-[#D8B76A]" />
                   </div>
-                  <p className="font-heading font-semibold text-[#101827] text-sm">{item.label}</p>
-                  <p className="text-xs text-[#4B5563] mt-1">{item.desc}</p>
+                  <p className="font-heading font-semibold text-[#101827] text-sm"><PublicText value={item.label} /></p>
+                  <p className="text-xs text-[#4B5563] mt-1"><PublicText value={item.desc} /></p>
                 </div>
               </RevealOnScroll>
             ))}
@@ -142,17 +135,15 @@ export default function Programmes() {
           <RevealOnScroll>
             <div className="bg-[#EAF0F8] rounded-3xl p-10 text-center">
               <Heart className="w-16 h-16 text-[#D8B76A] mx-auto mb-4" />
-              <p className="font-display text-3xl text-[#101827] font-bold mb-2">FIJ</p>
-              <p className="text-[#4B5563] text-sm">Familles d’Impact Jeunes</p>
+              <p className="font-display text-3xl text-[#101827] font-bold mb-2"><PublicText value={"FIJ"} /></p>
+              <p className="text-[#4B5563] text-sm"><PublicText value={"Familles d’Impact Jeunes"} /></p>
             </div>
           </RevealOnScroll>
           <RevealOnScroll>
-            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">Petits groupes</p>
-            <h2 className="font-display text-4xl text-[#101827] mb-6">Les FIJ</h2>
-            <p className="text-[#4B5563] leading-relaxed">
-              Les Familles d’Impact Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du dimanche. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble.
-            </p>
-            <Link to="/fij" className="ejp-pill mt-6">Découvrir les Familles d’Impact Jeunes</Link>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4"><PublicText value={"Petits groupes"} /></p>
+            <h2 className="font-display text-4xl text-[#101827] mb-6"><PublicText value={"Les FIJ"} /></h2>
+            <p className="text-[#4B5563] leading-relaxed"><PublicText value={"Les Familles d’Impact Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du dimanche. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble."} /></p>
+            <Link to="/fij" className="ejp-pill mt-6"><PublicText value={"Découvrir les Familles d’Impact Jeunes"} /></Link>
           </RevealOnScroll>
         </div>
       </section>
@@ -161,8 +152,8 @@ export default function Programmes() {
       <section className="bg-[#101827] text-white py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <RevealOnScroll>
-            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center">Parcours de formation</p>
-            <h2 className="font-display text-4xl md:text-5xl mb-10 text-center">Se former pour mieux servir</h2>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center"><PublicText value={"Parcours de formation"} /></p>
+            <h2 className="font-display text-4xl md:text-5xl mb-10 text-center"><PublicText value={"Se former pour mieux servir"} /></h2>
           </RevealOnScroll>
           <div className="grid md:grid-cols-3 gap-6">
             {[
@@ -172,9 +163,9 @@ export default function Programmes() {
             ].map((f) => (
               <RevealOnScroll key={f.code}>
                 <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                  <p className="text-[#D8B76A] text-xs font-semibold uppercase tracking-widest mb-2">{f.code}</p>
-                  <h3 className="font-heading font-bold text-white text-lg mb-2">{f.titre}</h3>
-                  <p className="text-white/60 text-sm leading-relaxed">{f.desc}</p>
+                  <p className="text-[#D8B76A] text-xs font-semibold uppercase tracking-widest mb-2"><PublicText value={f.code} /></p>
+                  <h3 className="font-heading font-bold text-white text-lg mb-2"><PublicText value={f.titre} /></h3>
+                  <p className="text-white/60 text-sm leading-relaxed"><PublicText value={f.desc} /></p>
                 </div>
               </RevealOnScroll>
             ))}
@@ -187,8 +178,8 @@ export default function Programmes() {
         <section className="py-24 px-6">
           <div className="max-w-4xl mx-auto">
             <RevealOnScroll>
-              <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center">À venir</p>
-              <h2 className="font-display text-4xl text-[#101827] text-center mb-12">Événements spéciaux</h2>
+              <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center"><PublicText value={"À venir"} /></p>
+              <h2 className="font-display text-4xl text-[#101827] text-center mb-12"><PublicText value={"Événements spéciaux"} /></h2>
             </RevealOnScroll>
             <div className="space-y-4">
               {special.slice(0, 4).map((ev) => (
@@ -196,18 +187,18 @@ export default function Programmes() {
                   <div className="flex items-start gap-5 bg-white border border-[#E8E2D5] rounded-2xl p-5 shadow-sm">
                     <div className="bg-[#EAF0F8] rounded-2xl px-4 py-3 text-center flex-shrink-0">
                       <p className="text-xs text-[#D8B76A] font-semibold uppercase">
-                        {new Date(ev.event_date).toLocaleDateString('fr-FR', { month: 'short' })}
+                        <PublicText value={new Date(ev.event_date).toLocaleDateString('fr-FR', { month: 'short' })} />
                       </p>
                       <p className="font-display text-2xl text-[#101827] font-bold">
-                        {new Date(ev.event_date).getDate()}
+                        <PublicText value={new Date(ev.event_date).getDate()} />
                       </p>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-heading font-bold text-[#101827]">{ev.title}</p>
-                      {ev.description && <p className="text-sm text-[#4B5563] mt-1 line-clamp-2">{ev.description}</p>}
+                      <p className="font-heading font-bold text-[#101827]"><PublicText value={ev.title} /></p>
+                      {ev.description && <p className="text-sm text-[#4B5563] mt-1 line-clamp-2"><PublicText value={ev.description} /></p>}
                       <div className="flex items-center gap-4 mt-2 text-xs text-[#4B5563]">
-                        {ev.event_time && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{ev.event_time}</span>}
-                        {ev.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{ev.location}</span>}
+                        {ev.event_time && <span className="flex items-center gap-1"><Clock className="w-3 h-3" /><PublicText value={ev.event_time} /></span>}
+                        {ev.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /><PublicText value={ev.location} /></span>}
                       </div>
                     </div>
                   </div>
@@ -222,8 +213,8 @@ export default function Programmes() {
       <section id="calendrier" className="bg-[#F5F0E8] py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <RevealOnScroll>
-            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center">Calendrier</p>
-            <h2 className="font-display text-4xl text-[#101827] text-center mb-12">À venir</h2>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center"><PublicText value={"Calendrier"} /></p>
+            <h2 className="font-display text-4xl text-[#101827] text-center mb-12"><PublicText value={"À venir"} /></h2>
           </RevealOnScroll>
           {upcoming.length > 0 ? (
             <div className="space-y-3">
@@ -232,25 +223,25 @@ export default function Programmes() {
                   <div className="flex items-center gap-4 bg-white rounded-xl p-4 border border-[#E8E2D5]">
                     <div className="text-center w-14 flex-shrink-0">
                       <p className="text-[10px] text-[#D8B76A] font-semibold uppercase">
-                        {new Date(ev.event_date).toLocaleDateString('fr-FR', { month: 'short' })}
+                        <PublicText value={new Date(ev.event_date).toLocaleDateString('fr-FR', { month: 'short' })} />
                       </p>
                       <p className="font-heading font-bold text-[#101827] text-xl leading-none">
-                        {new Date(ev.event_date).getDate()}
+                        <PublicText value={new Date(ev.event_date).getDate()} />
                       </p>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-heading font-semibold text-sm text-[#101827] truncate">{ev.title}</p>
-                      {ev.event_time && <p className="text-xs text-[#4B5563]">{ev.event_time}</p>}
+                      <p className="font-heading font-semibold text-sm text-[#101827] truncate"><PublicText value={ev.title} /></p>
+                      {ev.event_time && <p className="text-xs text-[#4B5563]"><PublicText value={ev.event_time} /></p>}
                     </div>
                     <span className="text-[10px] bg-[#EAF0F8] text-[#4B5563] px-2 py-1 rounded-full font-medium flex-shrink-0">
-                      {EVENT_TYPE_LABELS[ev.event_type] || ev.event_type}
+                      <PublicText value={EVENT_TYPE_LABELS[ev.event_type] || ev.event_type} />
                     </span>
                   </div>
                 </RevealOnScroll>
               ))}
             </div>
           ) : (
-            <p className="text-center text-[#4B5563] text-sm">Le calendrier sera mis à jour prochainement.</p>
+            <p className="text-center text-[#4B5563] text-sm"><PublicText value={"Le calendrier sera mis à jour prochainement."} /></p>
           )}
         </div>
       </section>
@@ -258,13 +249,11 @@ export default function Programmes() {
       {/* CTA */}
       <section className="py-20 px-6 text-center">
         <RevealOnScroll>
-          <h2 className="font-display text-3xl md:text-4xl text-[#101827] mb-6">Viens vivre tout ça de l'intérieur</h2>
+          <h2 className="font-display text-3xl md:text-4xl text-[#101827] mb-6"><PublicText value={"Viens vivre tout ça de l'intérieur"} /></h2>
           <Link
             to="/venir"
             className="inline-flex items-center gap-2 bg-[#101827] text-white text-sm font-semibold px-8 py-4 rounded-full hover:bg-[#1a2740] transition-all hover:scale-[1.02]"
-          >
-            Je viens dimanche
-          </Link>
+          ><PublicText value={"Je viens dimanche"} /></Link>
         </RevealOnScroll>
       </section>
 

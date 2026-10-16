@@ -1,0 +1,1835 @@
+{
+  "entries": [
+    {
+      "id": "4c93f684ff0ebbdc",
+      "value": "Connexion impossible",
+      "sections": ["Home"],
+      "source": "Connexion impossible"
+    },
+    {
+      "id": "647db16ae1559bb6",
+      "value": "Une erreur réseau est survenue. Vérifie ta connexion et réessaie.",
+      "sections": ["Home"],
+      "source": "Une erreur réseau est survenue. Vérifie ta connexion et réessaie."
+    },
+    {
+      "id": "af273d956b5bec8d",
+      "value": "Réessayer",
+      "sections": ["Home"],
+      "source": "Réessayer"
+    },
+    {
+      "id": "2b89ca4a49a16366",
+      "value": "Notre identité",
+      "sections": ["Home"],
+      "source": "Notre identité"
+    },
+    {
+      "id": "0f5fcae15ad2feb0",
+      "value": "Une maison pour",
+      "sections": ["Home"],
+      "source": "Une maison pour"
+    },
+    {
+      "id": "ed198e50b18b49e3",
+      "value": "une génération entière.",
+      "sections": ["Home"],
+      "source": "une génération entière."
+    },
+    {
+      "id": "da2138361fc39491",
+      "value": "L'EJP Nantes réunit des jeunes qui croient, qui servent et qui grandissent ensemble — dans la foi, l'excellence et la fraternité.",
+      "sections": ["Home"],
+      "source": "L'EJP Nantes réunit des jeunes qui croient, qui servent et qui grandissent ensemble — dans la foi, l'excellence et la fraternité."
+    },
+    {
+      "id": "4a77a351ff0d39a4",
+      "value": "Grandir",
+      "sections": ["Home", "APropos"],
+      "source": "Grandir"
+    },
+    {
+      "id": "3b24410547661f56",
+      "value": "Une formation spirituelle profonde, des parcours PCNC et des formations internes.",
+      "sections": ["Home"],
+      "source": "Une formation spirituelle profonde, des parcours PCNC et des formations internes."
+    },
+    {
+      "id": "09b0f8c64e197643",
+      "value": "Servir",
+      "sections": ["Home", "APropos"],
+      "source": "Servir"
+    },
+    {
+      "id": "36198e6eda16b480",
+      "value": "Chaque membre est un serviteur. Les ministères donnent une place à chaque talent.",
+      "sections": ["Home"],
+      "source": "Chaque membre est un serviteur. Les ministères donnent une place à chaque talent."
+    },
+    {
+      "id": "7ea64b84886655ef",
+      "value": "Appartenir",
+      "sections": ["Home"],
+      "source": "Appartenir"
+    },
+    {
+      "id": "14eed157b60f5874",
+      "value": "Les FIJ et la fraternité du {{jour}} créent une famille réelle, pas virtuelle.",
+      "sections": ["Home"],
+      "source": "Les FIJ et la fraternité du dimanche créent une famille réelle, pas virtuelle."
+    },
+    {
+      "id": "2151ce40298df4df",
+      "value": "Découvrir qui nous sommes",
+      "sections": ["Home"],
+      "source": "Découvrir qui nous sommes"
+    },
+    {
+      "id": "431d9f55c841f768",
+      "value": "Nos rendez-vous",
+      "sections": ["Home", "Programmes", "PublicHeader"],
+      "source": "Nos rendez-vous"
+    },
+    {
+      "id": "b3fc9de526e253e7",
+      "value": "à",
+      "sections": ["Home", "PublicFooter"],
+      "source": "à"
+    },
+    {
+      "id": "ed574e09109a509e",
+      "value": ". Et bien plus.",
+      "sections": ["Home"],
+      "source": ". Et bien plus."
+    },
+    {
+      "id": "fa76ab11f8e2d40c",
+      "value": "Le culte du {{jour}}, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée.",
+      "sections": ["Home"],
+      "source": "Le culte du dimanche, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée."
+    },
+    {
+      "id": "28bdcde6e07ce916",
+      "value": "Voir tous nos programmes",
+      "sections": ["Home"],
+      "source": "Voir tous nos programmes"
+    },
+    {
+      "id": "2813b1cab4d1f5cb",
+      "value": "Dimanche",
+      "sections": ["Home", "HeroLumineux", "PublicFooter"],
+      "source": "Dimanche",
+      "field": "service_day"
+    },
+    {
+      "id": "3d366201f5b88bcb",
+      "value": "Excellence",
+      "sections": ["APropos"],
+      "source": "Excellence"
+    },
+    {
+      "id": "8e24b30bdb70362e",
+      "value": "Nous faisons les choses à fond, avec soin et conviction. L'excellence n'est pas la perfection, c'est le refus de la médiocrité.",
+      "sections": ["APropos"],
+      "source": "Nous faisons les choses à fond, avec soin et conviction. L'excellence n'est pas la perfection, c'est le refus de la médiocrité."
+    },
+    {
+      "id": "f14b5d69f2f34f5a",
+      "value": "Famille",
+      "sections": ["APropos", "VisionEJP"],
+      "source": "Famille"
+    },
+    {
+      "id": "2d5a5c9ccb0708e1",
+      "value": "Nous sommes une maison, pas un programme. Chaque personne qui entre doit sentir qu'elle appartient à quelque chose.",
+      "sections": ["APropos"],
+      "source": "Nous sommes une maison, pas un programme. Chaque personne qui entre doit sentir qu'elle appartient à quelque chose."
+    },
+    {
+      "id": "d677190e0a9990e7",
+      "value": "Service",
+      "sections": ["APropos", "VisionEJP"],
+      "source": "Service"
+    },
+    {
+      "id": "5a9ceab8892327c0",
+      "value": "Notre vie est organisée autour du don. Servir n'est pas une charge, c'est notre façon d'exprimer notre foi.",
+      "sections": ["APropos"],
+      "source": "Notre vie est organisée autour du don. Servir n'est pas une charge, c'est notre façon d'exprimer notre foi."
+    },
+    {
+      "id": "1bac482060bd3b1a",
+      "value": "Croissance",
+      "sections": ["APropos"],
+      "source": "Croissance"
+    },
+    {
+      "id": "cbb3a8397e9b6d1f",
+      "value": "Nous ne nous installons pas. Chaque semestre est une occasion de progresser spirituellement, académiquement et humainement.",
+      "sections": ["APropos"],
+      "source": "Nous ne nous installons pas. Chaque semestre est une occasion de progresser spirituellement, académiquement et humainement."
+    },
+    {
+      "id": "1d301390f40f0659",
+      "value": "EJP Nantes",
+      "sections": ["APropos", "Programmes"],
+      "source": "EJP Nantes"
+    },
+    {
+      "id": "731e0170ecd522e9",
+      "value": "Qui sommes-nous ?",
+      "sections": ["APropos", "PublicFooter"],
+      "source": "Qui sommes-nous ?"
+    },
+    {
+      "id": "038838f500739936",
+      "value": "Une génération qui croit, qui sert et qui grandit ensemble — au cœur de Nantes.",
+      "sections": ["APropos"],
+      "source": "Une génération qui croit, qui sert et qui grandit ensemble — au cœur de Nantes."
+    },
+    {
+      "id": "749a43d458f5825a",
+      "value": "L'EJP Nantes est une",
+      "sections": ["APropos"],
+      "source": "L'EJP Nantes est une"
+    },
+    {
+      "id": "ffc84ca232a5834b",
+      "value": "église de jeunes",
+      "sections": ["APropos"],
+      "source": "église de jeunes"
+    },
+    {
+      "id": "d4efb493ee7ba216",
+      "value": ", ancrée dans la foi chrétienne évangélique, portée par la conviction que chaque génération peut marquer son époque.",
+      "sections": ["APropos"],
+      "source": ", ancrée dans la foi chrétienne évangélique, portée par la conviction que chaque génération peut marquer son époque."
+    },
+    {
+      "id": "ccd3e8df8e52c2f5",
+      "value": "Notre vision",
+      "sections": ["APropos", "VisionEJP"],
+      "source": "Notre vision"
+    },
+    {
+      "id": "06f37c9022f0ea5b",
+      "value": "Notre mission",
+      "sections": ["APropos", "VisionEJP"],
+      "source": "Notre mission",
+      "field": "mission_title"
+    },
+    {
+      "id": "977ae6cb0c224bb8",
+      "value": "Découvrir",
+      "sections": ["APropos"],
+      "source": "Découvrir"
+    },
+    {
+      "id": "3c2ed850249fc5ca",
+      "value": "Présenter Dieu à ceux qui ne le connaissent pas encore, avec authenticité et amour.",
+      "sections": ["APropos"],
+      "source": "Présenter Dieu à ceux qui ne le connaissent pas encore, avec authenticité et amour."
+    },
+    {
+      "id": "4df2d6d5ace0b761",
+      "value": "Accompagner chaque personne dans sa formation spirituelle, académique et humaine.",
+      "sections": ["APropos"],
+      "source": "Accompagner chaque personne dans sa formation spirituelle, académique et humaine."
+    },
+    {
+      "id": "21bef2a838f5ae31",
+      "value": "Équiper chaque membre pour contribuer activement à la vie de l'église et de la cité.",
+      "sections": ["APropos"],
+      "source": "Équiper chaque membre pour contribuer activement à la vie de l'église et de la cité."
+    },
+    {
+      "id": "c3201fad6f900150",
+      "value": "Nos valeurs",
+      "sections": ["APropos"],
+      "source": "Nos valeurs"
+    },
+    {
+      "id": "ecdc2d03c29f7c00",
+      "value": "Ce qui nous tient",
+      "sections": ["APropos"],
+      "source": "Ce qui nous tient"
+    },
+    {
+      "id": "652cd9603ac8474d",
+      "value": "Notre histoire",
+      "sections": ["APropos"],
+      "source": "Notre histoire"
+    },
+    {
+      "id": "f8285c268a7aeea4",
+      "value": "Une maison qui a grandi",
+      "sections": ["APropos"],
+      "source": "Une maison qui a grandi"
+    },
+    {
+      "id": "119671df42ee13fa",
+      "value": "L'EJP Nantes est née d'une conviction simple : les jeunes méritent une église qui les prend au sérieux — spirituellement, académiquement, humainement.",
+      "sections": ["APropos"],
+      "source": "L'EJP Nantes est née d'une conviction simple : les jeunes méritent une église qui les prend au sérieux — spirituellement, académiquement, humainement."
+    },
+    {
+      "id": "77e8c1e946f8282f",
+      "value": "Fondée avec un groupe restreint de jeunes déterminés, elle a grandi {{jour}} après {{jour}}, serviteur après serviteur. Ce qui a commencé comme un rassemblement est devenu une maison, un ministère, une communauté.",
+      "sections": ["APropos"],
+      "source": "Fondée avec un groupe restreint de jeunes déterminés, elle a grandi dimanche après dimanche, serviteur après serviteur. Ce qui a commencé comme un rassemblement est devenu une maison, un ministère, une communauté."
+    },
+    {
+      "id": "045f92ab24ccecc8",
+      "value": "Aujourd'hui, l'EJP Nantes réunit des dizaines de jeunes chaque {{jour}} à {{horaire}}, portés par la louange, la Parole et une fraternité réelle qui dépasse les réunions.",
+      "sections": ["APropos"],
+      "source": "Aujourd'hui, l'EJP Nantes réunit des dizaines de jeunes chaque dimanche à 15h, portés par la louange, la Parole et une fraternité réelle qui dépasse les réunions."
+    },
+    {
+      "id": "65d65b7a0e6fd143",
+      "value": "Les responsables",
+      "sections": ["APropos"],
+      "source": "Les responsables"
+    },
+    {
+      "id": "7c1b8303b0303ac9",
+      "value": "L'équipe de direction",
+      "sections": ["APropos"],
+      "source": "L'équipe de direction"
+    },
+    {
+      "id": "0d1983ba04edcaa2",
+      "value": "Notre ancrage",
+      "sections": ["APropos"],
+      "source": "Notre ancrage"
+    },
+    {
+      "id": "f7d80763bf5307d7",
+      "value": "À Nantes, pour Nantes",
+      "sections": ["APropos"],
+      "source": "À Nantes, pour Nantes"
+    },
+    {
+      "id": "d014595a43fed701",
+      "value": "L'EJP Nantes n'est pas hors-sol. Elle est profondément ancrée dans la ville de Nantes, engagée pour sa génération, attentive à ses besoins et convaincue que l'Évangile est une bonne nouvelle pour cette cité.",
+      "sections": ["APropos"],
+      "source": "L'EJP Nantes n'est pas hors-sol. Elle est profondément ancrée dans la ville de Nantes, engagée pour sa génération, attentive à ses besoins et convaincue que l'Évangile est une bonne nouvelle pour cette cité."
+    },
+    {
+      "id": "0ada187de05bf051",
+      "value": "Prêt à nous rejoindre ?",
+      "sections": ["APropos"],
+      "source": "Prêt à nous rejoindre ?"
+    },
+    {
+      "id": "0484d9bdee3dd649",
+      "value": "Voir nos programmes",
+      "sections": ["APropos"],
+      "source": "Voir nos programmes"
+    },
+    {
+      "id": "80826c063ab312b2",
+      "value": "Je viens {{jour}}",
+      "sections": [
+        "APropos",
+        "Programmes",
+        "Venir",
+        "FirstVisitForm",
+        "PublicHeader",
+        "StickyCTA",
+        "CTAFinal",
+        "HeroLumineux"
+      ],
+      "source": "Je viens dimanche"
+    },
+    {
+      "id": "aa56c9fad3a11a3c",
+      "value": "Susciter une génération de prodiges au service de Dieu.",
+      "sections": ["APropos"],
+      "source": "Susciter une génération de prodiges au service de Dieu.",
+      "field": "vision_title"
+    },
+    {
+      "id": "a272e4c040bcb108",
+      "value": "Nous croyons que Dieu appelle des jeunes ordinaires à vivre des vies extraordinaires. Notre vision est de former, ancrer et envoyer une génération de serviteurs excellents, profondément enracinés dans la Parole et audacieusement tournés vers leur génération.",
+      "sections": ["APropos"],
+      "source": "Nous croyons que Dieu appelle des jeunes ordinaires à vivre des vies extraordinaires. Notre vision est de former, ancrer et envoyer une génération de serviteurs excellents, profondément enracinés dans la Parole et audacieusement tournés vers leur génération.",
+      "field": "vision_text"
+    },
+    {
+      "id": "9629a0ee2a118205",
+      "value": "La présentation des responsables est momentanément indisponible.",
+      "sections": ["APropos"],
+      "source": "La présentation des responsables est momentanément indisponible."
+    },
+    {
+      "id": "b00971e667deffd1",
+      "value": "Les responsables seront présentés prochainement.",
+      "sections": ["APropos"],
+      "source": "Les responsables seront présentés prochainement."
+    },
+    {
+      "id": "a6da390a9b84b751",
+      "value": "EJP Nantes · FIJ",
+      "sections": ["FijPublic"],
+      "source": "EJP Nantes · FIJ"
+    },
+    {
+      "id": "393369a756ebba7e",
+      "value": "La foi se vit aussi en famille, au plus près de notre quotidien.",
+      "sections": ["FijPublic"],
+      "source": "La foi se vit aussi en famille, au plus près de notre quotidien."
+    },
+    {
+      "id": "12f7e0449e739165",
+      "value": "Une famille dans la maison",
+      "sections": ["FijPublic"],
+      "source": "Une famille dans la maison"
+    },
+    {
+      "id": "554ec890798ad646",
+      "value": "Se retrouver. Grandir.",
+      "sections": ["FijPublic"],
+      "source": "Se retrouver. Grandir."
+    },
+    {
+      "id": "1f2307eec6b843ec",
+      "value": "Rayonner ensemble.",
+      "sections": ["FijPublic"],
+      "source": "Rayonner ensemble."
+    },
+    {
+      "id": "535b75191fab127b",
+      "value": "Partager la Parole",
+      "sections": ["FijPublic"],
+      "source": "Partager la Parole"
+    },
+    {
+      "id": "59bbfe45e070ba8b",
+      "value": "Comprendre la foi et la mettre en pratique dans la vie de tous les jours.",
+      "sections": ["FijPublic"],
+      "source": "Comprendre la foi et la mettre en pratique dans la vie de tous les jours."
+    },
+    {
+      "id": "58207e4d5e4a23db",
+      "value": "Vivre la fraternité",
+      "sections": ["FijPublic"],
+      "source": "Vivre la fraternité"
+    },
+    {
+      "id": "6635000523f9d299",
+      "value": "Créer des liens, se soutenir et accueillir ceux qui découvrent la maison.",
+      "sections": ["FijPublic"],
+      "source": "Créer des liens, se soutenir et accueillir ceux qui découvrent la maison."
+    },
+    {
+      "id": "f88a6517b5693128",
+      "value": "Porter un impact",
+      "sections": ["FijPublic"],
+      "source": "Porter un impact"
+    },
+    {
+      "id": "590f53991d2b7401",
+      "value": "Grandir comme disciple de Jésus-Christ et rayonner dans son entourage.",
+      "sections": ["FijPublic"],
+      "source": "Grandir comme disciple de Jésus-Christ et rayonner dans son entourage."
+    },
+    {
+      "id": "3b5f09f4dd549163",
+      "value": "Trouver ma famille à Nantes.",
+      "sections": ["FijPublic"],
+      "source": "Trouver ma famille à Nantes."
+    },
+    {
+      "id": "cadc7ce3d84b3996",
+      "value": "Contacter l’équipe FIJ",
+      "sections": ["FijPublic"],
+      "source": "Contacter l’équipe FIJ"
+    },
+    {
+      "id": "6e1af2f2149e5cc1",
+      "value": "Rencontrer l’équipe à Nantes",
+      "sections": ["FijPublic"],
+      "source": "Rencontrer l’équipe à Nantes"
+    },
+    {
+      "id": "cabaa035ed0ed64d",
+      "value": "Familles d’Impact Jeunes",
+      "sections": ["FijPublic", "Programmes", "FijInvitation", "PublicFooter"],
+      "source": "Familles d’Impact Jeunes",
+      "field": "fij_title"
+    },
+    {
+      "id": "6e20daeb0a2cba02",
+      "value": "Les Familles d’Impact Jeunes sont des petits groupes de jeunes rattachés à l’EJP. On y partage la Parole de Dieu, la prière et la fraternité. Chacun peut être écouté, encouragé et accompagné dans sa marche avec Dieu.",
+      "sections": ["FijPublic"],
+      "source": "Les Familles d’Impact Jeunes sont des petits groupes de jeunes rattachés à l’EJP. On y partage la Parole de Dieu, la prière et la fraternité. Chacun peut être écouté, encouragé et accompagné dans sa marche avec Dieu.",
+      "field": "fij_text"
+    },
+    {
+      "id": "df3ddcfbf22ee920",
+      "value": "Contacte l’équipe EJP Nantes pour connaître les FIJ, leurs lieux et leurs horaires, et être orienté vers une famille.",
+      "sections": ["FijPublic"],
+      "source": "Contacte l’équipe EJP Nantes pour connaître les FIJ, leurs lieux et leurs horaires, et être orienté vers une famille.",
+      "field": "fij_join_text"
+    },
+    {
+      "id": "4425c7373a9d4901",
+      "value": "Des rendez-vous réguliers et exceptionnels pour grandir, se retrouver et servir ensemble.",
+      "sections": ["Programmes"],
+      "source": "Des rendez-vous réguliers et exceptionnels pour grandir, se retrouver et servir ensemble."
+    },
+    {
+      "id": "45b898826abe5cf3",
+      "value": "Le calendrier est momentanément indisponible. Les informations de nos rendez-vous réguliers restent ci-dessous.",
+      "sections": ["Programmes"],
+      "source": "Le calendrier est momentanément indisponible. Les informations de nos rendez-vous réguliers restent ci-dessous."
+    },
+    {
+      "id": "56c1c0e46c342ea7",
+      "value": "Chaque {{jour}}",
+      "sections": ["Programmes"],
+      "source": "Chaque dimanche"
+    },
+    {
+      "id": "34779c592c94cbe9",
+      "value": "Réunion de jeunesse",
+      "sections": ["Programmes"],
+      "source": "Réunion de jeunesse"
+    },
+    {
+      "id": "d37f19b2ed36933e",
+      "value": "Le cœur battant de l'EJP. Chaque {{jour}} à {{horaire}}, la communauté se réunit pour la louange, la prière et l'enseignement de la Parole. Trois cultes par {{jour}}, trois moments pour rencontrer Dieu.",
+      "sections": ["Programmes"],
+      "source": "Le cœur battant de l'EJP. Chaque dimanche à 15h, la communauté se réunit pour la louange, la prière et l'enseignement de la Parole. Trois cultes par dimanche, trois moments pour rencontrer Dieu."
+    },
+    {
+      "id": "07f5d37ef47df8a1",
+      "value": "Chaque {{jour}} à",
+      "sections": ["Programmes"],
+      "source": "Chaque dimanche à"
+    },
+    {
+      "id": "6d1b38f42cae30a0",
+      "value": "Ouvert à tous — entrée libre",
+      "sections": ["Programmes"],
+      "source": "Ouvert à tous — entrée libre"
+    },
+    {
+      "id": "bf809949a5de9fa9",
+      "value": "cultes chaque {{jour}}",
+      "sections": ["Programmes"],
+      "source": "cultes chaque dimanche"
+    },
+    {
+      "id": "11d9d00981214c13",
+      "value": "Louange · Prière · Parole · Fraternité",
+      "sections": ["Programmes"],
+      "source": "Louange · Prière · Parole · Fraternité"
+    },
+    {
+      "id": "ac72b31e08cf6053",
+      "value": "Ce qui se passe chaque {{jour}}",
+      "sections": ["Programmes"],
+      "source": "Ce qui se passe chaque dimanche"
+    },
+    {
+      "id": "cb9dfa3a4b52f7d7",
+      "value": "Louange",
+      "sections": ["Programmes"],
+      "source": "Louange"
+    },
+    {
+      "id": "59d3e6d809d970f6",
+      "value": "Une montée vers Dieu",
+      "sections": ["Programmes"],
+      "source": "Une montée vers Dieu"
+    },
+    {
+      "id": "fad4bd4abc4c47e9",
+      "value": "Prière",
+      "sections": ["Programmes"],
+      "source": "Prière"
+    },
+    {
+      "id": "c3f4eb1b65b239f7",
+      "value": "Ensemble et avec foi",
+      "sections": ["Programmes"],
+      "source": "Ensemble et avec foi"
+    },
+    {
+      "id": "0472ddf5fd2ee50c",
+      "value": "Enseignement",
+      "sections": ["Programmes"],
+      "source": "Enseignement"
+    },
+    {
+      "id": "eec269523c5c052b",
+      "value": "La Parole vivante",
+      "sections": ["Programmes"],
+      "source": "La Parole vivante"
+    },
+    {
+      "id": "ed4cee0b81beb25f",
+      "value": "Fraternité",
+      "sections": ["Programmes"],
+      "source": "Fraternité"
+    },
+    {
+      "id": "380fbcfb8beb56ba",
+      "value": "La famille réelle",
+      "sections": ["Programmes"],
+      "source": "La famille réelle"
+    },
+    {
+      "id": "0facc44119cec002",
+      "value": "FIJ",
+      "sections": ["Programmes"],
+      "source": "FIJ"
+    },
+    {
+      "id": "3d13e0caf3d36cfe",
+      "value": "Petits groupes",
+      "sections": ["Programmes"],
+      "source": "Petits groupes"
+    },
+    {
+      "id": "1f8a50d591528c9f",
+      "value": "Les FIJ",
+      "sections": ["Programmes"],
+      "source": "Les FIJ"
+    },
+    {
+      "id": "42cb30b5c89a6a3b",
+      "value": "Les Familles d’Impact Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du {{jour}}. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble.",
+      "sections": ["Programmes"],
+      "source": "Les Familles d’Impact Jeunes sont des petits groupes de croissance et de fraternité qui se réunissent en dehors du dimanche. Chaque FIJ est conduite par un pilote et réunit une dizaine de personnes dans un cadre convivial, pour étudier la Parole, prier et vivre ensemble."
+    },
+    {
+      "id": "a864ecae98e3e212",
+      "value": "Découvrir les Familles d’Impact Jeunes",
+      "sections": ["Programmes"],
+      "source": "Découvrir les Familles d’Impact Jeunes"
+    },
+    {
+      "id": "a286a47affb7cccc",
+      "value": "Parcours de formation",
+      "sections": ["Programmes"],
+      "source": "Parcours de formation"
+    },
+    {
+      "id": "02bc99fddf70ab5f",
+      "value": "Se former pour mieux servir",
+      "sections": ["Programmes"],
+      "source": "Se former pour mieux servir"
+    },
+    {
+      "id": "8706418ba5b4e331",
+      "value": "Les fondamentaux",
+      "sections": ["Programmes"],
+      "source": "Les fondamentaux"
+    },
+    {
+      "id": "d2a12e0322a04861",
+      "value": "Introduction à la foi, à la communauté et aux bases du service.",
+      "sections": ["Programmes"],
+      "source": "Introduction à la foi, à la communauté et aux bases du service."
+    },
+    {
+      "id": "fe928c480f548e19",
+      "value": "Grandir dans le service",
+      "sections": ["Programmes"],
+      "source": "Grandir dans le service"
+    },
+    {
+      "id": "8843373c047becb3",
+      "value": "Approfondissement du parcours STAR : mission, engagement, excellence.",
+      "sections": ["Programmes"],
+      "source": "Approfondissement du parcours STAR : mission, engagement, excellence."
+    },
+    {
+      "id": "e584380ac5e405c5",
+      "value": "Responsabilité",
+      "sections": ["Programmes"],
+      "source": "Responsabilité"
+    },
+    {
+      "id": "8e9ac2b6ff106caa",
+      "value": "Formation avancée pour ceux qui prennent des responsabilités de leadership.",
+      "sections": ["Programmes"],
+      "source": "Formation avancée pour ceux qui prennent des responsabilités de leadership."
+    },
+    {
+      "id": "4b563878b404e10e",
+      "value": "À venir",
+      "sections": ["Programmes"],
+      "source": "À venir"
+    },
+    {
+      "id": "2481d887efac4db8",
+      "value": "Événements spéciaux",
+      "sections": ["Programmes"],
+      "source": "Événements spéciaux"
+    },
+    {
+      "id": "b65d9008e899b623",
+      "value": "Calendrier",
+      "sections": ["Programmes", "CeDimanche"],
+      "source": "Calendrier"
+    },
+    {
+      "id": "8e4a03784f1b0ddd",
+      "value": "Le calendrier sera mis à jour prochainement.",
+      "sections": ["Programmes"],
+      "source": "Le calendrier sera mis à jour prochainement."
+    },
+    {
+      "id": "c37c25c73284a35a",
+      "value": "Viens vivre tout ça de l'intérieur",
+      "sections": ["Programmes"],
+      "source": "Viens vivre tout ça de l'intérieur"
+    },
+    {
+      "id": "d2eed60c2abb6e80",
+      "value": "Nantes, France",
+      "sections": ["Programmes", "Venir", "CeDimanche", "PublicFooter"],
+      "source": "Nantes, France",
+      "field": "address_label"
+    },
+    {
+      "id": "400e725dc8fba689",
+      "value": "À quelle heure commence le culte ?",
+      "sections": ["Venir"],
+      "source": "À quelle heure commence le culte ?"
+    },
+    {
+      "id": "5840c923bebe4934",
+      "value": "Le culte commence chaque {{jour}} à {{horaire}}.",
+      "sections": ["Venir"],
+      "source": "Le culte commence chaque dimanche à 15h00."
+    },
+    {
+      "id": "4fbfaedf395398c2",
+      "value": "Dois-je m'inscrire ?",
+      "sections": ["Venir"],
+      "source": "Dois-je m'inscrire ?"
+    },
+    {
+      "id": "bbb8d76a9a33c12b",
+      "value": "Non, tu peux venir directement. Le formulaire est optionnel.",
+      "sections": ["Venir"],
+      "source": "Non, tu peux venir directement. Le formulaire est optionnel."
+    },
+    {
+      "id": "74d7ab62756b9f1e",
+      "value": "Puis-je venir seul ?",
+      "sections": ["Venir"],
+      "source": "Puis-je venir seul ?"
+    },
+    {
+      "id": "c781aeced2889213",
+      "value": "Bien sûr ! Notre équipe t'accueille dès ton arrivée.",
+      "sections": ["Venir"],
+      "source": "Bien sûr ! Notre équipe t'accueille dès ton arrivée."
+    },
+    {
+      "id": "56f9f9580577b883",
+      "value": "Combien de temps dure le culte ?",
+      "sections": ["Venir"],
+      "source": "Combien de temps dure le culte ?"
+    },
+    {
+      "id": "231e8182f2dd50ea",
+      "value": "Environ 1h30 à 2h, avec louange, Parole et communion.",
+      "sections": ["Venir"],
+      "source": "Environ 1h30 à 2h, avec louange, Parole et communion."
+    },
+    {
+      "id": "8f9f9b08ec0d1a6a",
+      "value": "Retour à l'accueil",
+      "sections": ["Venir", "EspaceServiteurSas"],
+      "source": "Retour à l'accueil"
+    },
+    {
+      "id": "84226bb791c5c294",
+      "value": "Préparer ma venue",
+      "sections": ["Venir", "CeDimanche", "PublicFooter"],
+      "source": "Préparer ma venue"
+    },
+    {
+      "id": "b45d6874904b0ccb",
+      "value": "Tout ce qu'il faut savoir pour vivre ton premier culte à l'EJP Nantes en toute simplicité.",
+      "sections": ["Venir"],
+      "source": "Tout ce qu'il faut savoir pour vivre ton premier culte à l'EJP Nantes en toute simplicité."
+    },
+    {
+      "id": "5f0c29b70d7005d9",
+      "value": "Horaire",
+      "sections": ["Venir"],
+      "source": "Horaire"
+    },
+    {
+      "id": "baca56d8c3e4013f",
+      "value": "{{Jour}} à {{horaire}}",
+      "sections": ["Venir"],
+      "source": "Dimanche à 15h00"
+    },
+    {
+      "id": "79e5cf20de0ba454",
+      "value": "Adresse",
+      "sections": ["Venir"],
+      "source": "Adresse"
+    },
+    {
+      "id": "a55c6d6d5706abfe",
+      "value": "Prochain culte",
+      "sections": ["Venir"],
+      "source": "Prochain culte"
+    },
+    {
+      "id": "4eb85608d894b7b5",
+      "value": "Itinéraire",
+      "sections": ["Venir"],
+      "source": "Itinéraire"
+    },
+    {
+      "id": "21addbc83941c27a",
+      "value": "Ajouter au calendrier",
+      "sections": ["Venir"],
+      "source": "Ajouter au calendrier"
+    },
+    {
+      "id": "8d9896be1d2df31f",
+      "value": "Comment se passe l'arrivée ?",
+      "sections": ["Venir"],
+      "source": "Comment se passe l'arrivée ?"
+    },
+    {
+      "id": "5375277b3b8895fe",
+      "value": "Tu arrives",
+      "sections": ["Venir", "PremiereFois"],
+      "source": "Tu arrives"
+    },
+    {
+      "id": "45cd55317039c9ce",
+      "value": "— une équipe t'accueille à l'entrée et t'oriente.",
+      "sections": ["Venir"],
+      "source": "— une équipe t'accueille à l'entrée et t'oriente."
+    },
+    {
+      "id": "cfc9b1686959d2da",
+      "value": "Tu trouves ta place",
+      "sections": ["Venir"],
+      "source": "Tu trouves ta place"
+    },
+    {
+      "id": "584a759cae497997",
+      "value": "— installe-toi tranquillement, le culte commence à {{horaire}}.",
+      "sections": ["Venir"],
+      "source": "— installe-toi tranquillement, le culte commence à 15h."
+    },
+    {
+      "id": "88a523b96d7cd776",
+      "value": "Tu participes",
+      "sections": ["Venir"],
+      "source": "Tu participes"
+    },
+    {
+      "id": "edea0359b875cefd",
+      "value": "— louange, prière, Parole. Vis le moment à ton rythme.",
+      "sections": ["Venir"],
+      "source": "— louange, prière, Parole. Vis le moment à ton rythme."
+    },
+    {
+      "id": "f437efbb2a49dfa4",
+      "value": "Tu restes après",
+      "sections": ["Venir"],
+      "source": "Tu restes après"
+    },
+    {
+      "id": "1ce11c3431bdd266",
+      "value": "— un temps fraternel pour échanger et poser tes questions.",
+      "sections": ["Venir"],
+      "source": "— un temps fraternel pour échanger et poser tes questions."
+    },
+    {
+      "id": "5c2b18fc6f632075",
+      "value": "Contact rapide",
+      "sections": ["Venir"],
+      "source": "Contact rapide"
+    },
+    {
+      "id": "e031a681c6f22f76",
+      "value": "Une question avant de venir ? Contacte-nous directement.",
+      "sections": ["Venir"],
+      "source": "Une question avant de venir ? Contacte-nous directement."
+    },
+    {
+      "id": "6a40edf1fc87a29f",
+      "value": "WhatsApp",
+      "sections": ["Venir"],
+      "source": "WhatsApp"
+    },
+    {
+      "id": "83b0b5a7d6fd1ace",
+      "value": "Réponse rapide",
+      "sections": ["Venir"],
+      "source": "Réponse rapide"
+    },
+    {
+      "id": "969ccbd3cf6300ec",
+      "value": "Email",
+      "sections": ["Venir", "PublicFooter"],
+      "source": "Email"
+    },
+    {
+      "id": "e09f2917381476c9",
+      "value": "FAQ pratique",
+      "sections": ["Venir"],
+      "source": "FAQ pratique"
+    },
+    {
+      "id": "712e0c3f24752baf",
+      "value": "Espace Serviteur",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Espace Serviteur"
+    },
+    {
+      "id": "5f125995289a12e5",
+      "value": "Bienvenue dans l'espace serviteur",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Bienvenue dans l'espace serviteur"
+    },
+    {
+      "id": "51c48ad1eea78ddc",
+      "value": "Cet espace est réservé aux personnes engagées au service de l'EJP Nantes. Connecte-toi pour accéder à ton tableau de bord, tes ministères et tes missions.",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Cet espace est réservé aux personnes engagées au service de l'EJP Nantes. Connecte-toi pour accéder à ton tableau de bord, tes ministères et tes missions."
+    },
+    {
+      "id": "0ac3d2cb30052ced",
+      "value": "Se connecter",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Se connecter"
+    },
+    {
+      "id": "08ca3bc53576f360",
+      "value": "Ce que tu trouveras dans l'espace",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Ce que tu trouveras dans l'espace"
+    },
+    {
+      "id": "c399e98d4d535c21",
+      "value": "Mes ministères",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Mes ministères"
+    },
+    {
+      "id": "364f8bd5fa7f4cc0",
+      "value": "Équipes & missions",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Équipes & missions"
+    },
+    {
+      "id": "0fdf485f5bfd3762",
+      "value": "Agenda",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Agenda"
+    },
+    {
+      "id": "d33f673ce9f39e4a",
+      "value": "Cultes & événements",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Cultes & événements"
+    },
+    {
+      "id": "3981a2b9c1ef7fce",
+      "value": "Communication",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Communication"
+    },
+    {
+      "id": "f5fddc52a33f0737",
+      "value": "Groupes & annonces",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Groupes & annonces"
+    },
+    {
+      "id": "ab451c6b48a79581",
+      "value": "Mon profil",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Mon profil"
+    },
+    {
+      "id": "404cf9f158c79098",
+      "value": "Rôle & informations",
+      "sections": ["EspaceServiteurSas"],
+      "source": "Rôle & informations"
+    },
+    {
+      "id": "28a2bb0a1169423a",
+      "value": "Je viens seul",
+      "sections": ["FirstVisitForm"],
+      "source": "Je viens seul"
+    },
+    {
+      "id": "766050d7d1be41d2",
+      "value": "Je viens accompagné",
+      "sections": ["FirstVisitForm"],
+      "source": "Je viens accompagné"
+    },
+    {
+      "id": "6fce4372ad0e3262",
+      "value": "Je ne sais pas encore",
+      "sections": ["FirstVisitForm"],
+      "source": "Je ne sais pas encore"
+    },
+    {
+      "id": "f53429b555550e18",
+      "value": "shadow-[0_24px_70px_rgba(16,24,39,0.08)]",
+      "sections": ["FirstVisitForm"],
+      "source": "shadow-[0_24px_70px_rgba(16,24,39,0.08)]"
+    },
+    {
+      "id": "26866b3c2036592c",
+      "value": "Merci",
+      "sections": ["FirstVisitForm"],
+      "source": "Merci"
+    },
+    {
+      "id": "ca101bfc6042861a",
+      "value": "Nous avons bien noté ton intention de venue. L'équipe d'accueil sera prévenue. On a hâte de te rencontrer ce {{jour}} !",
+      "sections": ["FirstVisitForm"],
+      "source": "Nous avons bien noté ton intention de venue. L'équipe d'accueil sera prévenue. On a hâte de te rencontrer ce dimanche !"
+    },
+    {
+      "id": "000aaed4b5db8efc",
+      "value": "Remplis ce formulaire pour que l'équipe d'accueil sache que tu viens. C'est optionnel.",
+      "sections": ["FirstVisitForm"],
+      "source": "Remplis ce formulaire pour que l'équipe d'accueil sache que tu viens. C'est optionnel."
+    },
+    {
+      "id": "cb89d19749493681",
+      "value": "Prénom *",
+      "sections": ["FirstVisitForm"],
+      "source": "Prénom *"
+    },
+    {
+      "id": "d40bff28070202e3",
+      "value": "Téléphone ou email *",
+      "sections": ["FirstVisitForm"],
+      "source": "Téléphone ou email *"
+    },
+    {
+      "id": "33da121fa62c5cf5",
+      "value": "Je viens",
+      "sections": ["FirstVisitForm"],
+      "source": "Je viens"
+    },
+    {
+      "id": "c917e1ed7774a5cd",
+      "value": "Question (optionnel)",
+      "sections": ["FirstVisitForm"],
+      "source": "Question (optionnel)"
+    },
+    {
+      "id": "bf2f14e82f15b313",
+      "value": "Envoi...",
+      "sections": ["FirstVisitForm"],
+      "source": "Envoi..."
+    },
+    {
+      "id": "c66ca8d92f515eed",
+      "value": "Confirmer ma venue",
+      "sections": ["FirstVisitForm"],
+      "source": "Confirmer ma venue"
+    },
+    {
+      "id": "533161735639c51a",
+      "value": "Accueil",
+      "sections": ["PublicHeader", "PublicFooter"],
+      "source": "Accueil"
+    },
+    {
+      "id": "9db78c07d551a403",
+      "value": "La maison",
+      "sections": ["PublicHeader"],
+      "source": "La maison"
+    },
+    {
+      "id": "5fda73682ca3e750",
+      "value": "Familles d’impact",
+      "sections": ["PublicHeader"],
+      "source": "Familles d’impact"
+    },
+    {
+      "id": "c342bc364c8220ad",
+      "value": "Nous rejoindre",
+      "sections": ["PublicHeader"],
+      "source": "Nous rejoindre"
+    },
+    {
+      "id": "de451b134d2e24de",
+      "value": "ejp-header-light",
+      "sections": ["PublicHeader"],
+      "source": "ejp-header-light"
+    },
+    {
+      "id": "86b113cd92086e27",
+      "value": "NANTES",
+      "sections": ["PublicHeader"],
+      "source": "NANTES"
+    },
+    {
+      "id": "eb4151dd0f5a633f",
+      "value": "Une génération qui rayonne",
+      "sections": ["PublicHeader"],
+      "source": "Une génération qui rayonne"
+    },
+    {
+      "id": "4180b202f09c2749",
+      "value": "Fermer le menu",
+      "sections": ["PublicHeader"],
+      "source": "Fermer le menu"
+    },
+    {
+      "id": "6ea528b18c7c7bf7",
+      "value": "Ouvrir le menu",
+      "sections": ["PublicHeader"],
+      "source": "Ouvrir le menu"
+    },
+    {
+      "id": "58b274ab2a5567c6",
+      "value": "Espace serviteur",
+      "sections": ["PublicHeader", "PublicFooter"],
+      "source": "Espace serviteur"
+    },
+    {
+      "id": "4e075e4efa912e2d",
+      "value": "Apôtre Yvan CASTANOU",
+      "sections": ["Authorities"],
+      "source": "Apôtre Yvan CASTANOU",
+      "field": "apostle_name"
+    },
+    {
+      "id": "4d644c87adcc51c8",
+      "value": "Nous honorons l’Apôtre Yvan CASTANOU et la vision dont l’Église des Jeunes Prodiges est issue. Cette vision appelle notre génération à connaître Dieu, à grandir comme disciples et à servir avec excellence.",
+      "sections": ["Authorities"],
+      "source": "Nous honorons l’Apôtre Yvan CASTANOU et la vision dont l’Église des Jeunes Prodiges est issue. Cette vision appelle notre génération à connaître Dieu, à grandir comme disciples et à servir avec excellence.",
+      "field": "apostle_bio"
+    },
+    {
+      "id": "1e5688a4bc0d1207",
+      "value": "Berger principal EJP Monde",
+      "sections": ["Authorities"],
+      "source": "Berger principal EJP Monde",
+      "field": "world_shepherd_role"
+    },
+    {
+      "id": "db1f7cc41a689b97",
+      "value": "Nous honorons le Pasteur Samuel EBOUMBOU, qui porte la responsabilité pastorale de l’EJP Monde et accompagne cette vision. La maison de Nantes s’inscrit dans cette transmission et cet accompagnement.",
+      "sections": ["Authorities"],
+      "source": "Nous honorons le Pasteur Samuel EBOUMBOU, qui porte la responsabilité pastorale de l’EJP Monde et accompagne cette vision. La maison de Nantes s’inscrit dans cette transmission et cet accompagnement.",
+      "field": "world_shepherd_bio"
+    },
+    {
+      "id": "66bf109c486a856f",
+      "value": "Notre Bergère à Nantes",
+      "sections": ["Authorities"],
+      "source": "Notre Bergère à Nantes"
+    },
+    {
+      "id": "d938df9aa3898e77",
+      "value": "Notre père spirituel · Une vision reçue",
+      "sections": ["Authorities"],
+      "source": "Notre père spirituel · Une vision reçue"
+    },
+    {
+      "id": "cc7b0fb8bbf99786",
+      "value": "Reconnaissance, fidélité et transmission.",
+      "sections": ["Authorities"],
+      "source": "Reconnaissance, fidélité et transmission."
+    },
+    {
+      "id": "7c0710127490215a",
+      "value": "Une même vision.",
+      "sections": ["Authorities"],
+      "source": "Une même vision."
+    },
+    {
+      "id": "66ab473201fcc7a7",
+      "value": "Une génération accompagnée.",
+      "sections": ["Authorities"],
+      "source": "Une génération accompagnée."
+    },
+    {
+      "id": "983dd6429dd3cad6",
+      "value": "Ce {{jour}}",
+      "sections": ["CeDimanche"],
+      "source": "Ce dimanche"
+    },
+    {
+      "id": "82a6e1a8c8e50a41",
+      "value": "Culte à",
+      "sections": ["CeDimanche"],
+      "source": "Culte à"
+    },
+    {
+      "id": "52b4c5aed10e1da4",
+      "value": "Un temps pour chercher Dieu, être édifié, et marcher avec une jeunesse qui désire porter du fruit.",
+      "sections": ["CeDimanche"],
+      "source": "Un temps pour chercher Dieu, être édifié, et marcher avec une jeunesse qui désire porter du fruit."
+    },
+    {
+      "id": "4c5d3bba5112a15c",
+      "value": "{{Jour}} à ",
+      "sections": ["CeDimanche"],
+      "source": "Tous les dimanches à"
+    },
+    {
+      "id": "2923740fe800e250",
+      "value": "Google Maps",
+      "sections": ["CeDimanche"],
+      "source": "Google Maps"
+    },
+    {
+      "id": "66ffd1ccfafb52c6",
+      "value": "Compte à rebours",
+      "sections": ["CeDimanche"],
+      "source": "Compte à rebours"
+    },
+    {
+      "id": "d5a8252500f852c9",
+      "value": "Jours",
+      "sections": ["CeDimanche"],
+      "source": "Jours"
+    },
+    {
+      "id": "2aa022f9728c6ce7",
+      "value": "Heures",
+      "sections": ["CeDimanche"],
+      "source": "Heures"
+    },
+    {
+      "id": "dea79332147ffe1f",
+      "value": "Min",
+      "sections": ["CeDimanche"],
+      "source": "Min"
+    },
+    {
+      "id": "7daacc78d1fe796c",
+      "value": "Sec",
+      "sections": ["CeDimanche"],
+      "source": "Sec"
+    },
+    {
+      "id": "337b214172d93bb4",
+      "value": "Prochain culte :",
+      "sections": ["CeDimanche"],
+      "source": "Prochain culte :"
+    },
+    {
+      "id": "018aba90581f8711",
+      "value": "Une porte t'est ouverte",
+      "sections": ["CTAFinal"],
+      "source": "Une porte t'est ouverte"
+    },
+    {
+      "id": "379aa33bb0b7eac4",
+      "value": "Et si tu venais ce {{jour}} ?",
+      "sections": ["CTAFinal"],
+      "source": "Et si tu venais ce dimanche ?"
+    },
+    {
+      "id": "da9b686db67d11fb",
+      "value": "Tu n'as pas besoin de tout comprendre. Viens comme tu es. Une place t'attend.",
+      "sections": ["CTAFinal"],
+      "source": "Tu n'as pas besoin de tout comprendre. Viens comme tu es. Une place t'attend."
+    },
+    {
+      "id": "a1c90d0337d8b267",
+      "value": "Une grande église.",
+      "sections": ["FijInvitation"],
+      "source": "Une grande église."
+    },
+    {
+      "id": "c25ae21170c24750",
+      "value": "Une famille tout près.",
+      "sections": ["FijInvitation"],
+      "source": "Une famille tout près."
+    },
+    {
+      "id": "6a81390e3f40bab7",
+      "value": "Découvrir les FIJ",
+      "sections": ["FijInvitation"],
+      "source": "Découvrir les FIJ"
+    },
+    {
+      "id": "294b3a6f3ebf3ffc",
+      "value": "Les FIJ sont des petits groupes de jeunes où l’on partage la Parole de Dieu, prie ensemble et construit des relations fraternelles. Un lieu pour être connu, accompagné et grandir dans la foi.",
+      "sections": ["FijInvitation"],
+      "source": "Les FIJ sont des petits groupes de jeunes où l’on partage la Parole de Dieu, prie ensemble et construit des relations fraternelles. Un lieu pour être connu, accompagné et grandir dans la foi.",
+      "field": "fij_text"
+    },
+    {
+      "id": "7b27947821c85911",
+      "value": "Galerie",
+      "sections": ["GalerieVivante"],
+      "source": "Galerie"
+    },
+    {
+      "id": "cd4a68d8a33fa566",
+      "value": "Une maison vivante",
+      "sections": ["GalerieVivante"],
+      "source": "Une maison vivante"
+    },
+    {
+      "id": "fbda20b13fba7110",
+      "value": "Quelques instants de vie à l'EJP Nantes.",
+      "sections": ["GalerieVivante"],
+      "source": "Quelques instants de vie à l'EJP Nantes."
+    },
+    {
+      "id": "af845394ff39283b",
+      "value": "Lire",
+      "sections": ["GalerieVivante", "HeroLumineux"],
+      "source": "Lire"
+    },
+    {
+      "id": "9fb440435a046647",
+      "value": "Ouvrir",
+      "sections": ["GalerieVivante"],
+      "source": "Ouvrir"
+    },
+    {
+      "id": "3862bd04591ced1b",
+      "value": "Voir plus de photos et vidéos (",
+      "sections": ["GalerieVivante"],
+      "source": "Voir plus de photos et vidéos ("
+    },
+    {
+      "id": "81bf3bea2c0058b8",
+      "value": "EJP",
+      "sections": ["HeroLumineux", "PublicFooter"],
+      "source": "EJP"
+    },
+    {
+      "id": "9cf25b4f12beb678",
+      "value": "Église des Jeunes Prodiges · Nantes",
+      "sections": ["HeroLumineux"],
+      "source": "Église des Jeunes Prodiges · Nantes"
+    },
+    {
+      "id": "d3b5264b9f2cc770",
+      "value": "Une foi vivante.",
+      "sections": ["HeroLumineux"],
+      "source": "Une foi vivante."
+    },
+    {
+      "id": "7609d2a84454d2b0",
+      "value": "Une génération",
+      "sections": ["HeroLumineux"],
+      "source": "Une génération"
+    },
+    {
+      "id": "96e3955039e6ea38",
+      "value": "qui rayonne.",
+      "sections": ["HeroLumineux"],
+      "source": "qui rayonne."
+    },
+    {
+      "id": "f1f390fba93d7c72",
+      "value": "Découvrir la maison",
+      "sections": ["HeroLumineux"],
+      "source": "Découvrir la maison"
+    },
+    {
+      "id": "592792b13cc2ec96",
+      "value": "Mettre la vidéo en pause",
+      "sections": ["HeroLumineux"],
+      "source": "Mettre la vidéo en pause"
+    },
+    {
+      "id": "47957b09f346a700",
+      "value": "Lire la vidéo",
+      "sections": ["HeroLumineux"],
+      "source": "Lire la vidéo"
+    },
+    {
+      "id": "4c6e8583d1a819c0",
+      "value": "Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence.",
+      "sections": ["HeroLumineux", "PublicFooter"],
+      "source": "Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence.",
+      "field": "hero_subtitle"
+    },
+    {
+      "id": "858e4ba7a29fd38b",
+      "value": "Pause",
+      "sections": ["HeroLumineux"],
+      "source": "Pause"
+    },
+    {
+      "id": "39b1896de3e62535",
+      "value": "Une équipe qui accueille, oriente et crée un climat chaleureux dès l'arrivée.",
+      "sections": ["Ministeres"],
+      "source": "Une équipe qui accueille, oriente et crée un climat chaleureux dès l'arrivée."
+    },
+    {
+      "id": "aee7cefd7b997f56",
+      "value": "Diffusion de la vision, création de contenus et gestion des canaux numériques.",
+      "sections": ["Ministeres"],
+      "source": "Diffusion de la vision, création de contenus et gestion des canaux numériques."
+    },
+    {
+      "id": "fdf0c58683d4392b",
+      "value": "Louange, répétitions et créations musicales qui élèvent le cœur vers Dieu.",
+      "sections": ["Ministeres"],
+      "source": "Louange, répétitions et créations musicales qui élèvent le cœur vers Dieu."
+    },
+    {
+      "id": "e7e3e426e32e8b84",
+      "value": "Organisation, planning et cohérence des activités de l'église.",
+      "sections": ["Ministeres"],
+      "source": "Organisation, planning et cohérence des activités de l'église."
+    },
+    {
+      "id": "293145f2b8a89a8e",
+      "value": "Accompagnement des étudiants, orientation et soutien dans les études.",
+      "sections": ["Ministeres"],
+      "source": "Accompagnement des étudiants, orientation et soutien dans les études."
+    },
+    {
+      "id": "c410eb2513c90b87",
+      "value": "Familles d’Impact Jeunes — petits groupes de croissance et de fraternité.",
+      "sections": ["Ministeres"],
+      "source": "Familles d’Impact Jeunes — petits groupes de croissance et de fraternité."
+    },
+    {
+      "id": "f4c704fba5a4d262",
+      "value": "Ministères",
+      "sections": ["Ministeres"],
+      "source": "Ministères"
+    },
+    {
+      "id": "74aad2ab9e78eada",
+      "value": "Espaces de service",
+      "sections": ["Ministeres"],
+      "source": "Espaces de service"
+    },
+    {
+      "id": "647b8ede4fc972e8",
+      "value": "Chaque ministère porte une mission, sert des personnes et produit un fruit concret.",
+      "sections": ["Ministeres"],
+      "source": "Chaque ministère porte une mission, sert des personnes et produit un fruit concret."
+    },
+    {
+      "id": "fd7037373cc7ddfb",
+      "value": "Photo d’illustration ·",
+      "sections": ["PhotoStory"],
+      "source": "Photo d’illustration ·"
+    },
+    {
+      "id": "7f93ce4e792631c7",
+      "value": "/ Unsplash",
+      "sections": ["PhotoStory"],
+      "source": "/ Unsplash"
+    },
+    {
+      "id": "e64e455e0781afe4",
+      "value": "La vie de notre communauté",
+      "sections": ["PhotoStory"],
+      "source": "La vie de notre communauté"
+    },
+    {
+      "id": "f2086a955d8036e6",
+      "value": "Croire.",
+      "sections": ["PhotoStory"],
+      "source": "Croire."
+    },
+    {
+      "id": "dfa8f194f80cb949",
+      "value": "Grandir.",
+      "sections": ["PhotoStory"],
+      "source": "Grandir."
+    },
+    {
+      "id": "17943661d7682586",
+      "value": "Servir.",
+      "sections": ["PhotoStory"],
+      "source": "Servir."
+    },
+    {
+      "id": "4b43f3d47ecb2120",
+      "value": "Ensemble.",
+      "sections": ["PhotoStory"],
+      "source": "Ensemble."
+    },
+    {
+      "id": "b5701953761de8d8",
+      "value": "La vie de la maison",
+      "sections": ["PhotoStory"],
+      "source": "La vie de la maison"
+    },
+    {
+      "id": "2ca35342ed4bcc61",
+      "value": "La foi se vit.",
+      "sections": ["PhotoStory"],
+      "source": "La foi se vit."
+    },
+    {
+      "id": "738c6e81fb8db8c4",
+      "value": "Des rencontres qui deviennent des liens. Une foi qui prend sa place dans la vie de tous les jours.",
+      "sections": ["PhotoStory"],
+      "source": "Des rencontres qui deviennent des liens. Une foi qui prend sa place dans la vie de tous les jours."
+    },
+    {
+      "id": "5129d6ba1d6e5b80",
+      "value": "Une famille à découvrir",
+      "sections": ["PhotoStory"],
+      "source": "Une famille à découvrir"
+    },
+    {
+      "id": "58bb187e6cacc636",
+      "value": "Une place pour toi.",
+      "sections": ["PhotoStory"],
+      "source": "Une place pour toi."
+    },
+    {
+      "id": "141ef92021397c29",
+      "value": "Au cœur de la ville",
+      "sections": ["PhotoStory"],
+      "source": "Au cœur de la ville"
+    },
+    {
+      "id": "547094c73321b6ad",
+      "value": "À Nantes, pour Nantes.",
+      "sections": ["PhotoStory"],
+      "source": "À Nantes, pour Nantes."
+    },
+    {
+      "id": "ea7babebbc526b40",
+      "value": "Une équipe t'accueille et t'oriente dès ton arrivée. Tu n'as pas besoin de connaître personne.",
+      "sections": ["PremiereFois"],
+      "source": "Une équipe t'accueille et t'oriente dès ton arrivée. Tu n'as pas besoin de connaître personne."
+    },
+    {
+      "id": "09c813c801d2b6fd",
+      "value": "Tu participes au culte",
+      "sections": ["PremiereFois"],
+      "source": "Tu participes au culte"
+    },
+    {
+      "id": "17c7b95de0c20a89",
+      "value": "Louange, prière, Parole et communion fraternelle. Vis ce temps à ton rythme.",
+      "sections": ["PremiereFois"],
+      "source": "Louange, prière, Parole et communion fraternelle. Vis ce temps à ton rythme."
+    },
+    {
+      "id": "f98495259e725e52",
+      "value": "Tu n'es pas seul",
+      "sections": ["PremiereFois"],
+      "source": "Tu n'es pas seul"
+    },
+    {
+      "id": "59126c2bc24be6fe",
+      "value": "Tu peux venir comme tu es. Il y a une place pour toi dans cette maison.",
+      "sections": ["PremiereFois"],
+      "source": "Tu peux venir comme tu es. Il y a une place pour toi dans cette maison."
+    },
+    {
+      "id": "55f19e7fd21e6e1f",
+      "value": "Tu peux rester après",
+      "sections": ["PremiereFois"],
+      "source": "Tu peux rester après"
+    },
+    {
+      "id": "5bb05921f38e2c12",
+      "value": "Un moment simple pour échanger, poser tes questions et partager un temps fraternel.",
+      "sections": ["PremiereFois"],
+      "source": "Un moment simple pour échanger, poser tes questions et partager un temps fraternel."
+    },
+    {
+      "id": "5a9b1303c214ed35",
+      "value": "Première fois",
+      "sections": ["PremiereFois"],
+      "source": "Première fois"
+    },
+    {
+      "id": "7b297275f7566ab0",
+      "value": "Tu viens pour la première fois ?",
+      "sections": ["PremiereFois"],
+      "source": "Tu viens pour la première fois ?"
+    },
+    {
+      "id": "d628fb73134d52c9",
+      "value": "Tu n'as pas besoin de tout connaître avant d'arriver. Notre équipe t'accueille, t'oriente et t'aide à vivre ce temps simplement.",
+      "sections": ["PremiereFois"],
+      "source": "Tu n'as pas besoin de tout connaître avant d'arriver. Notre équipe t'accueille, t'oriente et t'aide à vivre ce temps simplement."
+    },
+    {
+      "id": "1944218376570de3",
+      "value": "Étape",
+      "sections": ["PremiereFois"],
+      "source": "Étape"
+    },
+    {
+      "id": "bad57ef7837c8e6b",
+      "value": "Instagram",
+      "sections": ["PublicFooter"],
+      "source": "Instagram"
+    },
+    {
+      "id": "fb7accfff8c6f8ea",
+      "value": "YouTube",
+      "sections": ["PublicFooter"],
+      "source": "YouTube"
+    },
+    {
+      "id": "4733d264074d8212",
+      "value": "Nantes.",
+      "sections": ["PublicFooter"],
+      "source": "Nantes."
+    },
+    {
+      "id": "d5293ca713d82d44",
+      "value": "Église des Jeunes Prodiges",
+      "sections": ["PublicFooter"],
+      "source": "Église des Jeunes Prodiges"
+    },
+    {
+      "id": "3db65f8c2a7d1861",
+      "value": "Navigation",
+      "sections": ["PublicFooter"],
+      "source": "Navigation"
+    },
+    {
+      "id": "5fa19a378dd1e64a",
+      "value": "Photos & vidéos",
+      "sections": ["PublicFooter"],
+      "source": "Photos & vidéos"
+    },
+    {
+      "id": "4be858b057bcb5b6",
+      "value": "Nos Programmes",
+      "sections": ["PublicFooter"],
+      "source": "Nos Programmes"
+    },
+    {
+      "id": "57d6b9bf2c3d0659",
+      "value": "Rejoins-nous",
+      "sections": ["PublicFooter"],
+      "source": "Rejoins-nous"
+    },
+    {
+      "id": "9f38ae8098e231eb",
+      "value": "Nous contacter",
+      "sections": ["PublicFooter"],
+      "source": "Nous contacter"
+    },
+    {
+      "id": "de356f15bbd2c845",
+      "value": "Église des Jeunes Prodiges Nantes. Tous droits réservés.",
+      "sections": ["PublicFooter"],
+      "source": "Église des Jeunes Prodiges Nantes. Tous droits réservés."
+    },
+    {
+      "id": "31418ae6255c0572",
+      "value": "Témoignages",
+      "sections": ["Temoignages"],
+      "source": "Témoignages"
+    },
+    {
+      "id": "c405cc6c8815ad4a",
+      "value": "Ce que Dieu fait ici",
+      "sections": ["Temoignages"],
+      "source": "Ce que Dieu fait ici"
+    },
+    {
+      "id": "6b23d9ccbf456445",
+      "value": "Des histoires vraies de transformation, de foi et de rencontre.",
+      "sections": ["Temoignages"],
+      "source": "Des histoires vraies de transformation, de foi et de rencontre."
+    },
+    {
+      "id": "17f5ae2f3ec16948",
+      "value": "Anonyme",
+      "sections": ["Temoignages"],
+      "source": "Anonyme"
+    },
+    {
+      "id": "a10930ff295001e3",
+      "value": "Foi",
+      "sections": ["VisionEJP"],
+      "source": "Foi"
+    },
+    {
+      "id": "2d1d94ef9dc1e83b",
+      "value": "Chercher Dieu en vérité, grandir dans la connaissance de Sa Parole et vivre une foi authentique au quotidien.",
+      "sections": ["VisionEJP"],
+      "source": "Chercher Dieu en vérité, grandir dans la connaissance de Sa Parole et vivre une foi authentique au quotidien."
+    },
+    {
+      "id": "a8b484cf3c3e855e",
+      "value": "Bâtir des relations fraternelles profondes, où chacun est connu, aimé et accompagné.",
+      "sections": ["VisionEJP"],
+      "source": "Bâtir des relations fraternelles profondes, où chacun est connu, aimé et accompagné."
+    },
+    {
+      "id": "4e14b61125343964",
+      "value": "Découvrir ses dons, prendre sa place et servir avec excellence dans le corps de Christ.",
+      "sections": ["VisionEJP"],
+      "source": "Découvrir ses dons, prendre sa place et servir avec excellence dans le corps de Christ."
+    },
+    {
+      "id": "4d84a68c31f9c24b",
+      "value": "L'EJP Nantes existe pour conduire une génération à connaître Dieu, grandir ensemble, découvrir ses dons et prendre sa place dans le corps de Christ.",
+      "sections": ["VisionEJP"],
+      "source": "L'EJP Nantes existe pour conduire une génération à connaître Dieu, grandir ensemble, découvrir ses dons et prendre sa place dans le corps de Christ.",
+      "field": "vision_text"
+    },
+    {
+      "id": "a48e859aeb4cd85f",
+      "value": "Une génération qui sert",
+      "sections": ["VisionEJP"],
+      "source": "Une génération qui sert",
+      "field": "vision_title"
+    },
+    {
+      "id": "ae126e56ff2e18fd",
+      "value": "Découvrir Dieu. Grandir. Servir.",
+      "sections": ["VisionEJP"],
+      "source": "Découvrir Dieu. Grandir. Servir.",
+      "field": "mission_title"
+    },
+    {
+      "id": "562232523997d633",
+      "value": "Présenter Jésus-Christ à notre génération, accompagner chaque jeune dans sa croissance spirituelle et l’équiper pour servir Dieu et son prochain avec excellence.",
+      "sections": ["VisionEJP"],
+      "source": "Présenter Jésus-Christ à notre génération, accompagner chaque jeune dans sa croissance spirituelle et l’équiper pour servir Dieu et son prochain avec excellence.",
+      "field": "mission_text"
+    },
+    {
+      "id": "cd0ba7c24aeabee3",
+      "value": "Ton prénom",
+      "source": "Ton prénom",
+      "sections": ["FirstVisitForm"]
+    },
+    {
+      "id": "785be0294ac81262",
+      "value": "Pour qu'on puisse te contacter si besoin",
+      "source": "Pour qu'on puisse te contacter si besoin",
+      "sections": ["FirstVisitForm"]
+    },
+    {
+      "id": "0872dd97029dc931",
+      "value": "Une question ? Un besoin particulier ?",
+      "source": "Une question ? Un besoin particulier ?",
+      "sections": ["FirstVisitForm"]
+    },
+    {
+      "id": "79727f038af3cbda",
+      "value": "EJP Nantes, accueil",
+      "source": "EJP Nantes, accueil",
+      "sections": ["PublicHeader"]
+    },
+    {
+      "id": "4ea15f9a0d372b3e",
+      "value": "Navigation principale",
+      "source": "Navigation principale",
+      "sections": ["PublicHeader"]
+    },
+    {
+      "id": "2eaefc31e2b1a0a8",
+      "value": "Navigation mobile",
+      "source": "Navigation mobile",
+      "sections": ["PublicHeader"]
+    },
+    {
+      "id": "4e07408562bedb8b",
+      "value": "3",
+      "source": "3",
+      "sections": ["Programmes"]
+    }
+  ],
+  "fields": [
+    {
+      "key": "service_day",
+      "value": "Dimanche"
+    },
+    {
+      "key": "service_time",
+      "value": "15:00"
+    },
+    {
+      "key": "vision_title",
+      "value": "Une génération qui sert"
+    },
+    {
+      "key": "vision_text",
+      "value": "L'EJP Nantes existe pour conduire une génération à connaître Dieu, grandir ensemble, découvrir ses dons et prendre sa place dans le corps de Christ."
+    },
+    {
+      "key": "mission_title",
+      "value": "Découvrir Dieu. Grandir. Servir."
+    },
+    {
+      "key": "fij_title",
+      "value": "Familles d’Impact Jeunes"
+    },
+    {
+      "key": "fij_text",
+      "value": "Les Familles d’Impact Jeunes sont des petits groupes de jeunes rattachés à l’EJP. On y partage la Parole de Dieu, la prière et la fraternité. Chacun peut être écouté, encouragé et accompagné dans sa marche avec Dieu."
+    },
+    {
+      "key": "fij_join_text",
+      "value": "Contacte l’équipe EJP Nantes pour connaître les FIJ, leurs lieux et leurs horaires, et être orienté vers une famille."
+    },
+    {
+      "key": "address_label",
+      "value": "Nantes, France"
+    },
+    {
+      "key": "apostle_name",
+      "value": "Apôtre Yvan CASTANOU"
+    },
+    {
+      "key": "apostle_bio",
+      "value": "Nous honorons l’Apôtre Yvan CASTANOU et la vision dont l’Église des Jeunes Prodiges est issue. Cette vision appelle notre génération à connaître Dieu, à grandir comme disciples et à servir avec excellence."
+    },
+    {
+      "key": "world_shepherd_role",
+      "value": "Berger principal EJP Monde"
+    },
+    {
+      "key": "world_shepherd_bio",
+      "value": "Nous honorons le Pasteur Samuel EBOUMBOU, qui porte la responsabilité pastorale de l’EJP Monde et accompagne cette vision. La maison de Nantes s’inscrit dans cette transmission et cet accompagnement."
+    },
+    {
+      "key": "hero_subtitle",
+      "value": "Une maison pour rencontrer Dieu, grandir dans la foi et marcher avec une génération qui sert avec excellence."
+    },
+    {
+      "key": "mission_text",
+      "value": "Présenter Jésus-Christ à notre génération, accompagner chaque jeune dans sa croissance spirituelle et l’équiper pour servir Dieu et son prochain avec excellence."
+    },
+    {
+      "key": "hero_title",
+      "value": "Une foi vivante.\nUne génération\nqui rayonne."
+    },
+    {
+      "key": "shepherd_name",
+      "value": "La Bergère EJP Nantes"
+    },
+    {
+      "key": "shepherd_bio",
+      "value": "La Bergère accompagne la maison de Nantes, veille sur sa croissance et conduit les jeunes dans la foi et le service. Elle porte cette vision auprès de notre communauté et de notre génération."
+    },
+    {
+      "key": "world_shepherd_first_name",
+      "value": "Pasteur Samuel"
+    },
+    {
+      "key": "world_shepherd_last_name",
+      "value": "EBOUMBOU"
+    }
+  ]
+}

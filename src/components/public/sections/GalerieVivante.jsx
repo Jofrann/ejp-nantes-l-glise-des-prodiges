@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -16,13 +17,9 @@ export default function GalerieVivante({ media }) {
     <section id="galerie" className="py-20 md:py-28 px-5 md:px-8 bg-[#FBFAF7]">
       <div className="max-w-6xl mx-auto">
         <RevealOnScroll className="text-center mb-12">
-          <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold">Galerie</span>
-          <h2 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-4 font-medium leading-tight">
-            Une maison vivante
-          </h2>
-          <p className="text-[#4B5563] text-base max-w-xl mx-auto leading-relaxed">
-            Quelques instants de vie à l'EJP Nantes.
-          </p>
+          <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold"><PublicText value={"Galerie"} /></span>
+          <h2 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-4 font-medium leading-tight"><PublicText value={"Une maison vivante"} /></h2>
+          <p className="text-[#4B5563] text-base max-w-xl mx-auto leading-relaxed"><PublicText value={"Quelques instants de vie à l'EJP Nantes."} /></p>
         </RevealOnScroll>
 
         <div className="columns-2 md:columns-3 gap-4 space-y-4">
@@ -39,7 +36,7 @@ export default function GalerieVivante({ media }) {
                     {item.thumbnail_url ? <img src={item.thumbnail_url} alt={item.alt_text || item.title || ''} className="w-full object-cover" /> : <video src={item.file_url} muted playsInline preload="metadata" className="w-full min-h-40 object-cover" aria-hidden="true" /> }
                     <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-100 transition-opacity">
                       <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center">
-                        <span className="text-[#101827] text-xl">▶</span>
+                        <span className="text-[#101827] text-xl"><PublicText value={"▶"} /></span>
                       </div>
                     </div>
                   </>
@@ -52,20 +49,20 @@ export default function GalerieVivante({ media }) {
                 )}
                 {item.title && (
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-white text-xs font-medium">{item.title}</p>
+                    <p className="text-white text-xs font-medium"><PublicText value={item.title} /></p>
                   </div>
                 )}
               </motion.button>
             </RevealOnScroll>
           ))}
         </div>
-        {visible.length > limit && <button onClick={() => setLimit(current => current + 9)} className="mt-8 mx-auto block border border-[#101827] text-[#101827] px-6 py-3 rounded-full text-sm font-semibold">Voir plus de photos et vidéos ({visible.length - limit})</button>}
+        {visible.length > limit && <button onClick={() => setLimit(current => current + 9)} className="mt-8 mx-auto block border border-[#101827] text-[#101827] px-6 py-3 rounded-full text-sm font-semibold"><PublicText value={"Voir plus de photos et vidéos ("} /><PublicText value={visible.length - limit} /><PublicText value={")"} /></button>}
       </div>
 
       {/* Lightbox */}
       <Dialog open={!!lightbox} onOpenChange={open => { if (!open) setLightbox(null); }}>
         <DialogContent className="max-w-5xl bg-[#101827] text-white border-0 p-6" aria-describedby={undefined}>
-          <DialogTitle className="text-white">{lightbox?.title || 'Galerie EJP Nantes'}</DialogTitle>
+          <DialogTitle className="text-white"><PublicText value={lightbox?.title || 'Galerie EJP Nantes'} /></DialogTitle>
           {lightbox?.type === 'video' ? <video src={lightbox.file_url} controls autoPlay className="w-full max-h-[75vh]" /> : lightbox && <img src={lightbox.file_url} alt={lightbox.alt_text || lightbox.title || ''} className="w-full max-h-[75vh] object-contain" />}
         </DialogContent>
       </Dialog>

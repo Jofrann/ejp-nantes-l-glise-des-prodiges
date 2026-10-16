@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { Flame, Home, HandHeart } from 'lucide-react';
 import RevealOnScroll from '../RevealOnScroll';
@@ -15,16 +16,16 @@ export default function VisionEJP({ config }) {
     <section id="vision" className="py-20 md:py-32 px-5 md:px-8 bg-gradient-to-b from-[#FBFAF7] to-white">
       <div className="max-w-4xl mx-auto text-center">
         <RevealOnScroll>
-          <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold">Notre vision</span>
+          <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold"><PublicText value={"Notre vision"} /></span>
           <h2 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-6 font-medium leading-tight">
-            {config?.vision_title || 'Une génération qui sert'}
+            <PublicText value={config?.vision_title || 'Une génération qui sert'} />
           </h2>
           <p className="text-[#4B5563] text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-16">
-            {visionText}
+            <PublicText value={visionText} />
           </p>
         </RevealOnScroll>
 
-        <RevealOnScroll><div className="ejp-mission"><p className="ejp-eyebrow">Notre mission</p><h3>{config?.mission_title || "Découvrir Dieu. Grandir. Servir."}</h3><p>{config?.mission_text || "Présenter Jésus-Christ à notre génération, accompagner chaque jeune dans sa croissance spirituelle et l’équiper pour servir Dieu et son prochain avec excellence."}</p></div></RevealOnScroll>
+        <RevealOnScroll><div className="ejp-mission"><p className="ejp-eyebrow"><PublicText value={"Notre mission"} /></p><h3><PublicText value={config?.mission_title || "Découvrir Dieu. Grandir. Servir."} /></h3><p><PublicText value={config?.mission_text || "Présenter Jésus-Christ à notre génération, accompagner chaque jeune dans sa croissance spirituelle et l’équiper pour servir Dieu et son prochain avec excellence."} /></p></div></RevealOnScroll>
         <div className="grid md:grid-cols-3 gap-6">
           {PILLARS.map((pillar, i) => {
             const Icon = pillar.icon;
@@ -34,8 +35,8 @@ export default function VisionEJP({ config }) {
                   <div className={`w-14 h-14 rounded-2xl ${pillar.color} flex items-center justify-center mb-5`}>
                     <Icon className="w-6 h-6 text-[#101827]" />
                   </div>
-                  <h3 className="font-display text-2xl text-[#101827] mb-3 font-medium">{pillar.title}</h3>
-                  <p className="text-sm text-[#4B5563] leading-relaxed">{pillar.text}</p>
+                  <h3 className="font-display text-2xl text-[#101827] mb-3 font-medium"><PublicText value={pillar.title} /></h3>
+                  <p className="text-sm text-[#4B5563] leading-relaxed"><PublicText value={pillar.text} /></p>
                 </div>
               </RevealOnScroll>
             );

@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
@@ -5,7 +6,7 @@ import { PUBLIC_PHOTOS } from '../publicPhotos';
 
 export function PhotoCredit({ photo, custom }) {
   if (custom) return null;
-  return <a className="ejp-photo-credit" href={photo.source} target="_blank" rel="noreferrer">Photo d’illustration · {photo.author} / Unsplash</a>;
+  return <a className="ejp-photo-credit" href={photo.source} target="_blank" rel="noreferrer"><PublicText value={"Photo d’illustration · "} /><PublicText value={photo.author} /><PublicText value={" / Unsplash"} /></a>;
 }
 export function EditorialPhoto({ src, photo, className = '' }) {
   return <figure className={`ejp-photo-frame ejp-editorial-photo ${className}`}>
@@ -18,16 +19,16 @@ export default function PhotoStory({ config, media = [] }) {
   const community = config?.community_image_url || images[0]?.file_url;
   const city = config?.nantes_image_url || images[1]?.file_url;
   return <section id="vie-de-la-maison" className="ejp-photo-story" aria-labelledby="ejp-story-title">
-    <div className="ejp-scroll-ribbon" aria-hidden="true"><div className="ejp-scroll-ribbon-track">Croire. <i>Grandir.</i> Servir. <i>Ensemble.</i> Croire. <i>Grandir.</i> Servir.</div></div>
-    <div className="ejp-story-intro" data-motion-reveal><p className="ejp-eyebrow">La vie de la maison</p><h2 id="ejp-story-title">La foi se vit.<br /><em>Ensemble.</em></h2><p>Des rencontres qui deviennent des liens. Une foi qui prend sa place dans la vie de tous les jours.</p></div>
+    <div className="ejp-scroll-ribbon" aria-hidden="true"><div className="ejp-scroll-ribbon-track"><PublicText value={"Croire. "} /><i><PublicText value={"Grandir."} /></i><PublicText value={" Servir. "} /><i><PublicText value={"Ensemble."} /></i><PublicText value={" Croire. "} /><i><PublicText value={"Grandir."} /></i><PublicText value={" Servir."} /></div></div>
+    <div className="ejp-story-intro" data-motion-reveal><p className="ejp-eyebrow"><PublicText value={"La vie de la maison"} /></p><h2 id="ejp-story-title"><PublicText value={"La foi se vit."} /><br /><em><PublicText value={"Ensemble."} /></em></h2><p><PublicText value={"Des rencontres qui deviennent des liens. Une foi qui prend sa place dans la vie de tous les jours."} /></p></div>
     <div className="ejp-story-grid">
       <div className="ejp-story-card" data-tilt>
         <EditorialPhoto src={community} photo={PUBLIC_PHOTOS.community} />
-        <Link to="/a-propos" className="ejp-story-card-caption"><div><span>Une famille à découvrir</span><h3>Une place pour toi.</h3></div><ArrowUpRight /></Link>
+        <Link to="/a-propos" className="ejp-story-card-caption"><div><span><PublicText value={"Une famille à découvrir"} /></span><h3><PublicText value={"Une place pour toi."} /></h3></div><ArrowUpRight /></Link>
       </div>
       <div className="ejp-story-card ejp-story-card-offset" data-tilt>
         <EditorialPhoto src={city} photo={PUBLIC_PHOTOS.nantes} />
-        <Link to="/venir" className="ejp-story-card-caption"><div><span>Au cœur de la ville</span><h3>À Nantes, pour Nantes.</h3></div><ArrowUpRight /></Link>
+        <Link to="/venir" className="ejp-story-card-caption"><div><span><PublicText value={"Au cœur de la ville"} /></span><h3><PublicText value={"À Nantes, pour Nantes."} /></h3></div><ArrowUpRight /></Link>
       </div>
     </div>
   </section>;

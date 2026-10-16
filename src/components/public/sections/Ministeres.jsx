@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Megaphone, Music, Settings, GraduationCap, Heart } from 'lucide-react';
@@ -23,13 +24,9 @@ export default function Ministeres({ ministries }) {
     <section id="ministeres" className="py-20 md:py-28 px-5 md:px-8 bg-white">
       <div className="max-w-5xl mx-auto">
         <RevealOnScroll className="text-center mb-12">
-          <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold">Ministères</span>
-          <h2 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-4 font-medium leading-tight">
-            Espaces de service
-          </h2>
-          <p className="text-[#4B5563] text-base max-w-xl mx-auto leading-relaxed">
-            Chaque ministère porte une mission, sert des personnes et produit un fruit concret.
-          </p>
+          <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold"><PublicText value={"Ministères"} /></span>
+          <h2 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-4 font-medium leading-tight"><PublicText value={"Espaces de service"} /></h2>
+          <p className="text-[#4B5563] text-base max-w-xl mx-auto leading-relaxed"><PublicText value={"Chaque ministère porte une mission, sert des personnes et produit un fruit concret."} /></p>
         </RevealOnScroll>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -51,11 +48,11 @@ export default function Ministeres({ ministries }) {
                       <div className="w-10 h-10 rounded-xl bg-[#D8B76A]/15 flex items-center justify-center flex-shrink-0">
                         <Icon className="w-5 h-5 text-[#D8B76A]" />
                       </div>
-                      <h3 className="font-heading text-lg font-semibold text-[#101827]">{m.name}</h3>
+                      <h3 className="font-heading text-lg font-semibold text-[#101827]"><PublicText value={m.name} /></h3>
                     </div>
-                    <p className="text-sm text-[#4B5563] leading-relaxed mb-3">{m.description}</p>
+                    <p className="text-sm text-[#4B5563] leading-relaxed mb-3"><PublicText value={m.description} /></p>
                     {m.benefit_text && (
-                      <p className="text-xs text-[#D8B76A] font-medium italic">→ {m.benefit_text}</p>
+                      <p className="text-xs text-[#D8B76A] font-medium italic"><PublicText value={"→ "} /><PublicText value={m.benefit_text} /></p>
                     )}
                   </div>
                 </motion.div>
