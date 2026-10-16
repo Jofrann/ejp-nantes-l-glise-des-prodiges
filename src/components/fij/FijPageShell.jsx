@@ -93,7 +93,7 @@ export function RoleShell({ role, title, subtitle, children, actions, requiredRo
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header sticky avec navigation */}
-      <div className="sticky top-14 z-30 bg-card/90 backdrop-blur-md border-b border-border">
+      <div className="app-section-header sticky z-30 bg-card/90 backdrop-blur-md border-b border-border">
         <div className="max-w-4xl mx-auto px-4">
           {/* Fil d'Ariane */}
           <PageBreadcrumb

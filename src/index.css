@@ -408,3 +408,31 @@ html { scrollbar-color:#a79a7b #f1eee7; scrollbar-width:thin; }
 @media(prefers-reduced-motion:reduce){.ejp-gold-wave{animation:none}}
 @media(forced-colors:active){.ejp-gold-wave{background:none;-webkit-text-fill-color:CanvasText;color:CanvasText}}
 .ejp-authorities-editorial .ejp-authority-portrait img{width:100%;height:100%;object-fit:cover;object-position:top}
+
+/* Canonical fixed chrome: offsets follow rendered bars, not old page constants. */
+.serviteur-app,.ejp-public{--app-header-height:90px;--app-bottom-height:0px;--app-viewport-height:100dvh;scroll-padding-top:calc(var(--app-header-height) + 16px)}
+.serviteur-app .serviteur-main{padding-top:calc(var(--app-header-height) + 15px)!important;padding-bottom:calc(var(--app-bottom-height) + 24px)!important;overflow-x:clip;overflow-y:visible}
+.serviteur-app .app-section-header{top:var(--app-header-height)}
+.serviteur-app main :is([id],input,textarea,button,a),.ejp-public :is(section[id],input,textarea,button,a){scroll-margin-top:calc(var(--app-header-height) + 16px);scroll-margin-bottom:calc(var(--app-bottom-height) + 20px)}
+.ejp-public{padding-bottom:var(--app-bottom-height)}
+.ejp-public .ejp-sticky-cta{padding-bottom:calc(12px + env(safe-area-inset-bottom));padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.ejp-public .ejp-mobile-nav{max-height:calc(var(--app-viewport-height) - var(--app-header-height));padding-bottom:calc(30px + env(safe-area-inset-bottom));overscroll-behavior:contain}
+.serviteur-app main .fixed.inset-0.z-50{z-index:80}
+.serviteur-app main .fixed.inset-0.z-50>div{max-height:calc(var(--app-viewport-height) - 32px);overflow-y:auto}
+.serviteur-app .fixed.bottom-0[class*='z-[70]']{max-height:calc(var(--app-viewport-height) - 24px);overscroll-behavior:contain;overflow-y:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+@media(max-width:1279px){.serviteur-app{--app-bottom-height:64px}}
+@media(max-width:900px){.ejp-public{--app-header-height:76px}.ejp-header-inner{height:calc(76px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}}
+@media(max-width:767px){
+ .serviteur-app{--app-header-height:76px}
+ .serviteur-app .glass-header{height:calc(76px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}
+ .serviteur-app .app-section-header{position:relative;top:auto}
+ .serviteur-app .glass-header>div{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+ .serviteur-app :is(.text-xs,.text-sm){overflow-wrap:anywhere}
+ .serviteur-app:has(main input:focus,main textarea:focus) .glass-bottom,.ejp-public:has(input:focus,textarea:focus) .ejp-sticky-cta{display:none}
+ .serviteur-app .fixed.bottom-0[class*='z-[70]']{border-radius:24px 24px 0 0}
+ .serviteur-app main .fixed.inset-0.z-50{padding:12px;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+ .ejp-login{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right));padding-bottom:max(24px,env(safe-area-inset-bottom))}
+}
+
+@media(min-width:769px){.serviteur-app .fixed.bottom-0[class*='z-[70]']{max-height:calc(var(--app-viewport-height) - 72px)}}
+@media(max-width:1279px) and (max-height:600px){.serviteur-app .app-section-header{position:relative;top:auto}}

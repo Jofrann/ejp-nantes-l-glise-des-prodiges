@@ -49,7 +49,7 @@ function ParoleTab() {
   const readToday = logs.some(l => l.reading_date === today);
 
   const load = () => {
-    base44.entities.ScriptureReadingLog.list('-reading_date', 50)
+    base44.personal.ScriptureReadingLog.list('-reading_date', 50)
       .then(data => { setLogs(data || []); setLoading(false); })
       .catch(() => setLoading(false));
   };
@@ -57,7 +57,7 @@ function ParoleTab() {
   useEffect(() => { load(); }, []);
 
   const markToday = async () => {
-    await base44.entities.ScriptureReadingLog.create({ reading_date: today, status: 'read', passage: form.passage || 'Lecture du jour', verse_highlight: form.verse_highlight, private_note: form.private_note });
+    await base44.personal.ScriptureReadingLog.create({ reading_date: today, status: 'read', passage: form.passage || 'Lecture du jour', verse_highlight: form.verse_highlight, private_note: form.private_note });
     setForm({ passage: '', verse_highlight: '', private_note: '' });
     setShowForm(false);
     load();
@@ -150,7 +150,7 @@ function NotesTab() {
   const [form, setForm] = useState({ title: '', content: '', category: 'meditation' });
 
   const load = () => {
-    base44.entities.PersonalNote.list('-created_date', 50)
+    base44.personal.PersonalNote.list('-created_date', 50)
       .then(data => { setNotes(data || []); setLoading(false); })
       .catch(() => setLoading(false));
   };
@@ -159,14 +159,14 @@ function NotesTab() {
 
   const create = async () => {
     if (!form.title.trim() || !form.content.trim()) return;
-    await base44.entities.PersonalNote.create({ ...form, visibility: 'private' });
+    await base44.personal.PersonalNote.create({ ...form, visibility: 'private' });
     setForm({ title: '', content: '', category: 'meditation' });
     setShowForm(false);
     load();
   };
 
   const remove = async (id) => {
-    await base44.entities.PersonalNote.delete(id);
+    await base44.personal.PersonalNote.delete(id);
     load();
   };
 
@@ -261,7 +261,7 @@ function LivresTab() {
   const [form, setForm] = useState({ title: '', author: '', category: '', status: 'wishlist' });
 
   const load = () => {
-    base44.entities.BookLog.list('-created_date', 50)
+    base44.personal.BookLog.list('-created_date', 50)
       .then(data => { setBooks(data || []); setLoading(false); })
       .catch(() => setLoading(false));
   };
@@ -270,7 +270,7 @@ function LivresTab() {
 
   const create = async () => {
     if (!form.title.trim()) return;
-    await base44.entities.BookLog.create({ ...form, started_at: form.status === 'reading' ? new Date().toISOString().split('T')[0] : null });
+    await base44.personal.BookLog.create({ ...form, started_at: form.status === 'reading' ? new Date().toISOString().split('T')[0] : null });
     setForm({ title: '', author: '', category: '', status: 'wishlist' });
     setShowForm(false);
     load();
@@ -279,12 +279,12 @@ function LivresTab() {
   const updateStatus = async (id, status) => {
     const updates = { status };
     if (status === 'finished') updates.finished_at = new Date().toISOString().split('T')[0];
-    await base44.entities.BookLog.update(id, updates);
+    await base44.personal.BookLog.update(id, updates);
     load();
   };
 
   const remove = async (id) => {
-    await base44.entities.BookLog.delete(id);
+    await base44.personal.BookLog.delete(id);
     load();
   };
 

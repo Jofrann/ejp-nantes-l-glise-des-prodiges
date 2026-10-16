@@ -22,7 +22,7 @@ export default function NotificationBell() {
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const notifs = await base44.entities.StarNotification.list('-created_date', 20);
+      const notifs = await base44.personal.StarNotification.list('-created_date', 20);
       setNotifications(notifs || []);
     } catch (e) { /* ignore */ }
   }, []);
@@ -36,14 +36,14 @@ export default function NotificationBell() {
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
   const markAsRead = async (id) => {
-    await base44.entities.StarNotification.update(id, { is_read: true });
+    await base44.personal.StarNotification.update(id, { is_read: true });
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
   };
 
   const markAllAsRead = async () => {
     const unread = notifications.filter(n => !n.is_read);
     for (const n of unread) {
-      await base44.entities.StarNotification.update(n.id, { is_read: true });
+      await base44.personal.StarNotification.update(n.id, { is_read: true });
     }
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
   };

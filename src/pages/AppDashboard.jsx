@@ -53,13 +53,13 @@ export default function AppDashboard() {
     Promise.all([
       base44.auth.me(),
       base44.entities.Event.list('-event_date', 20),
-      base44.entities.AttendanceResponse.filter({}, '-created_date', 50),
+      base44.personal.AttendanceResponse.filter({}, '-created_date', 50),
       base44.entities.FIJ.filter({ is_active: true }, '-created_date', 50),
-      base44.entities.AppointmentRequest.filter({ status: 'pending' }, '-created_date', 5),
-      base44.entities.TrainingSubmission.filter({}, '-created_date', 50),
+      base44.personal.AppointmentRequest.filter({ status: 'pending' }, '-created_date', 5),
+      base44.personal.TrainingSubmission.filter({}, '-created_date', 50),
       base44.entities.TrainingProgram.filter({ status: 'published' }, 'display_order', 50),
       base44.entities.StarResource.filter({ is_active: true }, 'display_order', 5),
-      base44.entities.UserWorkspacePreference.list('-updated_date', 1),
+      base44.personal.UserWorkspacePreference.list('-updated_date', 1),
       base44.entities.DepartmentMember.filter({}, { limit: 100 }),
       base44.entities.Department.filter({ is_active: true }, { sort: 'display_order', limit: 50 }),
     ]).then(([u, evs, resps, f, appts, subs, progs, rsrcs, prefs, mems, depts]) => {

@@ -1,3 +1,5 @@
+import { toast } from '@/components/ui/use-toast';
+let lastError = { message: '', at: 0 };
 // Compatibility name retained so existing screens use the independent local API.
 async function request(path, data) {
   const response = await fetch("/api/local/" + path, {
@@ -10,7 +12,17 @@ async function request(path, data) {
           body: JSON.stringify(data),
         }),
   });
-  const result = await response.json();
+  const text = await response.text();
+  let result;
+  try { result = text ? JSON.parse(text) : {}; }
+  catch { result = { message: 'Le serveur est momentanément indisponible. Réessaie.' }; }
+  if (!response.ok && response.status !== 401 && !path.startsWith('auth/')) {
+    const message = result.message || result.error || 'Opération impossible';
+    if (message !== lastError.message || Date.now() - lastError.at > 5000) {
+      toast({ variant: 'destructive', title: 'Action non terminée', description: message });
+      lastError = { message, at: Date.now() };
+    }
+  }
   if (!response.ok)
     throw Object.assign(
       new Error(result.message || result.error || "Opération impossible"),
@@ -39,6 +51,7 @@ export const base44 = {
         ),
     },
   ),
+  personal: new Proxy({}, { get: (_, entity) => new Proxy({}, { get: (_, method) => (...args) => request('entities/' + entity, { method, args, scope: 'self' }) }) }),
   auth: {
     me: () => request("auth/me"),
     isAuthenticated: async () => {

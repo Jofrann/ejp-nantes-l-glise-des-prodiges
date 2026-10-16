@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { isAdminUser } from '../../shared/identityUtils.ts';
+import { isBureauLike } from '../../../src/lib/permissions.js';
 
 /**
  * getDepartmentData — Fonction backend pour l'accès aux données d'un département.
@@ -31,13 +31,13 @@ export default async function(req: Request): Promise<Response> {
 
     // 1. Trouver le département par slug
     const depts = await base44.asServiceRole.entities.Department.filter({ slug: department_slug });
-    const department = depts && depts[0];
+    const department = depts?.[0] || (await base44.asServiceRole.entities.Department.filter({ id: department_slug }))?.[0];
     if (!department) {
       return Response.json({ not_found: true, error: 'Département introuvable' });
     }
 
     // 2. Vérifier l'accès
-    const admin = isAdminUser(user);
+    const admin = isBureauLike(user);
     let membership = null;
 
     if (!admin) {
@@ -45,7 +45,7 @@ export default async function(req: Request): Promise<Response> {
         user_id: user.id,
         department_id: department.id,
       });
-      membership = (memberships || []).find((m: any) => m.status === 'active' || m.is_active === true);
+      membership = (memberships || []).find((m: any) => m.status === 'active' || (!m.status && m.is_active !== false));
 
       if (!membership) {
         // Accès refusé — ne renvoyer AUCUNE donnée du département

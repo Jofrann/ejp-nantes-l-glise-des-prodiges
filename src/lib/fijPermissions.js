@@ -8,7 +8,7 @@
  * - serviteur hors FIJ : aucune donnée FIJ
  */
 
-import { getRoles, isAdmin, isBureauLike, hasRole, hasAnyRole } from '@/lib/permissions';
+import { getRoles, isAdmin, isBureauLike, hasRole, hasAnyRole } from './permissions.js';
 
 // === Rôles FIJ ===
 
@@ -30,7 +30,7 @@ export function isFijCoordinationRole(user, memberships = null, coordFijDeptId =
     const hasActiveMembership = memberships.some(
       m => m.user_id === user.id &&
             m.department_id === coordFijDeptId &&
-            (m.status === 'active' || m.is_active !== false)
+            (m.status ? m.status === 'active' : m.is_active !== false)
     );
     if (hasActiveMembership) return true;
   }

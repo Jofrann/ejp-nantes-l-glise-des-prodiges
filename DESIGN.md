@@ -29,3 +29,7 @@ Connexion : LoginBubbles présente deux étapes centrées ; Login.jsx reste prop
 ## Autorités et reflet doré — référence Porto-Novo
 
 Apôtre en composition texte/portrait, puis deux présentations des bergers avec signature et portrait. Portraits publics de Yvan Castanou et Samuel Eboumbou : sources officielles observées sur https://www.ejp-portonovo.com/ ; URLs remplaçables dans ChurchConfig. Le portrait de Nantes reste spécifique à Nantes. Aucun témoignage ou citation n’est attribué sans source. Reflet doré CSS sur quelques titres, respect de prefers-reduced-motion et couleurs forcées.
+
+## Responsive et barres fixes
+
+useChromeInset mesure les en-têtes et les barres du bas avec ResizeObserver. Les décalages et marges de défilement utilisent les variables de hauteur réelles. Sur téléphone, les en-têtes secondaires restent dans le flux, les onglets d’administration défilent horizontalement et les fenêtres passent devant la navigation avec une hauteur adaptée au viewport visuel. Les barres inférieures s’effacent pendant la saisie pour libérer le clavier. Zones de sécurité prises en compte. Les fonctions métier restent inchangées.

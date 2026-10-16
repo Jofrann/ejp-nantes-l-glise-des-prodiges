@@ -26,12 +26,13 @@ export default function FormationDetail() {
   const [activeModule, setActiveModule] = useState(null);
   const [summary, setSummary] = useState('');
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     Promise.all([
       base44.entities.TrainingProgram.get(formationId),
       base44.entities.TrainingModule.filter({ program_id: formationId }, 'module_order', 50),
-      base44.entities.TrainingSubmission.filter({ program_id: formationId }, '-updated_date', 100),
+      base44.personal.TrainingSubmission.filter({ program_id: formationId }, '-updated_date', 100),
     ]).then(([prog, mods, subs]) => {
       setProgram(prog);
       setModules(mods || []);
@@ -52,6 +53,7 @@ export default function FormationDetail() {
   const handleSubmitSummary = async () => {
     if (!activeModule || !summary.trim()) return;
     setSaving(true);
+    setError('');
     try {
       const existing = getSubmission(activeModule.id);
       const payload = {
@@ -65,15 +67,15 @@ export default function FormationDetail() {
       };
       let result;
       if (existing?.id) {
-        result = await base44.entities.TrainingSubmission.update(existing.id, payload);
+        result = await base44.personal.TrainingSubmission.update(existing.id, payload);
       } else {
-        result = await base44.entities.TrainingSubmission.create(payload);
+        result = await base44.personal.TrainingSubmission.create(payload);
       }
       setSubmissions(prev => {
         const filtered = prev.filter(s => s.module_id !== activeModule.id);
         return [...filtered, result];
       });
-    } catch (e) {
+    } catch (e) { setError(e.message || 'Envoi impossible. Réessaie.');
     } finally {
       setSaving(false);
     }
@@ -106,6 +108,7 @@ export default function FormationDetail() {
         <ArrowLeft className="w-3.5 h-3.5" /> Retour aux formations
       </Link>
 
+      {error && <p role="alert" className="text-danger mb-4">{error}</p>}
       <PageHeader
         title={program.title}
         intention={program.description || ''}

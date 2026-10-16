@@ -177,7 +177,7 @@ function AddMembershipModal({ person, activeDepartments, existingDeptIds, onClos
         </div>
 
         {availableDepts.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">{person.first_name} fait déjà partie de tous les départements actifs.</p>
+          <p className="text-sm text-muted-foreground text-center py-4">{activeDepartments.length === 0 ? 'Aucun département actif n’est configuré. Crée un département dans Administration → Départements.' : `${person.first_name} fait déjà partie de tous les départements actifs.`}</p>
         ) : (
           <form onSubmit={submit} className="space-y-4">
             {error && <div className="p-3 rounded-xl bg-danger/10 text-danger text-sm border border-danger/20">{error}</div>}

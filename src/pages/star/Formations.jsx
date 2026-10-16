@@ -24,7 +24,7 @@ export default function Formations() {
   useEffect(() => {
     Promise.all([
       base44.entities.TrainingProgram.filter({ status: 'published' }, 'display_order', 50),
-      base44.entities.TrainingSubmission.list('-updated_date', 200),
+      base44.personal.TrainingSubmission.list('-updated_date', 200),
     ]).then(([progs, subs]) => {
       setPrograms(progs || []);
       setSubmissions(subs || []);

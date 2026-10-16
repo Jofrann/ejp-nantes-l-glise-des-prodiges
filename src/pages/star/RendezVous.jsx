@@ -38,7 +38,7 @@ export default function RendezVous() {
   const [form, setForm] = useState({ request_type: 'bergere', subject: '', urgency: 'normal', message: '', proposed_slots: '' });
 
   const load = () => {
-    base44.entities.AppointmentRequest.list('-created_date', 50)
+    base44.personal.AppointmentRequest.list('-created_date', 50)
       .then(data => { setRequests(data || []); setLoading(false); })
       .catch(() => setLoading(false));
   };
@@ -47,14 +47,14 @@ export default function RendezVous() {
 
   const submit = async () => {
     if (!form.subject.trim()) return;
-    await base44.entities.AppointmentRequest.create({ ...form, status: 'pending' });
+    await base44.personal.AppointmentRequest.create({ ...form, status: 'pending' });
     setForm({ request_type: 'bergere', subject: '', urgency: 'normal', message: '', proposed_slots: '' });
     setShowForm(false);
     load();
   };
 
   const cancel = async (id) => {
-    await base44.entities.AppointmentRequest.update(id, { status: 'cancelled' });
+    await base44.personal.AppointmentRequest.update(id, { status: 'cancelled' });
     load();
   };
 

@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Settings, Users, Calendar, Image, Church, Save, Plus, Trash2, Upload, CalendarClock, GraduationCap, UserPlus } from 'lucide-react';
@@ -44,7 +45,9 @@ function Field({ label, children }) {
 const inputCls = "w-full bg-white border border-border text-foreground placeholder-muted-foreground/60 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary/50";
 
 export default function AdminHome() {
-  const [tab, setTab] = useState('hero');
+  const [params, setParams] = useSearchParams();
+  const tab = TABS.some(item => item.id === params.get('tab')) ? params.get('tab') : 'hero';
+  const setTab = value => setParams({ tab: value });
   const [config, setConfig] = useState(null);
   const [leaders, setLeaders] = useState([]);
   const [events, setEvents] = useState([]);
@@ -102,7 +105,7 @@ export default function AdminHome() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="border-b border-border px-6 py-4 flex items-center justify-between bg-card/80 backdrop-blur-sm sticky top-14 z-30">
+      <div className="border-b border-border px-4 sm:px-6 py-4 flex flex-wrap gap-3 items-center justify-between bg-card/80 backdrop-blur-sm app-section-header sticky z-30">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-secondary/15 border border-secondary/30 flex items-center justify-center">
             <span className="text-secondary font-bold text-xs">EJP</span>
@@ -122,14 +125,14 @@ export default function AdminHome() {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex flex-col md:flex-row">
         {/* Sidebar */}
-        <div className="w-52 border-r border-border min-h-[calc(100vh-120px)] p-4 flex flex-col gap-1 bg-card/50">
+        <div className="w-full md:w-52 md:shrink-0 border-b md:border-b-0 md:border-r border-border p-3 md:p-4 flex flex-row md:flex-col gap-1 overflow-x-auto bg-card/50">
           {TABS.map(t => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all ${tab === t.id ? 'bg-secondary/10 text-secondary' : 'text-muted-foreground hover:text-foreground hover:bg-surface'}`}
+              className={`flex shrink-0 items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all ${tab === t.id ? 'bg-secondary/10 text-secondary' : 'text-muted-foreground hover:text-foreground hover:bg-surface'}`}
             >
               <t.icon className="w-4 h-4" />
               {t.label}
@@ -138,7 +141,7 @@ export default function AdminHome() {
         </div>
 
         {/* Contenu */}
-        <div className="flex-1 p-6 max-w-3xl">
+        <div className="flex-1 min-w-0 w-full p-4 sm:p-6 max-w-3xl">
           {tab === 'programs' && <AdminProgramsTab />}
           {tab === 'appointments' && <AdminAppointmentsTab />}
           {tab === 'formations' && <AdminFormationsTab />}

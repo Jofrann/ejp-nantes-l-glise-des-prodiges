@@ -51,7 +51,7 @@ export default function Confidentialite() {
   const [actionLoading, setActionLoading] = useState(null);
 
   useEffect(() => {
-    base44.entities.PrivacyConsent.list('-consent_date', 50).then(c => {
+    base44.personal.PrivacyConsent.list('-consent_date', 50).then(c => {
       setExistingConsents(c || []);
       const map = {};
       (c || []).forEach(con => {
@@ -72,7 +72,7 @@ export default function Confidentialite() {
     setActionLoading(type);
     try {
       const user = await base44.auth.me();
-      await base44.entities.PrivacyConsent.create({
+      await base44.personal.PrivacyConsent.create({
         consent_type: type,
         consent_given: newValue,
         consent_text: CONSENT_TYPES.find(c => c.type === type)?.description || '',
@@ -88,7 +88,7 @@ export default function Confidentialite() {
   const requestDataExport = async () => {
     setActionLoading('export');
     try {
-      await base44.entities.DataRequest.create({
+      await base44.personal.DataRequest.create({
         request_type: 'export',
         status: 'pending',
         details: 'Demande d\'export RGPD de mes données personnelles',
@@ -104,7 +104,7 @@ export default function Confidentialite() {
     if (!confirm('Êtes-vous sûr de vouloir demander la suppression de vos données ? Cette action est irréversible.')) return;
     setActionLoading('delete');
     try {
-      await base44.entities.DataRequest.create({
+      await base44.personal.DataRequest.create({
         request_type: 'delete',
         status: 'pending',
         details: 'Demande de suppression RGPD de mes données personnelles',

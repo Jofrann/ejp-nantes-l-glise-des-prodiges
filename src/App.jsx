@@ -53,6 +53,7 @@ import MemberDetail from '@/pages/fij/MemberDetail';
 import PageDepartement from '@/pages/departements/PageDepartement';
 import DepartmentEntry from '@/components/DepartmentEntry';
 import EditerDepartement from '@/pages/departements/EditerDepartement';
+import ListeDepartements from '@/pages/departements/ListeDepartements';
 import Pilotage from '@/pages/pilotage/Pilotage';
 import PilotageDeptDetail from '@/pages/pilotage/PilotageDeptDetail';
 import StarAgenda from '@/pages/star/Agenda';
@@ -124,7 +125,7 @@ const AuthenticatedApp = () => {
           <Route path="/app" element={<AppDashboard />} />
           <Route path="/app/service" element={<MonService />} />
           <Route path="/app/profil" element={<MonProfil />} />
-          <Route path="/app/departements" element={<Navigate to="/app/service" replace />} />
+          <Route path="/app/departements" element={<ListeDepartements />} />
           {/* Lot 3 : /app/departements/fij affiche maintenant la page générique via DepartmentEntry
               (avec lien vers l'espace spécialisé). Les sous-routes FIJ opérationnelles
               (/app/departements/fij/pilote, /coordination, etc.) conservent leurs redirections. */}

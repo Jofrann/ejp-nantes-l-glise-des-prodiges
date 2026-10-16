@@ -30,10 +30,10 @@ export default function EspaceEtudiant() {
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
-      base44.entities.ServantJourney.list('-updated_date', 1),
-      base44.entities.PersonalGoal.filter({}, '-created_date', 50),
+      base44.personal.ServantJourney.list('-updated_date', 1),
+      base44.personal.PersonalGoal.filter({}, '-created_date', 50),
       base44.entities.StarResource.filter({ is_active: true }, 'display_order', 50),
-      base44.entities.AppointmentRequest.filter({}, '-created_date', 20),
+      base44.personal.AppointmentRequest.filter({}, '-created_date', 20),
     ]).then(([u, j, g, r, appt]) => {
       setUser(u);
       setJourney(j && j.length > 0 ? j[0] : {});

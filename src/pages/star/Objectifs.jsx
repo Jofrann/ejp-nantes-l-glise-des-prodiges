@@ -32,7 +32,7 @@ export default function Objectifs() {
   const [newStep, setNewStep] = useState('');
 
   const load = () => {
-    base44.entities.PersonalGoal.list('-created_date', 100)
+    base44.personal.PersonalGoal.list('-created_date', 100)
       .then(data => { setGoals(data || []); setLoading(false); })
       .catch(() => setLoading(false));
   };
@@ -41,7 +41,7 @@ export default function Objectifs() {
 
   const createGoal = async () => {
     if (!form.title.trim()) return;
-    await base44.entities.PersonalGoal.create({ ...form, status: 'active' });
+    await base44.personal.PersonalGoal.create({ ...form, status: 'active' });
     setForm({ title: '', category: 'spirituel', why: '', expected_result: '', target_date: '', priority: 'medium', visibility: 'private', steps: [] });
     setNewStep('');
     setShowForm(false);
@@ -49,12 +49,12 @@ export default function Objectifs() {
   };
 
   const updateStatus = async (id, status) => {
-    await base44.entities.PersonalGoal.update(id, { status });
+    await base44.personal.PersonalGoal.update(id, { status });
     load();
   };
 
   const removeGoal = async (id) => {
-    await base44.entities.PersonalGoal.delete(id);
+    await base44.personal.PersonalGoal.delete(id);
     load();
   };
 

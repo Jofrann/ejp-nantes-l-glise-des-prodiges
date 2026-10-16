@@ -1,3 +1,5 @@
+import { executeEntity } from './access.mjs';
+import { isAdminUser } from '../base44/shared/identityUtils.ts';
 import { initializeAdmin } from './bootstrap-admin.mjs';
 import "./hooks.mjs";
 import { createServer } from "node:http";
@@ -102,7 +104,7 @@ const server = createServer(async (req, res) => {
     };
     const requireAdmin = () => {
       requireUser();
-      if (user.role !== "admin") fail(403, "Accès administrateur requis");
+      if (!isAdminUser(user)) fail(403, "Accès administrateur requis");
     };
     const sessionCookie = (id) => {
       const value = randomBytes(32).toString("hex");
@@ -203,7 +205,7 @@ const server = createServer(async (req, res) => {
         "last_name",
         "full_name",
         "phone",
-        "avatar_url",
+        "avatar_url", "photo_url", "bio", "instagram_url", "whatsapp_number",
       ])
         if (k in body) allowed[k] = body[k];
       result = await entities.User.update(user.id, allowed);
@@ -246,7 +248,7 @@ const server = createServer(async (req, res) => {
       req.method === "POST"
     ) {
       const entity = url.pathname.split("/").pop();
-      const { method, args = [] } = body;
+      const { method, args = [], scope } = body;
       if (
         !/^[A-Za-z][A-Za-z0-9]*$/.test(entity) ||
         ![
@@ -267,7 +269,7 @@ const server = createServer(async (req, res) => {
         ["list", "filter", "get"].includes(method)
       ) {
         result = await entities[entity][method](...args);
-        if (entity === "ChurchConfig" && !(user?.role === "admin" && user?.account_status === "active" && !user.first_login)) {
+        if (entity === "ChurchConfig" && !(isAdminUser(user) && user?.account_status === "active" && !user.first_login)) {
           const publicFields = [
             "id", "church_name", "auth_email_domain", "auth_page_image_url",
             "hero_title", "hero_subtitle", "hero_video_url", "hero_image_url",
@@ -287,8 +289,8 @@ const server = createServer(async (req, res) => {
         delete data.id;
         result = await entities[entity].create(data);
       } else {
-        requireAdmin();
-        result = await entities[entity][method](...args);
+        requireUser();
+        result = await executeEntity({ entity, method, args, scope, user });
       }
     } else if (
       url.pathname.startsWith("/api/local/functions/") &&

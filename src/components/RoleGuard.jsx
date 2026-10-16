@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '@/lib/AuthContext';
-import { hasAnyRole } from '@/lib/permissions';
+import { hasAnyRole, isAdmin, isBureauLike } from '@/lib/permissions';
 import { ShieldCheck, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -8,9 +8,9 @@ export default function RoleGuard({ allowedRoles, children }) {
   const { user } = useAuth();
 
   // Si l'utilisateur n'est pas encore chargé, on laisse passer — ProtectedRoute gère le loading
-  if (!user) return children;
+  if (!user) return null;
 
-  if (hasAnyRole(user, allowedRoles)) return children;
+  if (hasAnyRole(user, allowedRoles) || (allowedRoles.includes('admin') && isAdmin(user)) || (allowedRoles.includes('bureau') && isBureauLike(user))) return children;
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center text-center px-6">

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import useChromeInset from '@/hooks/useChromeInset';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import {
@@ -19,6 +20,10 @@ const QUICK_ACTIONS = [
 ];
 
 export default function StarLayout({ children, user }) {
+  const headerRef = useRef(null);
+  const bottomRef = useRef(null);
+  useChromeInset(headerRef, '--app-header-height');
+  useChromeInset(bottomRef, '--app-bottom-height');
   const location = useLocation();
   const navigate = useNavigate();
   const [planOpen, setPlanOpen] = useState(false);
@@ -56,7 +61,7 @@ export default function StarLayout({ children, user }) {
   return (
     <MotionConfig reducedMotion="user"><div className="serviteur-app min-h-screen bg-background text-foreground flex flex-col" data-page={location.pathname}>
       {/* Header desktop — glass premium, simplified */}
-      <header className="fixed top-0 left-0 right-0 z-50 glass-header">
+      <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 glass-header">
         <div className="h-full flex items-center justify-between px-4 max-w-screen-2xl">
           {/* Logo */}
           <Link to="/app" className="flex items-center gap-2 flex-shrink-0">
@@ -200,12 +205,12 @@ export default function StarLayout({ children, user }) {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 pt-[72px] pb-20 md:pb-8 overflow-x-hidden">
+      <main className="serviteur-main flex-1 min-w-0">
         {children}
       </main>
 
       {/* Bottom nav mobile — Accueil, Agenda, Présences, Plus */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-bottom xl:hidden">
+      <nav ref={bottomRef} className="fixed bottom-0 left-0 right-0 z-50 glass-bottom xl:hidden">
         <div className="flex items-center justify-around h-16 px-2">
           {MOBILE_BOTTOM_NAV.map(({ path, label, icon: Icon, end }) => (
             <Link

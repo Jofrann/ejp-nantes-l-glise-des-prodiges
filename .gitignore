@@ -32,3 +32,7 @@ base44/.app.jsonc
 
 # Local SQLite database (contains private data)
 .local-data/
+
+# Local audit evidence and browser sessions
+output/
+.playwright-cli/

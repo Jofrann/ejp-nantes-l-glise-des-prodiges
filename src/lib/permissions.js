@@ -92,14 +92,14 @@ export function getVisibleDepartmentIds(user, memberships = []) {
   if (!user) return [];
   if (isBureauLike(user)) return null; // null = tous visibles
   return memberships
-    .filter(m => m.user_id === user.id && (m.status === 'active' || m.is_active !== false))
+    .filter(m => m.user_id === user.id && (m.status ? m.status === 'active' : m.is_active !== false))
     .map(m => m.department_id);
 }
 
 export function canReadDepartment(user, departmentId, memberships = []) {
   if (!user) return false;
   if (isBureauLike(user)) return true;
-  return memberships.some(m => m.user_id === user.id && m.department_id === departmentId && (m.status === 'active' || m.is_active !== false));
+  return memberships.some(m => m.user_id === user.id && m.department_id === departmentId && (m.status ? m.status === 'active' : m.is_active !== false));
 }
 
 export function canManageDepartment(user, departmentId, memberships = []) {
@@ -111,7 +111,7 @@ export function canManageDepartment(user, departmentId, memberships = []) {
     m.user_id === user.id &&
     m.department_id === departmentId &&
     ['responsable', 'referent', 'coordinateur'].includes(m.role_in_dept) &&
-    (m.status === 'active' || m.is_active !== false)
+    (m.status ? m.status === 'active' : m.is_active !== false)
   );
 }
 
@@ -129,7 +129,7 @@ export function canCreateDepartmentData(user, departmentId, memberships = []) {
   return memberships.some(m =>
     m.user_id === user.id &&
     m.department_id === departmentId &&
-    (m.status === 'active' || m.is_active !== false)
+    (m.status ? m.status === 'active' : m.is_active !== false)
   );
 }
 
@@ -155,7 +155,7 @@ export function getRoleInDepartment(user, departmentId, memberships = []) {
   const membership = memberships.find(m =>
     m.user_id === user.id &&
     m.department_id === departmentId &&
-    (m.status === 'active' || m.is_active !== false)
+    (m.status ? m.status === 'active' : m.is_active !== false)
   );
   return membership?.role_in_dept || null;
 }
@@ -179,7 +179,7 @@ export function isFijCoordination(user, memberships = null, coordFijDeptId = nul
     const hasActiveMembership = memberships.some(
       m => m.user_id === user.id &&
             m.department_id === coordFijDeptId &&
-            (m.status === 'active' || m.is_active !== false)
+            (m.status ? m.status === 'active' : m.is_active !== false)
     );
     if (hasActiveMembership) return true;
   }

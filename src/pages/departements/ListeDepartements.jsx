@@ -23,6 +23,7 @@ export default function ListeDepartements() {
   const [referentCounts, setReferentCounts] = useState({});
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -47,7 +48,7 @@ export default function ListeDepartements() {
       setCounts(c);
       setReferentCounts(r);
       setLoading(false);
-    });
+    }).catch(err => { setError(err.message || "Impossible de charger les départements."); setLoading(false); });
   }, []);
 
   if (loading) return (
@@ -62,6 +63,7 @@ export default function ListeDepartements() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-4xl mx-auto px-5 pt-10 pb-20">
 
+        {error && <p role="alert" className="text-danger mb-6">{error}</p>}
         {/* Fil d'Ariane */}
         <PageBreadcrumb
           items={[

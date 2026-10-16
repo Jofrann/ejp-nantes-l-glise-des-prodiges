@@ -94,8 +94,8 @@ export default function Agenda() {
       const today = new Date().toISOString().split('T')[0];
       const [evs, blocks, resp] = await Promise.all([
         base44.entities.Event.list('-event_date', 60),
-        base44.entities.PersonalTimeBlock.list('-start_date', 60),
-        base44.entities.AttendanceResponse.list('-created_date', 60),
+        base44.personal.PersonalTimeBlock.list('-start_date', 60),
+        base44.personal.AttendanceResponse.list('-created_date', 60),
       ]);
       setEvents((evs || []).filter(e => e.is_active && e.event_date >= today));
       setTimeBlocks(blocks || []);

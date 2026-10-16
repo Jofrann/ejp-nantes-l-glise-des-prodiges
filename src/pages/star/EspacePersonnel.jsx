@@ -49,7 +49,7 @@ export default function EspacePersonnel() {
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
-      base44.entities.UserWorkspacePreference.list('-updated_date', 1),
+      base44.personal.UserWorkspacePreference.list('-updated_date', 1),
     ]).then(([u, prefs]) => {
       setUser(u);
       const existing = prefs && prefs.length > 0 ? prefs[0] : null;
@@ -114,9 +114,9 @@ export default function EspacePersonnel() {
     setSaving(true);
     try {
       if (pref.id) {
-        await base44.entities.UserWorkspacePreference.update(pref.id, pref);
+        await base44.personal.UserWorkspacePreference.update(pref.id, pref);
       } else {
-        const created = await base44.entities.UserWorkspacePreference.create(pref);
+        const created = await base44.personal.UserWorkspacePreference.create(pref);
         setPref(created);
       }
       setSaved(true);

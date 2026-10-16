@@ -6,7 +6,7 @@ import {
   Calendar, AlertCircle
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { isFijPilot, getInternalIdentifier, getDisplayName, isAccountBlocked } from '@/lib/permissions';
+import { isBureauLike, isFijPilot, getInternalIdentifier, getDisplayName, isAccountBlocked } from '@/lib/permissions';
 import { isHiddenFromService } from '@/lib/departmentModules';
 import PageHeader from '@/components/star/PageHeader';
 
@@ -107,6 +107,7 @@ export default function MonService() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      {isBureauLike(user) && <Link to="/app/departements" className="inline-flex gap-2 items-center mb-6 px-4 py-3 rounded-xl border border-secondary/30 text-secondary text-sm"><Building2 size={18} /> Gérer les départements</Link>}
       <PageHeader
         title={`Bonjour ${firstName}`}
         intention="Retrouve ici tes services, tes prochaines échéances et les informations utiles à ton engagement."

@@ -21,7 +21,7 @@ export default function Parcours() {
   const [openSection, setOpenSection] = useState('situation');
 
   useEffect(() => {
-    base44.entities.ServantJourney.list('-updated_date', 1)
+    base44.personal.ServantJourney.list('-updated_date', 1)
       .then(data => {
         setJourney(data && data.length > 0 ? data[0] : {});
         setLoading(false);
@@ -38,9 +38,9 @@ export default function Parcours() {
     setSaving(true);
     try {
       if (journey.id) {
-        await base44.entities.ServantJourney.update(journey.id, journey);
+        await base44.personal.ServantJourney.update(journey.id, journey);
       } else {
-        const created = await base44.entities.ServantJourney.create(journey);
+        const created = await base44.personal.ServantJourney.create(journey);
         setJourney(created);
       }
       setSaved(true);

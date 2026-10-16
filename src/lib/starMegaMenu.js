@@ -118,9 +118,10 @@ export const MEGA_MENU_RESTRICTED = [
     route: '/app/admin',
     items: [
       { label: 'Contenus publics', desc: 'Vitrine et programmes', icon: FileText, to: '/app/admin' },
-      { label: 'Utilisateurs', desc: 'Gérer les comptes', icon: Users, to: '/app/admin' },
-      { label: 'Formations', desc: 'Créer modules et parcours', icon: GraduationCap, to: '/app/admin' },
-      { label: 'Ressources', desc: 'Publier documents', icon: BookOpen, to: '/app/admin' },
+      { label: 'Utilisateurs', desc: 'Gérer les comptes', icon: Users, to: '/app/annuaire' },
+      { label: 'Départements', desc: 'Créer et gérer les équipes', icon: Briefcase, to: '/app/departements' },
+      { label: 'Formations', desc: 'Créer modules et parcours', icon: GraduationCap, to: '/app/admin?tab=formations' },
+      { label: 'Ressources', desc: 'Publier documents', icon: BookOpen, to: '/app/admin?tab=ressources' },
     ],
   },
 ];

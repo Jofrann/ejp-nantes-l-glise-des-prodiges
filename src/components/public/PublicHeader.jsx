@@ -1,3 +1,4 @@
+import useChromeInset from '@/hooks/useChromeInset';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
@@ -6,6 +7,8 @@ export default function PublicHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const toggle = useRef(null);
+  const headerRef = useRef(null);
+  useChromeInset(headerRef, '--app-header-height');
   const { pathname } = useLocation();
   useEffect(() => { setOpen(false); window.scrollTo(0, 0); }, [pathname]);
   useEffect(() => {
@@ -21,7 +24,7 @@ export default function PublicHeader() {
   }, [open]);
   return <header className={`ejp-header ${pathname === '/' && !scrolled && !open ? 'ejp-header-light' : ''}`}>
     <div className="ejp-scroll-progress" aria-hidden="true" />
-    <div className="ejp-header-inner">
+    <div ref={headerRef} className="ejp-header-inner">
       <Link to="/" className="ejp-brand" aria-label="EJP Nantes, accueil"><img className="ejp-logo" src="/brand/ejp-logo.png" width="289" height="203" alt="Église des Jeunes Prodiges" /><span>NANTES<br /><small>Une génération qui rayonne</small></span></Link>
       <nav className="ejp-desktop-nav" aria-label="Navigation principale">{links.map(([url, label]) => <NavLink key={url} to={url} end={url === '/'}>{label}</NavLink>)}</nav>
       <Link to="/venir" className="ejp-header-cta">Je viens dimanche <ArrowUpRight size={16} /></Link>

@@ -413,7 +413,7 @@ export default function PageDepartement() {
       </div>
 
       {/* Header fixe */}
-      <div className="sticky top-14 z-30 bg-card/80 backdrop-blur-md border-b border-border">
+      <div className="app-section-header sticky z-30 bg-card/80 backdrop-blur-md border-b border-border">
         <div className="max-w-3xl mx-auto px-4">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 py-2">

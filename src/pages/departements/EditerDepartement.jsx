@@ -71,15 +71,16 @@ export default function EditerDepartement() {
   const handleSave = async () => {
     if (!form.name.trim()) return;
     setSaving(true);
-    if (isNew) {
-      const created = await base44.entities.Department.create(form);
-      navigate(`/app/departements/${created.id}`);
-    } else {
-      await base44.entities.Department.update(form.id, form);
-      setMsg('Sauvegardé !');
-      setTimeout(() => setMsg(''), 2500);
-    }
-    setSaving(false);
+    try {
+      if (isNew) {
+        const created = await base44.entities.Department.create(form);
+        navigate(`/app/departements/${created.slug || created.id}`);
+      } else {
+        await base44.entities.Department.update(form.id, form);
+        setMsg('Sauvegardé !');
+      }
+    } catch (error) { setMsg(error.message || 'Enregistrement impossible. Réessaie.'); }
+    finally { setSaving(false); }
   };
 
   const handleDelete = async () => {

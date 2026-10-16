@@ -1,5 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 const dir = resolve(process.env.EJP_DATA_DIR || ".local-data");
@@ -8,6 +8,14 @@ export const db = new DatabaseSync(resolve(dir, "ejp.sqlite"));
 db.exec(
   `PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS records(entity TEXT, id TEXT, data TEXT, PRIMARY KEY(entity,id)); CREATE TABLE IF NOT EXISTS credentials(id TEXT PRIMARY KEY, hash TEXT); CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY, user_id TEXT, expires INTEGER);`,
 );
+const schemas = new Map();
+const defaults = entity => {
+  if (!schemas.has(entity)) {
+    try { schemas.set(entity,JSON.parse(readFileSync(new URL('../base44/entities/' + entity + '.jsonc',import.meta.url),'utf8')).properties || {}); }
+    catch { schemas.set(entity,{}); }
+  }
+  return Object.fromEntries(Object.entries(schemas.get(entity)).filter(([,spec])=>Object.hasOwn(spec,'default')).map(([key,spec])=>[key,structuredClone(spec.default)]));
+};
 export const entities = new Proxy(
   {},
   {
@@ -78,7 +86,9 @@ export const entities = new Proxy(
       const create = async (data) => {
         const now = new Date().toISOString();
         const row = {
+          ...defaults(entity),
           ...data,
+          ...(entity === "FIJ" && data.is_active === undefined ? { is_active: data.status !== "closed" } : {}),
           id: randomUUID(),
           created_date: now,
           updated_date: now,

@@ -36,7 +36,7 @@ export default function Presences() {
     try {
       const [evs, resp] = await Promise.all([
         base44.entities.Event.list('-event_date', 20),
-        base44.entities.AttendanceResponse.list('-created_date', 50),
+        base44.personal.AttendanceResponse.list('-created_date', 50),
       ]);
       const today = new Date().toISOString().split('T')[0];
       setEvents((evs || []).filter(e => e.is_active && e.event_date >= today));
@@ -50,9 +50,9 @@ export default function Presences() {
   const markPresent = async (ev) => {
     const existing = responses[ev.id];
     if (existing) {
-      await base44.entities.AttendanceResponse.update(existing.id, { status: 'present', reason_category: null, estimated_arrival_time: null });
+      await base44.personal.AttendanceResponse.update(existing.id, { status: 'present', reason_category: null, estimated_arrival_time: null });
     } else {
-      await base44.entities.AttendanceResponse.create({ event_id: ev.id, event_title: ev.title, event_date: ev.event_date, status: 'present' });
+      await base44.personal.AttendanceResponse.create({ event_id: ev.id, event_title: ev.title, event_date: ev.event_date, status: 'present' });
     }
     loadData();
   };
@@ -63,9 +63,9 @@ export default function Presences() {
     const existing = responses[ev.id];
     const payload = { status: 'absent', reason_category: absenceForm.reason_category, comment: absenceForm.comment, estimated_arrival_time: null };
     if (existing) {
-      await base44.entities.AttendanceResponse.update(existing.id, payload);
+      await base44.personal.AttendanceResponse.update(existing.id, payload);
     } else {
-      await base44.entities.AttendanceResponse.create({ event_id: ev.id, event_title: ev.title, event_date: ev.event_date, ...payload });
+      await base44.personal.AttendanceResponse.create({ event_id: ev.id, event_title: ev.title, event_date: ev.event_date, ...payload });
     }
     setAbsenceEvent(null);
     setAbsenceForm({ reason_category: 'travail', comment: '' });
@@ -78,9 +78,9 @@ export default function Presences() {
     const existing = responses[ev.id];
     const payload = { status: 'late', estimated_arrival_time: lateForm.estimated_arrival_time, comment: lateForm.comment, reason_category: null };
     if (existing) {
-      await base44.entities.AttendanceResponse.update(existing.id, payload);
+      await base44.personal.AttendanceResponse.update(existing.id, payload);
     } else {
-      await base44.entities.AttendanceResponse.create({ event_id: ev.id, event_title: ev.title, event_date: ev.event_date, ...payload });
+      await base44.personal.AttendanceResponse.create({ event_id: ev.id, event_title: ev.title, event_date: ev.event_date, ...payload });
     }
     setLateEvent(null);
     setLateForm({ estimated_arrival_time: '', comment: '' });
