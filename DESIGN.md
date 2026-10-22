@@ -1,5 +1,15 @@
 # EJP Nantes — design public
 
+## Proposition FIJ du 22 octobre 2026 — validation locale
+
+Périmètre : les accueils existants `/app/responsabilites/fij-pilote` et `/app/responsabilites/fij-coordination`, ainsi que la fiche membre accessible depuis leurs listes. StarLayout, PrivateSidebar, le registre de navigation et les autres ministères sont conservés. Aucun déplacement de route ni changement de thème global.
+
+Les six documents FIJ fournis le 22 octobre constituent les sources métier. Le tableau distingue assembler (participants et CR), connaître (parcours renseigné et fiches), conduire (schéma Attirer → Convertir → Intégrer → Prendre soin). La consécration, les 24 h de prière, les pauses, les transferts, la communication et le reporting conservent leurs formulaires existants. Le seuil de 13 membres signale une multiplication à préparer ; il ne crée, ne ferme et ne divise aucune FIJ automatiquement.
+
+FijVisualDashboard possède la composition des deux accueils et FijMemberDialog le détail en superposition ; couleurs et géométrie sont limitées à `components/fij/fijDashboard.css` sous `.fij-visual`. Palette dérivée de l’espace privé lumineux existant : fond #f3f6fa, surfaces blanches, texte #192f50, secondaire #67788e, accent des courbes #456bdd, séparateurs #e4eaf3. Manrope, grands titres sans serif, graphiques Recharts existants, mouvement limité et compatibilité reduced-motion. Aucun nouvel outil graphique ni image générée.
+
+Présentation : vue de lecture couvrant le chrome, sans noms de membres, contacts ou notes individuelles. Quitter restitue le tableau de bord. Bilan CSV agrégé uniquement. Les chiffres de démonstration vivent hors du produit dans les scripts de vérification, jamais dans les composants livrés.
+
 Audience : jeunes découvrant la communauté à Nantes. Objectif : comprendre la maison et préparer une première venue.
 
 ## Évolution métier — cahier des charges du 16 octobre 2026

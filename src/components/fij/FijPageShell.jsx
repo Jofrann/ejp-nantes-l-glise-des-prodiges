@@ -53,13 +53,13 @@ export function EmptyState({ icon: Icon, title, sub }) {
   );
 }
 
-export function RoleShell({ role, title, subtitle, children, actions, requiredRoles, breadcrumbLabel }) {
+export function RoleShell({ role, title = null, subtitle = null, children = null, actions = null, requiredRoles = null, breadcrumbLabel = null, visualDashboard = false }) {
   const location = useLocation();
 
   // Dérive la navigation de la route, pas du rôle utilisateur.
   // Permet à la direction d'utiliser l'espace coordination avec la bonne navigation.
-  const routeRole = location.pathname.includes('/pilote') ? 'pilot'
-    : location.pathname.includes('/coordination') ? 'coordination'
+  const routeRole = location.pathname.includes('/fij-pilote') ? 'pilot'
+    : location.pathname.includes('/fij-coordination') ? 'coordination'
     : role;
 
   const navItems = routeRole === 'pilot' ? PILOTE_NAV
@@ -94,7 +94,7 @@ export function RoleShell({ role, title, subtitle, children, actions, requiredRo
     <div className="min-h-screen bg-background text-foreground">
       {/* Header sticky avec navigation */}
       <div className="app-section-header sticky z-30 bg-card/90 backdrop-blur-md border-b border-border">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className={`${visualDashboard ? 'max-w-[1440px]' : 'max-w-4xl'} mx-auto px-4`}>
           {/* Fil d'Ariane */}
           <PageBreadcrumb
             items={[
@@ -134,7 +134,7 @@ export function RoleShell({ role, title, subtitle, children, actions, requiredRo
       </div>
 
       {/* Contenu */}
-      <div className="max-w-4xl mx-auto px-4 py-6 pb-24">
+      <div className={`${visualDashboard ? 'max-w-[1440px] sm:px-7 lg:px-9' : 'max-w-4xl'} mx-auto px-4 py-6 pb-24`}>
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           {title && <h1 className="text-xl font-heading font-bold text-foreground mb-1">{title}</h1>}
           {subtitle && <p className="text-sm text-muted-foreground mb-6">{subtitle}</p>}

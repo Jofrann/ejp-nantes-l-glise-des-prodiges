@@ -1,5 +1,13 @@
 # EJP Nantes — propriétaires des interactions conservées
 
+## FIJ — tableaux de bord et fiche membre (22 octobre 2026)
+
+- Données : API locale existante, contrôles serveur inchangés. Requêtes par `fij_id` ; anciens CR par `fij_house_id`. Seuls les CR soumis/validés/en retard entrent dans les graphiques, dédoublonnés par FIJ/semaine ; un CR de présence soumis prévaut sur le total hebdomadaire de la même FIJ. Le nombre de nouveaux visiteurs reste une mesure distincte. Taux pondéré par les effectifs renseignés, semaines sans mesure vides, absences non renseignées exclues. La semaine en cours est explicitement provisoire.
+- Select/Listbox : filtres FIJ, période et statut de parcours utilisent intentionnellement des sélections natives pour conserver les interactions de la plateforme, notamment sur téléphone. Les propriétaires globaux des autres écrans ne sont pas remplacés.
+- Fiche : Dialog Radix partagé, portail et surcouche FIJ floutée, focus piégé, Escape et restitution du focus. Aucune donnée nominative en présentation. Les autorisations de lecture/écriture et de visibilité des notes restent celles de fijPermissions et du serveur ; le contexte d’adhésion coordination confirmé est normalisé comme côté serveur, sans modifier les rôles stockés.
+- Écriture : statut de croissance via FijMember.update et note via FijMemberNote.create ; attente visible, double clic bloqué, erreur explicite, texte conservé en cas d’échec, confirmation après réponse serveur. Le détail historique des changements de statut et la présence au culte ne sont pas fabriqués : absence de mesure affichée.
+- Autres parcours : création/suppression des membres, saisie et consultation des CR, registre, ouvertures, consécrations, pauses, relances, pilotes, documents, communications, transferts et reporting restent accessibles sur leurs routes existantes. Aucun import, aucune migration ni suppression de données en production.
+
 ## Lots métier du 16 octobre 2026
 
 - Suivi de l’équipe : DepartmentAnalytics, lecture getDepartmentAnalytics autorisée côté serveur ; filtres date natifs via Input, sélection nominative limitée au département. Les taux indiquent leur dénominateur et excluent les données non renseignées. Les périodes portent sur les affectations reliées à des événements ; les plannings sans lien restent explicitement hors calcul.

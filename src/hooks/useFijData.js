@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
-import { isFijCoordination } from '@/lib/permissions';
+import { getRoles } from '@/lib/permissions';
 import { isFijCoordinationRole, isFijDirectionRole, isPilotOfFij, getFijAccessLevelV2 } from '@/lib/fijPermissions';
 import { loadCoordFijContext } from '@/lib/coordFijUtils';
 
@@ -8,10 +8,12 @@ export function useFijData() {
   const [user, setUser] = useState(null);
   const [fijs, setFijs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [coordFijData, setCoordFijData] = useState({ memberships: null, coordFijDeptId: null });
 
   const load = async () => {
     setLoading(true);
+    setError(null);
     try {
       const [u, ctx] = await Promise.all([
         base44.auth.me(),
@@ -35,6 +37,7 @@ export function useFijData() {
       }
     } catch {
       setFijs([]);
+      setError('Impossible de charger vos FIJ. Vérifiez votre connexion puis réessayez.');
     } finally {
       setLoading(false);
     }
@@ -42,6 +45,10 @@ export function useFijData() {
 
   useEffect(() => { load(); }, []);
 
-  const accessLevel = getFijAccessLevelV2(user, fijs);
-  return { user, fijs, loading, accessLevel, reload: load, ...coordFijData };
+  const accessLevel = isFijCoordinationRole(user, coordFijData.memberships, coordFijData.coordFijDeptId)
+    ? 'coordination' : getFijAccessLevelV2(user, fijs);
+  // Match the server's FIJ-only membership context; no stored role is modified.
+  const fijUser = useMemo(() => accessLevel === 'coordination' && user
+    ? { ...user, roles: [...getRoles(user), 'coordination_fij'] } : user, [user, accessLevel]);
+  return { user: fijUser, fijs, loading, error, accessLevel, reload: load, ...coordFijData };
 }

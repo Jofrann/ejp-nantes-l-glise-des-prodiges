@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Plus, Search, MoreVertical, Trash2, UserCheck } from 'lucide-react';
 import { GROWTH_STATUS_LABELS, GROWTH_STATUS_COLORS, canCreateFijMember, canDeleteFijMember } from '@/lib/fijPermissions';
+import FijMemberDialog from '@/components/fij/FijMemberDialog';
 
 export default function MembersTab({ fij, members, user, onReload, basePath }) {
   const [search, setSearch] = useState('');
   const [showAdd, setShowAdd] = useState(false);
   const [menuOpen, setMenuOpen] = useState(null);
+  const [selectedMember, setSelectedMember] = useState(null);
   const canAdd = canCreateFijMember(user, fij);
   const canDelete = canDeleteFijMember(user, fij);
 
@@ -67,6 +69,7 @@ export default function MembersTab({ fij, members, user, onReload, basePath }) {
                   </div>
                 </div>
               </Link>
+              <button className="fij-open-family" onClick={() => setSelectedMember(member)} aria-label={`Voir la fiche de ${member.full_name}`}>Voir la fiche ↗</button>
               {canDelete && (
                 <div className="relative">
                   <button onClick={() => setMenuOpen(menuOpen === member.id ? null : member.id)} className="p-1 text-muted-foreground hover:text-foreground">
@@ -87,6 +90,7 @@ export default function MembersTab({ fij, members, user, onReload, basePath }) {
       )}
 
       {showAdd && <AddMemberModal fij={fij} onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); onReload(); }} />}
+      {selectedMember && <FijMemberDialog member={members.find(m => m.id === selectedMember.id) || selectedMember} fij={fij} user={user} onClose={() => setSelectedMember(null)} onUpdated={onReload} />}
     </div>
   );
 }
