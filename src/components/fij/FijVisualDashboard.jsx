@@ -17,7 +17,6 @@ import {
   Users,
   Presentation,
   X,
-  ChevronRight,
   Download,
   Target,
   HeartHandshake,
@@ -144,10 +143,9 @@ export default function FijVisualDashboard({
       }
     >
       <div className="fij-toolbar">
-        <div className="fij-path">
-          Mes responsabilités <ChevronRight size={14} />{" "}
-          {coordination ? "Coordination FIJ" : "Pilote FIJ"}
-        </div>
+        <span className="fij-path">
+          {coordination ? "Coordination FIJ" : "Espace pilote"}
+        </span>
         <div className="fij-tools">
           <Button
             variant="outline"
@@ -177,16 +175,16 @@ export default function FijVisualDashboard({
           <h1>
             {coordination
               ? selected === "all"
-                ? "Une vision d’ensemble.\nChaque personne compte."
+                ? "Vue d’ensemble"
                 : visibleFijs[0]?.name
               : selected !== "all"
                 ? visibleFijs[0]?.name
-                : "Ma FIJ, au fil des vies."}
+                : "Ma FIJ"}
           </h1>
           <p>
             {coordination
-              ? "Comprendre la dynamique. Soutenir les pilotes. Préparer la suite."
-              : "Assembler. Connaître. Conduire. Vos repères pour accompagner chacun."}
+              ? "La vie des familles, en un regard."
+              : "Les repères pour accompagner votre famille."}
           </p>
         </div>
         <div className="fij-filters">
@@ -258,6 +256,7 @@ export default function FijVisualDashboard({
             >
               {[
                 ["overview", "Vue d’ensemble"],
+                ["analysis", "Analyses"],
                 ["members", "Membres & accompagnement"],
                 ...(coordination
                   ? [["operations", "Coordination opérationnelle"]]
@@ -273,304 +272,332 @@ export default function FijVisualDashboard({
               ))}
             </nav>
           )}
-          {(tab === "overview" || presentation) && (
+          {(tab === "overview" || tab === "analysis" || presentation) && (
             <>
-              <div className="fij-metrics">
-                <Metric
-                  label={coordination ? "FIJ actives" : "Membres de mes FIJ"}
-                  value={
-                    coordination
-                      ? model.activeFijs.length
-                      : model.members.length
-                  }
-                  detail={
-                    coordination
-                      ? `${visibleFijs.filter((f) => f.status === "paused").length} en pause · ${visibleFijs.filter((f) => f.status === "opening").length} en ouverture`
-                      : `${visibleFijs.length} famille${visibleFijs.length > 1 ? "s" : ""} accompagnée${visibleFijs.length > 1 ? "s" : ""}`
-                  }
-                />
-                <Metric
-                  label="Participants cette semaine"
-                  value={model.latest.participants ?? "—"}
-                  detail={
-                    comparison == null
-                      ? "Comparaison S−1 non disponible"
-                      : `${comparison > 0 ? "+" : ""}${comparison} par rapport à S−1 · périmètre déclaré`
-                  }
-                />
-                <Metric
-                  label="Présence cette semaine"
-                  value={
-                    model.latest.attendance == null
-                      ? "—"
-                      : `${model.latest.attendance} %`
-                  }
-                  detail="Présents / membres des CR renseignés"
-                />
-                <Metric
-                  label="CR reçus cette semaine"
-                  value={`${received} / ${model.activeFijs.length}`}
-                  detail="Objectif : tous les CR · sans les brouillons"
-                />
-              </div>
-              <div className="fij-main-grid">
-                <article className="fij-chart-panel fij-trend">
-                  <div className="fij-section-heading">
-                    <div>
-                      <span className="fij-kicker">ASSEMBLER</span>
-                      <h2>La dynamique des rencontres</h2>
-                      <p>Participants par semaine · {weeks} semaines</p>
-                    </div>
-                    <span className="fij-legend">
-                      <i /> Participants
-                    </span>
-                  </div>
-                  {model.points.some((p) => p.participants != null) ? (
-                    <div
-                      className="fij-chart"
-                      role="img"
-                      aria-label="Courbe des participants enregistrés par semaine"
-                    >
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart
-                          data={model.points}
-                          margin={{ top: 18, right: 18, left: -16, bottom: 0 }}
-                        >
-                          <defs>
-                            <linearGradient
-                              id={
-                                coordination
-                                  ? "fij-coord-fill"
-                                  : "fij-pilot-fill"
-                              }
-                              x1="0"
-                              y1="0"
-                              x2="0"
-                              y2="1"
-                            >
-                              <stop
-                                offset="0%"
-                                stopColor="#456bdd"
-                                stopOpacity={0.22}
-                              />
-                              <stop
-                                offset="100%"
-                                stopColor="#456bdd"
-                                stopOpacity={0.01}
-                              />
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid vertical={false} stroke="#e8edf5" />
-                          <XAxis
-                            dataKey="label"
-                            tick={{ fontSize: 11, fill: "#64748b" }}
-                            tickLine={false}
-                            axisLine={false}
-                            minTickGap={24}
-                          />
-                          <YAxis
-                            allowDecimals={false}
-                            tick={{ fontSize: 11, fill: "#64748b" }}
-                            tickLine={false}
-                            axisLine={false}
-                          />
-                          <Tooltip
-                            formatter={(v) => [v, "Participants"]}
-                            contentStyle={{
-                              borderRadius: 12,
-                              border: "1px solid #e4e9f0",
-                              color: "#172b4b",
-                            }}
-                          />
-                          <Area
-                            type="monotone"
-                            dataKey="participants"
-                            stroke="#456bdd"
-                            strokeWidth={3}
-                            fill={`url(#${coordination ? "fij-coord-fill" : "fij-pilot-fill"})`}
-                            connectNulls={false}
-                            isAnimationActive={false}
-                            dot={{ r: 3, fill: "#456bdd", strokeWidth: 0 }}
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-                  ) : (
-                    <ChartEmpty text="Les courbes apparaîtront à partir des premiers CR transmis." />
-                  )}
-                  <p className="fij-chart-foot">
-                    Nouveaux visiteurs cette semaine :{" "}
-                    {model.latest.visitors ?? "non renseigné"}. Une semaine sans
-                    CR reste vide. Les chiffres décrivent les CR reçus, pas une
-                    estimation.
-                  </p>
-                </article>
-                <article className="fij-chart-panel fij-care-panel">
-                  <span className="fij-kicker">
-                    {coordination ? "PILOTER" : "PRENDRE SOIN"}
-                  </span>
-                  <h2>
-                    {coordination
-                      ? "Les points de vigilance"
-                      : "Les prochaines attentions"}
-                  </h2>
-                  <div className="fij-attention">
-                    <span className="fij-dot amber" />
-                    <div>
-                      <b>{model.missing.length} FIJ sans CR cette semaine</b>
-                      <p>À vérifier avant la clôture hebdomadaire.</p>
-                    </div>
-                  </div>
-                  <div className="fij-attention">
-                    <span className="fij-dot coral" />
-                    <div>
-                      <b>
-                        {model.needsCare.length} membre
-                        {model.needsCare.length > 1 ? "s" : ""} à recontacter
-                      </b>
-                      <p>Au moins trois absences enregistrées à la suite.</p>
-                    </div>
-                  </div>
-                  <div className="fij-attention">
-                    <span className="fij-dot blue" />
-                    <div>
-                      <b>
-                        {model.multiplying.length} FIJ avec 13 membres ou plus
-                      </b>
-                      <p>Préparer la multiplication avec la coordination.</p>
-                    </div>
-                  </div>
-                  {!presentation && (
-                    <button
-                      className="fij-text-link"
-                      onClick={() =>
-                        setTab(coordination ? "operations" : "members")
+              {(tab === "overview" || presentation) && (
+                <>
+                  <div className="fij-metrics">
+                    <Metric
+                      label={
+                        coordination ? "FIJ actives" : "Membres de mes FIJ"
                       }
-                    >
-                      {coordination
-                        ? "Ouvrir le suivi opérationnel"
-                        : "Voir les membres"}{" "}
-                      <ArrowUpRight size={16} />
-                    </button>
-                  )}
-                </article>
-              </div>
-              <div className="fij-secondary-grid">
-                <article className="fij-chart-panel">
-                  <div className="fij-section-heading">
-                    <div>
-                      <span className="fij-kicker">CONNAÎTRE</span>
-                      <h2>Le parcours des membres</h2>
-                    </div>
-                    <span className="fij-subtle">
-                      {model.members.length} membres actifs
-                    </span>
+                      value={
+                        coordination
+                          ? model.activeFijs.length
+                          : model.members.length
+                      }
+                      detail={
+                        coordination
+                          ? `${visibleFijs.filter((f) => f.status === "paused").length} en pause · ${visibleFijs.filter((f) => f.status === "opening").length} en ouverture`
+                          : `${visibleFijs.length} famille${visibleFijs.length > 1 ? "s" : ""} accompagnée${visibleFijs.length > 1 ? "s" : ""}`
+                      }
+                    />
+                    <Metric
+                      label="Participants cette semaine"
+                      value={model.latest.participants ?? "—"}
+                      detail={
+                        comparison == null
+                          ? "Comparaison S−1 non disponible"
+                          : `${comparison > 0 ? "+" : ""}${comparison} par rapport à S−1 · périmètre déclaré`
+                      }
+                    />
+                    <Metric
+                      label="Présence cette semaine"
+                      value={
+                        model.latest.attendance == null
+                          ? "—"
+                          : `${model.latest.attendance} %`
+                      }
+                      detail="Présents / membres des CR renseignés"
+                    />
+                    <Metric
+                      label="CR reçus cette semaine"
+                      value={`${received} / ${model.activeFijs.length}`}
+                      detail="Objectif : tous les CR · sans les brouillons"
+                    />
                   </div>
-                  <div className="fij-growth-bars">
-                    {growth.map((g) => (
-                      <div className="fij-growth-row" key={g.name}>
-                        <span>{g.name}</span>
+                  <div className="fij-main-grid">
+                    <article className="fij-chart-panel fij-trend">
+                      <div className="fij-section-heading">
                         <div>
-                          <span
-                            style={{
-                              width: `${model.members.length ? (g.count / model.members.length) * 100 : 0}%`,
-                            }}
-                          />
+                          <span className="fij-kicker">ASSEMBLER</span>
+                          <h2>Participation aux rencontres</h2>
+                          <p>Participants par semaine · {weeks} semaines</p>
                         </div>
-                        <b>{g.count}</b>
+                        <span className="fij-legend">
+                          <i /> Participants
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                  <p className="fij-chart-foot">
-                    Statuts renseignés, sans notation spirituelle ni progression
-                    supposée.
-                  </p>
-                </article>
-                <article className="fij-chart-panel">
-                  <span className="fij-kicker">CONDUIRE</span>
-                  <h2>De l’accueil à l’ancrage</h2>
-                  <div className="fij-journey-map">
-                    {[
-                      ["Attirer", "Créer le lien"],
-                      ["Convertir", "Découvrir la foi"],
-                      ["Intégrer", "Accueillir en FIJ"],
-                      ["Prendre soin", "Accompagner dans la durée"],
-                    ].map(([a, b], i) => (
-                      <div key={a}>
-                        <span className="fij-step">{i + 1}</span>
-                        <b>{a}</b>
-                        <small>{b}</small>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="fij-sunday">
-                    <Church size={18} />
-                    <div>
-                      <b>Lien avec le culte du dimanche</b>
-                      <p>
-                        Non mesuré : aucune donnée dédiée dans les CR actuels.
+                      {model.points.some((p) => p.participants != null) ? (
+                        <div
+                          className="fij-chart"
+                          role="img"
+                          aria-label="Courbe des participants enregistrés par semaine"
+                        >
+                          <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart
+                              data={model.points}
+                              margin={{
+                                top: 18,
+                                right: 18,
+                                left: -16,
+                                bottom: 0,
+                              }}
+                            >
+                              <defs>
+                                <linearGradient
+                                  id={
+                                    coordination
+                                      ? "fij-coord-fill"
+                                      : "fij-pilot-fill"
+                                  }
+                                  x1="0"
+                                  y1="0"
+                                  x2="0"
+                                  y2="1"
+                                >
+                                  <stop
+                                    offset="0%"
+                                    stopColor="#426b88"
+                                    stopOpacity={0.12}
+                                  />
+                                  <stop
+                                    offset="100%"
+                                    stopColor="#426b88"
+                                    stopOpacity={0.01}
+                                  />
+                                </linearGradient>
+                              </defs>
+                              <CartesianGrid
+                                vertical={false}
+                                stroke="#e8edf5"
+                              />
+                              <XAxis
+                                dataKey="label"
+                                tick={{ fontSize: 11, fill: "#64748b" }}
+                                tickLine={false}
+                                axisLine={false}
+                                minTickGap={24}
+                              />
+                              <YAxis
+                                allowDecimals={false}
+                                tick={{ fontSize: 11, fill: "#64748b" }}
+                                tickLine={false}
+                                axisLine={false}
+                              />
+                              <Tooltip
+                                formatter={(v) => [v, "Participants"]}
+                                contentStyle={{
+                                  borderRadius: 12,
+                                  border: "1px solid #e4e9f0",
+                                  color: "#172b4b",
+                                }}
+                              />
+                              <Area
+                                type="monotone"
+                                dataKey="participants"
+                                stroke="#426b88"
+                                strokeWidth={3}
+                                fill={`url(#${coordination ? "fij-coord-fill" : "fij-pilot-fill"})`}
+                                connectNulls={false}
+                                isAnimationActive={false}
+                                dot={{ r: 3, fill: "#426b88", strokeWidth: 0 }}
+                              />
+                            </AreaChart>
+                          </ResponsiveContainer>
+                        </div>
+                      ) : (
+                        <ChartEmpty text="Les courbes apparaîtront à partir des premiers CR transmis." />
+                      )}
+                      <p className="fij-chart-foot">
+                        Nouveaux visiteurs cette semaine :{" "}
+                        {model.latest.visitors ?? "non renseigné"} · chiffres
+                        des CR reçus.
                       </p>
-                    </div>
+                    </article>
+                    <article className="fij-chart-panel fij-care-panel">
+                      <span className="fij-kicker">
+                        {coordination ? "PILOTER" : "PRENDRE SOIN"}
+                      </span>
+                      <h2>
+                        {coordination
+                          ? "Les points de vigilance"
+                          : "Les prochaines attentions"}
+                      </h2>
+                      <div className="fij-attention">
+                        <span className="fij-dot amber" />
+                        <div>
+                          <b>
+                            {model.missing.length} FIJ sans CR cette semaine
+                          </b>
+                          <p>À vérifier avant la clôture hebdomadaire.</p>
+                        </div>
+                      </div>
+                      <div className="fij-attention">
+                        <span className="fij-dot coral" />
+                        <div>
+                          <b>
+                            {model.needsCare.length} membre
+                            {model.needsCare.length > 1 ? "s" : ""} à
+                            recontacter
+                          </b>
+                          <p>
+                            Au moins trois absences enregistrées à la suite.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="fij-attention">
+                        <span className="fij-dot blue" />
+                        <div>
+                          <b>
+                            {model.multiplying.length} FIJ avec 13 membres ou
+                            plus
+                          </b>
+                          <p>
+                            Préparer la multiplication avec la coordination.
+                          </p>
+                        </div>
+                      </div>
+                      {!presentation && (
+                        <button
+                          className="fij-text-link"
+                          onClick={() =>
+                            setTab(coordination ? "operations" : "members")
+                          }
+                        >
+                          {coordination
+                            ? "Ouvrir le suivi opérationnel"
+                            : "Voir les membres"}{" "}
+                          <ArrowUpRight size={16} />
+                        </button>
+                      )}
+                    </article>
                   </div>
-                </article>
-              </div>
-              {coordination && (
-                <article className="fij-chart-panel fij-comparison">
-                  <div className="fij-section-heading">
-                    <div>
-                      <span className="fij-kicker">COMPARER</span>
-                      <h2>Les FIJ cette semaine</h2>
-                    </div>
-                    <span className="fij-subtle">Participants déclarés</span>
-                  </div>
-                  <div
-                    className="fij-chart"
-                    role="img"
-                    aria-label="Comparaison des participants par FIJ"
-                  >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={visibleFijs.map((f) => {
-                          const r = model.rows.find(
-                            (r) =>
-                              reportFij(r) === f.id &&
-                              weekKey(reportDate(r)) === model.latest.key,
-                          );
-                          return {
-                            name: f.name,
-                            participants: r
-                              ? (r.present_count ?? r.participants_count ?? 0)
-                              : null,
-                          };
-                        })}
-                      >
-                        <CartesianGrid vertical={false} stroke="#e8edf5" />
-                        <XAxis
-                          dataKey="name"
-                          tick={{ fontSize: 11 }}
-                          interval="preserveStartEnd"
-                        />
-                        <YAxis allowDecimals={false} />
-                        <Tooltip formatter={(v) => [v, "Participants"]} />
-                        <Bar
-                          dataKey="participants"
-                          fill="#7c94dc"
-                          radius={[5, 5, 0, 0]}
-                          isAnimationActive={false}
-                          maxBarSize={52}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </article>
+                </>
               )}
-              {!presentation && (
+              {(tab === "analysis" || presentation) && (
+                <>
+                  <div className="fij-secondary-grid">
+                    <article className="fij-chart-panel">
+                      <div className="fij-section-heading">
+                        <div>
+                          <span className="fij-kicker">CONNAÎTRE</span>
+                          <h2>Le parcours des membres</h2>
+                        </div>
+                        <span className="fij-subtle">
+                          {model.members.length} membres actifs
+                        </span>
+                      </div>
+                      <div className="fij-growth-bars">
+                        {growth.map((g) => (
+                          <div className="fij-growth-row" key={g.name}>
+                            <span>{g.name}</span>
+                            <div>
+                              <span
+                                style={{
+                                  width: `${model.members.length ? (g.count / model.members.length) * 100 : 0}%`,
+                                }}
+                              />
+                            </div>
+                            <b>{g.count}</b>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="fij-chart-foot">
+                        Statuts renseignés, sans notation spirituelle ni
+                        progression supposée.
+                      </p>
+                    </article>
+                    <article className="fij-chart-panel">
+                      <span className="fij-kicker">CONDUIRE</span>
+                      <h2>De l’accueil à l’ancrage</h2>
+                      <div className="fij-journey-map">
+                        {[
+                          ["Attirer", "Créer le lien"],
+                          ["Convertir", "Découvrir la foi"],
+                          ["Intégrer", "Accueillir en FIJ"],
+                          ["Prendre soin", "Accompagner dans la durée"],
+                        ].map(([a, b], i) => (
+                          <div key={a}>
+                            <span className="fij-step">{i + 1}</span>
+                            <b>{a}</b>
+                            <small>{b}</small>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="fij-sunday">
+                        <Church size={18} />
+                        <div>
+                          <b>Lien avec le culte du dimanche</b>
+                          <p>
+                            Non mesuré : aucune donnée dédiée dans les CR
+                            actuels.
+                          </p>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                  {coordination && (
+                    <article className="fij-chart-panel fij-comparison">
+                      <div className="fij-section-heading">
+                        <div>
+                          <span className="fij-kicker">COMPARER</span>
+                          <h2>Les FIJ cette semaine</h2>
+                        </div>
+                        <span className="fij-subtle">
+                          Participants déclarés
+                        </span>
+                      </div>
+                      <div
+                        className="fij-chart"
+                        role="img"
+                        aria-label="Comparaison des participants par FIJ"
+                      >
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart
+                            data={visibleFijs.map((f) => {
+                              const r = model.rows.find(
+                                (r) =>
+                                  reportFij(r) === f.id &&
+                                  weekKey(reportDate(r)) === model.latest.key,
+                              );
+                              return {
+                                name: f.name,
+                                participants: r
+                                  ? (r.present_count ??
+                                    r.participants_count ??
+                                    0)
+                                  : null,
+                              };
+                            })}
+                          >
+                            <CartesianGrid vertical={false} stroke="#e8edf5" />
+                            <XAxis
+                              dataKey="name"
+                              tick={{ fontSize: 11 }}
+                              interval="preserveStartEnd"
+                            />
+                            <YAxis allowDecimals={false} />
+                            <Tooltip formatter={(v) => [v, "Participants"]} />
+                            <Bar
+                              dataKey="participants"
+                              fill="#7896a9"
+                              radius={[5, 5, 0, 0]}
+                              isAnimationActive={false}
+                              maxBarSize={52}
+                            />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </article>
+                  )}
+                </>
+              )}
+              {!presentation && tab === "overview" && (
                 <>
                   <div className="fij-section-heading">
                     <h2>
-                      {coordination
-                        ? "Chaque FIJ, dans son contexte"
-                        : "Mon espace de travail"}
+                      {coordination ? "Les familles" : "Mon espace de travail"}
                     </h2>
                     <Link to={fijBase} className="fij-text-link">
                       {coordination ? "Registre complet" : "Toutes mes FIJ"}{" "}
@@ -625,7 +652,7 @@ export default function FijVisualDashboard({
             <article className="fij-chart-panel">
               <div className="fij-section-heading">
                 <div>
-                  <span className="fij-kicker">PERSONNE N’EST UN CHIFFRE</span>
+                  <span className="fij-kicker">ACCOMPAGNEMENT</span>
                   <h2>
                     Les membres de{" "}
                     {selected === "all"
@@ -798,14 +825,23 @@ export default function FijVisualDashboard({
             </>
           )}
           <footer className="fij-data-note">
-            Données enregistrées dans l’application · semaine du{" "}
-            {new Date(model.latest.key + "T12:00:00Z").toLocaleDateString(
-              "fr-FR",
-            )}{" "}
-            · Semaine en cours susceptible d’être incomplète · Vue limitée aux
-            données chargées (1 000 lignes par FIJ et source).{" "}
-            {presentation &&
-              "Mode présentation : données nominatives masquées."}
+            <span>
+              Semaine du{" "}
+              {new Date(model.latest.key + "T12:00:00Z").toLocaleDateString(
+                "fr-FR",
+              )}{" "}
+              · en cours
+            </span>
+            <details>
+              <summary>À propos des données</summary>
+              <p>
+                Données enregistrées dans l’application. La semaine en cours
+                peut être incomplète. Une semaine sans CR reste vide ; les
+                chiffres ne sont pas des estimations. Vue limitée à 1 000 lignes
+                par FIJ et source.{" "}
+                {presentation && "Données nominatives masquées."}
+              </p>
+            </details>
           </footer>
         </>
       )}

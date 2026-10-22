@@ -832,3 +832,357 @@
     print-color-adjust: exact;
   }
 }
+
+/* FIJ : lecture calme, un niveau de détail à la fois. */
+.fij-visual {
+  --fij-blue: #426b88;
+  --fij-ink: #203440;
+  --fij-muted: #657580;
+  --fij-line: #e7ecee;
+  --fij-bg: #f7f9fa;
+}
+.fij-dashboard-header .fij-section-menu {
+  border-top: 1px solid #edf0f2;
+}
+.fij-section-menu-label {
+  cursor: pointer;
+  padding: 12px 0;
+  font-size: 12px;
+  color: #586975;
+  width: fit-content;
+}
+.fij-section-menu[open] > summary {
+  margin-bottom: 8px;
+}
+.fij-section-menu summary:focus-visible {
+  outline: 2px solid #426b88;
+  outline-offset: 3px;
+}
+.fij-toolbar {
+  margin-bottom: 24px;
+}
+.fij-path {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.fij-page-intro {
+  margin-bottom: 32px;
+}
+.fij-page-intro > div > .fij-kicker {
+  display: none;
+}
+.serviteur-app .fij-visual .fij-page-intro h1,
+.fij-visual .fij-page-intro h1 {
+  font-size: clamp(30px, 3vw, 38px);
+  letter-spacing: -1.2px;
+  margin-bottom: 10px;
+}
+.fij-page-intro p {
+  font-size: 13px;
+}
+.fij-local-tabs {
+  gap: 28px;
+  margin-bottom: 32px;
+}
+.fij-local-tabs button {
+  padding: 15px 0;
+}
+.fij-local-tabs button[aria-pressed="true"] {
+  color: #203440;
+  border-color: #426b88;
+}
+.fij-metrics {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 4px 0 24px;
+  margin-bottom: 16px;
+}
+.fij-metrics article {
+  padding: 0 28px;
+  gap: 8px;
+}
+.fij-metrics article:first-child {
+  padding-left: 0;
+}
+.fij-metrics strong {
+  font-size: 38px;
+  font-weight: 500;
+  letter-spacing: -1.6px;
+}
+.fij-metrics article > span {
+  font-size: 12px;
+}
+.fij-metrics p {
+  font-size: 11px;
+  max-width: 220px;
+}
+.fij-chart-panel {
+  border-color: var(--fij-line);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 3px 18px #20344003;
+}
+.fij-main-grid {
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: 28px;
+  margin-bottom: 36px;
+}
+.fij-chart-panel .fij-kicker {
+  display: none;
+}
+.fij-chart-panel h2,
+.fij-section-heading h2 {
+  font-size: 16px;
+  letter-spacing: -0.35px;
+}
+.fij-chart {
+  height: 260px;
+}
+.fij-section-heading {
+  margin-bottom: 24px;
+}
+.fij-legend {
+  display: none;
+}
+.fij-care-panel {
+  background: #f7f9fa;
+  border-color: transparent;
+  box-shadow: none;
+}
+.fij-attention {
+  padding: 20px 0;
+  gap: 12px;
+}
+.fij-attention:last-of-type {
+  border-bottom: 0;
+}
+.fij-attention p {
+  font-size: 11px !important;
+}
+.fij-attention b {
+  font-size: 12px;
+}
+.fij-dot {
+  width: 5px;
+  height: 5px;
+}
+.fij-dot.amber,
+.fij-dot.blue {
+  background: #78919e;
+}
+.fij-dot.coral {
+  background: #b18466;
+}
+.fij-secondary-grid {
+  gap: 28px;
+  margin-bottom: 28px;
+}
+.fij-family-list {
+  gap: 0;
+  border-block: 1px solid var(--fij-line);
+}
+.fij-family-list article {
+  border: 0;
+  border-bottom: 1px solid var(--fij-line);
+  border-radius: 0;
+  background: transparent;
+  padding: 20px 0;
+}
+.fij-family-list article:last-child {
+  border-bottom: 0;
+}
+.fij-family-icon {
+  display: none;
+}
+.fij-status,
+.fij-status.good {
+  background: transparent;
+  color: #687980;
+  padding: 4px 0;
+}
+.fij-status.good {
+  color: #447963;
+}
+.fij-open-family {
+  background: transparent;
+  color: #426b88;
+}
+.fij-data-note {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  padding-top: 28px;
+}
+.fij-data-note details {
+  max-width: 520px;
+}
+.fij-data-note summary {
+  cursor: pointer;
+}
+.fij-data-note details p {
+  margin-top: 12px;
+}
+.fij-operations {
+  gap: 28px;
+}
+.fij-operations > article > svg {
+  display: none;
+}
+.fij-operations h2 {
+  margin-top: 0;
+}
+.fij-member-hero {
+  background: #f6f8f9;
+  padding: 34px 36px 28px;
+}
+.fij-member-dialog {
+  border-radius: 18px;
+}
+.fij-member-dialog .fij-local-tabs {
+  gap: 24px;
+}
+.fij-member-dialog .fij-member-name {
+  font-weight: 500;
+}
+.fij-visual-extra {
+  padding-top: 26px;
+  margin-top: 10px;
+}
+.fij-visual-extra .fij-section-heading h2 {
+  font-size: 14px;
+}
+.fij-chart-panel,
+.fij-family-list article,
+.fij-member-dialog {
+  animation: fij-enter 280ms ease-out both;
+}
+.fij-visual button,
+.fij-visual a {
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+.fij-open-family:hover,
+.fij-text-link:hover {
+  color: #203440;
+}
+.fij-family-list article:hover {
+  background: #f7f9fa;
+}
+.fij-member-overlay {
+  animation: fij-fade 180ms ease-out both;
+}
+.fij-member-dialog {
+  animation-name: fij-dialog-enter;
+}
+@keyframes fij-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fij-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fij-dialog-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+@media (max-width: 1050px) {
+  .fij-main-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(230px, 1fr);
+  }
+}
+@media (max-width: 750px) {
+  .fij-main-grid,
+  .fij-secondary-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .fij-metrics {
+    gap: 26px 0;
+    padding-bottom: 12px;
+  }
+  .fij-metrics article {
+    padding: 0 16px;
+  }
+  .fij-metrics article:nth-child(3) {
+    padding-left: 0;
+  }
+  .fij-metrics strong {
+    font-size: 32px;
+  }
+  .fij-chart-panel {
+    padding: 22px;
+  }
+  .fij-chart {
+    height: 225px;
+  }
+  .fij-local-tabs {
+    gap: 22px;
+  }
+  .fij-member-hero {
+    padding: 30px 22px 24px;
+  }
+  .fij-data-note {
+    display: grid;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fij-visual *,
+  .fij-member-overlay,
+  .fij-member-dialog {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.fij-growth-row > div > span {
+  background: #7896a9;
+}
+.fij-step {
+  color: #426b88;
+  background: #edf2f5;
+}
+.fij-text-link {
+  color: #426b88;
+}
+@media (max-width: 750px) {
+  .fij-toolbar {
+    margin-bottom: 20px;
+  }
+  .fij-page-intro {
+    gap: 22px;
+    margin-bottom: 20px;
+  }
+  .fij-local-tabs {
+    margin-bottom: 24px;
+  }
+  .fij-local-tabs button {
+    font-size: 12px !important;
+  }
+  .fij-page-intro p {
+    line-height: 1.5;
+  }
+}

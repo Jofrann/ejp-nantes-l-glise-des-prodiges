@@ -67,3 +67,9 @@ AdminHome ouvre Photos du site par défaut. PublicPhotosEditor présente six emp
 GalleryAdmin conserve la source GalleryMedia et enregistre ses propres opérations immédiatement. Modifier titre/description/fichier, masquer/afficher, monter/descendre et retirer sont visibles au toucher. Retirer demande confirmation et ne détruit pas le fichier utilisé ailleurs. Les liens ouvrent Accueil → Galerie. Home charge jusqu’à 1000 médias actifs au lieu de huit ; GalerieVivante en montre neuf puis propose la suite. Une vidéo sans miniature utilise un élément video plutôt qu’un img pointant vers le fichier vidéo.
 
 Le stockage et les autorisations de server/files.mjs restent les propriétaires de l’upload. Les formulaires réutilisent le Dialog partagé. Aucun import de données de test en production. Les photos ne sont pas modifiées automatiquement au déploiement.
+
+## FIJ — simplification visuelle, 22 octobre 2026
+
+La synthèse devient l'arrivée par défaut : quatre repères sans cartes imbriquées, une courbe principale et les attentions. Les graphiques de parcours et de comparaison sont conservés dans Analyses ; les membres et les outils gardent leurs vues dédiées. Les routes et le menu global restent identiques. Le menu horizontal des outils est repliable uniquement sur ces deux tableaux de bord. Le mode présentation rassemble toujours les graphiques anonymisés.
+
+Palette FIJ : encre #203440, secondaire #657580, accent bleu ardoise #426b88, séparateurs #e7ecee, fond #f7f9fa. Manrope existante conservée : titres sobres et chiffres tabulaires. Signature : les indicateurs forment une seule ligne de lecture, puis une courbe dominante. Les détails de méthode sont disponibles à la demande. Animations d'entrée courtes (180–280 ms), retour au survol discret et ouverture de fiche ; mouvement réduit respecté. Aucun effet permanent.

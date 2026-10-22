@@ -1,34 +1,49 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { AlertTriangle } from 'lucide-react';
-import PageBreadcrumb from '@/components/navigation/PageBreadcrumb';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { AlertTriangle } from "lucide-react";
+import PageBreadcrumb from "@/components/navigation/PageBreadcrumb";
 
 // Navigation par rôle — chaque rôle a son propre espace
 export const PILOTE_NAV = [
-  { to: '/app/responsabilites/fij-pilote', label: 'Accueil', end: true },
-  { to: '/app/responsabilites/fij-pilote/mes-fij', label: 'Mes FIJ' },
-  { to: '/app/responsabilites/fij-pilote/cr', label: 'Comptes rendus' },
-  { to: '/app/responsabilites/fij-pilote/communications', label: 'Communications' },
-  { to: '/app/responsabilites/fij-pilote/documents', label: 'Documents' },
-  { to: '/app/responsabilites/fij-pilote/alertes', label: 'Alertes' },
-  { to: '/app/responsabilites/fij-coordination/pilotes', label: 'Pilotes' },
+  { to: "/app/responsabilites/fij-pilote", label: "Accueil", end: true },
+  { to: "/app/responsabilites/fij-pilote/mes-fij", label: "Mes FIJ" },
+  { to: "/app/responsabilites/fij-pilote/cr", label: "Comptes rendus" },
+  {
+    to: "/app/responsabilites/fij-pilote/communications",
+    label: "Communications",
+  },
+  { to: "/app/responsabilites/fij-pilote/documents", label: "Documents" },
+  { to: "/app/responsabilites/fij-pilote/alertes", label: "Alertes" },
+  { to: "/app/responsabilites/fij-coordination/pilotes", label: "Pilotes" },
 ];
 
 export const COORDINATION_NAV = [
-  { to: '/app/responsabilites/fij-coordination', label: 'Tableau', end: true },
-  { to: '/app/responsabilites/fij-coordination/registre', label: 'Registre' },
-  { to: '/app/responsabilites/fij-coordination/cr-jeudi', label: 'CR Jeudi' },
-  { to: '/app/responsabilites/fij-coordination/relances', label: 'Relances' },
-  { to: '/app/responsabilites/fij-coordination/ouvertures', label: 'Ouvertures' },
-  { to: '/app/responsabilites/fij-coordination/consecrations', label: 'Consécrations' },
-  { to: '/app/responsabilites/fij-coordination/pause', label: 'Pause' },
-  { to: '/app/responsabilites/fij-coordination/pilotes', label: 'Pilotes' },
-  { to: '/app/responsabilites/fij-coordination/communications', label: 'Comms' },
-  { to: '/app/responsabilites/fij-coordination/documents', label: 'Docs' },
-  { to: '/app/responsabilites/fij-coordination/alertes', label: 'Alertes' },
-  { to: '/app/responsabilites/fij-coordination/reporting', label: 'Reporting' },
-  { to: '/app/responsabilites/fij-coordination/transferts', label: 'Transferts' },
+  { to: "/app/responsabilites/fij-coordination", label: "Tableau", end: true },
+  { to: "/app/responsabilites/fij-coordination/registre", label: "Registre" },
+  { to: "/app/responsabilites/fij-coordination/cr-jeudi", label: "CR Jeudi" },
+  { to: "/app/responsabilites/fij-coordination/relances", label: "Relances" },
+  {
+    to: "/app/responsabilites/fij-coordination/ouvertures",
+    label: "Ouvertures",
+  },
+  {
+    to: "/app/responsabilites/fij-coordination/consecrations",
+    label: "Consécrations",
+  },
+  { to: "/app/responsabilites/fij-coordination/pause", label: "Pause" },
+  { to: "/app/responsabilites/fij-coordination/pilotes", label: "Pilotes" },
+  {
+    to: "/app/responsabilites/fij-coordination/communications",
+    label: "Comms",
+  },
+  { to: "/app/responsabilites/fij-coordination/documents", label: "Docs" },
+  { to: "/app/responsabilites/fij-coordination/alertes", label: "Alertes" },
+  { to: "/app/responsabilites/fij-coordination/reporting", label: "Reporting" },
+  {
+    to: "/app/responsabilites/fij-coordination/transferts",
+    label: "Transferts",
+  },
 ];
 
 // L'espace Direction FIJ a été supprimé — les leaders consultent les indicateurs dans /app/direction
@@ -48,31 +63,53 @@ export function EmptyState({ icon: Icon, title, sub }) {
         {Icon && <Icon className="w-5 h-5 text-muted-foreground" />}
       </div>
       <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
-      {sub && <p className="text-xs text-muted-foreground max-w-xs mx-auto">{sub}</p>}
+      {sub && (
+        <p className="text-xs text-muted-foreground max-w-xs mx-auto">{sub}</p>
+      )}
     </div>
   );
 }
 
-export function RoleShell({ role, title = null, subtitle = null, children = null, actions = null, requiredRoles = null, breadcrumbLabel = null, visualDashboard = false }) {
+export function RoleShell({
+  role,
+  title = null,
+  subtitle = null,
+  children = null,
+  actions = null,
+  requiredRoles = null,
+  breadcrumbLabel = null,
+  visualDashboard = false,
+}) {
   const location = useLocation();
 
   // Dérive la navigation de la route, pas du rôle utilisateur.
   // Permet à la direction d'utiliser l'espace coordination avec la bonne navigation.
-  const routeRole = location.pathname.includes('/fij-pilote') ? 'pilot'
-    : location.pathname.includes('/fij-coordination') ? 'coordination'
-    : role;
+  const routeRole = location.pathname.includes("/fij-pilote")
+    ? "pilot"
+    : location.pathname.includes("/fij-coordination")
+      ? "coordination"
+      : role;
 
-  const navItems = routeRole === 'pilot' ? PILOTE_NAV
-    : routeRole === 'coordination' ? COORDINATION_NAV
-    : [];
+  const navItems =
+    routeRole === "pilot"
+      ? PILOTE_NAV
+      : routeRole === "coordination"
+        ? COORDINATION_NAV
+        : [];
 
-  const hubPath = routeRole === 'pilot' ? '/app/responsabilites/fij-pilote'
-    : routeRole === 'coordination' ? '/app/responsabilites/fij-coordination'
-    : '/app/responsabilites';
+  const hubPath =
+    routeRole === "pilot"
+      ? "/app/responsabilites/fij-pilote"
+      : routeRole === "coordination"
+        ? "/app/responsabilites/fij-coordination"
+        : "/app/responsabilites";
 
-  const hubLabel = routeRole === 'pilot' ? '← Espace pilote'
-    : routeRole === 'coordination' ? '← Coordination'
-    : '← FIJ';
+  const hubLabel =
+    routeRole === "pilot"
+      ? "← Espace pilote"
+      : routeRole === "coordination"
+        ? "← Coordination"
+        : "← FIJ";
 
   // Le contrôle d'accès utilise le rôle réel de l'utilisateur
   const hasAccess = !requiredRoles || requiredRoles.includes(role);
@@ -84,8 +121,15 @@ export function RoleShell({ role, title = null, subtitle = null, children = null
           <AlertTriangle className="w-6 h-6 text-destructive/60" />
         </div>
         <p className="text-sm font-semibold mb-1">Accès restreint</p>
-        <p className="text-xs text-muted-foreground mb-5 max-w-xs">Cette page est réservée à la coordination et à la direction.</p>
-        <Link to="/app/responsabilites" className="text-secondary text-sm font-medium">← Retour à l'accueil FIJ</Link>
+        <p className="text-xs text-muted-foreground mb-5 max-w-xs">
+          Cette page est réservée à la coordination et à la direction.
+        </p>
+        <Link
+          to="/app/responsabilites"
+          className="text-secondary text-sm font-medium"
+        >
+          ← Retour à l'accueil FIJ
+        </Link>
       </div>
     );
   }
@@ -93,14 +137,18 @@ export function RoleShell({ role, title = null, subtitle = null, children = null
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header sticky avec navigation */}
-      <div className="app-section-header sticky z-30 bg-card/90 backdrop-blur-md border-b border-border">
-        <div className={`${visualDashboard ? 'max-w-[1440px]' : 'max-w-4xl'} mx-auto px-4`}>
+      <div
+        className={`app-section-header sticky z-30 bg-card/90 backdrop-blur-md border-b border-border ${visualDashboard ? "fij-dashboard-header" : ""}`}
+      >
+        <div
+          className={`${visualDashboard ? "max-w-[1440px]" : "max-w-4xl"} mx-auto px-4`}
+        >
           {/* Fil d'Ariane */}
           <PageBreadcrumb
             items={[
-              { label: 'Tableau de bord', to: '/app' },
-              { label: 'Ministères', to: '/app/departements' },
-              { label: 'FIJ', to: '/app/responsabilites' },
+              { label: "Tableau de bord", to: "/app" },
+              { label: "Ministères", to: "/app/departements" },
+              { label: "FIJ", to: "/app/responsabilites" },
               { label: breadcrumbLabel || title, to: location.pathname },
             ]}
             backTo={hubPath}
@@ -109,35 +157,59 @@ export function RoleShell({ role, title = null, subtitle = null, children = null
           />
           {/* Navigation horizontale scrollable */}
           {navItems.length > 0 && (
-            <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-none">
-              {navItems.map(item => {
-                const active = item.end
-                  ? location.pathname === item.to
-                  : location.pathname.startsWith(item.to);
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                      active
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-surface'
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
+            <details
+              className={visualDashboard ? "fij-section-menu" : "contents"}
+              open={visualDashboard ? undefined : true}
+            >
+              <summary
+                className={
+                  visualDashboard ? "fij-section-menu-label" : "hidden"
+                }
+              >
+                Les outils{" "}
+                {routeRole === "pilot" ? "du pilote" : "de coordination"}
+              </summary>
+              <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-none">
+                {navItems.map((item) => {
+                  const active = item.end
+                    ? location.pathname === item.to
+                    : location.pathname.startsWith(item.to);
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                        active
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-surface"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            </details>
           )}
         </div>
       </div>
 
       {/* Contenu */}
-      <div className={`${visualDashboard ? 'max-w-[1440px] sm:px-7 lg:px-9' : 'max-w-4xl'} mx-auto px-4 py-6 pb-24`}>
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          {title && <h1 className="text-xl font-heading font-bold text-foreground mb-1">{title}</h1>}
-          {subtitle && <p className="text-sm text-muted-foreground mb-6">{subtitle}</p>}
+      <div
+        className={`${visualDashboard ? "max-w-[1440px] sm:px-7 lg:px-9" : "max-w-4xl"} mx-auto px-4 py-6 pb-24`}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          {title && (
+            <h1 className="text-xl font-heading font-bold text-foreground mb-1">
+              {title}
+            </h1>
+          )}
+          {subtitle && (
+            <p className="text-sm text-muted-foreground mb-6">{subtitle}</p>
+          )}
           {children}
         </motion.div>
       </div>
