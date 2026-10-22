@@ -1,18 +1,10 @@
+import { getNextService } from '@/lib/publicSchedule';
+import { PublicText } from '@/components/public/PublicCopy';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Navigation, Clock } from 'lucide-react';
 import RevealOnScroll from '../RevealOnScroll';
 
-function getNextSunday() {
-  const now = new Date();
-  const sunday = new Date(now);
-  const day = now.getDay();
-  const diff = day === 0 ? 0 : 7 - day;
-  sunday.setDate(now.getDate() + diff);
-  sunday.setHours(15, 0, 0, 0);
-  if (sunday <= now) sunday.setDate(sunday.getDate() + 7);
-  return sunday;
-}
 
 function useCountdown(target) {
   const [timeLeft, setTimeLeft] = useState({});
@@ -38,7 +30,7 @@ function useCountdown(target) {
 }
 
 export default function CeDimanche({ config }) {
-  const [nextSunday] = useState(getNextSunday);
+  const nextSunday = React.useMemo(() => getNextService(config || {}), [config?.service_day, config?.service_time]);
   const { days, hours, minutes, seconds } = useCountdown(nextSunday);
   const address = config?.address_label || 'Nantes, France';
   const mapsUrl = config?.maps_link || 'https://maps.google.com/?q=Nantes';
@@ -56,39 +48,32 @@ export default function CeDimanche({ config }) {
             <div className="grid md:grid-cols-2">
               {/* Left: info */}
               <div className="p-8 md:p-10">
-                <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold">Ce dimanche</span>
-                <h2 className="font-display text-3xl md:text-4xl text-[#101827] mt-3 mb-4 font-medium leading-tight">
-                  Culte à {serviceTime.replace(':', 'h')}
+                <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold"><PublicText value={"Ce dimanche"} /></span>
+                <h2 className="font-display text-3xl md:text-4xl text-[#101827] mt-3 mb-4 font-medium leading-tight"><PublicText value={"Culte à "} /><PublicText value={serviceTime.replace(':', 'h')} />
                 </h2>
-                <p className="text-[#4B5563] text-sm leading-relaxed mb-6">
-                  Un temps pour chercher Dieu, être édifié, et marcher avec une jeunesse qui désire porter du fruit.
-                </p>
+                <p className="text-[#4B5563] text-sm leading-relaxed mb-6"><PublicText value={"Un temps pour chercher Dieu, être édifié, et marcher avec une jeunesse qui désire porter du fruit."} /></p>
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                     <MapPin className="w-4 h-4 text-[#D8B76A] flex-shrink-0" />
-                    <span>{address}</span>
+                    <span><PublicText value={address} /></span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                     <Clock className="w-4 h-4 text-[#D8B76A] flex-shrink-0" />
-                    <span>Tous les dimanches à {serviceTime.replace(':', 'h')}</span>
+                    <span><PublicText value={"Tous les dimanches à "} /><PublicText value={serviceTime.replace(':', 'h')} /></span>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Link to="/venir" className="flex items-center gap-1.5 bg-[#101827] text-white text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#1a2740] transition-colors">
-                    Préparer ma venue
-                  </Link>
+                  <Link to="/venir" className="flex items-center gap-1.5 bg-[#101827] text-white text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#1a2740] transition-colors"><PublicText value={"Préparer ma venue"} /></Link>
                   <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-[#F5F0E8] text-[#101827] text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#EDE6D8] transition-colors">
-                    <Navigation className="w-3.5 h-3.5" /> Google Maps
-                  </a>
+                    <Navigation className="w-3.5 h-3.5" /><PublicText value={" Google Maps"} /></a>
                   <a href={icsUrl} download="culte-ejp-nantes.ics" className="flex items-center gap-1.5 bg-[#F5F0E8] text-[#101827] text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#EDE6D8] transition-colors">
-                    <Calendar className="w-3.5 h-3.5" /> Calendrier
-                  </a>
+                    <Calendar className="w-3.5 h-3.5" /><PublicText value={" Calendrier"} /></a>
                 </div>
               </div>
 
               {/* Right: countdown */}
               <div className="bg-gradient-to-br from-[#101827] to-[#1a2740] p-8 md:p-10 flex flex-col items-center justify-center text-white">
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] mb-6 font-semibold">Compte à rebours</p>
+                <p className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] mb-6 font-semibold"><PublicText value={"Compte à rebours"} /></p>
                 <div className="grid grid-cols-4 gap-3 md:gap-4 w-full max-w-xs">
                   {[
                     { label: 'Jours', value: days },
@@ -99,14 +84,14 @@ export default function CeDimanche({ config }) {
                     <div key={unit.label} className="text-center">
                       <div className="bg-white/10 backdrop-blur-md rounded-2xl py-3 px-1 border border-white/10">
                         <span className="font-display text-2xl md:text-3xl font-medium tabular-nums">
-                          {String(unit.value).padStart(2, '0')}
+                          <PublicText value={String(unit.value).padStart(2, '0')} />
                         </span>
                       </div>
-                      <p className="text-[10px] text-white/50 mt-1.5 uppercase tracking-wider">{unit.label}</p>
+                      <p className="text-[10px] text-white/50 mt-1.5 uppercase tracking-wider"><PublicText value={unit.label} /></p>
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-white/40 mt-6 text-center">Prochain culte : {nextSunday.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+                <p className="text-xs text-white/40 mt-6 text-center"><PublicText value={"Prochain culte : "} /><PublicText value={nextSunday.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} /></p>
               </div>
             </div>
           </div>

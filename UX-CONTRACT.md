@@ -39,3 +39,14 @@ PrivateSidebar et les liens inférieurs présentent les routes existantes. Mobil
 Photo d’emplacement : upload public → aperçu et état À publier → publication de ChurchConfig → image publique. Le chargement bloque la publication ; une erreur conserve le formulaire modifiable. Le changement d’onglet conserve les choix non publiés dans AdminHome. Galerie : opérations GalleryMedia enregistrées immédiatement, état visible/masqué et position affichés ; suppression de la référence après confirmation, sans destruction du fichier. Choisir un média de galerie pour un emplacement utilise son URL stable sans déplacer ni supprimer la référence de galerie. Les boîtes de dialogue utilisent les composants Radix existants.
 
 Les tableaux FIJ séparent Synthèse (vue d’ensemble), Analyses et Membres sans changer les routes. Les graphiques détaillés restent tous visibles en présentation. La navigation des outils du rôle utilise un disclosure HTML natif replié sur les deux hubs, avec tous les liens conservés. Les données de méthode sont dans un disclosure, la semaine provisoire restant visible. Aucun changement de calcul, d’API ou de droit dans cette simplification.
+
+
+## Édition des textes publics
+
+PublicTextsEditor étend AdminHome et ChurchConfig ; public_copy est la source des textes de présentation, les champs publics existants restent la source des horaires, de l’adresse et des présentations partagées. Les champs montrent le texte effectif. La recherche et les sections remplacent une liste indifférenciée. Les informations répétées utilisent {{jour}}, {{horaire}} et {{adresse}}. Un état visible distingue les modifications non publiées.
+
+Aperçu : Dialog Radix partagé, iframe des vraies routes publiques, sélection page/ordinateur/téléphone, fermeture et Échap accessibles. Transfert postMessage limité à même origine/source/canal et vérification administrateur actif sans première connexion ; liste explicite de champs publics, aucune intégration privée. Aucun envoi de formulaire ni navigation externe dans l’aperçu. Publier utilise le CRUD ChurchConfig existant. En cas d’erreur les valeurs restent dans le formulaire. Les listes métier conservent leur enregistrement immédiat, signalé explicitement.
+
+PublicText et usePublicText rendent des chaînes React échappées, sans moteur de traduction du DOM. Le calendrier et le compte à rebours partagent publicSchedule.js et le fuseau Europe/Paris. Le serveur valide les textes publics et le jour/heure du culte. Les champs du formulaire de visite possèdent des identifiants uniques liés à leurs libellés.
+
+Le Dialog canonique utilise les couches 80 (fond) et 90 (contenu), devant les en-têtes et la navigation privée ; les fenêtres de galerie existantes gardent leur variante de style.

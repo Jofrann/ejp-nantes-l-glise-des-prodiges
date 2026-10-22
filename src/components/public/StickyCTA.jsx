@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React, { useRef } from 'react';
 import useChromeInset from '@/hooks/useChromeInset';
 import { Link } from 'react-router-dom';
@@ -10,9 +11,7 @@ export default function StickyCTA() {
       <Link
         to="/venir"
         className="flex items-center justify-center w-full bg-[#101827] text-white text-sm font-semibold py-3 rounded-full"
-      >
-        Je viens dimanche
-      </Link>
+      ><PublicText value={"Je viens dimanche"} /></Link>
     </div>
   );
 }

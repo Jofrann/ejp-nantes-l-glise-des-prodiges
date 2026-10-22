@@ -1,3 +1,4 @@
+import { withPublicDefaults } from '@/lib/publicCopy';
 import { toast } from '@/components/ui/use-toast';
 let lastError = { message: '', at: 0 };
 // Compatibility name retained so existing screens use the independent local API.
@@ -27,6 +28,12 @@ async function request(path, data) {
       new Error(result.message || result.error || "Opération impossible"),
       { status: response.status, data: result },
     );
+  if (path === 'entities/ChurchConfig' && ['list', 'filter', 'get'].includes(data?.method)) {
+    result = Array.isArray(result) ? result.map(withPublicDefaults) : withPublicDefaults(result);
+  }
+  if (path === 'entities/ChurchConfig' && ['list', 'filter', 'get'].includes(data?.method) && window.__ejpPublicDraft) {
+    return Array.isArray(result) ? [{ ...(result[0] || {}), ...window.__ejpPublicDraft }] : { ...result, ...window.__ejpPublicDraft };
+  }
   return result;
 }
 const unsupported = async () => {

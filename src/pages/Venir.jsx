@@ -1,3 +1,5 @@
+import { getNextService } from '@/lib/publicSchedule';
+import { PublicText } from '@/components/public/PublicCopy';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, MapPin, Navigation, Calendar, MessageCircle, Mail, ArrowLeft, HelpCircle } from 'lucide-react';
@@ -18,21 +20,11 @@ const FAQ_ITEMS = [
   { q: 'Combien de temps dure le culte ?', a: 'Environ 1h30 à 2h, avec louange, Parole et communion.' },
 ];
 
-function getNextSunday() {
-  const now = new Date();
-  const sunday = new Date(now);
-  const day = now.getDay();
-  const diff = day === 0 ? 0 : 7 - day;
-  sunday.setDate(now.getDate() + diff);
-  sunday.setHours(15, 0, 0, 0);
-  if (sunday <= now) sunday.setDate(sunday.getDate() + 7);
-  return sunday;
-}
 
 export default function Venir() {
   const [config, setConfig] = useState(null);
   const motionRoot = usePublicMotion(config);
-  const nextSunday = getNextSunday();
+  const nextSunday = React.useMemo(() => getNextService(config || {}), [config?.service_day, config?.service_time]);
 
   useEffect(() => {
     base44.entities.ChurchConfig.list().then(c => setConfig(c?.[0] || null)).catch(() => {});
@@ -55,18 +47,13 @@ export default function Venir() {
         <div className="max-w-4xl mx-auto px-5 md:px-8 pb-24">
           {/* Back link */}
           <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-[#4B5563] hover:text-[#101827] transition-colors mb-6">
-            <ArrowLeft className="w-4 h-4" /> Retour à l'accueil
-          </Link>
+            <ArrowLeft className="w-4 h-4" /><PublicText value={" Retour à l'accueil"} /></Link>
 
           {/* Header */}
           <RevealOnScroll className="mb-10">
-            <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold">Préparer ma venue</span>
-            <h1 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-4 font-medium leading-tight">
-              Je viens dimanche
-            </h1>
-            <p className="text-[#4B5563] text-base leading-relaxed max-w-xl">
-              Tout ce qu'il faut savoir pour vivre ton premier culte à l'EJP Nantes en toute simplicité.
-            </p>
+            <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold"><PublicText value={"Préparer ma venue"} /></span>
+            <h1 className="font-display text-3xl md:text-5xl text-[#101827] mt-3 mb-4 font-medium leading-tight"><PublicText value={"Je viens dimanche"} /></h1>
+            <p className="text-[#4B5563] text-base leading-relaxed max-w-xl"><PublicText value={"Tout ce qu'il faut savoir pour vivre ton premier culte à l'EJP Nantes en toute simplicité."} /></p>
           </RevealOnScroll>
 
           <EditorialPhoto className="ejp-visit-photo" src={config?.nantes_image_url} photo={PUBLIC_PHOTOS.nantes} />
@@ -76,22 +63,22 @@ export default function Venir() {
             <RevealOnScroll>
               <div className="bg-white rounded-[20px] border border-[#E8E2D5] p-5">
                 <Clock className="w-5 h-5 text-[#D8B76A] mb-3" />
-                <p className="text-sm font-semibold text-[#101827]">Horaire</p>
-                <p className="text-sm text-[#4B5563]">Dimanche à 15h00</p>
+                <p className="text-sm font-semibold text-[#101827]"><PublicText value={"Horaire"} /></p>
+                <p className="text-sm text-[#4B5563]"><PublicText value={"Dimanche à 15h00"} /></p>
               </div>
             </RevealOnScroll>
             <RevealOnScroll delay={100}>
               <div className="bg-white rounded-[20px] border border-[#E8E2D5] p-5">
                 <MapPin className="w-5 h-5 text-[#D8B76A] mb-3" />
-                <p className="text-sm font-semibold text-[#101827]">Adresse</p>
-                <p className="text-sm text-[#4B5563]">{address}</p>
+                <p className="text-sm font-semibold text-[#101827]"><PublicText value={"Adresse"} /></p>
+                <p className="text-sm text-[#4B5563]"><PublicText value={address} /></p>
               </div>
             </RevealOnScroll>
             <RevealOnScroll delay={200}>
               <div className="bg-white rounded-[20px] border border-[#E8E2D5] p-5">
                 <Calendar className="w-5 h-5 text-[#D8B76A] mb-3" />
-                <p className="text-sm font-semibold text-[#101827]">Prochain culte</p>
-                <p className="text-sm text-[#4B5563]">{nextSunday.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+                <p className="text-sm font-semibold text-[#101827]"><PublicText value={"Prochain culte"} /></p>
+                <p className="text-sm text-[#4B5563]"><PublicText value={nextSunday.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} /></p>
               </div>
             </RevealOnScroll>
           </div>
@@ -109,11 +96,9 @@ export default function Venir() {
               </div>
               <div className="p-5 flex flex-wrap gap-2">
                 <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-[#101827] text-white text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#1a2740] transition-colors">
-                  <Navigation className="w-3.5 h-3.5" /> Itinéraire
-                </a>
+                  <Navigation className="w-3.5 h-3.5" /><PublicText value={" Itinéraire"} /></a>
                 <a href={icsUrl} download="culte-ejp-nantes.ics" className="flex items-center gap-1.5 bg-[#F5F0E8] text-[#101827] text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#EDE6D8] transition-colors">
-                  <Calendar className="w-3.5 h-3.5" /> Ajouter au calendrier
-                </a>
+                  <Calendar className="w-3.5 h-3.5" /><PublicText value={" Ajouter au calendrier"} /></a>
               </div>
             </div>
           </RevealOnScroll>
@@ -121,12 +106,12 @@ export default function Venir() {
           {/* First visit explanation */}
           <RevealOnScroll className="mb-10">
             <div className="bg-gradient-to-br from-[#EAF0F8] to-white rounded-[24px] border border-[#E8E2D5] p-6 md:p-8">
-              <h2 className="font-display text-2xl text-[#101827] mb-4 font-medium">Comment se passe l'arrivée ?</h2>
+              <h2 className="font-display text-2xl text-[#101827] mb-4 font-medium"><PublicText value={"Comment se passe l'arrivée ?"} /></h2>
               <div className="space-y-3 text-sm text-[#4B5563] leading-relaxed">
-                <p>1. <strong className="text-[#101827]">Tu arrives</strong> — une équipe t'accueille à l'entrée et t'oriente.</p>
-                <p>2. <strong className="text-[#101827]">Tu trouves ta place</strong> — installe-toi tranquillement, le culte commence à 15h.</p>
-                <p>3. <strong className="text-[#101827]">Tu participes</strong> — louange, prière, Parole. Vis le moment à ton rythme.</p>
-                <p>4. <strong className="text-[#101827]">Tu restes après</strong> — un temps fraternel pour échanger et poser tes questions.</p>
+                <p><PublicText value={"1. "} /><strong className="text-[#101827]"><PublicText value={"Tu arrives"} /></strong><PublicText value={" — une équipe t'accueille à l'entrée et t'oriente."} /></p>
+                <p><PublicText value={"2. "} /><strong className="text-[#101827]"><PublicText value={"Tu trouves ta place"} /></strong><PublicText value={" — installe-toi tranquillement, le culte commence à 15h."} /></p>
+                <p><PublicText value={"3. "} /><strong className="text-[#101827]"><PublicText value={"Tu participes"} /></strong><PublicText value={" — louange, prière, Parole. Vis le moment à ton rythme."} /></p>
+                <p><PublicText value={"4. "} /><strong className="text-[#101827]"><PublicText value={"Tu restes après"} /></strong><PublicText value={" — un temps fraternel pour échanger et poser tes questions."} /></p>
               </div>
             </div>
           </RevealOnScroll>
@@ -139,15 +124,15 @@ export default function Venir() {
 
             <RevealOnScroll delay={100}>
               <div className="bg-white rounded-[24px] border border-[#E8E2D5] p-6 md:p-8 h-full">
-                <h3 className="font-display text-xl text-[#101827] mb-4 font-medium">Contact rapide</h3>
-                <p className="text-sm text-[#4B5563] mb-5">Une question avant de venir ? Contacte-nous directement.</p>
+                <h3 className="font-display text-xl text-[#101827] mb-4 font-medium"><PublicText value={"Contact rapide"} /></h3>
+                <p className="text-sm text-[#4B5563] mb-5"><PublicText value={"Une question avant de venir ? Contacte-nous directement."} /></p>
                 <div className="space-y-3">
                   {whatsappUrl && (
                     <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-[#DCEFE7] rounded-xl p-4 hover:opacity-80 transition-opacity">
                       <MessageCircle className="w-5 h-5 text-[#101827]" />
                       <div>
-                        <p className="text-sm font-semibold text-[#101827]">WhatsApp</p>
-                        <p className="text-xs text-[#4B5563]">Réponse rapide</p>
+                        <p className="text-sm font-semibold text-[#101827]"><PublicText value={"WhatsApp"} /></p>
+                        <p className="text-xs text-[#4B5563]"><PublicText value={"Réponse rapide"} /></p>
                       </div>
                     </a>
                   )}
@@ -155,8 +140,8 @@ export default function Venir() {
                     <a href={`mailto:${contactEmail}`} className="flex items-center gap-3 bg-[#EAF0F8] rounded-xl p-4 hover:opacity-80 transition-opacity">
                       <Mail className="w-5 h-5 text-[#101827]" />
                       <div>
-                        <p className="text-sm font-semibold text-[#101827]">Email</p>
-                        <p className="text-xs text-[#4B5563]">{contactEmail}</p>
+                        <p className="text-sm font-semibold text-[#101827]"><PublicText value={"Email"} /></p>
+                        <p className="text-xs text-[#4B5563]"><PublicText value={contactEmail} /></p>
                       </div>
                     </a>
                   )}
@@ -170,13 +155,13 @@ export default function Venir() {
             <div className="bg-white rounded-[24px] border border-[#E8E2D5] p-6 md:p-8">
               <div className="flex items-center gap-2 mb-5">
                 <HelpCircle className="w-5 h-5 text-[#D8B76A]" />
-                <h3 className="font-display text-xl text-[#101827] font-medium">FAQ pratique</h3>
+                <h3 className="font-display text-xl text-[#101827] font-medium"><PublicText value={"FAQ pratique"} /></h3>
               </div>
               <div className="space-y-4">
                 {FAQ_ITEMS.map((item, i) => (
                   <div key={i} className="border-b border-[#F0EBE0] last:border-0 pb-4 last:pb-0">
-                    <p className="text-sm font-semibold text-[#101827] mb-1">{item.q}</p>
-                    <p className="text-sm text-[#4B5563]">{item.a}</p>
+                    <p className="text-sm font-semibold text-[#101827] mb-1"><PublicText value={item.q} /></p>
+                    <p className="text-sm text-[#4B5563]"><PublicText value={item.a} /></p>
                   </div>
                 ))}
               </div>

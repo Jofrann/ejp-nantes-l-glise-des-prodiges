@@ -1,3 +1,4 @@
+import PublicTextsEditor from '@/components/admin/PublicTextsEditor';
 import PublicPhotosEditor from '@/components/admin/PublicPhotosEditor';
 import IntegrationSettings from '@/components/admin/IntegrationSettings';
 import EJPPermissions from '@/components/admin/EJPPermissions';
@@ -16,7 +17,8 @@ const TABS = [
   { id: 'photos', label: 'Photos du site', icon: Image },
   { id: 'ejp-permissions', label: 'Habilitations EJP', icon: Users },
   { id: 'integrations', label: 'Fichiers & Intégrations', icon: Settings },
-  { id: 'hero', label: 'Textes & Réglages', icon: Church },
+  { id: 'texts', label: 'Textes du site', icon: Church },
+  { id: 'hero', label: 'Liens & Réglages', icon: Settings },
   { id: 'leaders', label: 'Leaders', icon: Users },
   { id: 'events', label: 'Événements', icon: Calendar },
   { id: 'programs', label: 'Programmes EJP', icon: CalendarClock },
@@ -55,6 +57,7 @@ export default function AdminHome() {
   const tab = TABS.some(item => item.id === params.get('tab')) ? params.get('tab') : 'photos';
   const setTab = value => setParams({ tab: value });
   const [config, setConfig] = useState(null);
+  const [publishedConfig, setPublishedConfig] = useState('');
   const [leaders, setLeaders] = useState([]);
   const [events, setEvents] = useState([]);
   const [ministries, setMinistries] = useState([]);
@@ -76,7 +79,14 @@ export default function AdminHome() {
       base44.entities.GalleryMedia.list('display_order', 1000),
       base44.entities.Testimonial.list('display_order', 50),
     ]).then(([c, l, e, m, g, t]) => {
-      setConfig(c?.[0] || {});
+      const current = c?.[0] || {};
+      const shepherd = l?.find(person => person.is_main_shepherd);
+      const effective = {...current,
+        shepherd_name: current.shepherd_name || [shepherd?.first_name, shepherd?.last_name].filter(Boolean).join(' ') || 'La Bergère EJP Nantes',
+        shepherd_bio: current.shepherd_bio || shepherd?.bio || 'La Bergère accompagne la maison de Nantes, veille sur sa croissance et conduit les jeunes dans la foi et le service. Elle porte cette vision auprès de notre communauté et de notre génération.',
+      };
+      setConfig(effective);
+      setPublishedConfig(JSON.stringify(effective));
       setLeaders(l || []);
       setEvents(e || []);
       setMinistries(m || []);
@@ -91,6 +101,7 @@ export default function AdminHome() {
     try {
       if (config.id) await base44.entities.ChurchConfig.update(config.id, config);
       else setConfig(await base44.entities.ChurchConfig.create(config));
+      setPublishedConfig(JSON.stringify(config));
       setMsg('Modifications publiées sur le site.');
       setPhotosPending([]);
       return true;
@@ -151,7 +162,9 @@ export default function AdminHome() {
 
         {/* Contenu */}
         <div className="flex-1 min-w-0 w-full p-4 sm:p-6 max-w-3xl">
+          {config && publishedConfig && JSON.stringify(config) !== publishedConfig && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 text-amber-900 px-4 py-3 mb-5 text-sm">Modifications non publiées — vérifie l’aperçu puis publie pour les rendre visibles.</p>}
           {loadError && <p role="alert" className="public-edit-error">{loadError}</p>}
+          {tab === 'texts' && config && <PublicTextsEditor config={config} setConfig={setConfig} onSave={saveConfig} saving={saving || mediaBusy} onOpenTab={setTab} />}
           {tab === 'photos' && config && <PublicPhotosEditor config={config} setConfig={setConfig} gallery={gallery} leaders={leaders} onOpenGallery={() => setTab('gallery')} onSave={saveConfig} saving={saving} pending={photosPending} setPending={setPhotosPending} onBusyChange={setMediaBusy} />}
           {tab === 'programs' && <AdminProgramsTab />}
           {tab === 'appointments' && <AdminAppointmentsTab />}
@@ -161,52 +174,8 @@ export default function AdminHome() {
           {tab === 'ejp-permissions' && <EJPPermissions />}
           {tab === 'hero' && config && (
             <>
-              <Section title="Contenu Hero">
-                <Field label="Titre principal">
-                  <input className={inputCls} value={config.hero_title || ''} onChange={e => setConfig(c => ({ ...c, hero_title: e.target.value }))} />
-                </Field>
-                <Field label="Sous-titre">
-                  <textarea className={inputCls} rows={3} value={config.hero_subtitle || ''} onChange={e => setConfig(c => ({ ...c, hero_subtitle: e.target.value }))} />
-                </Field>
-                <p className="public-edit-help">Les photos, portraits et la vidéo d’accueil se modifient dans <button className="public-edit-text" onClick={() => setTab('photos')}>Photos du site</button>.</p>
-              </Section>
-              <Section title="Vision">
-                <Field label="Titre vision">
-                  <input className={inputCls} value={config.vision_title || ''} onChange={e => setConfig(c => ({ ...c, vision_title: e.target.value }))} />
-                </Field>
-                <Field label="Texte de vision">
-                  <textarea className={inputCls} rows={4} value={config.vision_text || ''} onChange={e => setConfig(c => ({ ...c, vision_text: e.target.value }))} />
-                </Field>
-              </Section>
-              <Section title="Présentation publique : autorités, mission et FIJ">
-                <Field label="Nom de l’Apôtre"><textarea className={inputCls} rows={1} value={config.apostle_name || ''} onChange={e => setConfig(c => ({ ...c, apostle_name: e.target.value }))} /></Field>
-                <Field label="Présentation de l’Apôtre"><textarea className={inputCls} rows={3} value={config.apostle_bio || ''} onChange={e => setConfig(c => ({ ...c, apostle_bio: e.target.value }))} /></Field>
-
-                <Field label="Nom de la Bergère de Nantes"><textarea className={inputCls} rows={1} value={config.shepherd_name || ''} onChange={e => setConfig(c => ({ ...c, shepherd_name: e.target.value }))} /></Field>
-                <Field label="Présentation de la Bergère"><textarea className={inputCls} rows={3} value={config.shepherd_bio || ''} onChange={e => setConfig(c => ({ ...c, shepherd_bio: e.target.value }))} /></Field>
-
-                <Field label="Titre de la mission"><textarea className={inputCls} rows={1} value={config.mission_title || ''} onChange={e => setConfig(c => ({ ...c, mission_title: e.target.value }))} /></Field>
-                <Field label="Texte de la mission"><textarea className={inputCls} rows={3} value={config.mission_text || ''} onChange={e => setConfig(c => ({ ...c, mission_text: e.target.value }))} /></Field>
-                <Field label="Titre de la page FIJ"><textarea className={inputCls} rows={1} value={config.fij_title || ''} onChange={e => setConfig(c => ({ ...c, fij_title: e.target.value }))} /></Field>
-                <Field label="Présentation des FIJ"><textarea className={inputCls} rows={3} value={config.fij_text || ''} onChange={e => setConfig(c => ({ ...c, fij_text: e.target.value }))} /></Field>
-                <Field label="Comment rejoindre une FIJ"><textarea className={inputCls} rows={3} value={config.fij_join_text || ''} onChange={e => setConfig(c => ({ ...c, fij_join_text: e.target.value }))} /></Field>
-              </Section>
-              <Section title="Culte">
-                <div className="grid grid-cols-2 gap-4">
-                  <Field label="Jour du culte">
-                    <input className={inputCls} value={config.service_day || 'Dimanche'} onChange={e => setConfig(c => ({ ...c, service_day: e.target.value }))} />
-                  </Field>
-                  <Field label="Heure (ex: 15:00)">
-                    <input className={inputCls} value={config.service_time || '15:00'} onChange={e => setConfig(c => ({ ...c, service_time: e.target.value }))} />
-                  </Field>
-                </div>
-                <Field label="Adresse">
-                  <input className={inputCls} value={config.address_label || ''} onChange={e => setConfig(c => ({ ...c, address_label: e.target.value }))} />
-                </Field>
-                <Field label="Lien Google Maps">
-                  <input className={inputCls} value={config.maps_link || ''} onChange={e => setConfig(c => ({ ...c, maps_link: e.target.value }))} />
-                </Field>
-              </Section>
+              <p className="public-edit-help mb-5">Les textes, horaires et adresses se modifient dans <button className="public-edit-text" onClick={() => setTab('texts')}>Textes du site</button>.</p>
+              <Section title="Itinéraire"><Field label="Lien Google Maps"><input className={inputCls} value={config.maps_link || ''} onChange={e => setConfig(c => ({ ...c, maps_link: e.target.value }))} /></Field></Section>
               <Section title="Contact & Réseaux">
                 <Field label="Email de contact">
                   <input className={inputCls} value={config.contact_email || ''} onChange={e => setConfig(c => ({ ...c, contact_email: e.target.value }))} />

@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44, publicContent } from '@/api/base44Client';
@@ -70,11 +71,9 @@ export default function Home() {
   if (error) {
     return (
       <div className="min-h-screen bg-[#FBFAF7] flex flex-col items-center justify-center text-center px-6">
-        <p className="font-display text-[#D8B76A] text-2xl mb-3">Connexion impossible</p>
-        <p className="text-[#4B5563] text-sm mb-6 max-w-xs">Une erreur réseau est survenue. Vérifie ta connexion et réessaie.</p>
-        <button onClick={fetchData} className="bg-[#101827] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#1a2740] transition-colors">
-          Réessayer
-        </button>
+        <p className="font-display text-[#D8B76A] text-2xl mb-3"><PublicText value={"Connexion impossible"} /></p>
+        <p className="text-[#4B5563] text-sm mb-6 max-w-xs"><PublicText value={"Une erreur réseau est survenue. Vérifie ta connexion et réessaie."} /></p>
+        <button onClick={fetchData} className="bg-[#101827] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#1a2740] transition-colors"><PublicText value={"Réessayer"} /></button>
       </div>
     );
   }
@@ -98,13 +97,9 @@ export default function Home() {
       <section className="ejp-identity py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <RevealOnScroll>
-            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center">Notre identité</p>
-            <h2 className="font-display text-4xl md:text-6xl text-[#101827] text-center mb-6 leading-tight">
-              Une maison pour<br />une génération entière.
-            </h2>
-            <p className="text-[#4B5563] text-lg text-center max-w-2xl mx-auto leading-relaxed mb-10">
-              L'EJP Nantes réunit des jeunes qui croient, qui servent et qui grandissent ensemble — dans la foi, l'excellence et la fraternité.
-            </p>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4 text-center"><PublicText value={"Notre identité"} /></p>
+            <h2 className="font-display text-4xl md:text-6xl text-[#101827] text-center mb-6 leading-tight"><PublicText value={"Une maison pour"} /><br /><PublicText value={"une génération entière."} /></h2>
+            <p className="text-[#4B5563] text-lg text-center max-w-2xl mx-auto leading-relaxed mb-10"><PublicText value={"L'EJP Nantes réunit des jeunes qui croient, qui servent et qui grandissent ensemble — dans la foi, l'excellence et la fraternité."} /></p>
           </RevealOnScroll>
 
           {/* 3 piliers */}
@@ -119,8 +114,8 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-2xl bg-[#EAF0F8] flex items-center justify-center mx-auto mb-4">
                     <p.icon className="w-5 h-5 text-[#D8B76A]" />
                   </div>
-                  <h3 className="font-heading font-bold text-[#101827] text-lg mb-2">{p.titre}</h3>
-                  <p className="text-[#4B5563] text-sm leading-relaxed">{p.texte}</p>
+                  <h3 className="font-heading font-bold text-[#101827] text-lg mb-2"><PublicText value={p.titre} /></h3>
+                  <p className="text-[#4B5563] text-sm leading-relaxed"><PublicText value={p.texte} /></p>
                 </div>
               </RevealOnScroll>
             ))}
@@ -131,8 +126,7 @@ export default function Home() {
               <Link
                 to="/a-propos"
                 className="inline-flex items-center gap-2 text-sm font-semibold text-[#101827] border-b-2 border-[#D8B76A] pb-0.5 hover:text-[#D8B76A] transition-colors"
-              >
-                Découvrir qui nous sommes <ArrowRight className="w-4 h-4" />
+              ><PublicText value={"Découvrir qui nous sommes "} /><ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </RevealOnScroll>
@@ -143,16 +137,13 @@ export default function Home() {
       <section className="ejp-rendezvous bg-[#101827] text-white py-24 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <RevealOnScroll>
-            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4">Nos rendez-vous</p>
-            <h2 className="font-display text-4xl md:text-5xl mb-6">{config?.service_day || 'Dimanche'} à {config?.service_time || '15:00'}. Et bien plus.</h2>
-            <p className="text-white/70 max-w-xl mx-auto leading-relaxed mb-10">
-              Le culte du dimanche, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée.
-            </p>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4"><PublicText value={"Nos rendez-vous"} /></p>
+            <h2 className="font-display text-4xl md:text-5xl mb-6"><PublicText field="service_day" value={config?.service_day || 'Dimanche'} /><PublicText value={" à "} /><PublicText field="service_time" value={config?.service_time || '15:00'} /><PublicText value={". Et bien plus."} /></h2>
+            <p className="text-white/70 max-w-xl mx-auto leading-relaxed mb-10"><PublicText value={"Le culte du dimanche, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée."} /></p>
             <Link
               to="/programmes"
               className="inline-flex items-center gap-2 bg-[#D8B76A] text-[#101827] text-sm font-bold px-8 py-4 rounded-full hover:bg-[#c9a85a] transition-all hover:scale-[1.02]"
-            >
-              Voir tous nos programmes <ArrowRight className="w-4 h-4" />
+            ><PublicText value={"Voir tous nos programmes "} /><ArrowRight className="w-4 h-4" />
             </Link>
           </RevealOnScroll>
         </div>

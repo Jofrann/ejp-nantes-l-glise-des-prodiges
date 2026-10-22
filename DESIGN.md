@@ -73,3 +73,12 @@ Le stockage et les autorisations de server/files.mjs restent les propriétaires 
 La synthèse devient l'arrivée par défaut : quatre repères sans cartes imbriquées, une courbe principale et les attentions. Les graphiques de parcours et de comparaison sont conservés dans Analyses ; les membres et les outils gardent leurs vues dédiées. Les routes et le menu global restent identiques. Le menu horizontal des outils est repliable uniquement sur ces deux tableaux de bord. Le mode présentation rassemble toujours les graphiques anonymisés.
 
 Palette FIJ : encre #203440, secondaire #657580, accent bleu ardoise #426b88, séparateurs #e7ecee, fond #f7f9fa. Manrope existante conservée : titres sobres et chiffres tabulaires. Signature : les indicateurs forment une seule ligne de lecture, puis une courbe dominante. Les détails de méthode sont disponibles à la demande. Animations d'entrée courtes (180–280 ms), retour au survol discret et ouverture de fiche ; mouvement réduit respecté. Aucun effet permanent.
+
+
+## Édition des textes publics
+
+PublicTextsEditor étend AdminHome et ChurchConfig ; public_copy est la source des textes de présentation, les champs publics existants restent la source des horaires, de l’adresse et des présentations partagées. Les champs montrent le texte effectif. La recherche et les sections remplacent une liste indifférenciée. Les informations répétées utilisent {{jour}}, {{horaire}} et {{adresse}}. Un état visible distingue les modifications non publiées.
+
+Aperçu : Dialog Radix partagé, iframe des vraies routes publiques, sélection page/ordinateur/téléphone, fermeture et Échap accessibles. Transfert postMessage limité à même origine/source/canal et vérification administrateur actif sans première connexion ; liste explicite de champs publics, aucune intégration privée. Aucun envoi de formulaire ni navigation externe dans l’aperçu. Publier utilise le CRUD ChurchConfig existant. En cas d’erreur les valeurs restent dans le formulaire. Les listes métier conservent leur enregistrement immédiat, signalé explicitement.
+
+PublicText et usePublicText rendent des chaînes React échappées, sans moteur de traduction du DOM. Le calendrier et le compte à rebours partagent publicSchedule.js et le fuseau Europe/Paris. Le serveur valide les textes publics et le jour/heure du culte. Les champs du formulaire de visite possèdent des identifiants uniques liés à leurs libellés.

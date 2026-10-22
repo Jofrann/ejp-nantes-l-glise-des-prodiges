@@ -1,3 +1,4 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -14,8 +15,7 @@ export default function EspaceServiteurSas() {
       {/* Retour accueil */}
       <div className="relative z-10 max-w-2xl mx-auto w-full px-5 pt-6">
         <Link to="/" className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-3.5 h-3.5" /> Retour à l'accueil
-        </Link>
+          <ArrowLeft className="w-3.5 h-3.5" /><PublicText value={" Retour à l'accueil"} /></Link>
       </div>
 
       {/* Contenu central */}
@@ -27,14 +27,9 @@ export default function EspaceServiteurSas() {
               <Heart className="w-7 h-7 text-secondary" />
             </div>
 
-            <p className="text-xs text-secondary uppercase tracking-widest mb-3">Espace Serviteur</p>
-            <h1 className="font-display text-3xl font-light text-foreground mb-4">
-              Bienvenue dans l'espace serviteur
-            </h1>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
-              Cet espace est réservé aux personnes engagées au service de l'EJP Nantes.
-              Connecte-toi pour accéder à ton tableau de bord, tes ministères et tes missions.
-            </p>
+            <p className="text-xs text-secondary uppercase tracking-widest mb-3"><PublicText value={"Espace Serviteur"} /></p>
+            <h1 className="font-display text-3xl font-light text-foreground mb-4"><PublicText value={"Bienvenue dans l'espace serviteur"} /></h1>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto"><PublicText value={"Cet espace est réservé aux personnes engagées au service de l'EJP Nantes. Connecte-toi pour accéder à ton tableau de bord, tes ministères et tes missions."} /></p>
           </motion.div>
 
           {/* Boutons d'action */}
@@ -43,14 +38,12 @@ export default function EspaceServiteurSas() {
               to="/login"
               className="flex items-center justify-center gap-2 w-full bg-secondary hover:bg-secondary/90 text-white text-sm font-semibold py-3.5 rounded-xl transition-all"
             >
-              <LogIn className="w-4 h-4" />
-              Se connecter
-            </Link>
+              <LogIn className="w-4 h-4" /><PublicText value={"Se connecter"} /></Link>
           </motion.div>
 
           {/* Ce qu'on trouve dans l'espace */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-12">
-            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest text-center mb-5">Ce que tu trouveras dans l'espace</p>
+            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest text-center mb-5"><PublicText value={"Ce que tu trouveras dans l'espace"} /></p>
             <div className="grid grid-cols-2 gap-3">
               {[
                 { icon: Users, label: 'Mes ministères', desc: 'Équipes & missions' },
@@ -60,8 +53,8 @@ export default function EspaceServiteurSas() {
               ].map(({ icon: Icon, label, desc }) => (
                 <div key={label} className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
                   <Icon className="w-5 h-5 text-secondary mx-auto mb-2" />
-                  <p className="text-xs font-semibold text-foreground">{label}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">{desc}</p>
+                  <p className="text-xs font-semibold text-foreground"><PublicText value={label} /></p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5"><PublicText value={desc} /></p>
                 </div>
               ))}
             </div>

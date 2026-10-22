@@ -1,10 +1,11 @@
+import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import RevealOnScroll from '../RevealOnScroll';
 import { AUTHORITY_PHOTOS as PORTRAITS } from '@/lib/publicMedia';
 function Portrait({ src, name, initials, className = '' }) {
   const [failed, setFailed] = React.useState(false);
   React.useEffect(() => setFailed(false), [src]);
-  return <div className={`ejp-authority-portrait ${className}`}>{src && !failed ? <img src={src} alt={name} loading="lazy" onError={() => setFailed(true)} /> : <span aria-hidden="true">{initials}</span>}</div>;
+  return <div className={`ejp-authority-portrait ${className}`}>{src && !failed ? <img src={src} alt={name} loading="lazy" onError={() => setFailed(true)} /> : <span aria-hidden="true"><PublicText value={initials} /></span>}</div>;
 }
 export default function Authorities({ config, leaders = [] }) {
   const local = leaders.find(person => person.is_main_shepherd);
@@ -16,10 +17,10 @@ export default function Authorities({ config, leaders = [] }) {
   return <section id="autorites" className="ejp-authorities ejp-authorities-editorial" aria-label="Nos autorités spirituelles">
     <div className="max-w-6xl mx-auto">
       <div className="ejp-apostle-feature">
-        <RevealOnScroll className="ejp-apostle-text"><p className="ejp-eyebrow">Notre père spirituel · Une vision reçue</p><h2><span className="ejp-gold-wave">{apostle.name}</span></h2><div className="ejp-authority-rule" /><p>{apostle.bio}</p><p className="ejp-authority-honor">Reconnaissance, fidélité et transmission.</p></RevealOnScroll>
+        <RevealOnScroll className="ejp-apostle-text"><p className="ejp-eyebrow"><PublicText value={"Notre père spirituel · Une vision reçue"} /></p><h2><span className="ejp-gold-wave"><PublicText value={apostle.name} /></span></h2><div className="ejp-authority-rule" /><p><PublicText value={apostle.bio} /></p><p className="ejp-authority-honor"><PublicText value={"Reconnaissance, fidélité et transmission."} /></p></RevealOnScroll>
         <RevealOnScroll delay={150}><Portrait src={apostle.photo} name={apostle.name} initials="YC" className="ejp-apostle-portrait" /></RevealOnScroll>
       </div>
-      <div className="ejp-shepherds-editorial">{people.map((person, index) => <RevealOnScroll key={person.role} delay={index * 100}><article><p className="ejp-eyebrow">{person.role}</p><h3>Une même vision.<br /><em className="ejp-gold-wave">Une génération accompagnée.</em></h3><p className="ejp-shepherd-bio">{person.bio}</p><div className="ejp-authority-signature"><Portrait src={person.photo} name={person.name} initials={person.initials} /><div><h4>{person.name}</h4><p>{person.role}</p></div></div></article></RevealOnScroll>)}</div>
+      <div className="ejp-shepherds-editorial">{people.map((person, index) => <RevealOnScroll key={person.role} delay={index * 100}><article><p className="ejp-eyebrow"><PublicText value={person.role} /></p><h3><PublicText value={"Une même vision."} /><br /><em className="ejp-gold-wave"><PublicText value={"Une génération accompagnée."} /></em></h3><p className="ejp-shepherd-bio"><PublicText value={person.bio} /></p><div className="ejp-authority-signature"><Portrait src={person.photo} name={person.name} initials={person.initials} /><div><h4><PublicText value={person.name} /></h4><p><PublicText value={person.role} /></p></div></div></article></RevealOnScroll>)}</div>
     </div>
   </section>;
 }

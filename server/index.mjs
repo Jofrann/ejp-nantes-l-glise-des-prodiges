@@ -306,7 +306,7 @@ const server = createServer(async (req, res) => {
         result = await entities[entity][method](...args);
         if (entity === "ChurchConfig" && !(isAdminUser(user) && user?.account_status === "active" && !user.first_login)) {
           const publicFields = [
-            "id", "church_name", "auth_email_domain", "auth_page_image_url",
+            "id", "public_copy", "church_name", "auth_email_domain", "auth_page_image_url",
             "hero_title", "hero_subtitle", "hero_video_url", "hero_image_url",
             "community_image_url", "nantes_image_url",
             "vision_title", "vision_text", "service_day", "service_time",
@@ -325,6 +325,13 @@ const server = createServer(async (req, res) => {
         result = await entities[entity].create(data);
       } else {
         requireUser();
+        if (entity === 'ChurchConfig' && ['create', 'update'].includes(method)) {
+          const changes = method === 'create' ? args[0] : args[1];
+          const copy = changes?.public_copy;
+          if (copy !== undefined && (!copy || typeof copy !== 'object' || Array.isArray(copy) || Object.keys(copy).length > 1000 || Object.entries(copy).some(([key, value]) => !/^[a-f0-9]{16}$/.test(key) || typeof value !== 'string' || value.length > 10000))) fail(400, 'Les textes publics sont invalides ou trop longs.');
+          if (changes?.service_time !== undefined && !/^([01]\d|2[0-3]):[0-5]\d$/.test(changes.service_time)) fail(400, 'Indique une heure valide au format HH:MM.');
+          if (changes?.service_day !== undefined && !['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'].includes(String(changes.service_day).trim().toLocaleLowerCase('fr'))) fail(400, 'Choisis un jour de la semaine valide.');
+        }
         result = await executeEntity({ entity, method, args, scope, user });
         if (entity === 'StarProduct' && ['create','update'].includes(method)) await notifyShopOpening();
       }
