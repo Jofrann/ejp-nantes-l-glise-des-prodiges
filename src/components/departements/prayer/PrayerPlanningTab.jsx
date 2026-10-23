@@ -75,7 +75,7 @@ export default function PrayerPlanningTab({ prayerData, isResponsable, currentUs
 
       {showForm && isResponsable && (
         <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
-          <input className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm" placeholder="Titre (ex: Prière avant culte)" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
+          <input className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm" placeholder="Titre (ex: Prière avant Prodiges Expérience)" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
           <div className="grid grid-cols-2 gap-3">
             <input type="date" className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
             <select className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>

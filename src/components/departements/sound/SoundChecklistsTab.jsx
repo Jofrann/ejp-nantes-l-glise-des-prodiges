@@ -168,7 +168,7 @@ function TemplateForm({ editing, colors, slug, onClose, onSaved }) {
           <p className="text-sm font-semibold">{editing ? 'Modifier' : 'Nouveau'} template</p>
           <button onClick={onClose}><X className="w-4 h-4 text-muted-foreground" /></button>
         </div>
-        <input className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm mb-2" placeholder="Nom (ex: Checklist Avant Culte)" value={name} onChange={e => setName(e.target.value)} />
+        <input className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm mb-2" placeholder="Nom (ex: Checklist Avant Prodiges Expérience)" value={name} onChange={e => setName(e.target.value)} />
         <input className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm mb-3" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
         <p className="text-xs text-muted-foreground mb-2">Étapes</p>
         <div className="space-y-1.5 mb-3">

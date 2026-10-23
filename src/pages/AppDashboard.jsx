@@ -55,7 +55,7 @@ export default function AppDashboard() {
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
-      base44.entities.Event.list('-event_date', 20),
+      base44.entities.Event.filter({is_active:true,event_date:{$gte:new Intl.DateTimeFormat('fr-CA',{timeZone:'Europe/Paris'}).format(new Date())}},'event_date',100),
       base44.personal.AttendanceResponse.filter({}, '-created_date', 50),
       base44.entities.FIJ.filter({ is_active: true }, '-created_date', 50),
       base44.personal.AppointmentRequest.filter({ status: 'pending' }, '-created_date', 5),

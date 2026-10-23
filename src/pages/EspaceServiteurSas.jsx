@@ -47,7 +47,7 @@ export default function EspaceServiteurSas() {
             <div className="grid grid-cols-2 gap-3">
               {[
                 { icon: Users, label: 'Mes ministères', desc: 'Équipes & missions' },
-                { icon: Calendar, label: 'Agenda', desc: 'Cultes & événements' },
+                { icon: Calendar, label: 'Agenda', desc: 'Prodiges Expérience & événements' },
                 { icon: MessageCircle, label: 'Communication', desc: 'Groupes & annonces' },
                 { icon: Shield, label: 'Mon profil', desc: 'Rôle & informations' },
               ].map(({ icon: Icon, label, desc }) => (

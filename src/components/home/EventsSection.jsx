@@ -1,10 +1,11 @@
+import {isPublicEvent} from '@/lib/calendarPolicy';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 export default function EventsSection({ events = [] }) {
-  const active = events.filter(e => e.is_active).slice(0, 6);
+  const active = events.filter(isPublicEvent).slice(0, 6);
   if (active.length === 0) return null;
 
   return (

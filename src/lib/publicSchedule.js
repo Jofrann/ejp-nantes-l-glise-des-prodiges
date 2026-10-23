@@ -48,7 +48,7 @@ export function getNextService(config = {}, now = new Date()) {
     config.service_time || "",
   )
     ? config.service_time.split(":").map(Number)
-    : [15, 0];
+    : [14, 30];
   const p = parts(now);
   const calendar = new Date(Date.UTC(p.year, p.month - 1, p.day));
   const ahead = ((dayIndex < 0 ? 0 : dayIndex) - calendar.getUTCDay() + 7) % 7;

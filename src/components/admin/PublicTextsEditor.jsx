@@ -28,7 +28,7 @@ const names = {
   Authorities: "Autorités",
   FijInvitation: "Invitation FIJ",
   PhotoStory: "Photos et légendes",
-  CeDimanche: "Prochain culte",
+  CeDimanche: "Prochaine Prodiges Expérience",
   PremiereFois: "Première visite",
   FirstVisitForm: "Formulaire de visite",
   Ministeres: "Ministères",
@@ -43,8 +43,8 @@ const names = {
   VivreIci: "Vie de la maison",
 };
 const labels = {
-  service_day: "Jour du culte",
-  service_time: "Heure du culte (heure de Nantes)",
+  service_day: "Jour de Prodiges Expérience",
+  service_time: "Heure de Prodiges Expérience (heure de Nantes)",
   address_label: "Adresse",
   vision_title: "Titre de la vision",
   vision_text: "Présentation de la vision",
@@ -191,7 +191,7 @@ export default function PublicTextsEditor({
               setQuery(e.target.value);
               if (section === "shared") setSection("all");
             }}
-            placeholder="Ex. : culte, bienvenue, famille…"
+            placeholder="Ex. : Prodiges Expérience, bienvenue, famille…"
           />
         </label>
         <p className="text-xs text-muted-foreground">

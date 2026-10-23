@@ -528,7 +528,7 @@ export default function FijVisualDashboard({
                       <div className="fij-sunday">
                         <Church size={18} />
                         <div>
-                          <b>Lien avec le culte du dimanche</b>
+                          <b>Lien avec Prodiges Expérience</b>
                           <p>
                             Non mesuré : aucune donnée dédiée dans les CR
                             actuels.

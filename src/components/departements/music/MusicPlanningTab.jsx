@@ -331,7 +331,7 @@ function PlanForm({ plan, onSave, onCancel }) {
       <p className="text-sm font-semibold text-foreground">{plan ? 'Modifier le service' : 'Nouveau service'}</p>
       <input
         type="text"
-        placeholder="Titre (ex: Culte EJP)"
+        placeholder="Titre (ex: Prodiges Expérience)"
         value={title}
         onChange={e => setTitle(e.target.value)}
         className="w-full text-sm border border-border rounded-lg px-3 py-2"

@@ -1,7 +1,7 @@
 import { PublicText } from '@/components/public/PublicCopy';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { base44, getPublicCalendar } from '@/api/base44Client';
 import PublicHeader from '@/components/public/PublicHeader';
 import usePublicMotion from '@/components/public/motion/usePublicMotion';
 import { PUBLIC_PHOTOS } from '@/components/public/publicPhotos';
@@ -16,7 +16,7 @@ function formatDate(dateStr) {
 }
 
 const EVENT_TYPE_LABELS = {
-  culte: 'Culte',
+  culte: 'Prodiges Expérience',
   ejp: 'EJP',
   formation: 'Formation',
   rendez_vous: 'Rendez-vous',
@@ -36,7 +36,7 @@ export default function Programmes() {
   useEffect(() => {
     Promise.all([
       base44.entities.ChurchConfig.list(),
-      base44.entities.Event.filter({ is_active: true }, 'event_date', 20).catch(() => { setEventsError(true); return []; }),
+      getPublicCalendar().catch(() => { setEventsError(true); return []; }),
     ]).then(([c, e]) => {
       setConfig(c?.[0] || null);
       setEvents(e || []);
@@ -76,7 +76,7 @@ export default function Programmes() {
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
                   <Clock className="w-4 h-4 text-[#D8B76A]" />
                 </div>
-                <span><PublicText value={"Chaque dimanche à "} /><strong className="text-[#101827]"><PublicText field="culte_time" value={config?.service_time?.replace(':', 'h') || config?.culte_time || '15h00'} /></strong></span>
+                <span><PublicText value={"Chaque dimanche à "} /><strong className="text-[#101827]"><PublicText field="culte_time" value={config?.service_time?.replace(':', 'h') || config?.culte_time || '14h30'} /></strong></span>
               </div>
               <div className="flex items-center gap-3 text-sm text-[#4B5563]">
                 <div className="w-8 h-8 rounded-xl bg-[#EAF0F8] flex items-center justify-center flex-shrink-0">
@@ -94,8 +94,8 @@ export default function Programmes() {
           </RevealOnScroll>
           <RevealOnScroll>
             <div className="bg-[#101827] rounded-3xl p-10 text-white text-center">
-              <p className="font-display text-7xl text-[#D8B76A] font-bold mb-2"><PublicText value={"3"} /></p>
-              <p className="font-heading font-semibold text-lg mb-4"><PublicText value={"cultes chaque dimanche"} /></p>
+              <p className="font-display text-7xl text-[#D8B76A] font-bold mb-2"><PublicText field="service_time" value={config?.service_time?.replace(':','h') || "14h30"} /></p>
+              <p className="font-heading font-semibold text-lg mb-4"><PublicText value={"Prodiges Expérience chaque dimanche"} /></p>
               <p className="text-white/60 text-sm leading-relaxed"><PublicText value={"Louange · Prière · Parole · Fraternité"} /></p>
             </div>
           </RevealOnScroll>

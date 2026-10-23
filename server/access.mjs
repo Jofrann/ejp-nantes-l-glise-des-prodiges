@@ -1,3 +1,4 @@
+import {visibleEvent} from './calendar.mjs';
 import { entities } from './store.mjs';
 import { isAdmin, isBureauLike, getRoles, canManageDepartment } from '../src/lib/permissions.js';
 import { canReadFijV2, canReadFijMembers, canReadMemberNotes, isPilotOfFij } from '../src/lib/fijPermissions.js';
@@ -76,6 +77,7 @@ export async function executeEntity({ entity, method, args, user, scope }) {
   const old = method === 'create' ? null : await entities[entity].get(args[0]);
   const input = {...(method === 'create' ? args[0] : args[1])};
   const target = {...old,...input};
+  if(entity==='AttendanceResponse' && ['create','update'].includes(method) && !await visibleEvent(await entities.Event.get(target.event_id),user))reject('Programme non accessible',403);
   if(entity==='User' && Object.hasOwn(input,'ejp_permissions'))reject('Utiliser la gestion nominative des habilitations');
   if (!administrator || self) {
     if (personalEntities.has(entity)) {

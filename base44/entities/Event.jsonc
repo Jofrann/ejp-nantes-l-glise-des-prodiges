@@ -4,7 +4,7 @@
   "properties": {
     "title": {
       "type": "string",
-      "description": "Titre de l'\u00e9v\u00e9nement"
+      "description": "Titre de l'événement"
     },
     "description": {
       "type": "string",
@@ -20,10 +20,11 @@
         "reunion",
         "service",
         "special",
-        "autre"
+        "autre",
+        "fij"
       ],
       "default": "ejp",
-      "description": "Type d'\u00e9v\u00e9nement"
+      "description": "Type d'événement"
     },
     "event_date": {
       "type": "string",
@@ -44,11 +45,11 @@
     },
     "meet_url": {
       "type": "string",
-      "description": "Lien Google Meet de la r\u00e9union"
+      "description": "Lien Google Meet de la réunion"
     },
     "image_url": {
       "type": "string",
-      "description": "Image de l'\u00e9v\u00e9nement"
+      "description": "Image de l'événement"
     },
     "audience": {
       "type": "string",
@@ -60,7 +61,7 @@
         "specific"
       ],
       "default": "all_servants",
-      "description": "Audience concern\u00e9e"
+      "description": "Audience concernée"
     },
     "presence_mode": {
       "type": "string",
@@ -70,7 +71,7 @@
         "informative"
       ],
       "default": "optional",
-      "description": "Mode de pr\u00e9sence"
+      "description": "Mode de présence"
     },
     "is_featured": {
       "type": "boolean",
@@ -81,6 +82,25 @@
       "type": "boolean",
       "description": "Visible sur la page ?",
       "default": true
+    },
+    "is_public": {
+      "type": "boolean"
+    },
+    "publication_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published"
+      ]
+    },
+    "target_user_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recurrence_key": {
+      "type": "string"
     }
   },
   "required": [

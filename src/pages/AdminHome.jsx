@@ -1,3 +1,4 @@
+import CalendarManagement from '@/components/calendar/CalendarManagement';
 import PublicTextsEditor from '@/components/admin/PublicTextsEditor';
 import PublicPhotosEditor from '@/components/admin/PublicPhotosEditor';
 import IntegrationSettings from '@/components/admin/IntegrationSettings';
@@ -166,7 +167,7 @@ export default function AdminHome() {
           {loadError && <p role="alert" className="public-edit-error">{loadError}</p>}
           {tab === 'texts' && config && <PublicTextsEditor config={config} setConfig={setConfig} onSave={saveConfig} saving={saving || mediaBusy} onOpenTab={setTab} />}
           {tab === 'photos' && config && <PublicPhotosEditor config={config} setConfig={setConfig} gallery={gallery} leaders={leaders} onOpenGallery={() => setTab('gallery')} onSave={saveConfig} saving={saving} pending={photosPending} setPending={setPhotosPending} onBusyChange={setMediaBusy} />}
-          {tab === 'programs' && <AdminProgramsTab />}
+          {tab === 'programs' && <CalendarManagement />}
           {tab === 'appointments' && <AdminAppointmentsTab />}
           {tab === 'formations' && <AdminFormationsTab />}
           {tab === 'ressources' && <AdminRessourcesTab />}
@@ -264,7 +265,7 @@ export default function AdminHome() {
             <LeadersAdmin leaders={leaders} setLeaders={setLeaders} />
           )}
           {tab === 'events' && (
-            <EventsAdmin events={events} setEvents={setEvents} />
+            <CalendarManagement />
           )}
           {tab === 'testimonials' && (
             <TestimonialsAdmin testimonials={testimonials} setTestimonials={setTestimonials} />

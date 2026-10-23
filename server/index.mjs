@@ -1,3 +1,4 @@
+import {calendarOperations,executeCalendarOperation,readCalendarEvents,syncStarsNotifications} from './calendar.mjs';
 import {workspaceOperationNames,executeWorkspaceOperation} from './workspaces.mjs';
 import { integrationStatus, invokeAI, sendEmail, createMeet } from './integrations.mjs';
 import { subscribeShop, notifyShopOpening } from './shop.mjs';
@@ -279,6 +280,8 @@ const server = createServer(async (req, res) => {
       const fields = ["id", "first_name", "last_name", "role", "bio", "photo_url", "is_main_shepherd", "display_order"];
       const people = await entities.Leader.filter({ is_active: true }, "display_order", 100);
       result = people.map(person => Object.fromEntries(fields.filter(key => Object.hasOwn(person, key)).map(key => [key, person[key]])));
+    } else if(url.pathname==='/api/local/public/calendar' && req.method==='GET'){
+      result=await readCalendarEvents(null,'filter',[{event_date:{$gte:new Intl.DateTimeFormat('fr-CA',{timeZone:'Europe/Paris'}).format(new Date())}},'event_date',500]);
     } else if (
       url.pathname.startsWith("/api/local/entities/") &&
       req.method === "POST"
@@ -304,7 +307,7 @@ const server = createServer(async (req, res) => {
         publicRead.has(entity) &&
         ["list", "filter", "get"].includes(method)
       ) {
-        result = await entities[entity][method](...args);
+        result = entity==='Event' ? await readCalendarEvents(user,method,args) : await entities[entity][method](...args);
         if (entity === "ChurchConfig" && !(isAdminUser(user) && user?.account_status === "active" && !user.first_login)) {
           const publicFields = [
             "id", "public_copy", "church_name", "auth_email_domain", "auth_page_image_url",
@@ -342,6 +345,7 @@ const server = createServer(async (req, res) => {
     ) {
       requireUser();
       const name = url.pathname.split("/").pop();
+      if (calendarOperations.has(name)) { res.end(JSON.stringify(await executeCalendarOperation(name,body,user))); return; }
       if ((operationNames.has(name) || workspaceOperationNames.has(name))) { res.end(JSON.stringify(await (workspaceOperationNames.has(name) ? executeWorkspaceOperation(name,body,user) : executeEJPOperation(name,body,user)))); return; }
       if (name === "createMeetLink") { res.end(JSON.stringify(await createMeet(body,user))); return; }
       if (name === "adminManageUser" && ["create", "reset_access"].includes(body.action)) {
@@ -380,3 +384,5 @@ const server = createServer(async (req, res) => {
 server.listen(Number(process.env.EJP_API_PORT || 3001), process.env.EJP_HOST || "127.0.0.1", () =>
   console.log(process.env.EJP_SERVE_WEB === '1' ? 'Site EJP et API démarrés' : 'API EJP locale démarrée'),
 );
+
+const calendarNotificationsTimer=setInterval(()=>syncStarsNotifications().catch(error=>console.error('Calendrier : notifications à réessayer',error.message)),60000);calendarNotificationsTimer.unref();

@@ -1,3 +1,4 @@
+import CalendarManagement,{DepartmentCalendar} from '@/components/calendar/CalendarManagement';
 import DepartmentWorkspace from '@/components/workspaces/DepartmentWorkspace';
 import '@/components/workspaces/workspaces.css';
 import React, { useEffect, useState } from 'react';
@@ -406,7 +407,7 @@ export default function PageDepartement() {
   // === Page principale ===
 
   const colors = COLOR_MAP[dept.color] || COLOR_MAP.amber;
-  const enabledModules = ['workspace','workboard',...getEnabledModules(dept.slug), ...(canAnalyze ? ['analytics'] : [])];
+  const enabledModules = ['workspace','workboard','calendar',...(dept.slug==='communication'?['publishing']:[]),...getEnabledModules(dept.slug), ...(canAnalyze ? ['analytics'] : [])];
   const currentTab = enabledModules.includes(activeTab) ? activeTab : enabledModules[0];
   const isAdmin = isBureauLike(user);
   const canPost = isAdmin || isResponsable;
@@ -468,11 +469,11 @@ export default function PageDepartement() {
             )}
           </div>
 
-          <nav className="workspace-main-tabs" aria-label="Espace du département">{[['workspace','Synthèse'],['workboard',dept.slug==='communication'?'Demandes & publications':dept.slug==='vie-academique'?'Accompagnements':'Travail'],['team','Équipe'],...(canAnalyze?[['analytics','Analyses']]:[])].map(([id,label])=><button key={id} aria-pressed={currentTab===id} onClick={()=>setActiveTab(id)}>{label}</button>)}</nav>
+          <nav className="workspace-main-tabs" aria-label="Espace du département">{[['workspace','Synthèse'],['workboard',dept.slug==='communication'?'Demandes & publications':dept.slug==='vie-academique'?'Accompagnements':'Travail'],['calendar','Agenda'],...(dept.slug==='communication'?[['publishing','Publier un événement']]:[]),['team','Équipe'],...(canAnalyze?[['analytics','Analyses']]:[])].map(([id,label])=><button key={id} aria-pressed={currentTab===id} onClick={()=>setActiveTab(id)}>{label}</button>)}</nav>
           <details className="workspace-tools"><summary>Tous les outils du département</summary>
           {/* Navigation par onglets */}
           <div className="flex items-center gap-1 overflow-x-auto scrollbar-none -mx-1 px-1 pb-2">
-            {enabledModules.filter(id=>!['workspace','workboard','team','analytics'].includes(id)).map(modId => {
+            {enabledModules.filter(id=>!['workspace','workboard','calendar','publishing','team','analytics'].includes(id)).map(modId => {
               const meta = MODULE_META[modId];
               if (!meta) return null;
               const iconMap = {
@@ -534,6 +535,8 @@ export default function PageDepartement() {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.15 }}
             >
+              {currentTab==='calendar' && <DepartmentCalendar departmentId={dept.id}/>}
+              {currentTab==='publishing' && <CalendarManagement/>}
               {['workspace','workboard'].includes(currentTab) && <DepartmentWorkspace key={dept.id} department={dept} onNavigateTab={setActiveTab} view={currentTab==='workboard'?'work':'summary'}/>}
               {currentTab === 'analytics' && <><DepartmentAnalytics departmentId={dept.id} /><DepartmentPlanningTools departmentId={dept.id}/></>}
               {currentTab === 'program_teams' && <ProgramTeams />}

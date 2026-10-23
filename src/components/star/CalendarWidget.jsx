@@ -133,7 +133,7 @@ export default function CalendarWidget({ events = [], onDayClick }) {
       {/* Legend */}
       <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border flex-wrap">
         {[
-          { type: 'culte', label: 'Culte' },
+          { type: 'culte', label: 'Prodiges Expérience' },
           { type: 'ejp', label: 'EJP' },
           { type: 'formation', label: 'Formation' },
           { type: 'reunion', label: 'Réunion' },

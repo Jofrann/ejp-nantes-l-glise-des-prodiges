@@ -113,3 +113,5 @@ export const localSetup = {
 };
 
 export const publicContent = { leadership: () => request("public/leadership"), ministries: () => request("public/ministries") };
+
+export const getPublicCalendar=()=>request("public/calendar");
