@@ -1,3 +1,4 @@
+import {useWorkspaceAppearance} from '@/components/star/WorkspaceAppearance';
 import { fr } from "date-fns/locale";
 import React, {
   useEffect,
@@ -102,10 +103,10 @@ export default function Agenda() {
   const [timeBlocks, setTimeBlocks] = useState([]);
   const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState(() => {
-    if (typeof window !== "undefined" && window.innerWidth < 1024) return "day";
-    return "week";
-  });
+  const appearance = useWorkspaceAppearance();
+  const [view,setView] = useState('list');
+  const viewTouched = useRef(false);
+  useEffect(()=>{if(appearance?.ready && !viewTouched.current)setView(appearance.settings.default_agenda_view);},[appearance?.ready,appearance?.settings.default_agenda_view]);
   const [refDate, setRefDate] = useState(() => {
     const d = new URLSearchParams(window.location.search).get("date");
     return /^\d{4}-\d{2}-\d{2}$/.test(d || "") &&
@@ -400,7 +401,7 @@ export default function Agenda() {
                 {VIEWS.map((v) => (
                   <button
                     key={v.key}
-                    onClick={() => setView(v.key)}
+                    onClick={() => {viewTouched.current=true;setView(v.key);}}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${view === v.key ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
                   >
                     {v.label}

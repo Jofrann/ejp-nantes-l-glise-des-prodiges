@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import {useWorkspaceAppearance} from '@/components/star/WorkspaceAppearance';
+import {APPEARANCE_DEFAULTS,APPEARANCE_ACCENTS,normalizeAppearance} from '@/lib/workspaceAppearance';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Settings, Save, Check, Palette, Layout, Star, Shield, ChevronRight, RotateCcw, Eye, ArrowUp, ArrowDown } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -14,13 +16,7 @@ const WIDGETS = [
   { key: 'responsabilites', label: 'Responsabilités actives', icon: '💼', default: true },
 ];
 
-const ACCENTS = [
-  { key: 'gold', label: 'Doré EJP', cls: 'bg-secondary' },
-  { key: 'blue', label: 'Bleu nuit', cls: 'bg-primary' },
-  { key: 'green', label: 'Vert paix', cls: 'bg-success' },
-  { key: 'rose', label: 'Rose douceur', cls: 'bg-rose-500' },
-  { key: 'purple', label: 'Violet formation', cls: 'bg-purple-500' },
-];
+const ACCENTS = APPEARANCE_ACCENTS;
 
 const SHORTCUTS = [
   { key: 'agenda', label: 'Agenda' },
@@ -45,22 +41,33 @@ export default function EspacePersonnel() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [loadError,setLoadError] = useState('');
+  const [saveError,setSaveError] = useState('');
+  const appearance=useWorkspaceAppearance();
+  const previewAppearance=appearance?.previewAppearance,clearPreview=appearance?.clearPreview;
+  useEffect(()=>{if(pref && previewAppearance)previewAppearance(pref);},[pref,previewAppearance]);
+  useEffect(()=>()=>clearPreview?.(),[clearPreview]);
+  const previousAppearance=useRef(normalizeAppearance(appearance?.stored||{}));
+  useEffect(()=>{if(!appearance?.stored)return;const next=normalizeAppearance(appearance.stored);
+    const changed=Object.fromEntries(Object.entries(next).filter(([key,value])=>previousAppearance.current[key]!==value));previousAppearance.current=next;
+    setPref(prev=>prev?{...prev,...(appearance.stored.id?{id:appearance.stored.id}:{}),...changed}:prev);
+  },[appearance?.stored]);
 
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
-      base44.personal.UserWorkspacePreference.list('-updated_date', 1),
+      base44.personal['UserWorkspacePreference'].list('-updated_date', 1),
     ]).then(([u, prefs]) => {
       setUser(u);
       const existing = prefs && prefs.length > 0 ? prefs[0] : null;
       if (existing) {
-        setPref(existing);
+        setPref({...APPEARANCE_DEFAULTS,...existing});
       } else {
         setPref({
           personal_verse_text: '',
           personal_verse_reference: '',
           season_phrase: '',
-          accent_color: 'gold',
+          ...APPEARANCE_DEFAULTS,
           default_agenda_view: 'list',
           display_density: 'comfortable',
           visible_widgets: WIDGETS.filter(w => w.default).map(w => w.key),
@@ -74,7 +81,7 @@ export default function EspacePersonnel() {
         });
       }
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => {setLoadError('Ton espace personnel ne peut pas être chargé. Recharge la page pour réessayer.');setLoading(false);});
   }, []);
 
   const update = (field, value) => {
@@ -111,17 +118,14 @@ export default function EspacePersonnel() {
   };
 
   const save = async () => {
-    setSaving(true);
+    setSaving(true); setSaveError('');
     try {
-      if (pref.id) {
-        await base44.personal.UserWorkspacePreference.update(pref.id, pref);
-      } else {
-        const created = await base44.personal.UserWorkspacePreference.create(pref);
-        setPref(created);
-      }
+      const result = pref.id ? await base44.personal['UserWorkspacePreference'].update(pref.id,pref) : await base44.personal['UserWorkspacePreference'].create(pref);
+      setPref(result);
+      appearance?.commitPreferences(result);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e) { /* bubble */ }
+    } catch (e) {setSaveError(e.message || 'Tes préférences n’ont pas été enregistrées. Réessaie.');}
     setSaving(false);
   };
 
@@ -133,6 +137,7 @@ export default function EspacePersonnel() {
     );
   }
 
+  if(loadError || !pref)return <div role="alert" className="p-6">{loadError || 'Préférences indisponibles.'}</div>;
   const showSection = (section) => activeSection === 'all' || activeSection === section;
 
   return (
@@ -143,12 +148,13 @@ export default function EspacePersonnel() {
         breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Espace personnel' }]}
         actions={
           <button onClick={save} disabled={saving}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-white hover:bg-secondary/90'} disabled:opacity-50`}>
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'} disabled:opacity-50`}>
             {saved ? <><Check className="w-4 h-4" /> Enregistré</> : <><Save className="w-4 h-4" /> {saving ? '...' : 'Enregistrer'}</>}
           </button>
         }
       />
 
+      {saveError && <p role="alert" className="private-load-error">{saveError}</p>}
       <div className="space-y-4">
         {/* Verset & phrase personnelle */}
         {showSection('verset') && (
@@ -194,22 +200,26 @@ export default function EspacePersonnel() {
               <Palette className="w-4 h-4 text-secondary" />
               <h3 className="text-sm font-semibold text-foreground">Apparence</h3>
             </div>
+            <p className="text-sm text-muted-foreground mb-5">L’aperçu s’applique immédiatement. Enregistre pour conserver tes choix sur ton compte ; quitter sans enregistrer annule l’aperçu.</p>
             <div className="space-y-4">
+              <fieldset><legend className="text-xs font-medium mb-2">Thème</legend><div className="appearance-options">{[['light','Clair'],['dark','Sombre'],['system','Système']].map(([value,label])=><button key={value} aria-pressed={pref.appearance_mode===value} onClick={()=>update('appearance_mode',value)}>{label}</button>)}</div></fieldset>
+              <button className="appearance-motion" role="switch" aria-label="Réduire les animations" aria-checked={pref.reduce_motion===true} onClick={()=>update('reduce_motion',!pref.reduce_motion)}><span><b>Réduire les animations</b><small>Les animations restent actives par défaut.</small></span><span>{pref.reduce_motion?'Activé':'Désactivé'}</span></button>
               <div>
-                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Couleur d'accent</label>
+                <span className="text-xs font-medium text-muted-foreground mb-1.5 block">Couleur d'accent</span>
                 <div className="flex gap-2 flex-wrap">
                   {ACCENTS.map(a => (
                     <button key={a.key} onClick={() => update('accent_color', a.key)}
-                      className={`w-9 h-9 rounded-full ${a.cls} transition-all ${pref.accent_color === a.key ? 'ring-2 ring-offset-2 ring-foreground/20 scale-110' : 'opacity-60 hover:opacity-100'}`}
-                      title={a.label} />
+                      style={{backgroundColor:a.swatch}} aria-label={a.label} aria-pressed={pref.accent_color===a.key}
+                      className={`w-11 h-11 rounded-full transition-all ${pref.accent_color === a.key ? 'ring-2 ring-offset-2 ring-foreground/20 scale-110' : 'opacity-60 hover:opacity-100'}`}
+                      title={a.label}>{pref.accent_color===a.key && <Check aria-hidden="true" className="w-4 h-4 text-white mx-auto"/>}</button>
                   ))}
                 </div>
               </div>
               <div>
-                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Densité d'affichage</label>
+                <span className="text-xs font-medium text-muted-foreground mb-1.5 block">Densité d'affichage</span>
                 <div className="grid grid-cols-2 gap-2">
                   {['compact', 'comfortable'].map(d => (
-                    <button key={d} onClick={() => update('display_density', d)}
+                    <button key={d} aria-pressed={pref.display_density===d} onClick={() => update('display_density', d)}
                       className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${pref.display_density === d ? 'bg-secondary/10 border-secondary/20 text-secondary' : 'bg-surface border-border text-muted-foreground'}`}>
                       {d === 'compact' ? 'Compact' : 'Confortable'}
                     </button>
@@ -217,8 +227,8 @@ export default function EspacePersonnel() {
                 </div>
               </div>
               <div>
-                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Vue agenda par défaut</label>
-                <select value={pref.default_agenda_view} onChange={e => update('default_agenda_view', e.target.value)}
+                <label htmlFor="appearance-agenda-view" className="text-xs font-medium text-muted-foreground mb-1.5 block">Vue agenda par défaut</label>
+                <select id="appearance-agenda-view" value={pref.default_agenda_view} onChange={e => update('default_agenda_view', e.target.value)}
                   className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm">
                   <option value="list">Liste</option>
                   <option value="day">Jour</option>
@@ -228,7 +238,7 @@ export default function EspacePersonnel() {
               </div>
               <label className="flex items-center justify-between cursor-pointer">
                 <span className="text-xs text-foreground flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" /> Afficher la colonne contextuelle (desktop)</span>
-                <button onClick={() => update('show_right_panel', pref.show_right_panel !== false ? false : true)}
+                <button role="switch" aria-label="Afficher la colonne contextuelle" aria-checked={pref.show_right_panel !== false} onClick={() => update('show_right_panel', pref.show_right_panel !== false ? false : true)}
                   className={`w-10 h-5 rounded-full transition-colors relative ${pref.show_right_panel !== false ? 'bg-secondary' : 'bg-border'}`}>
                   <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${pref.show_right_panel !== false ? 'left-5' : 'left-0.5'}`} />
                 </button>
@@ -340,7 +350,7 @@ export default function EspacePersonnel() {
       </Link>
 
       <button onClick={save} disabled={saving}
-        className={`w-full mt-6 py-3 rounded-xl text-sm font-semibold transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-white hover:bg-secondary/90'} disabled:opacity-50`}>
+        className={`w-full mt-6 py-3 rounded-xl text-sm font-semibold transition-colors ${saved ? 'bg-success text-white' : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'} disabled:opacity-50`}>
         {saved ? '✓ Préférences enregistrées' : saving ? 'Enregistrement...' : 'Enregistrer mes préférences'}
       </button>
     </div>

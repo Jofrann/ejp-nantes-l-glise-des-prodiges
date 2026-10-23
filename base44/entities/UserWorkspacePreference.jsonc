@@ -8,7 +8,7 @@
     },
     "personal_verse_reference": {
       "type": "string",
-      "description": "R\u00e9f\u00e9rence du verset (ex: 1 Pierre 4:10)"
+      "description": "Référence du verset (ex: 1 Pierre 4:10)"
     },
     "season_phrase": {
       "type": "string",
@@ -35,7 +35,7 @@
         "list"
       ],
       "default": "list",
-      "description": "Vue agenda par d\u00e9faut"
+      "description": "Vue agenda par défaut"
     },
     "display_density": {
       "type": "string",
@@ -44,7 +44,7 @@
         "comfortable"
       ],
       "default": "comfortable",
-      "description": "Densit\u00e9 d'affichage"
+      "description": "Densité d'affichage"
     },
     "visible_widgets": {
       "type": "array",
@@ -65,7 +65,7 @@
       "items": {
         "type": "string"
       },
-      "description": "Raccourcis favoris affich\u00e9s dans la colonne contextuelle"
+      "description": "Raccourcis favoris affichés dans la colonne contextuelle"
     },
     "show_right_panel": {
       "type": "boolean",
@@ -80,7 +80,7 @@
     "notif_presence_reminder": {
       "type": "boolean",
       "default": true,
-      "description": "Rappels de pr\u00e9sence"
+      "description": "Rappels de présence"
     },
     "notif_training_reminder": {
       "type": "boolean",
@@ -91,6 +91,19 @@
       "type": "boolean",
       "default": false,
       "description": "Rappel lecture"
+    },
+    "appearance_mode": {
+      "type": "string",
+      "enum": [
+        "light",
+        "dark",
+        "system"
+      ],
+      "default": "light"
+    },
+    "reduce_motion": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

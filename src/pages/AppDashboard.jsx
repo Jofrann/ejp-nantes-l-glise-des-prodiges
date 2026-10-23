@@ -15,14 +15,6 @@ import BureauHero from '@/components/star/bureau/BureauHero';
 import BureauActions from '@/components/star/bureau/BureauActions';
 import BureauContextColumn from '@/components/star/bureau/BureauContextColumn';
 
-const ACCENT_CSS_MAP = {
-  gold: { star: '38 45% 47%', starSoft: '40 45% 70%' },
-  blue: { star: '215 35% 19%', starSoft: '215 35% 35%' },
-  green: { star: '142 45% 34%', starSoft: '142 45% 50%' },
-  rose: { star: '340 60% 50%', starSoft: '340 60% 65%' },
-  purple: { star: '265 60% 55%', starSoft: '265 60% 68%' },
-};
-
 const DEFAULT_WIDGET_ORDER = ['actions', 'agenda', 'rythme', 'formations', 'croissance', 'ressources', 'responsabilites'];
 const DEFAULT_VISIBLE = ['actions', 'agenda', 'rythme', 'formations', 'croissance', 'ressources', 'responsabilites'];
 
@@ -84,13 +76,6 @@ export default function AppDashboard() {
       setLoading(false);
     }).catch(() => { setLoadError('Le bureau ne peut pas être chargé pour le moment. Recharge la page pour réessayer.'); setLoading(false); });
   }, []);
-
-  useEffect(() => {
-    if (!pref?.accent_color) return;
-    const colors = ACCENT_CSS_MAP[pref.accent_color] || ACCENT_CSS_MAP.gold;
-    document.documentElement.style.setProperty('--star-accent', `hsl(${colors.star})`);
-    document.documentElement.style.setProperty('--star-accent-soft', `hsl(${colors.starSoft})`);
-  }, [pref?.accent_color]);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';

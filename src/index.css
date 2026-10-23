@@ -577,3 +577,17 @@ body[data-private-keyboard=true] .private-vision .glass-bottom,body[data-private
 .app-assistant-panel{bottom:calc(var(--private-keyboard-inset,0px) + var(--app-bottom-height,0px) + 106px)!important}
 .app-event-detail{top:calc(var(--private-viewport-top,0px) + 12px)!important;bottom:auto!important;height:calc(var(--private-viewport-height,100dvh) - 24px)}
 @media(min-width:1280px){.app-fixed-actions{bottom:var(--private-keyboard-inset,0px)!important}}
+
+/* Appearance preferences: accent tokens are owned by WorkspaceAppearance. */
+.private-vision[data-accent] .private-next-footer>a{background:var(--private-action-accent);color:#142b42}
+.private-vision[data-accent] .private-tab-pill,.private-vision[data-accent] .private-context-nav a[aria-current=page]{background:var(--private-sage)}
+.private-vision[data-density=compact] :is(.private-service-card,.maison-actions,.private-context-column .glass-card){padding:16px}
+.private-vision[data-density=compact] .private-service-card{min-height:112px}
+.private-vision[data-density=compact] :is(.bg-card.p-4,.bg-card.p-5){padding:12px}
+.private-vision[data-density=compact] .maison-widgets{gap:14px!important}
+.private-vision[data-density=compact] .private-dashboard-grid{gap:16px}
+.private-vision[data-density=compact] .private-next-event{min-height:220px;padding:22px}
+.private-vision[data-density=compact] .private-next-event-empty{min-height:0}
+.appearance-options{display:flex;flex-wrap:wrap;gap:8px}.appearance-options button{flex:1;min-height:44px;padding:12px 18px;border:1px solid hsl(var(--border));border-radius:14px;font-size:13px;background:hsl(var(--card))}.appearance-options button[aria-pressed=true]{background:var(--private-sage);border-color:hsl(var(--secondary));font-weight:700}.appearance-motion{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;text-align:left;min-height:58px;padding:14px;border:1px solid hsl(var(--border));border-radius:15px}.appearance-motion small{display:block;font-size:11px;color:hsl(var(--muted-foreground));margin-top:4px}.appearance-motion b{font-size:13px}.appearance-motion>span:last-child{font-size:11px;color:hsl(var(--secondary))}.private-preference:disabled{opacity:.5}
+
+.private-vision[data-theme=dark] :is(.bg-secondary.text-white,.bg-primary.text-white){color:hsl(var(--primary-foreground))}

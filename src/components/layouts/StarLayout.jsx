@@ -1,3 +1,4 @@
+import {WorkspaceAppearanceContext,useAppearanceController} from '@/components/star/WorkspaceAppearance';
 import useChromeInset from '@/hooks/useChromeInset';
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -28,14 +29,9 @@ export default function StarLayout({ children, user }) {
   useChromeInset(bottomRef, '--app-bottom-height');
   const location = useLocation();
   const section = privateSection(location.pathname);
-  const [theme, setTheme] = useState(() => { try { return localStorage.getItem('ejp-private-theme') === 'dark' ? 'dark' : 'light'; } catch { return 'light'; } });
-  const [calm, setCalm] = useState(() => { try { return localStorage.getItem('ejp-private-calm') === 'true'; } catch { return false; } });
-  useEffect(() => {
-    document.body.dataset.privateTheme = theme;
-    if (calm) document.body.dataset.privateCalm = 'true'; else delete document.body.dataset.privateCalm;
-    try { localStorage.setItem('ejp-private-theme', theme); localStorage.setItem('ejp-private-calm', String(calm)); } catch { /* Preferences remain usable without storage. */ }
-    return () => { delete document.body.dataset.privateTheme; delete document.body.dataset.privateCalm; };
-  }, [theme, calm]);
+  const appearance = useAppearanceController(user?.id);
+  const {theme,settings,tokens} = appearance;
+  const calm = settings.reduce_motion;
   useEffect(() => {
     const measure = () => {document.body.style.setProperty('--private-viewport-height', `${window.visualViewport?.height || window.innerHeight}px`);document.body.style.setProperty('--private-viewport-top', `${window.visualViewport?.offsetTop || 0}px`);const keyboard=window.innerHeight-(window.visualViewport?.height||window.innerHeight)>120 && document.activeElement?.matches('input,textarea,select,[contenteditable=true]');if(keyboard)document.body.dataset.privateKeyboard='true';else delete document.body.dataset.privateKeyboard;};
     measure(); window.visualViewport?.addEventListener('resize', measure);window.visualViewport?.addEventListener('scroll', measure);
@@ -85,7 +81,7 @@ export default function StarLayout({ children, user }) {
   const handleLogout = () => base44.auth.logout('/');
 
   return (
-    <MotionConfig reducedMotion={calm ? "always" : "user"}><div className="serviteur-app private-vision min-h-screen bg-background text-foreground flex flex-col" data-theme={theme} data-calm={calm} data-page={location.pathname}>
+    <WorkspaceAppearanceContext.Provider value={appearance}><MotionConfig reducedMotion={calm ? "always" : "user"}><div className="serviteur-app private-vision min-h-screen bg-background text-foreground flex flex-col" style={tokens} data-accent={settings.accent_color} data-density={settings.display_density} data-theme={theme} data-calm={calm} data-page={location.pathname}>
       <PrivateSidebar showAdmin={showAdmin} showSupervision={showSupervision} extraModules={extraModules} onOpenTools={() => setPlanOpen(true)} />
       {/* Header desktop — glass premium, simplified */}
       <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 glass-header">
@@ -184,10 +180,12 @@ export default function StarLayout({ children, user }) {
                       >
                         <Settings className="w-3.5 h-3.5 text-muted-foreground" /> Espace personnel
                       </button>
-                      <button role="switch" aria-checked={theme === 'dark'} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="private-preference">
+                      <button role="switch" aria-checked={theme === 'dark'} disabled={appearance.saving || !appearance.ready} onClick={() => appearance.saveAppearancePatch({appearance_mode:theme === 'dark' ? 'light' : 'dark'})} className="private-preference">
                         {theme === 'dark' ? <Sun size={16}/> : <Moon size={16}/>} Apparence sombre <span>{theme === 'dark' ? 'Oui' : 'Non'}</span>
                       </button>
-                      <button role="switch" aria-checked={calm} onClick={() => setCalm(!calm)} className="private-preference"><Sparkles size={16}/> Réduire les animations <span>{calm ? 'Oui' : 'Non'}</span></button>
+                      <button role="switch" aria-checked={calm} disabled={appearance.saving || !appearance.ready} onClick={() => appearance.saveAppearancePatch({reduce_motion:!calm})} className="private-preference"><Sparkles size={16}/> Réduire les animations <span>{calm ? 'Oui' : 'Non'}</span></button>
+                      <button onClick={() => navigate('/app/espace-personnel?section=apparence')} className="private-preference"><Settings size={16}/> Apparence et personnalisation</button>
+                      {appearance.error && <p role="alert" className="text-xs text-danger px-3 py-2">{appearance.error}</p>}
                       <button onClick={() => { setProfileOpen(false); setPlanOpen(true); }} className="private-preference"><Search size={16}/> Explorer mon espace</button>
                       {showSupervision && (
                         <button
@@ -258,6 +256,6 @@ export default function StarLayout({ children, user }) {
         showAdmin={showAdmin}
         extraModules={extraModules}
       />
-    </div></MotionConfig>
+    </div></MotionConfig></WorkspaceAppearanceContext.Provider>
   );
 }
