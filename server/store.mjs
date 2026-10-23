@@ -158,7 +158,7 @@ async function validateWrite(entity, old, input) {
   if (entity === 'Department' && row.is_active !== false) {
     if (isRetiredStructure(row)) reject('Cette structure est retirée de l’organisation active');
     const official = findOfficialStructure(row);
-    if (official?.kind) reject('Utiliser l’espace spécialisé et ses responsabilités');
+    if (official?.kind && official.slug !== 'vie-academique') reject('Utiliser l’espace spécialisé et ses responsabilités');
     if (official && (await entities.Department.list(null, 100000)).some(d => d.id !== old?.id && d.is_active !== false && findOfficialStructure(d)?.slug === official.slug))
       reject('Cette structure officielle existe déjà', 409);
     if (official) input.name = official.name;
@@ -174,7 +174,7 @@ async function validateWrite(entity, old, input) {
     if (!active) return;
     const department = await entities.Department.get(row.department_id);
     if (!isActiveDepartment(department) || isRetiredStructure(department)) reject('Ministère inactif : nouvelle affectation interdite');
-    if (findOfficialStructure(department)?.kind) reject('Utiliser les responsabilités de l’espace spécialisé');
+    if (findOfficialStructure(department)?.kind && findOfficialStructure(department)?.slug !== 'vie-academique') reject('Utiliser les responsabilités de l’espace spécialisé');
     const person = await entities.User.get(row.user_id);
     if (person.account_status !== 'active') reject('Compte inactif');
     if ((await entities.DepartmentMember.filter({ department_id: row.department_id, user_id: row.user_id })).some(m => m.id !== old?.id && (m.status ? m.status === 'active' : m.is_active !== false)))

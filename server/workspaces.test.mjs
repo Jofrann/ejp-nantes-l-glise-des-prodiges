@@ -1,3 +1,4 @@
+import { ensureAcademicWorkspace } from "./academic-workspace.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
@@ -72,6 +73,28 @@ test("Department workspaces persist scoped actions and leaders receive deduplica
         role_in_dept: role,
         status: "active",
       });
+    const adapter = {
+      Department: {
+        filter: (...args) => entity("Department", "filter", ...args),
+        create: (data) => entity("Department", "create", data),
+      },
+    };
+    const academic = await ensureAcademicWorkspace(adapter);
+    assert.equal(academic.created, true);
+    assert.deepEqual(await ensureAcademicWorkspace(adapter), {
+      created: false,
+      id: academic.id,
+    });
+    await entity("DepartmentMember", "create", {
+      department_id: academic.id,
+      user_id: member.user_id,
+      role_in_dept: "serviteur",
+      status: "active",
+    });
+    const privateJourney = await entity("ServantJourney", "create", {
+      user_id: ref.user_id,
+      education_school: "PRIVATE_ACADEMIC_MARKER",
+    });
     const event = await entity("Event", "create", {
       title: "Rencontre",
       event_date: "2026-01-10",
@@ -167,6 +190,16 @@ test("Department workspaces persist scoped actions and leaders receive deduplica
     assert.equal(read.summary.open, 0);
     assert.equal(read.summary.completed, 1);
     await login(member);
+    assert.equal(
+      (await op("getDepartmentWorkspace", { department_id: academic.id }))
+        .canonical,
+      "vie-academique",
+    );
+    await call(
+      "entities/ServantJourney",
+      { method: "get", args: [privateJourney.id] },
+      403,
+    );
     const memberRead = await op("getDepartmentWorkspace", {
       department_id: a.id,
     });
@@ -191,7 +224,7 @@ test("Department workspaces persist scoped actions and leaders receive deduplica
     await op("getChurchOverview", {}, 401);
     await op("getDepartmentWorkspace", { department_id: a.id }, 401);
     cookie = adminCookie;
-    assert.equal((await entity("Department", "list")).length, 2);
+    assert.equal((await entity("Department", "list")).length, 3);
     assert.equal((await entity("Event", "get", event.id)).title, "Rencontre");
   } finally {
     child.kill();
