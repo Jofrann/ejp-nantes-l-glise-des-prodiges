@@ -1,3 +1,4 @@
+import {workspaceOperationNames,executeWorkspaceOperation} from './workspaces.mjs';
 import { integrationStatus, invokeAI, sendEmail, createMeet } from './integrations.mjs';
 import { subscribeShop, notifyShopOpening } from './shop.mjs';
 import { uploadFile, serveFile, maxUploadBytes } from './files.mjs';
@@ -341,7 +342,7 @@ const server = createServer(async (req, res) => {
     ) {
       requireUser();
       const name = url.pathname.split("/").pop();
-      if (operationNames.has(name)) { res.end(JSON.stringify(await executeEJPOperation(name,body,user))); return; }
+      if ((operationNames.has(name) || workspaceOperationNames.has(name))) { res.end(JSON.stringify(await (workspaceOperationNames.has(name) ? executeWorkspaceOperation(name,body,user) : executeEJPOperation(name,body,user)))); return; }
       if (name === "createMeetLink") { res.end(JSON.stringify(await createMeet(body,user))); return; }
       if (name === "adminManageUser" && ["create", "reset_access"].includes(body.action)) {
         requireAdmin();

@@ -82,3 +82,11 @@ PublicTextsEditor étend AdminHome et ChurchConfig ; public_copy est la source d
 Aperçu : Dialog Radix partagé, iframe des vraies routes publiques, sélection page/ordinateur/téléphone, fermeture et Échap accessibles. Transfert postMessage limité à même origine/source/canal et vérification administrateur actif sans première connexion ; liste explicite de champs publics, aucune intégration privée. Aucun envoi de formulaire ni navigation externe dans l’aperçu. Publier utilise le CRUD ChurchConfig existant. En cas d’erreur les valeurs restent dans le formulaire. Les listes métier conservent leur enregistrement immédiat, signalé explicitement.
 
 PublicText et usePublicText rendent des chaînes React échappées, sans moteur de traduction du DOM. Le calendrier et le compte à rebours partagent publicSchedule.js et le fuseau Europe/Paris. Le serveur valide les textes publics et le jour/heure du culte. Les champs du formulaire de visite possèdent des identifiants uniques liés à leurs libellés.
+
+## Espaces départementaux et leaders — 23 octobre 2026
+
+Le langage FIJ est étendu aux espaces internes existants. Signature : une ligne de quatre repères, un graphique de lecture et une prochaine étape, puis les outils métier. Couleurs normatives réutilisées dans `components/workspaces/workspaces.css` : encre #203440, secondaire #657580, accent #426b88, séparateur #e7ecee, surfaces blanches et #f7f9fa. Manrope existante ; titres 27–38 px, chiffres tabulaires 28–36 px. Ni thème global ni shell remplacé.
+
+DepartmentWorkspace est le propriétaire partagé des synthèses et du travail interne. workspaceProfiles.js adapte le parcours et les liens par département. Les étapes sont des propositions, pas des missions officielles inventées ; description et paramètres existants conservent la mission du responsable. Synthèse / Travail / Équipe / Analyses, avec les autres outils regroupés dans un disclosure. Aucun module historique n’est retiré.
+
+ChurchOverview ajoute une entrée dans Pilotage, avec synthèse, départements, évolutions/sources et présentation agrégée. Le détail historique, les personnes et les décisions restent accessibles. L’espace étudiant conserve ses données et onglets personnels, avec des repères de suivi supplémentaires.

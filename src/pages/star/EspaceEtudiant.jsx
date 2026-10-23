@@ -1,3 +1,4 @@
+import {WorkspaceMetrics} from '@/components/workspaces/WorkspacePrimitives';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -66,13 +67,14 @@ export default function EspaceEtudiant() {
   const myAppointments = appointments.filter(a => a.created_by_id === user?.id);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div className="ws max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
         title="Mon Espace Étudiant"
         intention="Ton parcours académique, ton suivi et ton accompagnement — en toute confidentialité."
         breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Espace Étudiant' }]}
       />
 
+      <WorkspaceMetrics items={[["Objectifs en cours",academicGoals.filter(g=>!['completed','done','cancelled'].includes(g.status)).length,'Académiques et professionnels'],['Rendez-vous demandés',myAppointments.filter(a=>a.status==='pending').length,'Demandes en attente'],['Ressources',studentResources.length,'Catalogue actuellement accessible'],['Parcours',journey.id?'Renseigné':'À compléter','Votre dossier personnel']]}/>
       {/* Confidentiality note */}
       <div className="flex items-start gap-2.5 bg-purple-500/5 border border-purple-400/20 rounded-xl p-3 mb-5">
         <AlertCircle className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />

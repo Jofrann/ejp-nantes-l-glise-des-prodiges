@@ -1,3 +1,5 @@
+import ChurchOverview from '@/components/workspaces/ChurchOverview';
+import '@/components/workspaces/workspaces.css';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -26,7 +28,7 @@ export default function Pilotage() {
   const [loading, setLoading] = useState(true);
   const [accessDenied, setAccessDenied] = useState(false);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('church');
 
   const loadData = async () => {
     setLoading(true);
@@ -105,15 +107,10 @@ export default function Pilotage() {
   const openDecisions = (data.decisions || []).filter(d => d.status === 'open' || d.status === 'in_progress').length;
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Glow ambiant */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-secondary/5 blur-[140px] opacity-50" />
-      </div>
-
+    <div className="workspace-page min-h-screen bg-background text-foreground">
       {/* Header fixe */}
-      <div className="sticky top-14 z-30 bg-card/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-5xl mx-auto px-4">
+      <div className="app-section-header sticky z-30 bg-card/80 backdrop-blur-md border-b border-border">
+        <div className="max-w-6xl mx-auto px-4">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 py-2">
             <Link to="/app" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
@@ -146,6 +143,8 @@ export default function Pilotage() {
             )}
           </div>
 
+          <nav className="workspace-main-tabs" aria-label="Navigation leaders">{[...(data.can_view_all_data?[['church','Synthèse'],['departments','Départements'],['people','Personnes']]:[]),['decisions','Décisions & suivis']].map(([id,label])=><button key={id} aria-pressed={activeTab===id} onClick={()=>setActiveTab(id)}>{label}</button>)}</nav>
+          <details className="workspace-tools"><summary>Tous les outils de pilotage</summary>
           {/* Navigation par onglets */}
           <div className="flex items-center gap-1 overflow-x-auto scrollbar-none -mx-1 px-1 pb-2">
             {[...PILOTAGE_TABS.filter(t=>data.can_view_all_data || t.id==='decisions'), ...(data.can_view_all_data ? [{id:'details',label:'Données détaillées',icon:'Building2'}] : [])].map(tab => {
@@ -173,11 +172,12 @@ export default function Pilotage() {
               );
             })}
           </div>
+          </details>
         </div>
       </div>
 
       {/* Contenu principal */}
-      <div className="relative max-w-5xl mx-auto pb-20">
+      <div className="relative max-w-6xl mx-auto pb-20">
         <div className="px-4 pt-6">
           <AnimatePresence mode="wait">
             <motion.div
@@ -187,6 +187,7 @@ export default function Pilotage() {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.15 }}
             >
+              {activeTab === 'church' && data.can_view_all_data && <ChurchOverview onNavigateTab={setActiveTab}/>}
               {activeTab === 'overview' && (
                 <PilotageOverviewTab data={data} onNavigateTab={setActiveTab} />
               )}

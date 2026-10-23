@@ -1,3 +1,5 @@
+import DepartmentWorkspace from '@/components/workspaces/DepartmentWorkspace';
+import '@/components/workspaces/workspaces.css';
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -103,7 +105,7 @@ export default function PageDepartement() {
   const [error, setError] = useState(null);
   const [accessDenied, setAccessDenied] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('workspace');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -404,21 +406,16 @@ export default function PageDepartement() {
   // === Page principale ===
 
   const colors = COLOR_MAP[dept.color] || COLOR_MAP.amber;
-  const enabledModules = [...getEnabledModules(dept.slug), ...(canAnalyze ? ['analytics'] : [])];
+  const enabledModules = ['workspace','workboard',...getEnabledModules(dept.slug), ...(canAnalyze ? ['analytics'] : [])];
   const currentTab = enabledModules.includes(activeTab) ? activeTab : enabledModules[0];
   const isAdmin = isBureauLike(user);
   const canPost = isAdmin || isResponsable;
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Glow ambiant */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full ${colors.glow} blur-[140px] opacity-50`} />
-      </div>
-
+    <div className="workspace-page min-h-screen bg-background text-foreground">
       {/* Header fixe */}
-      <div className="app-section-header sticky z-30 bg-card/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-3xl mx-auto px-4">
+      <div className="app-section-header workspace-section-header sticky z-30 bg-card/80 backdrop-blur-md border-b border-border">
+        <div className="max-w-6xl mx-auto px-4">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 py-2">
             <Link to="/app/service" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
@@ -471,9 +468,11 @@ export default function PageDepartement() {
             )}
           </div>
 
+          <nav className="workspace-main-tabs" aria-label="Espace du département">{[['workspace','Synthèse'],['workboard',dept.slug==='communication'?'Demandes & publications':dept.slug==='vie-academique'?'Accompagnements':'Travail'],['team','Équipe'],...(canAnalyze?[['analytics','Analyses']]:[])].map(([id,label])=><button key={id} aria-pressed={currentTab===id} onClick={()=>setActiveTab(id)}>{label}</button>)}</nav>
+          <details className="workspace-tools"><summary>Tous les outils du département</summary>
           {/* Navigation par onglets */}
           <div className="flex items-center gap-1 overflow-x-auto scrollbar-none -mx-1 px-1 pb-2">
-            {enabledModules.map(modId => {
+            {enabledModules.filter(id=>!['workspace','workboard','team','analytics'].includes(id)).map(modId => {
               const meta = MODULE_META[modId];
               if (!meta) return null;
               const iconMap = {
@@ -507,21 +506,22 @@ export default function PageDepartement() {
               );
             })}
           </div>
+          </details>
         </div>
       </div>
 
       {/* Contenu principal */}
-      <div className="relative max-w-3xl mx-auto pb-20">
+      <div className="relative max-w-6xl mx-auto pb-20">
         <div className="px-4 pt-6">
           {/* Bannière */}
-          {dept.cover_url && (
+          {currentTab === 'overview' && dept.cover_url && (
             <div className="h-32 md:h-40 overflow-hidden rounded-2xl mb-6">
               <img src={dept.cover_url} alt={dept.name} className="w-full h-full object-cover" />
             </div>
           )}
 
           {/* Description */}
-          {dept.description && (
+          {currentTab === 'overview' && dept.description && (
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">{dept.description}</p>
           )}
 
@@ -534,6 +534,7 @@ export default function PageDepartement() {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.15 }}
             >
+              {['workspace','workboard'].includes(currentTab) && <DepartmentWorkspace key={dept.id} department={dept} onNavigateTab={setActiveTab} view={currentTab==='workboard'?'work':'summary'}/>}
               {currentTab === 'analytics' && <><DepartmentAnalytics departmentId={dept.id} /><DepartmentPlanningTools departmentId={dept.id}/></>}
               {currentTab === 'program_teams' && <ProgramTeams />}
               {currentTab === 'overview' && (

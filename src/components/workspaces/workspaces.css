@@ -1,0 +1,554 @@
+.ws {
+  --ws-ink: #203440;
+  --ws-muted: #657580;
+  --ws-accent: #426b88;
+  --ws-line: #e7ecee;
+  color: var(--ws-ink);
+  font-family: Manrope, "Segoe UI", sans-serif;
+  min-width: 0;
+}
+.ws h1,
+.ws h2,
+.ws h3,
+.ws p {
+  margin: 0;
+}
+.ws h1 {
+  font-size: clamp(27px, 3vw, 38px) !important;
+  font-weight: 500 !important;
+  letter-spacing: -1.1px;
+  line-height: 1.2;
+}
+.ws h2 {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+.ws h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+.ws-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.ws-intro p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ws-muted);
+  margin-top: 12px;
+}
+.ws-eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--ws-muted);
+  display: block;
+  margin-bottom: 14px;
+}
+.ws-button {
+  border: 1px solid var(--ws-line);
+  background: white;
+  border-radius: 9px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  min-height: 42px;
+  color: var(--ws-ink);
+  white-space: nowrap;
+}
+.ws-primary {
+  background: var(--ws-accent);
+  color: white;
+  border-color: var(--ws-accent);
+}
+.ws-link {
+  color: var(--ws-accent);
+  font-size: 12px;
+  background: transparent;
+  display: inline-block;
+  text-decoration: none;
+  line-height: 1.8;
+}
+.ws button,
+.ws a {
+  touch-action: manipulation;
+  transition:
+    background-color 0.16s,
+    color 0.16s;
+}
+.ws button:hover,
+.ws a:hover {
+  color: #243e50;
+}
+.ws .ws-primary:hover {
+  color: white;
+  background: #324f64;
+}
+.ws button:focus-visible,
+.ws a:focus-visible,
+.ws input:focus-visible,
+.ws select:focus-visible,
+.ws summary:focus-visible {
+  outline: 3px solid #91b0c5;
+  outline-offset: 3px;
+}
+.ws-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 28px 0 36px;
+}
+.ws-metrics > div {
+  padding-left: 24px;
+  border-left: 1px solid var(--ws-line);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.ws-metrics > div:first-child {
+  border: 0;
+  padding-left: 0;
+}
+.ws-metrics span {
+  font-size: 12px;
+  color: var(--ws-muted);
+}
+.ws-metrics strong {
+  font-size: 36px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  letter-spacing: -1px;
+}
+.ws-metrics small {
+  font-size: 11px;
+  color: var(--ws-muted);
+  line-height: 1.6;
+}
+.ws-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
+  gap: 26px;
+  margin-bottom: 30px;
+}
+.ws-panel {
+  background: white;
+  border: 1px solid var(--ws-line);
+  padding: 26px;
+  border-radius: 14px;
+  min-width: 0;
+  margin-bottom: 26px;
+}
+.ws-grid > .ws-panel {
+  margin-bottom: 0;
+}
+.ws-soft {
+  background: #f7f9fa;
+  border-color: transparent;
+}
+.ws-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.ws-heading > span,
+.ws-heading > p {
+  font-size: 11px;
+  color: var(--ws-muted);
+}
+.ws-chart {
+  height: 245px;
+  width: 100%;
+  min-width: 0;
+}
+.ws-caption {
+  font-size: 12px !important;
+  color: var(--ws-muted);
+  line-height: 1.8;
+  margin-top: 16px !important;
+}
+.ws-empty {
+  padding: 45px 20px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--ws-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.ws-next {
+  display: grid;
+  gap: 10px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--ws-line);
+  font-size: 13px;
+}
+.ws-next span {
+  color: var(--ws-muted);
+  font-size: 12px;
+}
+.ws-next button {
+  text-align: left;
+  color: var(--ws-accent);
+  font-size: 12px;
+}
+.ws-soft > .ws-link {
+  margin-top: 24px;
+}
+.ws-process {
+  display: flex;
+  gap: 24px;
+  padding: 22px 0 30px;
+  flex-wrap: wrap;
+}
+.ws-process > span {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  flex: 1;
+  min-width: 150px;
+}
+.ws-process small {
+  border: 1px solid var(--ws-line);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: white;
+  color: var(--ws-muted);
+}
+.ws-tool-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 26px;
+  border-block: 1px solid var(--ws-line);
+}
+.ws-tool-list button,
+.ws-tool-list a {
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--ws-accent);
+  font-size: 13px;
+  text-align: left;
+  border-bottom: 1px solid var(--ws-line);
+  background: transparent;
+}
+.ws-method {
+  margin-top: 24px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ws-muted);
+}
+.ws-method summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.ws-method p {
+  margin-top: 14px;
+}
+.ws-updated {
+  padding: 16px 0;
+}
+.ws-work-list article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px 0;
+  border-top: 1px solid var(--ws-line);
+}
+.ws-work-list small {
+  font-size: 11px;
+  color: var(--ws-muted);
+}
+.ws-work-list h2 {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+.ws-work-list p {
+  font-size: 12px;
+  color: var(--ws-muted);
+}
+.ws-field {
+  font-size: 12px;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+  color: var(--ws-muted);
+}
+.ws select {
+  background: white;
+  border: 1px solid var(--ws-line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-height: 42px;
+  color: var(--ws-ink);
+  font-size: 13px;
+  max-width: 100%;
+}
+.ws-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+.ws-error {
+  color: #9b4035;
+  font-size: 12px;
+  margin: 16px 0 !important;
+}
+.ws-edit {
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+}
+.ws-tabs {
+  display: flex;
+  gap: 26px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--ws-line);
+  margin-bottom: 30px;
+}
+.ws-tabs button {
+  font-size: 12px;
+  white-space: nowrap;
+  padding: 15px 0;
+  border-bottom: 2px solid transparent;
+  color: var(--ws-muted);
+}
+.ws-tabs button[aria-pressed="true"] {
+  color: var(--ws-ink);
+  border-color: var(--ws-accent);
+}
+.ws-attentions {
+  display: grid;
+  margin: 18px 0;
+}
+.ws-attentions > div {
+  display: flex;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--ws-line);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.ws-attentions strong {
+  font-weight: 500;
+  font-size: 22px;
+}
+.ws-dept-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  padding: 22px 0;
+  border-top: 1px solid var(--ws-line);
+}
+.ws-dept-row p {
+  font-size: 12px;
+  color: var(--ws-muted);
+  margin-top: 7px;
+  line-height: 1.7;
+}
+.ws-presentation {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: #f3f6fa;
+  padding: 40px 5vw;
+  overflow: auto;
+}
+.workspace-page .workspace-tools {
+  border-bottom: 1px solid #e7ecee;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+.workspace-tools summary {
+  cursor: pointer;
+  width: fit-content;
+  color: #657580;
+  font-size: 12px;
+  padding: 7px 0;
+}
+.workspace-tools[open] summary {
+  margin-bottom: 10px;
+}
+.workspace-page .workspace-main-tabs {
+  display: flex;
+  gap: 24px;
+  overflow: auto;
+}
+.workspace-main-tabs button {
+  font-size: 12px;
+  padding: 12px 0;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  color: #657580;
+}
+.workspace-main-tabs button[aria-pressed="true"] {
+  color: #203440;
+  border-color: #426b88;
+}
+.workspace-page .glass-card {
+  box-shadow: none;
+}
+.workspace-page .workspace-section-header {
+  top: var(--app-header-height, 78px);
+}
+.ws-panel,
+.ws-work-list {
+  animation: ws-enter 0.2s ease-out;
+}
+@keyframes ws-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 850px) {
+  .ws-grid {
+    grid-template-columns: 1fr;
+  }
+  .ws-metrics {
+    grid-template-columns: 1fr 1fr;
+    gap: 26px 18px;
+  }
+  .ws-metrics > div:nth-child(3) {
+    border: 0;
+    padding-left: 0;
+  }
+  .ws-metrics strong {
+    font-size: 31px;
+  }
+  .ws-tool-list {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ws-intro {
+    gap: 20px;
+  }
+  .ws-panel {
+    padding: 22px;
+  }
+  .ws-presentation {
+    padding: 24px 16px;
+  }
+  .workspace-page .workspace-section-header {
+    top: var(--app-header-height, 68px);
+  }
+}
+@media (max-width: 450px) {
+  .ws-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .ws select,
+  .ws input {
+    font-size: 16px;
+  }
+  .ws-tool-list {
+    grid-template-columns: 1fr;
+  }
+  .ws-work-list article,
+  .ws-dept-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .ws-metrics strong {
+    font-size: 28px;
+  }
+  .ws-chart {
+    height: 220px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ws * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.ws-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-top: 1px solid var(--ws-line);
+  border-left: 1px solid var(--ws-line);
+  overflow: hidden;
+  border-radius: 10px;
+  background: white;
+}
+.ws-calendar > div {
+  border-right: 1px solid var(--ws-line);
+  border-bottom: 1px solid var(--ws-line);
+  min-width: 0;
+}
+.ws-calendar-day {
+  min-height: 100px;
+  padding: 10px;
+}
+.ws-calendar-day > strong {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ws-muted);
+}
+.ws-calendar-dayname {
+  font-size: 11px;
+  color: var(--ws-muted);
+  padding: 12px;
+  text-align: center;
+  background: #f7f9fa;
+}
+.ws-calendar-day button,
+.ws-calendar-day p {
+  display: block;
+  font-size: 11px;
+  text-align: left;
+  background: #edf2f5;
+  color: #203440;
+  border-radius: 5px;
+  padding: 7px;
+  margin-top: 7px;
+  overflow-wrap: anywhere;
+  width: 100%;
+  line-height: 1.5;
+}
+.ws-calendar-day small {
+  display: block;
+  color: #657580;
+  font-size: 10px;
+  margin-top: 4px;
+}
+@media (max-width: 600px) {
+  .ws-calendar-day {
+    padding: 4px;
+    min-height: 90px;
+  }
+  .ws-calendar-day button {
+    font-size: 10px;
+    padding: 3px;
+  }
+  .ws-calendar-day small {
+    display: none;
+  }
+  .ws-calendar-dayname {
+    padding: 8px 0;
+  }
+}
