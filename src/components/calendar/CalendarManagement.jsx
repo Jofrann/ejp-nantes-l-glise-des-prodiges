@@ -406,7 +406,6 @@ export default function CalendarManagement() {
   );
 }
 export function DepartmentCalendar({ departmentId }) {
-  const opener = useRef(null);
   const state = useWorkspaceData("getAgendaData", departmentId);
   if (state.loading || state.error)
     return (
