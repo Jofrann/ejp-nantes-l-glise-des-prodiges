@@ -5,7 +5,7 @@
 export const SCHEDULE_TYPE_LABELS = {
   intercession: 'Intercession',
   prayer_meeting: 'Réunion de prière',
-  pre_service_prayer: 'Prière avant culte',
+  pre_service_prayer: 'Prière avant Prodiges Expérience',
   special_prayer: 'Prière spéciale',
   other: 'Autre',
 };
@@ -13,7 +13,7 @@ export const SCHEDULE_TYPE_LABELS = {
 export const SCHEDULE_TYPE_SHORT = {
   intercession: 'Intercession',
   prayer_meeting: 'Réunion',
-  pre_service_prayer: 'Avant culte',
+  pre_service_prayer: 'Avant Prodiges Expérience',
   special_prayer: 'Spéciale',
   other: 'Autre',
 };
@@ -21,7 +21,7 @@ export const SCHEDULE_TYPE_SHORT = {
 export const SCHEDULE_TYPE_OPTIONS = [
   { value: 'intercession', label: 'Intercession' },
   { value: 'prayer_meeting', label: 'Réunion de prière' },
-  { value: 'pre_service_prayer', label: 'Prière avant culte' },
+  { value: 'pre_service_prayer', label: 'Prière avant Prodiges Expérience' },
   { value: 'special_prayer', label: 'Prière spéciale' },
   { value: 'other', label: 'Autre' },
 ];

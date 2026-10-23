@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Calendar, Clock, MapPin, Home, ChevronRight, Users } from 'lucide-react';
 
 const EVENT_TYPE_LABELS = {
-  culte: 'Culte',
+  culte: 'Prodiges Expérience',
   ejp: 'EJP',
   formation: 'Formation',
   rendez_vous: 'Rendez-vous',

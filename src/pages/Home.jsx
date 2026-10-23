@@ -138,7 +138,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <RevealOnScroll>
             <p className="text-xs uppercase tracking-[0.25em] text-[#D8B76A] font-semibold mb-4"><PublicText value={"Nos rendez-vous"} /></p>
-            <h2 className="font-display text-4xl md:text-5xl mb-6"><PublicText field="service_day" value={config?.service_day || 'Dimanche'} /><PublicText value={" à "} /><PublicText field="service_time" value={config?.service_time || '15:00'} /><PublicText value={". Et bien plus."} /></h2>
+            <h2 className="font-display text-4xl md:text-5xl mb-6"><PublicText field="service_day" value={config?.service_day || 'Dimanche'} /><PublicText value={" à "} /><PublicText field="service_time" value={config?.service_time || '14:30'} /><PublicText value={". Et bien plus."} /></h2>
             <p className="text-white/70 max-w-xl mx-auto leading-relaxed mb-10"><PublicText value={"Le culte du dimanche, les FIJ, les formations PCNC, les événements spéciaux — une vie communautaire riche et structurée."} /></p>
             <Link
               to="/programmes"

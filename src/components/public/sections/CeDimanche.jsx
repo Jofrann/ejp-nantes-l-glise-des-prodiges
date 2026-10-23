@@ -34,10 +34,10 @@ export default function CeDimanche({ config }) {
   const { days, hours, minutes, seconds } = useCountdown(nextSunday);
   const address = config?.address_label || 'Nantes, France';
   const mapsUrl = config?.maps_link || 'https://maps.google.com/?q=Nantes';
-  const serviceTime = config?.service_time || '15:00';
+  const serviceTime = config?.service_time || '14:30';
 
   const icsUrl = `data:text/calendar;charset=utf8,${encodeURIComponent(
-    `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nURL:${window.location.href}\nDTSTART:${nextSunday.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\nDTEND:${new Date(nextSunday.getTime() + 7200000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z\nSUMMARY:Culte EJP Nantes\nLOCATION:${address}\nEND:VEVENT\nEND:VCALENDAR`
+    `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nURL:${window.location.href}\nDTSTART:${nextSunday.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\nSUMMARY:Prodiges Expérience\nLOCATION:${address}\nEND:VEVENT\nEND:VCALENDAR`
   )}`;
 
   return (
@@ -49,7 +49,7 @@ export default function CeDimanche({ config }) {
               {/* Left: info */}
               <div className="p-8 md:p-10">
                 <span className="text-[11px] uppercase tracking-[0.3em] text-[#D8B76A] font-semibold"><PublicText value={"Ce dimanche"} /></span>
-                <h2 className="font-display text-3xl md:text-4xl text-[#101827] mt-3 mb-4 font-medium leading-tight"><PublicText value={"Culte à "} /><PublicText value={serviceTime.replace(':', 'h')} />
+                <h2 className="font-display text-3xl md:text-4xl text-[#101827] mt-3 mb-4 font-medium leading-tight"><PublicText value={"Prodiges Expérience à "} /><PublicText value={serviceTime.replace(':', 'h')} />
                 </h2>
                 <p className="text-[#4B5563] text-sm leading-relaxed mb-6"><PublicText value={"Un temps pour chercher Dieu, être édifié, et marcher avec une jeunesse qui désire porter du fruit."} /></p>
                 <div className="space-y-3 mb-6">
@@ -66,7 +66,7 @@ export default function CeDimanche({ config }) {
                   <Link to="/venir" className="flex items-center gap-1.5 bg-[#101827] text-white text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#1a2740] transition-colors"><PublicText value={"Préparer ma venue"} /></Link>
                   <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-[#F5F0E8] text-[#101827] text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#EDE6D8] transition-colors">
                     <Navigation className="w-3.5 h-3.5" /><PublicText value={" Google Maps"} /></a>
-                  <a href={icsUrl} download="culte-ejp-nantes.ics" className="flex items-center gap-1.5 bg-[#F5F0E8] text-[#101827] text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#EDE6D8] transition-colors">
+                  <a href={icsUrl} download="prodiges-experience.ics" className="flex items-center gap-1.5 bg-[#F5F0E8] text-[#101827] text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#EDE6D8] transition-colors">
                     <Calendar className="w-3.5 h-3.5" /><PublicText value={" Calendrier"} /></a>
                 </div>
               </div>
@@ -91,7 +91,7 @@ export default function CeDimanche({ config }) {
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-white/40 mt-6 text-center"><PublicText value={"Prochain culte : "} /><PublicText value={nextSunday.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} /></p>
+                <p className="text-xs text-white/40 mt-6 text-center"><PublicText value={"Prochaine Prodiges Expérience : "} /><PublicText value={nextSunday.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} /></p>
               </div>
             </div>
           </div>

@@ -22,7 +22,7 @@ export default function AddressSection({ config }) {
 
             <div className="space-y-6 mb-10">
               <div className="border-b border-[#E5E0D8] pb-6">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B6B6B]/60 mb-2">Culte</p>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B6B6B]/60 mb-2">Prodiges Expérience</p>
                 <p className="text-[#0B0B0C] font-medium">{serviceDay} à {serviceTime}</p>
               </div>
               <div className="border-b border-[#E5E0D8] pb-6">

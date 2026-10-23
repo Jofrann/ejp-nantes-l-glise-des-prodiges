@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function getNextServiceDate(serviceTime = '15:00') {
+function getNextServiceDate(serviceTime = '14:30') {
   const [hour, minute] = serviceTime.split(':').map(Number);
   const now = new Date();
   const dayOfWeek = now.getDay(); // 0 = dimanche
@@ -20,7 +20,7 @@ function getNextServiceDate(serviceTime = '15:00') {
   return target;
 }
 
-export default function CountdownTimer({ serviceTime = '15:00' }) {
+export default function CountdownTimer({ serviceTime = '14:30' }) {
   const [timeLeft, setTimeLeft] = useState({ jours: 0, heures: 0, minutes: 0, secondes: 0 });
 
   useEffect(() => {

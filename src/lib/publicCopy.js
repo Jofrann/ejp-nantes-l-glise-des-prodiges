@@ -38,7 +38,7 @@ export function expandPublicCopy(value, config = {}) {
     Jour: (config.service_day || "Dimanche").replace(/^./, (value) =>
       value.toLocaleUpperCase("fr"),
     ),
-    horaire: (config.service_time || "15:00").replace(":", "h"),
+    horaire: (config.service_time || "14:30").replace(":", "h"),
     adresse: config.address_label || "Nantes, France",
   };
   return value.replace(

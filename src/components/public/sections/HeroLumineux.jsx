@@ -37,7 +37,7 @@ export default function HeroLumineux({ config }) {
         </div>
       </div>
       {!config?.hero_image_url && !videoUrl && <PhotoCredit photo={PUBLIC_PHOTOS.worship} />}
-      <div className="ejp-hero-caption"><a href="#ce-dimanche"><PublicText value={"Découvrir la maison "} /><ArrowDown size={16} /></a><span><PublicText field="service_day" value={config?.service_day || 'Dimanche'} /><PublicText value={" · "} /><PublicText field="service_time" value={config?.service_time?.replace(':', 'h') || '15h00'} /></span>
+      <div className="ejp-hero-caption"><a href="#ce-dimanche"><PublicText value={"Découvrir la maison "} /><ArrowDown size={16} /></a><span><PublicText field="service_day" value={config?.service_day || 'Dimanche'} /><PublicText value={" · "} /><PublicText field="service_time" value={config?.service_time?.replace(':', 'h') || '14h30'} /></span>
         {videoUrl && !failed && <button onClick={() => playing ? video.current?.pause() : video.current?.play().catch(() => {})} aria-label={playing ? 'Mettre la vidéo en pause' : 'Lire la vidéo'}>{playing ? <Pause size={16} /> : <Play size={16} />}<span><PublicText value={playing ? 'Pause' : 'Lire'} /></span></button>}
       </div>
     </section>

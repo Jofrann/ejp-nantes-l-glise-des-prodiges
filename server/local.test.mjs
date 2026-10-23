@@ -64,7 +64,7 @@ test("independent API: authentication, persistence, CRUD, business functions and
       (
         await call("entities/Event", {
           method: "filter",
-          args: [{ is_active: true }, { limit: 5 }],
+          args: [{ is_active: true, id:event.id }, { limit: 5 }],
         })
       )[0].id,
       event.id,

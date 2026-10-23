@@ -4,7 +4,7 @@ import CountdownTimer from './CountdownTimer';
 
 export default function CulteSection({ config }) {
   const serviceDay = config?.service_day || 'Dimanche';
-  const serviceTime = config?.service_time || '15:00';
+  const serviceTime = config?.service_time || '14:30';
   const address = config?.address_label || 'Nantes, Loire-Atlantique';
   const mapsLink = config?.maps_link || 'https://maps.google.com/?q=Nantes,France';
 
@@ -18,7 +18,7 @@ export default function CulteSection({ config }) {
     next.setHours(h, m, 0, 0);
     const end = new Date(next.getTime() + 2 * 60 * 60 * 1000);
     const fmt = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Culte+EJP+Nantes&dates=${fmt(next)}/${fmt(end)}&location=${encodeURIComponent(address)}`;
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Prodiges+Exp%C3%A9rience+EJP+Nantes&dates=${fmt(next)}/${fmt(end)}&location=${encodeURIComponent(address)}`;
   })();
 
   return (
@@ -32,7 +32,7 @@ export default function CulteSection({ config }) {
         >
           <span className="text-[10px] uppercase tracking-[0.4em] text-[#C8A96A]/70 font-light block mb-6">Chaque semaine</span>
           <h2 className="font-display text-4xl md:text-6xl text-[#F7F4EF] font-light mb-4 leading-tight">
-            Prochain culte
+            Prochaine Prodiges Expérience
           </h2>
           <p className="text-[#B8B8B8]/50 text-sm tracking-wide mb-16 font-light">
             {serviceDay} à {serviceTime} — {address}

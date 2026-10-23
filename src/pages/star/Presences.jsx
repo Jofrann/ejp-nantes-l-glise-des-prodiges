@@ -35,7 +35,7 @@ export default function Presences() {
   const loadData = async () => {
     try {
       const [evs, resp] = await Promise.all([
-        base44.entities.Event.list('-event_date', 20),
+        base44.entities.Event.filter({is_active:true,event_date:{$gte:new Intl.DateTimeFormat('fr-CA',{timeZone:'Europe/Paris'}).format(new Date())}},'event_date',100),
         base44.personal.AttendanceResponse.list('-created_date', 50),
       ]);
       const today = new Date().toISOString().split('T')[0];

@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Plus, Trash2, Calendar, Clock, MapPin, Users, CheckCircle } from 'lucide-react';
 
 const EVENT_TYPES = [
-  { value: 'culte', label: 'Culte' },
+  { value: 'culte', label: 'Prodiges Expérience' },
   { value: 'ejp', label: 'Programme EJP' },
   { value: 'formation', label: 'Formation' },
   { value: 'reunion', label: 'Réunion' },

@@ -36,7 +36,7 @@ export default function Venir() {
   const whatsappUrl = config?.whatsapp_url || '';
 
   const icsUrl = `data:text/calendar;charset=utf8,${encodeURIComponent(
-    `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nURL:${window.location.href}\nDTSTART:${nextSunday.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\nDTEND:${new Date(nextSunday.getTime() + 7200000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z\nSUMMARY:Culte EJP Nantes\nLOCATION:${address}\nEND:VEVENT\nEND:VCALENDAR`
+    `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nURL:${window.location.href}\nDTSTART:${nextSunday.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\nSUMMARY:Prodiges Expérience · EJP Nantes\nLOCATION:${address}\nEND:VEVENT\nEND:VCALENDAR`
   )}`;
 
   return (
@@ -97,7 +97,7 @@ export default function Venir() {
               <div className="p-5 flex flex-wrap gap-2">
                 <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-[#101827] text-white text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#1a2740] transition-colors">
                   <Navigation className="w-3.5 h-3.5" /><PublicText value={" Itinéraire"} /></a>
-                <a href={icsUrl} download="culte-ejp-nantes.ics" className="flex items-center gap-1.5 bg-[#F5F0E8] text-[#101827] text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#EDE6D8] transition-colors">
+                <a href={icsUrl} download="prodiges-experience.ics" className="flex items-center gap-1.5 bg-[#F5F0E8] text-[#101827] text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#EDE6D8] transition-colors">
                   <Calendar className="w-3.5 h-3.5" /><PublicText value={" Ajouter au calendrier"} /></a>
               </div>
             </div>

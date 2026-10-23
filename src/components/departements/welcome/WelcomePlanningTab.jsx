@@ -60,7 +60,7 @@ export default function WelcomePlanningTab({ welcomeData, isResponsable, current
 
       {showForm && isResponsable && (
         <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
-          <input className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm" placeholder="Titre (ex: Culte EJP)" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
+          <input className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm" placeholder="Titre (ex: Prodiges Expérience)" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
           <div className="grid grid-cols-2 gap-3">
             <input type="date" className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
             <input className="w-full bg-white border border-border rounded-xl px-3 py-2 text-sm" placeholder="Présence (13:30)" value={form.call_time} onChange={e => setForm(f => ({ ...f, call_time: e.target.value }))} />

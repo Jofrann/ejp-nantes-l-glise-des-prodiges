@@ -1,3 +1,4 @@
+import {isPublicEvent} from '@/lib/calendarPolicy';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
@@ -8,7 +9,7 @@ export default function CalendarSection({ events = [] }) {
   const [filter, setFilter] = useState('all');
 
   const upcoming = events
-    .filter(e => e.is_active && new Date(e.event_date) >= new Date(new Date().setHours(0, 0, 0, 0)))
+    .filter(e => isPublicEvent(e) && new Date(e.event_date) >= new Date(new Date().setHours(0, 0, 0, 0)))
     .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
 
   const featured = upcoming.filter(e => e.is_featured);
