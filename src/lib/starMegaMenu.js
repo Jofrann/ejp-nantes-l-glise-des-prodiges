@@ -1,3 +1,4 @@
+import { PRIVATE_TABS } from './privateNavigation';
 import {
   Home, Calendar, CheckCircle, Sprout, GraduationCap,
   CalendarClock, BookOpen, Briefcase, Shield, Settings,
@@ -127,10 +128,6 @@ export const MEGA_MENU_RESTRICTED = [
   },
 ];
 
-// Mobile bottom nav: Bureau | Service | Formations | Agenda | Plus
-export const MOBILE_BOTTOM_NAV = [
-  { path: '/app', label: 'Bureau', icon: Home, end: true },
-  { path: '/app/service', label: 'Service', icon: Briefcase },
-  { path: '/app/formations', label: 'Formations', icon: GraduationCap },
-  { path: '/app/agenda', label: 'Agenda', icon: Calendar },
-];
+// Shared top-level destinations; all secondary routes remain available.
+const TAB_ICONS = { Home, Calendar, Briefcase, GraduationCap };
+export const MOBILE_BOTTOM_NAV = PRIVATE_TABS.map(tab => ({...tab, icon: TAB_ICONS[tab.icon]}));

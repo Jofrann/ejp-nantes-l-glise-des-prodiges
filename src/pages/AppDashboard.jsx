@@ -49,6 +49,7 @@ export default function AppDashboard() {
   const [memberships, setMemberships] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expandedBureau, setExpandedBureau] = useState(false);
   const [loadError, setLoadError] = useState('');
   const actionsRef = useRef(null);
 
@@ -103,7 +104,7 @@ export default function AppDashboard() {
   );
   const myServiceDepts = myActiveMemberships
     .map(m => departments.find(d => d.id === m.department_id))
-    .filter(d => d && d.is_active !== false && !isHiddenFromService(d.slug));
+    .filter(d => d && d.is_active !== false && d.slug !== 'coordination-fij' && !isHiddenFromService(d.slug));
 
   // Mes responsabilités FIJ (source : FIJ.pilot_user_id / copilot_user_id)
   const myPilotFijs = fijs.filter(f =>
@@ -207,7 +208,7 @@ export default function AppDashboard() {
   const showWidget = (key) => orderedVisible.includes(key);
 
   const scrollToActions = () => {
-    actionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    actionsRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.dataset.privateCalm ? 'auto' : 'smooth', block: 'start' });
   };
 
   if (loading) {
@@ -221,7 +222,6 @@ export default function AppDashboard() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <MyAssignments />
         {loadError && <p role="alert" className="private-load-error">{loadError}</p>}
             <BureauHero
               firstName={firstName}
@@ -230,10 +230,12 @@ export default function AppDashboard() {
               todoCount={actions.length}
               onScrollToActions={scrollToActions}
             />
-        <div className="private-dashboard-grid flex gap-6">
+        <button className="private-bureau-expand" aria-expanded={expandedBureau} aria-controls="private-dashboard-widgets" onClick={() => setExpandedBureau(!expandedBureau)}>{expandedBureau ? 'Revenir à l’essentiel' : 'Tout mon bureau'}<ChevronRight size={15}/></button>
+        <div id="private-dashboard-widgets" className={`private-dashboard-grid flex gap-6 ${expandedBureau ? "" : "private-dashboard-compact"}`}>
           {/* Zone principale */}
           <div className="maison-widgets flex-1 min-w-0 space-y-6">
             {showWidget('agenda') && <BureauNextEvent events={events} responses={responses} />}
+            <MyAssignments compact />
             {showWidget('agenda') && pref?.show_right_panel === false && <BureauAgendaCourt events={events} />}
 
             {showWidget('actions') && (
@@ -272,7 +274,7 @@ export default function AppDashboard() {
 
             {/* Mes formations */}
             {showWidget('formations') && (
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
+              <motion.div className="private-bureau-training" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="text-xs text-muted-foreground uppercase tracking-widest">Mes formations</h2>
                   <Link to="/app/formations" className="text-xs text-secondary flex items-center gap-1">
