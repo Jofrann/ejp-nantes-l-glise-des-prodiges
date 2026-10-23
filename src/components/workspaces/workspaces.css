@@ -1,8 +1,8 @@
 .ws {
-  --ws-ink: #203440;
-  --ws-muted: #657580;
-  --ws-accent: #426b88;
-  --ws-line: #e7ecee;
+  --ws-ink: hsl(var(--foreground));
+  --ws-muted: hsl(var(--muted-foreground));
+  --ws-accent: hsl(var(--secondary));
+  --ws-line: hsl(var(--border));
   color: var(--ws-ink);
   font-family: Manrope, "Segoe UI", sans-serif;
   min-width: 0;
@@ -51,7 +51,7 @@
 }
 .ws-button {
   border: 1px solid var(--ws-line);
-  background: white;
+  background: hsl(var(--card));
   border-radius: 9px;
   padding: 10px 14px;
   display: inline-flex;
@@ -65,7 +65,7 @@
 }
 .ws-primary {
   background: var(--ws-accent);
-  color: white;
+  color: hsl(var(--primary-foreground));
   border-color: var(--ws-accent);
 }
 .ws-link {
@@ -85,18 +85,18 @@
 }
 .ws button:hover,
 .ws a:hover {
-  color: #243e50;
+  color: hsl(var(--foreground));
 }
 .ws .ws-primary:hover {
-  color: white;
-  background: #324f64;
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary) / .9);
 }
 .ws button:focus-visible,
 .ws a:focus-visible,
 .ws input:focus-visible,
 .ws select:focus-visible,
 .ws summary:focus-visible {
-  outline: 3px solid #91b0c5;
+  outline: 3px solid hsl(var(--ring));
   outline-offset: 3px;
 }
 .ws-metrics {
@@ -139,7 +139,7 @@
   margin-bottom: 30px;
 }
 .ws-panel {
-  background: white;
+  background: hsl(var(--card));
   border: 1px solid var(--ws-line);
   padding: 26px;
   border-radius: 14px;
@@ -150,7 +150,7 @@
   margin-bottom: 0;
 }
 .ws-soft {
-  background: #f7f9fa;
+  background: hsl(var(--muted));
   border-color: transparent;
 }
 .ws-heading {
@@ -230,7 +230,7 @@
   height: 28px;
   display: grid;
   place-items: center;
-  background: white;
+  background: hsl(var(--card));
   color: var(--ws-muted);
 }
 .ws-tool-list {
@@ -299,7 +299,7 @@
 .ws select {
   min-width: 0;
   width: 100%;
-  background: white;
+  background: hsl(var(--card));
   border: 1px solid var(--ws-line);
   border-radius: 8px;
   padding: 10px 12px;
@@ -374,19 +374,19 @@
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: #f3f6fa;
+  background: hsl(var(--background));
   padding: 40px 5vw;
   overflow: auto;
 }
 .workspace-page .workspace-tools {
-  border-bottom: 1px solid #e7ecee;
+  border-bottom: 1px solid hsl(var(--border));
   padding: 10px 0;
   margin-bottom: 10px;
 }
 .workspace-tools summary {
   cursor: pointer;
   width: fit-content;
-  color: #657580;
+  color: hsl(var(--muted-foreground));
   font-size: 12px;
   padding: 7px 0;
 }
@@ -403,11 +403,11 @@
   padding: 12px 0;
   white-space: nowrap;
   border-bottom: 2px solid transparent;
-  color: #657580;
+  color: hsl(var(--muted-foreground));
 }
 .workspace-main-tabs button[aria-pressed="true"] {
-  color: #203440;
-  border-color: #426b88;
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--secondary));
 }
 .workspace-page .glass-card {
   box-shadow: none;
@@ -496,7 +496,7 @@
   border-left: 1px solid var(--ws-line);
   overflow: hidden;
   border-radius: 10px;
-  background: white;
+  background: hsl(var(--card));
 }
 .ws-calendar > div {
   border-right: 1px solid var(--ws-line);
@@ -517,15 +517,15 @@
   color: var(--ws-muted);
   padding: 12px;
   text-align: center;
-  background: #f7f9fa;
+  background: hsl(var(--muted));
 }
 .ws-calendar-day button,
 .ws-calendar-day p {
   display: block;
   font-size: 11px;
   text-align: left;
-  background: #edf2f5;
-  color: #203440;
+  background: var(--private-sage,hsl(var(--muted)));
+  color: hsl(var(--foreground));
   border-radius: 5px;
   padding: 7px;
   margin-top: 7px;
@@ -535,7 +535,7 @@
 }
 .ws-calendar-day small {
   display: block;
-  color: #657580;
+  color: hsl(var(--muted-foreground));
   font-size: 10px;
   margin-top: 4px;
 }
@@ -555,3 +555,7 @@
     padding: 8px 0;
   }
 }
+
+.private-vision[data-density=compact] .ws-panel{padding:16px;margin-bottom:16px}
+.private-vision[data-density=compact] .ws-metrics{gap:14px;margin-block:18px}
+.private-vision[data-density=compact] .ws-grid{gap:16px}
