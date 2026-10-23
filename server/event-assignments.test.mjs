@@ -27,3 +27,10 @@ test('lot 02: reject mismatched event dates, foreign planning and inactive or no
   await assert.rejects(validateEventWrite(entities,'SoundAssignment',null,{service_plan_id:'p',department_id:'b',user_id:'u'}),/membre actif/);
   await assert.rejects(validateEventWrite(entities,'SoundServicePlan',{department_id:'a'},{department_id:'b'}),/historique/);
 });
+
+test('future programming remains visible before linking without entering attendance projections',async()=>{
+ const data={Department:[{id:'a',name:'Musique'},{id:'b',name:'Fermé',is_active:false}],User:[{id:'u',full_name:'Nom résolu',password:'SECRET'}],MusicServicePlan:[{id:'p',department_id:'a',title:'Préparation',date:'2030-01-06',start_time:'14:30'},{id:'cancelled',department_id:'a',date:'2030-01-06',status:'cancelled'},{id:'closed',department_id:'b',date:'2030-01-06'}],MusicAssignment:[{id:'x',service_plan_id:'p',user_id:'u',position:'clavier'}]};
+ data.LogisticsPlan=[{id:'log',department_id:'a',title:'Installation',date:'2030-01-06',setup_time:'13:00',instructions:'SECRET_INSTRUCTIONS'}];data.LogisticsTask=[{id:'task',department_id:'a',logistics_plan_id:'log',title:'Installer',assigned_to:'u',status:'todo',description:'SECRET_TASK'}];data.CoordinationPlan=[{id:'coord',department_id:'a',title:'Coordination dimanche',date:'2030-01-06'}];
+ const before=JSON.stringify(data);const attendance=await projectAssignments(fixture(data));assert.equal(attendance.assignments.length,0);
+ const projection=await projectAssignments(fixture(data),{includeUnlinked:true,from:'2030-01-01',to:'2030-01-31'});assert.equal(projection.plans.length,3);assert.equal(projection.assignments.find(a=>a.source==='LogisticsTask').user_id,'u');assert.equal(projection.assignments.find(a=>a.source==='LogisticsTask').start_time,'13:00');assert.equal(projection.assignments[0].full_name,'Nom résolu');assert.equal(projection.assignments[0].event_id,null);assert.equal(projection.assignments[0].service_status,'not_recorded');assert.equal(JSON.stringify(projection).includes('SECRET'),false);assert.equal(JSON.stringify(data),before);
+});

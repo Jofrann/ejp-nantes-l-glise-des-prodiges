@@ -1,6 +1,7 @@
 import { entities, db } from './store.mjs';
 import { projectAssignments } from './event-assignments.mjs';
 import { activeMembership, canViewAllEJPData, departmentManager } from '../src/lib/ejpAccess.js';
+import { isActiveDepartment } from '../src/lib/departmentState.js';
 import { isAdmin } from '../src/lib/permissions.js';
 import { departmentAnalytics } from './department-analytics.mjs';
 import { readLeaderData } from './leader-data.mjs';
@@ -37,7 +38,7 @@ export async function executeEJPOperation(name,body,user) {
     return {success:true};
   }
   const memberships=(await entities.DepartmentMember.filter({user_id:user.id},null,100000)).filter(activeMembership);
-  const departments=await entities.Department.filter({is_active:true},null,100000);
+  const departments=(await entities.Department.list(null,100000)).filter(isActiveDepartment);
   const department=departments.find(d=>d.id===body.department_id || d.slug===body.department_slug);
   const global=canViewAllEJPData(user);
   const coord=departments.find(d=>d.slug==='coordination');
@@ -88,14 +89,17 @@ export async function executeEJPOperation(name,body,user) {
     return {success:true};
   }
   if(name==='getProgramAssignments') {
-    if(!global && !coordinates && !(department && departmentManager(user,department.id,memberships)))fail(403,'Lecture réservée au Référent de ce département ou à la Coordination');
+    const leader=departments.find(d=>d.slug==='leaders');
+    const leads=leader && memberships.some(m=>m.department_id===leader.id);
+    if((body.department_id || body.department_slug) && !department)fail(404,'Département indisponible');
+    if(!global && !coordinates && !leads && !(department && departmentManager(user,department.id,memberships)))fail(403,'Lecture réservée au Référent de ce département ou à la Coordination');
     // Coordination receives only the whitelisted operational projection, no confidential sources.
-    const data=await projectAssignments(entities,{eventId:body.event_id,departmentId:department?.id,from:body.from,to:body.to});
-    return {...data,can_link_plans:Boolean(department && departmentManager(user,department.id,memberships)),events:(await entities.Event.filter({is_active:true},'event_date',100000)).filter(e=>(!body.event_id || e.id===body.event_id) && (!body.from || e.event_date>=body.from) && (!body.to || e.event_date<=body.to)).map(e=>({id:e.id,title:e.title,event_date:e.event_date,event_time:e.event_time,end_time:e.end_time}))};
+    const data=await projectAssignments(entities,{eventId:body.event_id,departmentId:department?.id,from:body.from,to:body.to,includeUnlinked:true});
+    return {...data,departments:departments.map(d=>({id:d.id,name:d.name,slug:d.slug})),can_link_plans:Boolean(department && departmentManager(user,department.id,memberships)),events:(await entities.Event.filter({is_active:true},'event_date',100000)).filter(e=>(!body.event_id || e.id===body.event_id) && (!body.from || e.event_date>=body.from) && (!body.to || e.event_date<=body.to)).map(e=>({id:e.id,title:e.title,event_date:e.event_date,event_time:e.event_time,end_time:e.end_time}))};
   }
   if(name==='linkDepartmentEvent') {
     if(!department || !(departmentManager(user,department.id,memberships) || isAdmin(user)))fail(403,'Seul le responsable de ce département peut relier son planning');
-    const sources=['MusicServicePlan','SoundServicePlan','WelcomeServicePlan','ModerationServicePlan','PrayerSchedule','CoordinationPlan'];
+    const sources=['MusicServicePlan','SoundServicePlan','WelcomeServicePlan','ModerationServicePlan','PrayerSchedule','CoordinationPlan','LogisticsPlan'];
     if(!sources.includes(body.source))fail(400,'Source de planning invalide');
     const old=await entities[body.source].get(body.plan_id);
     if(old.department_id!==department.id)fail(403,'Planning hors département');

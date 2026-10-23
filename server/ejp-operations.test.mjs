@@ -102,6 +102,20 @@ test('lots 02–08: eight account profiles, read/write separation, sensitive gra
   await call('auth/login',{email:coord.internal_identifier,password:'isolated-user-password-123'});
   assert.equal((await entity('FIJ','list')).length,2);
   await op('getDepartmentAnalytics',{department_id:a.id},403);await op('getLeaderData',{},403);
+  cookie=adminCookie;
+  const future=await entity('MusicServicePlan','create',{department_id:a.id,title:'PROGRAMMATION_FUTURE_NON_RELIEE',date:'2030-01-06',start_time:'14:30'});
+  await entity('MusicAssignment','create',{department_id:a.id,service_plan_id:future.id,user_id:worker.user_id,status:'assigned',position:'clavier'});
+  await call('auth/login',{email:coord.internal_identifier,password:'isolated-user-password-123'});
+  const upcoming=await op('getProgramAssignments',{from:'2030-01-01',to:'2030-01-31'});
+  assert.equal(upcoming.plans.length,1);assert.equal(upcoming.assignments[0].event_id,null);assert.equal(upcoming.assignments[0].full_name,'Membre Test');assert.equal(upcoming.can_link_plans,false);
+  assert.equal(JSON.stringify(upcoming).includes('PRIVATE_NOTE'),false);
+  await call('auth/login',{email:simple.internal_identifier,password:'isolated-user-password-123'});
+  assert.equal((await op('getProgramAssignments',{from:'2030-01-01',to:'2030-01-31'})).plans[0].plan_id,future.id);
+  await op('getDepartmentAnalytics',{department_id:a.id},403);await op('getLeaderData',{},403);
+  await op('linkDepartmentEvent',{department_id:a.id,source:'MusicServicePlan',plan_id:future.id,event_id:event.id},403);
+  await op('getProgramAssignments',{department_id:'nonexistent'},404);
+  cookie=adminCookie;const leaderMembership=(await entity('DepartmentMember','filter',{department_id:leaders.id,user_id:simple.user_id}))[0];await entity('DepartmentMember','update',leaderMembership.id,{status:'inactive'});
+  await call('auth/login',{email:simple.internal_identifier,password:'isolated-user-password-123'});await op('getProgramAssignments',{},403);
   cookie=adminCookie;await op('adminManageUser',{action:'suspend',user_id:ref.user_id});cookie=refCookie;
   await op('getDepartmentAnalytics',{department_id:a.id},401);
  }finally{if(child.exitCode===null){const done=once(child,'exit');child.kill();await done;}await rm(dir,{recursive:true,force:true});}
