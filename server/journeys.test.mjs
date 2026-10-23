@@ -1,3 +1,4 @@
+import {freePort} from './test-port.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -8,7 +9,7 @@ import {once} from 'node:events';
 
 test('department lifecycle, assignment, personal records, role isolation and revocation', async () => {
  const dir=await mkdtemp(join(tmpdir(),'ejp-journeys-'));
- const port=52000+Math.floor(Math.random()*3000);
+ const port=await freePort();
  const child=spawn(process.execPath,['server/index.mjs'],{env:{...process.env,EJP_DATA_DIR:dir,EJP_API_PORT:String(port)},stdio:['ignore','pipe','pipe']});
  let cookie='';
  const call=async(path,data,status=200)=>{const r=await fetch(`http://127.0.0.1:${port}/api/local/${path}`,{headers:{'Content-Type':'application/json',Cookie:cookie},...(data===undefined?{}:{method:'POST',body:JSON.stringify(data)})});const value=await r.json();assert.equal(r.status,status,JSON.stringify(value));if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];return value;};

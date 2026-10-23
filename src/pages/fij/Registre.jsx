@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -157,7 +158,7 @@ function FijFormModal({ fij, onClose, onSaved }) {
   const inputCls = "w-full h-10 px-3 rounded-xl border border-border bg-white text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary";
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center" onClick={onClose}>
       <motion.div
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -231,6 +232,6 @@ function FijFormModal({ fij, onClose, onSaved }) {
           </button>
         </div>
       </motion.div>
-    </div>
+    </ViewportOverlay>
   );
 }

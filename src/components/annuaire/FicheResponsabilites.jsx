@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Plus, X, Loader2, Heart } from 'lucide-react';
@@ -126,7 +127,7 @@ function AssignFijModal({ person, availableFijs, onClose, onAssigned }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-foreground font-semibold text-sm">Assigner à une FIJ</h3>
@@ -162,6 +163,6 @@ function AssignFijModal({ person, availableFijs, onClose, onAssigned }) {
           </form>
         )}
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

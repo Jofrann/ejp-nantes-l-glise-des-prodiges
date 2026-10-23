@@ -550,3 +550,30 @@ body[data-private-calm=true] *, .private-vision[data-calm=true] *{animation:none
 .private-vision .serviteur-main{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 .private-vision .glass-header>div{padding-left:max(21px,env(safe-area-inset-left));padding-right:max(21px,env(safe-area-inset-right))}
 @media(max-width:1279px){.private-vision .glass-bottom{left:max(18px,env(safe-area-inset-left));right:max(18px,env(safe-area-inset-right))}}
+
+/* Viewport-safe dialogs and action rows: desktop, touch screens and virtual keyboards. */
+.app-safe-dialog,body[data-private-theme] [role="dialog"]{max-height:calc(var(--private-viewport-height,100dvh) - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;max-width:calc(100vw - 24px)!important;overflow-y:auto;overscroll-behavior:contain;scroll-padding-block:24px;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.app-safe-dialog{width:min(640px,calc(100vw - 24px));left:50%!important;top:calc(var(--private-viewport-top,0px) + var(--private-viewport-height,100dvh)/2)!important;bottom:auto!important;transform:translate(-50%,-50%)!important;background:hsl(var(--card))!important}
+body[data-private-theme] [role="dialog"][class*="translate-y-"]:not(.app-safe-dialog){top:calc(var(--private-viewport-top,0px) + var(--private-viewport-height,100dvh)/2)!important}
+.app-safe-sheet{position:fixed;z-index:90!important;left:50%!important;right:auto!important;bottom:max(12px,env(safe-area-inset-bottom))!important;width:min(640px,calc(100vw - 24px));max-height:calc(var(--private-viewport-height,100dvh) - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;overflow-y:auto;overscroll-behavior:contain;transform:translateX(-50%)!important;background:hsl(var(--card))!important;padding-bottom:max(24px,env(safe-area-inset-bottom))!important;scroll-padding-block:24px}
+.app-fixed-actions{bottom:calc(var(--app-bottom-height,0px) + 28px + env(safe-area-inset-bottom))!important;z-index:45!important;max-height:40dvh;overflow-y:auto}
+.app-has-fixed-actions{padding-bottom:calc(var(--app-bottom-height,0px) + 160px)!important}
+.app-dialog-actions{padding-bottom:env(safe-area-inset-bottom)}
+.attendance-page{padding-bottom:calc(var(--app-bottom-height,0px) + 150px)!important}.attendance-period{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:20px}.attendance-period .ws-field{margin:0;min-width:0}.attendance-day{margin:24px 0}.attendance-day>h3{text-transform:capitalize;font-size:13px;font-weight:650;color:var(--ws-muted);padding:12px 0;border-bottom:1px solid var(--ws-line)}.attendance-row{display:flex;gap:20px;align-items:center;padding:18px 0;border-bottom:1px solid var(--ws-line)}.attendance-row>div{flex:1;min-width:0}.attendance-row h4{font-size:14px;font-weight:650;overflow-wrap:anywhere}.attendance-row p{font-size:12px;color:var(--ws-muted);margin-top:5px}.attendance-row .ws-field{max-width:250px;margin:0;font-size:11px}.attendance-save{position:sticky;bottom:calc(var(--app-bottom-height,0px) + 28px);z-index:40;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--ws-line);background:var(--ws-card,white);padding:16px;border-radius:14px;box-shadow:0 8px 30px #172b4b15;font-size:12px}
+@media(max-width:600px){.attendance-row{flex-wrap:wrap;gap:12px}.attendance-row>div{flex-basis:100%}.attendance-row .ws-field{flex:1;max-width:none}.app-safe-dialog :is(input,select,textarea),.app-safe-sheet :is(input,select,textarea){font-size:16px!important;max-width:100%}.attendance-period label{flex:1}.app-safe-sheet{border-radius:18px!important}}
+@media(min-width:1280px){.app-fixed-actions{left:242px!important;bottom:0!important}}
+
+.app-viewport-overlay{z-index:85!important;top:var(--private-viewport-top,0px)!important;bottom:auto!important;height:var(--private-viewport-height,100dvh);padding:12px 12px max(12px,env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain}.app-viewport-overlay>div{max-height:calc(var(--private-viewport-height,100dvh) - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;max-width:calc(100vw - 24px)!important;overflow-y:auto;overscroll-behavior:contain}.app-viewport-overlay :is(input,select,textarea){max-width:100%}.app-viewport-overlay .sticky.bottom-0{padding-bottom:max(16px,env(safe-area-inset-bottom))}
+
+.app-floating-action{bottom:calc(var(--app-bottom-height,0px) + 38px)!important}.app-assistant-panel{width:min(384px,calc(100vw - 24px))!important;right:12px!important;bottom:calc(var(--app-bottom-height,0px) + 106px)!important;height:min(500px,calc(var(--private-viewport-height,100dvh) - var(--app-bottom-height,0px) - 200px))!important}.app-notification-panel{max-height:min(480px,calc(var(--private-viewport-height,100dvh) - var(--app-bottom-height,0px) - 130px))!important}
+
+.app-fullscreen-overlay{top:var(--private-viewport-top,0px)!important;bottom:auto!important;height:var(--private-viewport-height,100dvh)!important;transform:none!important;padding-bottom:env(safe-area-inset-bottom)}
+
+body[data-private-theme]{--private-keyboard-inset:max(0px,calc(100dvh - var(--private-viewport-height,100dvh) - var(--private-viewport-top,0px)))}
+body[data-private-keyboard=true] .private-vision .glass-bottom,body[data-private-keyboard=true] .app-floating-action{display:none!important}
+.app-safe-sheet{bottom:calc(var(--private-keyboard-inset,0px) + max(12px,env(safe-area-inset-bottom)))!important}
+.app-fixed-actions{bottom:calc(var(--private-keyboard-inset,0px) + var(--app-bottom-height,0px) + 28px + env(safe-area-inset-bottom))!important}
+.attendance-save{bottom:calc(var(--private-keyboard-inset,0px) + var(--app-bottom-height,0px) + 28px)}
+.app-assistant-panel{bottom:calc(var(--private-keyboard-inset,0px) + var(--app-bottom-height,0px) + 106px)!important}
+.app-event-detail{top:calc(var(--private-viewport-top,0px) + 12px)!important;bottom:auto!important;height:calc(var(--private-viewport-height,100dvh) - 24px)}
+@media(min-width:1280px){.app-fixed-actions{bottom:var(--private-keyboard-inset,0px)!important}}

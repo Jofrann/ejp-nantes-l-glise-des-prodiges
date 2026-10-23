@@ -106,9 +106,21 @@ export default function Agenda() {
     if (typeof window !== "undefined" && window.innerWidth < 1024) return "day";
     return "week";
   });
-  const [refDate, setRefDate] = useState(new Date());
+  const [refDate, setRefDate] = useState(() => {
+    const d = new URLSearchParams(window.location.search).get("date");
+    return /^\d{4}-\d{2}-\d{2}$/.test(d || "") &&
+      !Number.isNaN(Date.parse(d + "T12:00:00"))
+      ? new Date(d + "T12:00:00")
+      : new Date();
+  });
   const [filter, setFilter] = useState("all");
-  const [miniCalMonth, setMiniCalMonth] = useState(new Date());
+  const [miniCalMonth, setMiniCalMonth] = useState(() => {
+    const d = new URLSearchParams(window.location.search).get("date");
+    return /^\d{4}-\d{2}-\d{2}$/.test(d || "") &&
+      !Number.isNaN(Date.parse(d + "T12:00:00"))
+      ? new Date(d + "T12:00:00")
+      : new Date();
+  });
   const [blockForm, setBlockForm] = useState({
     open: false,
     date: null,
@@ -199,6 +211,7 @@ export default function Agenda() {
           (i.event_type === "culte" ||
             i.event_type === "ejp" ||
             i.event_type === "fij" ||
+            i.event_type === "service" ||
             !i.event_type),
       );
     if (filter === "formation")
@@ -605,7 +618,7 @@ export default function Agenda() {
             existing: null,
           })
         }
-        className="fixed bottom-20 right-4 xl:hidden w-12 h-12 rounded-full bg-secondary text-white shadow-lg flex items-center justify-center z-40 active:scale-95 transition-transform"
+        className="app-floating-action fixed bottom-20 right-4 xl:hidden w-12 h-12 rounded-full bg-secondary text-white shadow-lg flex items-center justify-center z-40 active:scale-95 transition-transform"
       >
         <Plus className="w-5 h-5" />
       </button>

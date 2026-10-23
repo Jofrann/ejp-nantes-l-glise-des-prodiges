@@ -122,7 +122,7 @@ export default function FijCrForm() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
+      <div className="max-w-2xl mx-auto app-has-fixed-actions px-4 py-6 pb-32">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <div className="flex items-center gap-2 mb-1">
             <FileText className="w-4 h-4 text-secondary" />
@@ -207,7 +207,7 @@ export default function FijCrForm() {
       </div>
 
       {/* Actions fixes en bas */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-card/90 backdrop-blur-md border-t border-border">
+      <div className="app-fixed-actions fixed bottom-0 left-0 right-0 z-30 bg-card/90 backdrop-blur-md border-t border-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex gap-2">
           <button
             onClick={() => save('draft')}

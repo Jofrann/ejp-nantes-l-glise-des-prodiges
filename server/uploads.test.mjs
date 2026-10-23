@@ -1,3 +1,4 @@
+import {freePort} from './test-port.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -8,7 +9,7 @@ import {once} from 'node:events';
 
 test('uploads: public media, private access, resource sharing, range, persistence, first login and shop subscriptions',async()=>{
  const dir=await mkdtemp(join(tmpdir(),'ejp-files-'));
- const port=51000+Math.floor(Math.random()*3000), base=`http://127.0.0.1:${port}`;
+ const port=await freePort(), base=`http://127.0.0.1:${port}`;
  let child,cookie='';
  const start=async()=>{child=spawn(process.execPath,['server/web.mjs'],{env:{...process.env,EJP_DATA_DIR:dir,PORT:String(port),EJP_HOST:'127.0.0.1',OPENAI_API_KEY:'',RESEND_API_KEY:'',GOOGLE_REFRESH_TOKEN:''},stdio:['ignore','pipe','pipe']});await Promise.race([once(child.stdout,'data'),once(child,'exit').then(()=>{throw Error('API startup failed');})]);};
  const stop=async()=>{const done=once(child,'exit');child.kill();await done;};

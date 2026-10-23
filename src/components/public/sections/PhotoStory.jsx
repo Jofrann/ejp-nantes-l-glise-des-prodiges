@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -10,7 +11,7 @@ export function PhotoCredit({ photo, custom }) {
 }
 export function EditorialPhoto({ src, photo, className = '' }) {
   return <figure className={`ejp-photo-frame ejp-editorial-photo ${className}`}>
-    <img className="ejp-photo-depth" src={src || photo.url} alt={src ? 'La vie de notre communauté' : photo.alt} loading="lazy" decoding="async" />
+    <PublicImage className="ejp-photo-depth" src={src || photo.url} alt={src ? 'La vie de notre communauté' : photo.alt} loading="lazy" decoding="async" />
     <PhotoCredit photo={photo} custom={Boolean(src)} />
   </figure>;
 }

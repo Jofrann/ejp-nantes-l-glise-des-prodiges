@@ -1,3 +1,4 @@
+import OverlayPortal from '@/components/ui/OverlayPortal';
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -161,7 +162,7 @@ export default function StarOSLayout({ children, user }) {
       </nav>
 
       {/* Panel "Plus" */}
-      <AnimatePresence>
+      <OverlayPortal><AnimatePresence>
         {moreOpen && (
           <>
             <motion.div
@@ -176,7 +177,7 @@ export default function StarOSLayout({ children, user }) {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-[70] bg-card rounded-t-3xl border-t border-border p-6 pb-8 max-h-[80vh] overflow-y-auto"
+              className="app-safe-sheet fixed bottom-0 left-0 right-0 z-[90] bg-card rounded-t-3xl border-t border-border p-6 pb-8 max-h-[80vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-sm font-semibold text-foreground">Plus d'options</h3>
@@ -224,7 +225,7 @@ export default function StarOSLayout({ children, user }) {
             </motion.div>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence></OverlayPortal>
     </div>
   );
 }

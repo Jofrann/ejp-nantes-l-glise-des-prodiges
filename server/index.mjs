@@ -1,3 +1,6 @@
+import {attendanceOperations,executeAttendance} from './attendance.mjs';
+import {programmingOperations,executeProgramming} from './programming.mjs';
+import {syncServiceNotifications} from './service-notifications.mjs';
 import {calendarOperations,executeCalendarOperation,readCalendarEvents,syncStarsNotifications} from './calendar.mjs';
 import {workspaceOperationNames,executeWorkspaceOperation} from './workspaces.mjs';
 import { integrationStatus, invokeAI, sendEmail, createMeet } from './integrations.mjs';
@@ -345,6 +348,8 @@ const server = createServer(async (req, res) => {
     ) {
       requireUser();
       const name = url.pathname.split("/").pop();
+      if (attendanceOperations.has(name)) { res.end(JSON.stringify(await executeAttendance(name,body,user))); return; }
+      if (programmingOperations.has(name)) { res.end(JSON.stringify(await executeProgramming(name,body,user))); return; }
       if (calendarOperations.has(name)) { res.end(JSON.stringify(await executeCalendarOperation(name,body,user))); return; }
       if ((operationNames.has(name) || workspaceOperationNames.has(name))) { res.end(JSON.stringify(await (workspaceOperationNames.has(name) ? executeWorkspaceOperation(name,body,user) : executeEJPOperation(name,body,user)))); return; }
       if (name === "createMeetLink") { res.end(JSON.stringify(await createMeet(body,user))); return; }
@@ -370,6 +375,9 @@ const server = createServer(async (req, res) => {
       result = await response.json();
     } else fail(404, "Route inconnue");
     res.end(JSON.stringify(result));
+    const source=url.pathname.split('/').pop();
+    const serviceEntities=new Set(['ServiceProgram','ServiceAssignment','MusicServicePlan','MusicAssignment','SoundServicePlan','SoundAssignment','WelcomeServicePlan','WelcomeAssignment','PrayerSchedule','PrayerAssignment','ModerationServicePlan','LogisticsPlan','LogisticsTask','DepartmentMember']);
+    if(req.method==='POST' && res.statusCode<400 && ((url.pathname.includes('/entities/') && serviceEntities.has(source) && ['create','update','delete'].includes(body.method)) || /^manage(Music|Sound|Welcome|Prayer|Moderation|Logistics)Item$/.test(source)))setImmediate(()=>syncServiceNotifications().catch(error=>console.error('Notification de service à réessayer',error.message)));
   } catch (e) {
     if (res.headersSent) { res.destroy(); return; }
     res.statusCode = e.status || 500;
@@ -386,3 +394,5 @@ server.listen(Number(process.env.EJP_API_PORT || 3001), process.env.EJP_HOST || 
 );
 
 const calendarNotificationsTimer=setInterval(()=>syncStarsNotifications().catch(error=>console.error('Calendrier : notifications à réessayer',error.message)),60000);calendarNotificationsTimer.unref();
+
+const serviceNotificationsTimer=setInterval(()=>syncServiceNotifications().catch(error=>console.error("Programmations : notification à réessayer",error.message)),60000);serviceNotificationsTimer.unref();

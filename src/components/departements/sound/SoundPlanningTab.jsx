@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { Calendar, Clock, Plus, ChevronDown, ChevronUp, X, Check, AlertCircle, UserPlus, Trash2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -235,7 +236,7 @@ function AssignModal({ plan, members, existingAssignments, colors, slug, onClose
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
       <div className="bg-card w-full max-w-md rounded-t-2xl sm:rounded-2xl p-5 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold">Affecter — {plan.title}</p>
@@ -271,6 +272,6 @@ function AssignModal({ plan, members, existingAssignments, colors, slug, onClose
           </div>
         )}
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

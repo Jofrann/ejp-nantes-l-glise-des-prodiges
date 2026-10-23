@@ -1,0 +1,3 @@
+import {entities,db} from './store.mjs';
+import catalog from '../src/lib/publicCopyCatalog.json' with {type:'json'};
+try{const config=(await entities.ChurchConfig.list())[0];let changed=0;if(config){const copy={...config.public_copy};for(const entry of catalog.entries){if(/^(Réunion de jeunesse|Réunion de la jeunesse)$/i.test(entry.source||'')&&/^(Réunion de jeunesse|Réunion de la jeunesse)$/i.test(copy[entry.id]||'')){copy[entry.id]='Prodiges Expérience';changed++;}}if(changed)await entities.ChurchConfig.update(config.id,{public_copy:copy});}console.log(JSON.stringify({changed}));}finally{db.close();}

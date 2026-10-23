@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { UserPlus, Search, Ban, CheckCircle2, Archive, RefreshCw, Users, Loader2, BadgeCheck } from 'lucide-react';
@@ -391,7 +392,7 @@ function EditUserModal({ user, onClose, onSaved }) {
 
 function ModalShell({ title, onClose, children }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-foreground font-semibold text-sm">{title}</h3>
@@ -399,6 +400,6 @@ function ModalShell({ title, onClose, children }) {
         </div>
         {children}
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

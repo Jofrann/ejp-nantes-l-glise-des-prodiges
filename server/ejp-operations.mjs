@@ -47,7 +47,7 @@ export async function executeEJPOperation(name,body,user) {
     if(body.user_id && body.user_id!==user.id)fail(403,'Les affectations personnelles ne concernent que ton compte');
     const ids=[...new Set(memberships.filter(m=>departments.some(d=>d.id===m.department_id)).map(m=>m.department_id))];
     const from=body.from || new Intl.DateTimeFormat('fr-CA',{timeZone:'Europe/Paris'}).format(new Date());
-    const projections=await Promise.all(ids.map(departmentId=>projectAssignments(entities,{departmentId,from,to:body.to})));
+    const projections=await Promise.all(ids.map(departmentId=>projectAssignments(entities,{departmentId,from,to:body.to,includeUnlinked:true})));
     return {assignments:projections.flatMap(p=>p.assignments).filter(a=>a.user_id===user.id && !['replaced','cancelled'].includes(a.status)).sort((a,b)=>a.date.localeCompare(b.date))};
   }
   if(name==='getReferentTeamData') {
@@ -72,7 +72,7 @@ export async function executeEJPOperation(name,body,user) {
   if(name==='recordDepartmentService') {
     if(!department || !departmentManager(user,department.id,memberships))fail(403,'Validation réservée au Référent de ce département');
     if(!['not_recorded','completed','not_completed'].includes(body.status))fail(400,'Statut de service invalide');
-    const parents={MusicAssignment:['MusicServicePlan','service_plan_id'],SoundAssignment:['SoundServicePlan','service_plan_id'],WelcomeAssignment:['WelcomeServicePlan','service_plan_id'],PrayerAssignment:['PrayerSchedule','schedule_id']};
+    const parents={ServiceAssignment:['ServiceProgram','service_plan_id'],MusicAssignment:['MusicServicePlan','service_plan_id'],SoundAssignment:['SoundServicePlan','service_plan_id'],WelcomeAssignment:['WelcomeServicePlan','service_plan_id'],PrayerAssignment:['PrayerSchedule','schedule_id']};
     const mapping=parents[body.source];
     if(!mapping && body.source!=='ModerationServicePlan')fail(400,'Source d’affectation invalide');
     const old=await entities[body.source].get(body.assignment_id);
@@ -99,7 +99,7 @@ export async function executeEJPOperation(name,body,user) {
   }
   if(name==='linkDepartmentEvent') {
     if(!department || !(departmentManager(user,department.id,memberships) || isAdmin(user)))fail(403,'Seul le responsable de ce département peut relier son planning');
-    const sources=['MusicServicePlan','SoundServicePlan','WelcomeServicePlan','ModerationServicePlan','PrayerSchedule','CoordinationPlan','LogisticsPlan'];
+    const sources=['ServiceProgram','MusicServicePlan','SoundServicePlan','WelcomeServicePlan','ModerationServicePlan','PrayerSchedule','CoordinationPlan','LogisticsPlan'];
     if(!sources.includes(body.source))fail(400,'Source de planning invalide');
     const old=await entities[body.source].get(body.plan_id);
     if(old.department_id!==department.id)fail(403,'Planning hors département');

@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { Plus, ChevronDown, ChevronUp, Trash2, Calendar, MapPin, Clock, Users, FileText, CheckCircle2, ArrowRight, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -278,7 +279,7 @@ function ReportModal({ meeting, members, slug, colors, onClose, onSaved }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
       <div className="bg-card w-full max-w-lg rounded-t-2xl sm:rounded-2xl p-5 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold">Compte rendu — {meeting.title}</p>
@@ -322,6 +323,6 @@ function ReportModal({ meeting, members, slug, colors, onClose, onSaved }) {
           )}
         </div>
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -40,7 +41,7 @@ export default function Ministeres({ ministries }) {
                 >
                   {m.image_url && (
                     <div className="h-32 overflow-hidden bg-[#F5F0E8]">
-                      <img src={m.image_url} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <PublicImage src={m.image_url} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   )}
                   <div className="p-6">

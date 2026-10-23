@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import RevealOnScroll from '../RevealOnScroll';
@@ -5,7 +6,7 @@ import { AUTHORITY_PHOTOS as PORTRAITS } from '@/lib/publicMedia';
 function Portrait({ src, name, initials, className = '' }) {
   const [failed, setFailed] = React.useState(false);
   React.useEffect(() => setFailed(false), [src]);
-  return <div className={`ejp-authority-portrait ${className}`}>{src && !failed ? <img src={src} alt={name} loading="lazy" onError={() => setFailed(true)} /> : <span aria-hidden="true"><PublicText value={initials} /></span>}</div>;
+  return <div className={`ejp-authority-portrait ${className}`}>{src && !failed ? <PublicImage src={src} alt={name} loading="lazy" onError={() => setFailed(true)} /> : <span aria-hidden="true"><PublicText value={initials} /></span>}</div>;
 }
 export default function Authorities({ config, leaders = [] }) {
   const local = leaders.find(person => person.is_main_shepherd);

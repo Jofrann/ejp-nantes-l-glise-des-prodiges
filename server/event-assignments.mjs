@@ -1,6 +1,7 @@
 import { isActiveDepartment } from '../src/lib/departmentState.js';
 // Read projection over existing sources; never persist a second copy.
 export const ASSIGNMENT_SOURCES = [
+  { plan: 'ServiceProgram', assignment: 'ServiceAssignment', parent: 'service_plan_id' },
   { plan: 'MusicServicePlan', assignment: 'MusicAssignment', parent: 'service_plan_id' },
   { plan: 'SoundServicePlan', assignment: 'SoundAssignment', parent: 'service_plan_id' },
   { plan: 'WelcomeServicePlan', assignment: 'WelcomeAssignment', parent: 'service_plan_id' },

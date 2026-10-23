@@ -1,3 +1,4 @@
+import {freePort} from './test-port.mjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
@@ -7,7 +8,7 @@ import { join } from "node:path";
 import { once } from "node:events";
 test("independent API: authentication, persistence, CRUD, business functions and access control", async () => {
   const dir = await mkdtemp(join(tmpdir(), "ejp-test-"));
-  const port = 31000 + Math.floor(Math.random() * 10000);
+  const port = await freePort();
   let child,
     cookie = "";
   const start = async () => {

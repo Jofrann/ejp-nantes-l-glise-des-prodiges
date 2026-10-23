@@ -1,3 +1,4 @@
+import OverlayPortal from '@/components/ui/OverlayPortal';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, Check, Flame, Repeat } from 'lucide-react';
@@ -99,13 +100,13 @@ export default function HabitudesTab() {
         </div>
       )}
 
-      <AnimatePresence>
+      <OverlayPortal><AnimatePresence>
         {showForm && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowForm(false)}
               className="fixed inset-0 z-[60] bg-foreground/20 backdrop-blur-sm" />
             <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-[70] bg-card rounded-t-3xl border-t border-border p-6 pb-8">
+              className="app-safe-sheet fixed bottom-0 left-0 right-0 z-[90] bg-card rounded-t-3xl border-t border-border p-6 pb-8">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-sm font-semibold text-foreground">Nouvelle habitude</h3>
                 <button onClick={() => setShowForm(false)} className="text-muted-foreground p-1"><X className="w-5 h-5" /></button>
@@ -140,7 +141,7 @@ export default function HabitudesTab() {
             </motion.div>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence></OverlayPortal>
     </div>
   );
 }

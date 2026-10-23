@@ -1,3 +1,4 @@
+import {freePort} from './test-port.mjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
@@ -8,7 +9,7 @@ import { join } from "node:path";
 
 test("FIJ dashboard API preserves member notes and refuses cross-FIJ access", async () => {
   const dir = await mkdtemp(join(tmpdir(), "ejp-fij-dashboard-"));
-  const port = 59000 + Math.floor(Math.random() * 700);
+  const port = await freePort();
   const child = spawn(process.execPath, ["server/index.mjs"], {
     env: { ...process.env, EJP_DATA_DIR: dir, EJP_API_PORT: String(port) },
     stdio: ["ignore", "pipe", "pipe"],

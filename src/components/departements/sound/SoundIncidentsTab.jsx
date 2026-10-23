@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { AlertTriangle, Plus, X, Edit2, Package, User } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -131,7 +132,7 @@ function IncidentForm({ editing, isResponsable, equipment, plans, colors, slug, 
   const inputCls = "w-full bg-white border border-border rounded-xl px-3 py-2 text-sm";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
       <div className="bg-card w-full max-w-md rounded-t-2xl sm:rounded-2xl p-5 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold">{editing ? 'Modifier' : 'Signaler'} un incident</p>
@@ -164,7 +165,7 @@ function IncidentForm({ editing, isResponsable, equipment, plans, colors, slug, 
           )}
         </div>
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }
 

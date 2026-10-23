@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X, UserPlus, Search } from 'lucide-react';
@@ -53,7 +54,7 @@ export default function AjouterMembreModal({ departmentId, existingUserIds = [],
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-card border border-border rounded-2xl w-full max-w-md shadow-xl" onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
@@ -137,6 +138,6 @@ export default function AjouterMembreModal({ departmentId, existingUserIds = [],
           </div>
         </form>
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

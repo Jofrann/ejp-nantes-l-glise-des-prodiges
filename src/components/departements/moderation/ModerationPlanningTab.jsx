@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { Mic, Clock, Plus, ChevronDown, ChevronUp, X, Trash2, Users, UserCheck } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -160,7 +161,7 @@ function AssignModeratorModal({ plan, role, members, colors, slug, onClose, onAs
     onAssigned(sel, member?.full_name || '');
   };
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
       <div className="bg-card w-full max-w-md rounded-t-2xl sm:rounded-2xl p-5" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold">{role === 'moderator' ? 'Modérateur' : 'Co-modérateur'} — {plan.title}</p>
@@ -172,6 +173,6 @@ function AssignModeratorModal({ plan, role, members, colors, slug, onClose, onAs
         </select>
         <button onClick={save} disabled={!sel} className={`w-full ${colors.bg} ${colors.text} border ${colors.border} py-2.5 rounded-xl text-sm font-medium disabled:opacity-50`}>Assigner</button>
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

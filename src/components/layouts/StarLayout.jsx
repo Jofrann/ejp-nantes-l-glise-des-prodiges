@@ -37,9 +37,9 @@ export default function StarLayout({ children, user }) {
     return () => { delete document.body.dataset.privateTheme; delete document.body.dataset.privateCalm; };
   }, [theme, calm]);
   useEffect(() => {
-    const measure = () => document.body.style.setProperty('--private-viewport-height', `${window.visualViewport?.height || window.innerHeight}px`);
-    measure(); window.visualViewport?.addEventListener('resize', measure);
-    return () => { window.visualViewport?.removeEventListener('resize', measure); document.body.style.removeProperty('--private-viewport-height'); };
+    const measure = () => {document.body.style.setProperty('--private-viewport-height', `${window.visualViewport?.height || window.innerHeight}px`);document.body.style.setProperty('--private-viewport-top', `${window.visualViewport?.offsetTop || 0}px`);const keyboard=window.innerHeight-(window.visualViewport?.height||window.innerHeight)>120 && document.activeElement?.matches('input,textarea,select,[contenteditable=true]');if(keyboard)document.body.dataset.privateKeyboard='true';else delete document.body.dataset.privateKeyboard;};
+    measure(); window.visualViewport?.addEventListener('resize', measure);window.visualViewport?.addEventListener('scroll', measure);
+    return () => { window.visualViewport?.removeEventListener('resize', measure);window.visualViewport?.removeEventListener('scroll', measure);delete document.body.dataset.privateKeyboard; document.body.style.removeProperty('--private-viewport-height'); document.body.style.removeProperty('--private-viewport-top'); };
   }, []);
   const navigate = useNavigate();
   const [planOpen, setPlanOpen] = useState(false);

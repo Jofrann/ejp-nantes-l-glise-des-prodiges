@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { publicImageVariant } from './media-variants.mjs';
 import { mkdir, writeFile, unlink, stat } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import { resolve } from 'node:path';
@@ -80,11 +81,21 @@ export async function serveFile(req, res, id, user) {
   if (!['GET','HEAD'].includes(req.method)) fail(405, 'Méthode non autorisée');
   const file = db.prepare('SELECT * FROM uploaded_files WHERE id=?').get(id);
   if (!file || !(await canReadFile(file,user))) fail(404, 'Fichier introuvable');
-  const path = resolve(root,file.id);
+  let path = resolve(root,file.id);
+  let mime = file.mime;
+  const width = new URL(req.url, 'http://localhost').searchParams.get('w');
+  if (width && file.visibility === 'public' && ['image/jpeg','image/png','image/webp'].includes(file.mime)) {
+    const variant = await publicImageVariant(path,file.id,width).catch(()=>null);
+    if (variant) { path = variant; mime = 'image/webp'; }
+  }
   let info;
   try { info = await stat(path); } catch { fail(404, 'Fichier introuvable'); }
-  const headers = { 'Content-Type': file.mime, 'X-Content-Type-Options':'nosniff', 'Content-Security-Policy':"sandbox; default-src 'none'", 'Cache-Control':'private, no-store', 'Accept-Ranges':'bytes',
+  const headers = { 'Content-Type': mime, 'X-Content-Type-Options':'nosniff', 'Content-Security-Policy':"sandbox; default-src 'none'", 'Cache-Control':file.visibility === 'public' ? 'public, max-age=31536000, immutable' : 'private, no-store', 'Accept-Ranges':'bytes',
     'Content-Disposition': `${/^(image|video|audio)\//.test(file.mime) ? 'inline' : 'attachment'}; filename*=UTF-8''${encodeURIComponent(file.name)}` };
+  if (file.visibility === 'public') {
+    headers.ETag = '"'+file.id+'-'+(mime === 'image/webp' && width ? width : 'original')+'"';
+    if (req.headers['if-none-match'] === headers.ETag) { res.writeHead(304,headers); res.end(); return; }
+  }
   let start = 0, end = info.size - 1, status = 200;
   if (req.headers.range) {
     const match = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range);

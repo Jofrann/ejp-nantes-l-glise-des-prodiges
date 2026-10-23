@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, DoorOpen, Music, BookOpen, Heart, Sparkles } from 'lucide-react';
@@ -51,7 +52,7 @@ export default function ImmersionScroll() {
             transition={{ duration: 0.8 }}
             className="absolute inset-0"
           >
-            <img src={activeChapter.image} alt={activeChapter.title} className="w-full h-full object-cover" />
+            <PublicImage src={activeChapter.image} alt={activeChapter.title} className="w-full h-full object-cover" />
           </motion.div>
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-b from-[#101827]/80 via-[#101827]/60 to-[#101827]/90" />

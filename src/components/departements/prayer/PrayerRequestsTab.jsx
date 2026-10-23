@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { Plus, X, Lock, Heart, ChevronLeft, Send, UserPlus, CheckCircle2, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -368,7 +369,7 @@ function AssigneeModal({ requestId, members, existingAssignees, colors, slug, on
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
       <div className="bg-card w-full max-w-md rounded-t-2xl sm:rounded-2xl p-5" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold">Autoriser une personne</p>
@@ -384,6 +385,6 @@ function AssigneeModal({ requestId, members, existingAssignees, colors, slug, on
           </button>
         </div>
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

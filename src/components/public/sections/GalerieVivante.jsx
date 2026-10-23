@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import { PublicText } from '@/components/public/PublicCopy';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -33,7 +34,7 @@ export default function GalerieVivante({ media }) {
               >
                 {item.type === 'video' ? (
                   <>
-                    {item.thumbnail_url ? <img src={item.thumbnail_url} alt={item.alt_text || item.title || ''} className="w-full object-cover" /> : <video src={item.file_url} muted playsInline preload="metadata" className="w-full min-h-40 object-cover" aria-hidden="true" /> }
+                    {item.thumbnail_url ? <PublicImage src={item.thumbnail_url} alt={item.alt_text || item.title || ''} className="w-full object-cover" /> : <div className="w-full min-h-40 aspect-video bg-[#101827] text-white/70 flex items-center justify-center text-xs">Vidéo · lecture à la demande</div> }
                     <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-100 transition-opacity">
                       <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center">
                         <span className="text-[#101827] text-xl"><PublicText value={"▶"} /></span>
@@ -41,7 +42,7 @@ export default function GalerieVivante({ media }) {
                     </div>
                   </>
                 ) : (
-                  <img
+                  <PublicImage
                     src={item.file_url}
                     alt={item.alt_text || item.title || ''}
                     className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -63,7 +64,7 @@ export default function GalerieVivante({ media }) {
       <Dialog open={!!lightbox} onOpenChange={open => { if (!open) setLightbox(null); }}>
         <DialogContent className="max-w-5xl bg-[#101827] text-white border-0 p-6" aria-describedby={undefined}>
           <DialogTitle className="text-white"><PublicText field={lightbox?.title ? "entity" : undefined} value={lightbox?.title || 'Galerie EJP Nantes'} /></DialogTitle>
-          {lightbox?.type === 'video' ? <video src={lightbox.file_url} controls autoPlay className="w-full max-h-[75vh]" /> : lightbox && <img src={lightbox.file_url} alt={lightbox.alt_text || lightbox.title || ''} className="w-full max-h-[75vh] object-contain" />}
+          {lightbox?.type === 'video' ? <video src={lightbox.file_url} controls autoPlay className="w-full max-h-[75vh]" /> : lightbox && <PublicImage src={lightbox.file_url} alt={lightbox.alt_text || lightbox.title || ''} className="w-full max-h-[75vh] object-contain" />}
         </DialogContent>
       </Dialog>
     </section>

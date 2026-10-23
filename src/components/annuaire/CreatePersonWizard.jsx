@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState, useEffect } from 'react';
 import { isActiveDepartment } from '@/lib/departmentState';
 import { base44 } from '@/api/base44Client';
@@ -120,7 +121,7 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-card border border-border rounded-2xl max-w-lg w-full shadow-2xl max-h-[92vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between z-10">
@@ -511,6 +512,6 @@ export default function CreatePersonWizard({ onClose, onCreated }) {
           )}
         </div>
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

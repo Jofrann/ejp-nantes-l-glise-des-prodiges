@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { Quote } from 'lucide-react';
@@ -30,7 +31,7 @@ export default function Temoignages({ testimonials }) {
                 <p className={`text-[#101827] leading-relaxed flex-1 ${i === 0 ? 'text-lg' : 'text-sm'}`}><PublicText value={"« "} /><PublicText field="entity" value={t.content} /><PublicText value={" »"} /></p>
                 <div className="flex items-center gap-3 mt-6 pt-5 border-t border-[#F0EBE0]">
                   {t.photo_url ? (
-                    <img src={t.photo_url} alt={t.author_name} className="w-10 h-10 rounded-full object-cover" />
+                    <PublicImage src={t.photo_url} alt={t.author_name} className="w-10 h-10 rounded-full object-cover" />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-[#F5F0E8] flex items-center justify-center">
                       <span className="font-display text-[#D8B76A] text-sm font-semibold">

@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Plus, Trash2, Loader2, X, Calendar } from 'lucide-react';
@@ -170,7 +171,7 @@ function AddMembershipModal({ person, activeDepartments, existingDeptIds, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-foreground font-semibold text-sm">Ajouter à un ministère</h3>
@@ -212,6 +213,6 @@ function AddMembershipModal({ person, activeDepartments, existingDeptIds, onClos
           </form>
         )}
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

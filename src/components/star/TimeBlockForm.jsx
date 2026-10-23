@@ -1,3 +1,4 @@
+import OverlayPortal from '@/components/ui/OverlayPortal';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Clock, Eye, Repeat } from 'lucide-react';
@@ -83,7 +84,7 @@ export default function TimeBlockForm({ open, onClose, date, startTime, endTime,
   };
 
   return (
-    <AnimatePresence>
+    <OverlayPortal><AnimatePresence>
       {open && (
         <>
           <motion.div
@@ -97,7 +98,7 @@ export default function TimeBlockForm({ open, onClose, date, startTime, endTime,
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-[90] glass-panel rounded-3xl p-6 w-[92vw] max-w-md max-h-[88vh] overflow-y-auto"
+            className="app-safe-dialog fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-[90] glass-panel rounded-3xl p-6 w-[92vw] max-w-md max-h-[88vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-base font-heading font-bold text-foreground">
@@ -237,6 +238,6 @@ export default function TimeBlockForm({ open, onClose, date, startTime, endTime,
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence></OverlayPortal>
   );
 }

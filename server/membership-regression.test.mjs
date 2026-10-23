@@ -1,3 +1,4 @@
+import {freePort} from './test-port.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
@@ -18,7 +19,7 @@ test('migrated ministries without status can accept existing accounts, while arc
   db.exec('CREATE TABLE records(entity TEXT,id TEXT,data TEXT,PRIMARY KEY(entity,id))');
   applyStructures(db,planStructures([]));
   db.close();
-  const port=58000+Math.floor(Math.random()*1000);
+  const port=await freePort();
   const child=spawn(process.execPath,['server/index.mjs'],{env:{...process.env,EJP_DATA_DIR:dir,EJP_API_PORT:String(port)},stdio:['ignore','pipe','pipe']});
   let cookie='';
   const call=async(path,data,status=200)=>{

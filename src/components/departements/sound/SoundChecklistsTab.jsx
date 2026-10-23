@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { ListChecks, Plus, X, Check, AlertTriangle, Play, Edit2, Trash2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -162,7 +163,7 @@ function TemplateForm({ editing, colors, slug, onClose, onSaved }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
       <div className="bg-card w-full max-w-md rounded-t-2xl sm:rounded-2xl p-5 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold">{editing ? 'Modifier' : 'Nouveau'} template</p>
@@ -186,7 +187,7 @@ function TemplateForm({ editing, colors, slug, onClose, onSaved }) {
         </div>
         <button onClick={save} disabled={saving || !name} className={`w-full ${colors.bg} ${colors.text} border ${colors.border} py-2.5 rounded-xl text-sm font-medium disabled:opacity-50`}>{saving ? '...' : 'Enregistrer'}</button>
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }
 
@@ -221,7 +222,7 @@ function RunExecutionModal({ run, items, isResponsable, colors, slug, onClose, o
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
       <div className="bg-card w-full max-w-md rounded-t-2xl sm:rounded-2xl p-5 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold">{run.template_name}</p>
@@ -257,6 +258,6 @@ function RunExecutionModal({ run, items, isResponsable, colors, slug, onClose, o
           </button>
         )}
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

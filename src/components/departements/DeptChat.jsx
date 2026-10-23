@@ -1,3 +1,4 @@
+import OverlayPortal from '@/components/ui/OverlayPortal';
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X, Send, MessageCircle } from 'lucide-react';
@@ -68,12 +69,12 @@ export default function DeptChat({ dept, colors, onClose }) {
   }, []);
 
   return (
-    <motion.div
+    <OverlayPortal><motion.div
       initial={{ opacity: 0, y: '100%' }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: '100%' }}
       transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-      className="fixed inset-0 z-50 flex flex-col bg-background"
+      className="app-fullscreen-overlay fixed inset-0 z-[90] flex flex-col bg-background"
     >
       {/* Header */}
       <div className={`flex items-center gap-3 px-4 py-3 border-b border-border bg-card/80 backdrop-blur-sm`}>
@@ -179,6 +180,6 @@ export default function DeptChat({ dept, colors, onClose }) {
           </button>
         </form>
       </div>
-    </motion.div>
+    </motion.div></OverlayPortal>
   );
 }

@@ -1,3 +1,4 @@
+import ViewportOverlay from '@/components/ui/ViewportOverlay';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -114,7 +115,7 @@ function AddMemberModal({ fij, onClose, onSaved }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4" onClick={onClose}>
+    <ViewportOverlay className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-card border border-border rounded-2xl p-5 w-full max-w-md" onClick={e => e.stopPropagation()}>
         <h3 className="text-sm font-semibold text-foreground mb-4">Nouveau membre — {fij.name}</h3>
         <div className="space-y-3">
@@ -135,6 +136,6 @@ function AddMemberModal({ fij, onClose, onSaved }) {
           </button>
         </div>
       </div>
-    </div>
+    </ViewportOverlay>
   );
 }

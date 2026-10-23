@@ -1,0 +1,70 @@
+{
+  "name": "ServiceProgram",
+  "type": "object",
+  "properties": {
+    "department_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 180
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "start_time": {
+      "type": "string"
+    },
+    "end_time": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "cancelled"
+      ],
+      "default": "planned"
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "created_by_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "department_id",
+    "title",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

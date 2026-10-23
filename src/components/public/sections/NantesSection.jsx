@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
@@ -10,7 +11,7 @@ export default function NantesSection() {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <RevealOnScroll>
             <div className="relative rounded-[28px] overflow-hidden aspect-[4/5] shadow-[0_24px_70px_rgba(16,24,39,0.10)]">
-              <img
+              <PublicImage
                 src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80"
                 alt="Nantes"
                 className="w-full h-full object-cover"

@@ -114,7 +114,7 @@ export default function EventDetailPanel({
             e.preventDefault();
             opener.current?.focus();
           }}
-          className="fixed right-0 top-0 bottom-0 z-[90] w-[92vw] max-w-sm bg-white text-slate-800 shadow-2xl p-6 overflow-y-auto outline-none"
+          className="app-event-detail fixed right-0 top-0 bottom-0 z-[90] w-[92vw] max-w-sm bg-white text-slate-800 shadow-2xl p-6 overflow-y-auto outline-none"
         >
           <div className="flex items-center justify-between mb-5">
             <Dialog.Title className="font-semibold">

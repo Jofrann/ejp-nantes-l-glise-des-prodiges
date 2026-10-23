@@ -1,3 +1,4 @@
+import {freePort} from './test-port.mjs';
 import { ensureAcademicWorkspace } from "./academic-workspace.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -8,7 +9,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 test("Department workspaces persist scoped actions and leaders receive deduplicated aggregates only", async () => {
   const dir = await mkdtemp(join(tmpdir(), "ejp-workspaces-")),
-    port = 60100 + Math.floor(Math.random() * 500);
+    port = await freePort();
   const child = spawn(process.execPath, ["server/index.mjs"], {
     env: { ...process.env, EJP_DATA_DIR: dir, EJP_API_PORT: String(port) },
     stdio: ["ignore", "pipe", "pipe"],

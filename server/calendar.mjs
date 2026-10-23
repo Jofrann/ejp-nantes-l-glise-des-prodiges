@@ -11,7 +11,7 @@ import {
   validDay,
   validTime,
 } from "../src/lib/calendarPolicy.js";
-import { ASSIGNMENT_SOURCES } from "./event-assignments.mjs";
+import { projectAssignments } from "./event-assignments.mjs";
 const fail = (status, message) => {
   throw Object.assign(new Error(message), { status });
 };
@@ -425,73 +425,35 @@ export async function executeCalendarOperation(name, body, user) {
     ).filter(activeMembership),
     myIds = new Set(memberships.map((m) => m.department_id)),
     sundays = new Set();
-  for (const source of ASSIGNMENT_SOURCES) {
-    const plans = await entities[source.plan].list(null, 100000);
-    for (const plan of plans) {
-      if (plan.event_id) {
-        const parent = await entities.Event.get(plan.event_id).catch(
-          () => null,
-        );
-        if (
-          !parent ||
-          parent.is_active === false ||
-          parent.publication_status === "draft"
-        )
-          continue;
-      }
-      if (
-        !myIds.has(plan.department_id) ||
-        !departments.some((d) => d.id === plan.department_id) ||
-        !plan.date ||
-        plan.date < from ||
-        plan.date > to ||
-        plan.is_active === false ||
-        ["cancelled", "archived"].includes(plan.status)
-      )
-        continue;
-      let assignments = source.assignment
-        ? await entities[source.assignment].filter(
-            { [source.parent]: plan.id, user_id: user.id },
-            null,
-            100000,
-          )
-        : [
-            { id: plan.id, user_id: plan.moderator_user_id },
-            { id: plan.id + ":co", user_id: plan.co_moderator_user_id },
-          ];
-      assignments = assignments.filter(
-        (a) =>
-          a.user_id === user.id &&
-          !["declined", "replaced", "cancelled"].includes(a.status),
-      );
-      for (const a of assignments) {
-        events.push({
-          id: "service:" + source.plan + ":" + a.id,
-          title:
-            (departments.find((d) => d.id === plan.department_id)?.name ||
-              "Service") +
-            " · " +
-            (plan.title || "Service programmé"),
-          event_type: "service",
-          event_date: plan.date,
-          event_time:
-            a.start_time ||
-            plan.call_time ||
-            plan.start_time ||
-            plan.service_start_time ||
-            "",
-          end_time: a.end_time || plan.end_time || "",
-          is_public: false,
-          is_active: true,
-          presence_mode: "informative",
-          _derived: true,
-          _scope: "service",
-          parent_event_id: plan.event_id || null,
-        });
-        if (new Date(plan.date + "T12:00:00Z").getUTCDay() === 0)
-          sundays.add(plan.date);
-      }
-    }
+  const projection = await projectAssignments(entities, {
+    from,
+    to,
+    includeUnlinked: true,
+  });
+  for (const row of projection.assignments) {
+    if (
+      !myIds.has(row.department_id) ||
+      row.user_id !== user.id ||
+      ["declined", "replaced", "cancelled"].includes(row.status)
+    )
+      continue;
+    events.push({
+      id: "service:" + row.source + ":" + row.source_id,
+      title: row.department_name + " · " + row.event_title,
+      description: "Votre poste : " + (row.position || "Service"),
+      event_type: "service",
+      event_date: row.date,
+      event_time: row.start_time || "",
+      end_time: row.end_time || "",
+      is_public: false,
+      is_active: true,
+      presence_mode: "informative",
+      _derived: true,
+      _scope: "service",
+      parent_event_id: row.event_id,
+    });
+    if (new Date(row.date + "T12:00:00Z").getUTCDay() === 0)
+      sundays.add(row.date);
   }
   const settings = await calendarSettings(),
     meetings = await entities.StarsMeeting.list(null, 100000);
@@ -546,55 +508,27 @@ async function deliverStarsNotifications() {
     ),
     users = await entities.User.list(null, 100000);
   for (const meeting of meetings) {
-    const recipients = new Set();
-    for (const source of ASSIGNMENT_SOURCES)
-      for (const plan of await entities[source.plan].filter(
-        { date: meeting.event_date },
-        null,
-        100000,
-      )) {
-        if (
-          plan.is_active === false ||
-          ["cancelled", "archived"].includes(plan.status) ||
-          !departments.some((d) => d.id === plan.department_id)
-        )
-          continue;
-        if (plan.event_id) {
-          const parent = await entities.Event.get(plan.event_id).catch(
-            () => null,
-          );
-          if (
-            !parent ||
-            parent.is_active === false ||
-            parent.publication_status === "draft"
-          )
-            continue;
-        }
-        const assignments = source.assignment
-          ? await entities[source.assignment].filter(
-              { [source.parent]: plan.id },
-              null,
-              100000,
-            )
-          : [
-              { user_id: plan.moderator_user_id },
-              { user_id: plan.co_moderator_user_id },
-            ];
-        for (const a of assignments)
-          if (
+    const projection = await projectAssignments(entities, {
+      from: meeting.event_date,
+      to: meeting.event_date,
+      includeUnlinked: true,
+    });
+    const recipients = new Set(
+      projection.assignments
+        .filter(
+          (a) =>
             a.user_id &&
             !["declined", "replaced", "cancelled"].includes(a.status) &&
             members.some(
               (m) =>
-                m.user_id === a.user_id &&
-                m.department_id === plan.department_id,
+                m.user_id === a.user_id && m.department_id === a.department_id,
             ) &&
             users.some(
               (u) => u.id === a.user_id && u.account_status === "active",
-            )
-          )
-            recipients.add(a.user_id);
-      }
+            ),
+        )
+        .map((a) => a.user_id),
+    );
     const key = createHash("sha256")
       .update(meeting.id + ":" + meeting.meet_url)
       .digest("hex");
@@ -615,8 +549,8 @@ async function deliverStarsNotifications() {
           message:
             "Le lien Meet du dimanche de 6h à 6h30 est disponible dans votre agenda privé.",
           body: "Le lien Meet du dimanche de 6h à 6h30 est disponible dans votre agenda privé.",
-          link: "/app/agenda",
-          action_url: "/app/agenda",
+          link: "/app/agenda?date=" + meeting.event_date,
+          action_url: "/app/agenda?date=" + meeting.event_date,
           is_read: false,
           calendar_delivery_key: key,
         });

@@ -224,7 +224,7 @@ export default function CrJeudiForm() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
+      <div className="max-w-2xl mx-auto app-has-fixed-actions px-4 py-6 pb-32">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-xl font-heading font-bold text-foreground mb-1">CR du jeudi — Présences</h1>
           <p className="text-sm text-muted-foreground mb-4">{fij.name}</p>
@@ -306,7 +306,7 @@ export default function CrJeudiForm() {
       </div>
 
       {/* Sticky actions */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-3 z-40">
+      <div className="app-fixed-actions fixed bottom-0 left-0 right-0 bg-card border-t border-border p-3 z-40">
         <div className="max-w-2xl mx-auto flex gap-2">
           <button
             onClick={() => submit('draft')}

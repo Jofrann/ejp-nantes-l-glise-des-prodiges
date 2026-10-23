@@ -1,3 +1,4 @@
+import {freePort} from './test-port.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -8,7 +9,7 @@ import { once } from 'node:events';
 
 test('npm start serves the site, SPA routes and API without exposing server files', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'ejp-web-'));
-  const port = 41000 + Math.floor(Math.random() * 10000);
+  const port = await freePort();
   const child = spawn(process.execPath, ['server/web.mjs'], { env: { ...process.env, NODE_ENV: 'production', EJP_SETUP_TOKEN: 'test-only-setup-token', EJP_DATA_DIR: dir, PORT: String(port), EJP_HOST: '127.0.0.1' }, stdio: ['ignore', 'pipe', 'pipe'] });
   try {
     await Promise.race([once(child.stdout, 'data'), once(child, 'exit').then(() => { throw new Error('Website did not start'); })]);

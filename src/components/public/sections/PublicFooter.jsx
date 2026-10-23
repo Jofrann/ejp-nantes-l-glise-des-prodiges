@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import { PublicText } from '@/components/public/PublicCopy';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -17,7 +18,7 @@ export default function PublicFooter({ config }) {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src="/brand/ejp-logo.png" width="289" height="203" alt="Église des Jeunes Prodiges" className="ejp-footer-logo" />
+              <PublicImage src="/brand/ejp-logo.png" width="289" height="203" alt="Église des Jeunes Prodiges" className="ejp-footer-logo" />
               <div>
                 <p className="font-heading font-bold text-[#101827] text-sm"><PublicText value={"Église des Jeunes Prodiges"} /></p>
                 <p className="text-xs text-[#9CA3AF]"><PublicText value={"Nantes, France"} /></p>

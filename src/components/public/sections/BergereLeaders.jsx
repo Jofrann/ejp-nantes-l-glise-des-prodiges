@@ -1,3 +1,4 @@
+import PublicImage from '@/components/public/PublicImage';
 import React from 'react';
 import { motion } from 'framer-motion';
 import RevealOnScroll from '../RevealOnScroll';
@@ -23,7 +24,7 @@ export default function BergereLeaders({ leaders }) {
               <div className="grid md:grid-cols-2">
                 {shepherd.photo_url && (
                   <div className="h-64 md:h-auto bg-[#F5F0E8] overflow-hidden">
-                    <img src={shepherd.photo_url} alt={`${shepherd.first_name} ${shepherd.last_name}`} className="w-full h-full object-cover" />
+                    <PublicImage src={shepherd.photo_url} alt={`${shepherd.first_name} ${shepherd.last_name}`} className="w-full h-full object-cover" />
                   </div>
                 )}
                 <div className={`p-8 md:p-10 flex flex-col justify-center ${!shepherd.photo_url ? 'md:col-span-2' : ''}`}>
@@ -49,7 +50,7 @@ export default function BergereLeaders({ leaders }) {
                   className="bg-white rounded-[20px] border border-[#E8E2D5] p-5 text-center hover:shadow-[0_12px_40px_rgba(16,24,39,0.05)] transition-all duration-300"
                 >
                   {leader.photo_url ? (
-                    <img src={leader.photo_url} alt={`${leader.first_name} ${leader.last_name}`} className="w-16 h-16 rounded-full object-cover mx-auto mb-3" />
+                    <PublicImage src={leader.photo_url} alt={`${leader.first_name} ${leader.last_name}`} className="w-16 h-16 rounded-full object-cover mx-auto mb-3" />
                   ) : (
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#F5F0E8] to-[#EAF0F8] flex items-center justify-center mx-auto mb-3">
                       <span className="font-display text-[#D8B76A] text-lg font-semibold">

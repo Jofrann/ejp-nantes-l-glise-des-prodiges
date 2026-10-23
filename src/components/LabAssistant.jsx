@@ -62,7 +62,7 @@ Respond in a knowledgeable, clinical yet accessible tone. Keep responses to 2-3 
         onClick={() => setIsOpen(!isOpen)}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
-        className="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full glass-panel flex items-center justify-center group hover:scale-110 transition-transform duration-300"
+        className="app-floating-action fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full glass-panel flex items-center justify-center group hover:scale-110 transition-transform duration-300"
       >
         {isOpen ? (
           <X className="w-6 h-6 text-copper-400" />
@@ -73,7 +73,7 @@ Respond in a knowledgeable, clinical yet accessible tone. Keep responses to 2-3 
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-8 z-50 w-96 h-[500px] glass-panel rounded-lg overflow-hidden border border-white/10 flex flex-col">
+        <div className="app-assistant-panel fixed bottom-24 right-8 z-50 w-96 h-[500px] glass-panel rounded-lg overflow-hidden border border-white/10 flex flex-col">
           <div className="p-4 border-b border-white/10 bg-gradient-to-r from-white/5 to-transparent">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-copper-400/20 flex items-center justify-center">
