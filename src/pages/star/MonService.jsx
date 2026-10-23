@@ -7,8 +7,9 @@ import {
   Calendar, AlertCircle
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { isBureauLike, isFijPilot, getInternalIdentifier, getDisplayName, isAccountBlocked } from '@/lib/permissions';
+import { isBureauLike, isAccountBlocked } from '@/lib/permissions';
 import { isHiddenFromService } from '@/lib/departmentModules';
+import { isPilotOfFij } from '@/lib/fijPermissions';
 import PageHeader from '@/components/star/PageHeader';
 
 /**
@@ -33,8 +34,12 @@ export default function MonService() {
   const [fijs, setFijs] = useState([]);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
+    setLoading(true); setLoadError('');
+    let current = true;
     const today = new Date().toISOString().split('T')[0];
     Promise.all([
       base44.auth.me(),
@@ -43,14 +48,16 @@ export default function MonService() {
       base44.entities.FIJ.filter({ is_active: true }, { limit: 50 }),
       base44.entities.Event.filter({ is_active: true, event_date: { $gte: today } }, { sort: 'event_date', limit: 10 }),
     ]).then(([u, m, d, f, e]) => {
+      if (!current) return;
       setUser(u);
       setMemberships(m?.items || m || []);
       setDepartments(d?.items || d || []);
       setFijs(f?.items || f || []);
       setEvents(e?.items || e || []);
       setLoading(false);
-    }).catch(() => setLoading(false));
-  }, []);
+    }).catch(() => { if (current) { setLoadError('Tes engagements ne peuvent pas être chargés pour le moment.'); setLoading(false); } });
+    return () => { current = false; };
+  }, [attempt]);
 
   if (loading) {
     return (
@@ -59,6 +66,8 @@ export default function MonService() {
       </div>
     );
   }
+
+  if (loadError) return <div role="alert" className="max-w-3xl mx-auto p-6"><p>{loadError}</p><button className="private-retry" onClick={() => setAttempt(value => value + 1)}>Réessayer</button></div>;
 
   // Compte bloqué — aucun accès
   if (isAccountBlocked(user)) {
@@ -80,12 +89,12 @@ export default function MonService() {
   // Filtrer les ministères masqués (pilote-fij, coordination-fij) — gérés via responsabilités
   const myServiceMemberships = myActiveMemberships.filter(m => {
     const dept = departments.find(d => d.id === m.department_id);
-    return dept && dept.is_active !== false && !isHiddenFromService(dept.slug);
+    return dept && dept.is_active !== false && dept.slug !== 'coordination-fij' && !isHiddenFromService(dept.slug);
   });
 
   // FIJ Pilot — source : FIJ.pilot_user_id / copilot_user_id
   const myPilotFijs = fijs.filter(f =>
-    f.pilot_user_id === user?.id || f.copilot_user_id === user?.id
+    isPilotOfFij(user, f)
   );
 
   // Coordination FIJ — source : DepartmentMember actif dans coordination-fij
@@ -104,18 +113,17 @@ export default function MonService() {
   const hasUpcoming = upcomingEvents.length > 0;
   const isEmpty = !hasServices && !hasResponsibilities && !hasUpcoming;
 
-  const firstName = user?.first_name || getDisplayName(user)?.split(' ')[0] || '';
+
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-      {isBureauLike(user) && <Link to="/app/departements" className="inline-flex gap-2 items-center mb-6 px-4 py-3 rounded-xl border border-secondary/30 text-secondary text-sm"><Building2 size={18} /> Gérer les ministères</Link>}
+    <div className="private-service max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <PageHeader
-        title={`Bonjour ${firstName}`}
-        intention="Retrouve ici tes services, tes prochaines échéances et les informations utiles à ton engagement."
+        title="Ta place. Ton impact."
+        intention="Tes engagements et tes responsabilités réunis."
         breadcrumbs={[{ label: 'Accueil', to: '/app' }, { label: 'Mon Service' }]}
       />
 
-      <MyAssignments />
+      <MyAssignments compact />
       {isEmpty ? (
         /* État vide — utilisateur sans ministère ni responsabilité */
         <div className="text-center py-16">
@@ -150,7 +158,7 @@ export default function MonService() {
           {/* === MES RESPONSABILITÉS === */}
           {hasResponsibilities && (
           <section>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">Mes responsabilités</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">Familles d’impact et coordination</p>
           <div className="space-y-3">
             {/* Pilote FIJ — source : FIJ.pilot_user_id */}
             {myPilotFijs.map(fij => (
@@ -166,15 +174,10 @@ export default function MonService() {
             ))}
             {/* Coordination FIJ — source : DepartmentMember dans coordination-fij */}
             {isCoordFij && (
-              <ResponsibilityCard
-                key="coord-fij"
-                icon={Compass}
-                title="Coordination FIJ"
-                roleLabel="Coordination"
-                description="Outils spécialisés FIJ"
-                to="/app/responsabilites/fij-coordination"
-                color="purple"
-              />
+              <div className="private-coordination-card">
+                <ResponsibilityCard icon={Compass} title="Coordination FIJ" roleLabel="Département" description="Accompagner les pilotes et les familles" to={`/app/departements/${coordFijDept.slug || coordFijDept.id}`} color="blue" />
+                <Link className="private-coordination-network" to="/app/responsabilites/fij-coordination">Ouvrir le réseau FIJ <ArrowRight size={16}/></Link>
+              </div>
             )}
           </div>
           </section>
@@ -210,6 +213,8 @@ export default function MonService() {
           )}
         </div>
       )}
+      <div className="private-service-secondary">      {isBureauLike(user) && <Link to="/app/departements" className="inline-flex gap-2 items-center mb-6 px-4 py-3 rounded-xl border border-secondary/30 text-secondary text-sm"><Building2 size={18} /> Gérer les ministères</Link>}
+<Link to="/app/responsabilites" className="private-inline-link">Tous mes accès et responsabilités <ChevronRight size={16}/></Link></div>
     </div>
   );
 }
@@ -241,7 +246,7 @@ function ServiceCard({ dept, role, roleLabel }) {
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Link
         to={to}
-        className={`flex items-center gap-4 bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98]`}
+        className={`private-service-card flex items-center gap-4 bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98]`}
       >
         <div className={`w-11 h-11 rounded-xl ${colors.icon} border flex items-center justify-center flex-shrink-0`}>
           <Building2 className={`w-5 h-5 ${colors.text}`} />
@@ -269,7 +274,7 @@ function ResponsibilityCard({ icon: Icon, title, roleLabel, description, to, col
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Link
         to={to}
-        className={`flex items-center gap-4 bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98]`}
+        className={`private-service-card flex items-center gap-4 bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98]`}
       >
         <div className={`w-11 h-11 rounded-xl ${colors.icon} border flex items-center justify-center flex-shrink-0`}>
           <Icon className={`w-5 h-5 ${colors.text}`} />

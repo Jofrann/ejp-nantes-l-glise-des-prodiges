@@ -11,7 +11,7 @@
     "typecheck": "tsc -p ./jsconfig.json",
     "preview": "vite preview",
     "start": "node server/web.mjs",
-    "test": "node --test server/*.test.mjs",
+    "test": "node --test server/*.test.mjs src/lib/privateNavigation.test.mjs",
     "prestart": "npm run build"
   },
   "dependencies": {

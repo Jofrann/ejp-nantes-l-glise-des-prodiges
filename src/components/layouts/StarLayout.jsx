@@ -1,13 +1,14 @@
 import useChromeInset from '@/hooks/useChromeInset';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import {
-  LogOut, Plus, Menu as MenuIcon, Shield, Settings, User, ChevronDown,
+  LogOut, Plus, Search, Shield, Settings, User, ChevronDown, Moon, Sun, Sparkles,
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { isBureauLike, isAdmin, getRoles } from '@/lib/permissions';
+import { isAdmin, getRoles } from '@/lib/permissions';
 import { MOBILE_BOTTOM_NAV } from '@/lib/starMegaMenu';
+import { PRIVATE_CONTEXT, privateSection } from '@/lib/privateNavigation';
 import { MobilePlanStar } from '@/components/star/MegaMenu';
 import PrivateSidebar from '@/components/star/PrivateSidebar';
 import NotificationBell from '@/components/star/NotificationBell';
@@ -26,6 +27,20 @@ export default function StarLayout({ children, user }) {
   useChromeInset(headerRef, '--app-header-height');
   useChromeInset(bottomRef, '--app-bottom-height');
   const location = useLocation();
+  const section = privateSection(location.pathname);
+  const [theme, setTheme] = useState(() => { try { return localStorage.getItem('ejp-private-theme') === 'dark' ? 'dark' : 'light'; } catch { return 'light'; } });
+  const [calm, setCalm] = useState(() => { try { return localStorage.getItem('ejp-private-calm') === 'true'; } catch { return false; } });
+  useEffect(() => {
+    document.body.dataset.privateTheme = theme;
+    if (calm) document.body.dataset.privateCalm = 'true'; else delete document.body.dataset.privateCalm;
+    try { localStorage.setItem('ejp-private-theme', theme); localStorage.setItem('ejp-private-calm', String(calm)); } catch { /* Preferences remain usable without storage. */ }
+    return () => { delete document.body.dataset.privateTheme; delete document.body.dataset.privateCalm; };
+  }, [theme, calm]);
+  useEffect(() => {
+    const measure = () => document.body.style.setProperty('--private-viewport-height', `${window.visualViewport?.height || window.innerHeight}px`);
+    measure(); window.visualViewport?.addEventListener('resize', measure);
+    return () => { window.visualViewport?.removeEventListener('resize', measure); document.body.style.removeProperty('--private-viewport-height'); };
+  }, []);
   const navigate = useNavigate();
   const [planOpen, setPlanOpen] = useState(false);
   const [quickOpen, setQuickOpen] = useState(false);
@@ -38,6 +53,8 @@ export default function StarLayout({ children, user }) {
     Promise.all([base44.functions.invoke('getManagedDepartments',{}),base44.functions.invoke('getAcademicEligibility',{})]).then(([managed,academic])=>{if(current)setWorkspaceAccess({managed:managed.data.departments.length>0,student:academic.data.is_student});}).catch(()=>{if(current)setWorkspaceAccess({managed:false,student:false});});
     return()=>{current=false;};
   },[user?.id,user?.first_login]);
+
+  useLayoutEffect(() => { window.scrollTo({top: 0, left: 0, behavior: 'instant'}); }, [location.pathname]);
 
   // Fermer overlays sur changement de route
   useEffect(() => {
@@ -58,10 +75,6 @@ export default function StarLayout({ children, user }) {
     extraModules.push('equipe');
   }
 
-  const isActive = (item) => {
-    if (item.end) return location.pathname === item.path;
-    return location.pathname.startsWith(item.path);
-  };
 
   useEffect(() => {
     const escape = event => { if (event.key === 'Escape') { setQuickOpen(false); setProfileOpen(false); } };
@@ -72,7 +85,7 @@ export default function StarLayout({ children, user }) {
   const handleLogout = () => base44.auth.logout('/');
 
   return (
-    <MotionConfig reducedMotion="user"><div className="serviteur-app min-h-screen bg-background text-foreground flex flex-col" data-page={location.pathname}>
+    <MotionConfig reducedMotion={calm ? "always" : "user"}><div className="serviteur-app private-vision min-h-screen bg-background text-foreground flex flex-col" data-theme={theme} data-calm={calm} data-page={location.pathname}>
       <PrivateSidebar showAdmin={showAdmin} showSupervision={showSupervision} extraModules={extraModules} onOpenTools={() => setPlanOpen(true)} />
       {/* Header desktop — glass premium, simplified */}
       <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 glass-header">
@@ -171,6 +184,11 @@ export default function StarLayout({ children, user }) {
                       >
                         <Settings className="w-3.5 h-3.5 text-muted-foreground" /> Espace personnel
                       </button>
+                      <button role="switch" aria-checked={theme === 'dark'} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="private-preference">
+                        {theme === 'dark' ? <Sun size={16}/> : <Moon size={16}/>} Apparence sombre <span>{theme === 'dark' ? 'Oui' : 'Non'}</span>
+                      </button>
+                      <button role="switch" aria-checked={calm} onClick={() => setCalm(!calm)} className="private-preference"><Sparkles size={16}/> Réduire les animations <span>{calm ? 'Oui' : 'Non'}</span></button>
+                      <button onClick={() => { setProfileOpen(false); setPlanOpen(true); }} className="private-preference"><Search size={16}/> Explorer mon espace</button>
                       {showSupervision && (
                         <button
                           onClick={() => { navigate('/app/pilotage'); setProfileOpen(false); }}
@@ -203,11 +221,11 @@ export default function StarLayout({ children, user }) {
 
             {/* Mobile menu trigger */}
             <button
-              aria-label="Ouvrir le menu serviteur" aria-expanded={planOpen}
+              aria-label="Explorer mon espace" aria-expanded={planOpen}
               onClick={() => setPlanOpen(true)}
-              className="private-menu-trigger xl:hidden w-8 h-8 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
+              className="private-menu-trigger w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
             >
-              <MenuIcon className="w-5 h-5" />
+              <Search className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -215,35 +233,20 @@ export default function StarLayout({ children, user }) {
 
       {/* Main content */}
       <main className="serviteur-main flex-1 min-w-0">
-        {children}
+        <a href="#private-page-content" className="private-skip">Aller au contenu</a>
+        {PRIVATE_CONTEXT[section] && <nav className="private-context-nav" aria-label="Dans cette rubrique">{PRIVATE_CONTEXT[section].map(([to,label]) => <Link key={to} to={to} aria-current={location.pathname === to ? 'page' : undefined}>{label}</Link>)}</nav>}
+        <div id="private-page-content" key={location.pathname} className="private-route-enter" tabIndex={-1}>{children}</div>
       </main>
 
-      {/* Bottom nav mobile — Accueil, Agenda, Présences, Plus */}
-      <nav ref={bottomRef} className="fixed bottom-0 left-0 right-0 z-50 glass-bottom xl:hidden">
+      {/* Bottom navigation — four stable destinations */}
+      <nav ref={bottomRef} aria-label="Navigation principale mobile" className="fixed bottom-0 left-0 right-0 z-50 glass-bottom xl:hidden">
         <div className="flex items-center justify-around h-16 px-2">
-          {MOBILE_BOTTOM_NAV.map(({ path, label, icon: Icon, end }) => (
-            <Link
-              key={path}
-              to={path}
-              aria-current={isActive({path,end}) ? "page" : undefined}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-colors ${
-                isActive({ path, end })
-                  ? 'text-secondary'
-                  : 'text-muted-foreground'
-              }`}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="text-[9px] font-medium">{label}</span>
+          {MOBILE_BOTTOM_NAV.map(({ path, label, icon: Icon, id }) => (
+            <Link key={path} to={path} aria-current={section === id ? 'page' : undefined} className="private-tab">
+              {section === id && <motion.span layoutId="private-active-tab" className="private-tab-pill" transition={{type:'spring',stiffness:330,damping:30}} />}
+              <Icon aria-hidden="true" className="w-5 h-5"/><span>{label}</span>
             </Link>
           ))}
-          <button
-            aria-expanded={planOpen} aria-label="Tous les outils"
-            onClick={() => setPlanOpen(true)}
-            className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg text-muted-foreground"
-          >
-            <MenuIcon className="w-5 h-5" />
-            <span className="text-[9px] font-medium">Plus</span>
-          </button>
         </div>
       </nav>
 
